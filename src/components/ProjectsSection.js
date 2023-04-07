@@ -1,5 +1,5 @@
 import { Project } from "../components/Project.js";
-import styles from "../styles/Section.module.css";
+import styles from "../styles/Projects.module.css";
 import imageTest from "../../assets/images/image.jpeg";
 
 export function ProjectsSection() {
@@ -36,6 +36,9 @@ export function ProjectsSection() {
 	});
 
 	return (
-		<section className={styles.sectionProjects}>{projectsMapped}</section>
+		<section className={styles.sectionProjects}>
+			<h2 className={styles.sectionProjectsTitle}>Projects</h2>
+			<div className={styles.projectsWrapper}>{projectsMapped}</div>
+		</section>
 	);
 }
