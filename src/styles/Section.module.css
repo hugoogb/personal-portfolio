@@ -6,5 +6,7 @@
 }
 
 .sectionTitle {
+	text-transform: uppercase;
+
 	margin: 2rem;
 }
