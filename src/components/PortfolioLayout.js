@@ -9,7 +9,7 @@ import { Footer } from "./Footer.js";
 export function PortfolioLayout() {
 	return (
 		<>
-			<Navbar></Navbar>
+			{/* <Navbar></Navbar> */}
 			<Header></Header>
 			<HomeSection></HomeSection>
 			<AboutSection></AboutSection>
