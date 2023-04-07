@@ -1,9 +1,10 @@
 import styles from "../styles/Section.module.css";
+import { SectionTitle } from "./SectionTitle.js";
 
 export function AboutSection() {
 	return (
 		<section className={styles.section}>
-			<h2 className={styles.sectionTitle}>About</h2>
+			<SectionTitle>About</SectionTitle>
 			<p>Some text</p>
 		</section>
 	);

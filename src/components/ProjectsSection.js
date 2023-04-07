@@ -2,6 +2,7 @@ import { Project } from "../components/Project.js";
 import styles from "../styles/Section.module.css";
 import stylesProject from "../styles/Projects.module.css";
 import imageTest from "../../assets/images/image.jpeg";
+import { SectionTitle } from "./SectionTitle.js";
 
 export function ProjectsSection() {
 	const projects = [
@@ -38,7 +39,7 @@ export function ProjectsSection() {
 
 	return (
 		<section className={styles.section}>
-			<h2 className={styles.sectionTitle}>Projects</h2>
+			<SectionTitle>Projects</SectionTitle>
 			<div className={stylesProject.projectsWrapper}>
 				{projectsMapped}
 			</div>
