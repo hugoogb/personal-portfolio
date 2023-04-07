@@ -12,11 +12,27 @@ const cyGroteskGrandBold = localFont({
 });
 
 export function Header() {
-	const name = "Hugo Garcia Benjumea";
+	const name = "Hugo García Benjumea";
+	const splittedName = name.split(" ").map((word) => {
+		return word === name.split(" ")[0] ? (
+			<span style={{ color: "red" }} key={word}>
+				{word}
+				<br></br>
+			</span>
+		) : (
+			<span key={word}>
+				{word}
+				<br></br>
+			</span>
+		);
+	});
 
 	return (
-		<header className={cyGroteskGrandBold.className}>
-			<h1 className={styles.nameHeader}>{name}</h1>
-		</header>
+		<section className={cyGroteskGrandBold.className}>
+			<div className={styles.headerContainer}>
+				<h1 className={styles.nameHeader}>{splittedName}</h1>
+				<div className={styles.profileImage}></div>
+			</div>
+		</section>
 	);
 }
