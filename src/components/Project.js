@@ -1,4 +1,4 @@
-import Image from "next/image.js";
+import Image from "next/image";
 import styles from "../styles/Projects.module.css";
 
 export function Project({ name, desc, urlPreview, imgSrc, imgAlt }) {

@@ -1,7 +1,7 @@
 import { Project } from "../components/Project.js";
 import styles from "../styles/Section.module.css";
 import stylesProject from "../styles/Projects.module.css";
-import imageTest from "../../assets/images/image.jpeg";
+import imageTest from "../../public/image.jpeg";
 import { SectionTitle } from "./SectionTitle.js";
 
 export function ProjectsSection() {
