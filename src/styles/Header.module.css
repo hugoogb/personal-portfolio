@@ -1,6 +1,6 @@
 .nameHeader {
 	text-transform: uppercase;
-	font-size: 6vw;
+	font-size: min(72px, 6vw);
 }
 
 .headerWrapper {
