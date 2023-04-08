@@ -29,9 +29,13 @@ export function Header() {
 
 	return (
 		<section className={cyGroteskGrandBold.className}>
-			<div className={styles.headerContainer}>
-				<h1 className={styles.nameHeader}>{splittedName}</h1>
-				<div className={styles.profileImage}></div>
+			<div className={styles.headerWrapper}>
+				<div className={styles.headerContainer}>
+					<h1 className={styles.nameHeader}>{splittedName}</h1>
+					<div className={styles.profileImageContainer}>
+						<div className={styles.profileImage}></div>
+					</div>
+				</div>
 			</div>
 		</section>
 	);
