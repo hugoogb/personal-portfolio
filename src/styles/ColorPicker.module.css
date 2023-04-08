@@ -1,0 +1,26 @@
+.settingsIcon {
+	width: 35px;
+	margin: 1.5rem;
+}
+
+.colorPickerWrapper {
+	display: flex;
+	align-items: center;
+	justify-content: flex-end;
+	width: 100%;
+
+	position: absolute;
+	top: 0;
+}
+
+.colorPickerContainer {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.listColorPicker {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
