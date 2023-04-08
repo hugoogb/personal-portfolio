@@ -1,4 +1,9 @@
 .navbar {
+	position: sticky;
+	top: 4rem;
+}
+
+.navbarContainer {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
