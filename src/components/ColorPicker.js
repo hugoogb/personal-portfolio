@@ -5,7 +5,7 @@ import { ListColorPickerItem } from "./ListColorPickerItem";
 export function ColorPicker() {
 	const colors = ["Red", "Blue", "Green", "Yellow", "Orange", "Purple"];
 	const colorsMapped = colors.map((color) => {
-		<ListColorPickerItem key={color} color={color} />;
+		return <ListColorPickerItem key={color} color={color} />;
 	});
 
 	return (
