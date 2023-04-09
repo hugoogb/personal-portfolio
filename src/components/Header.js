@@ -1,5 +1,7 @@
 import styles from "../styles/Header.module.css";
 import localFont from "next/font/local";
+import { useContext } from "react";
+import { ThemeContext } from "./PortfolioLayout.js";
 
 const cyGroteskGrandBold = localFont({
 	src: [
@@ -12,10 +14,12 @@ const cyGroteskGrandBold = localFont({
 });
 
 export function Header() {
+	const theme = useContext(ThemeContext);
+
 	const name = "Hugo García Benjumea";
 	const splittedName = name.split(" ").map((word) => {
 		return word === name.split(" ")[0] ? (
-			<span style={{ color: "red" }} key={word}>
+			<span style={{ color: theme }} key={word}>
 				{word}
 				<br></br>
 			</span>

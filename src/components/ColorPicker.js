@@ -2,7 +2,7 @@ import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 import styles from "../styles/ColorPicker.module.css";
 import { ListColorPickerItem } from "./ListColorPickerItem";
 
-export function ColorPicker() {
+export function ColorPicker({ onClick }) {
 	const colors = [
 		"#ff0000",
 		"#0000ff",
@@ -13,7 +13,9 @@ export function ColorPicker() {
 		"#ffc0cb",
 	];
 	const colorsMapped = colors.map((color) => {
-		return <ListColorPickerItem key={color} color={color} />;
+		return (
+			<ListColorPickerItem key={color} color={color} onClick={onClick} />
+		);
 	});
 
 	return (
