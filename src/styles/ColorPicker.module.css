@@ -1,6 +1,15 @@
 .settingsIcon {
-	width: 35px;
-	margin: 1.5rem;
+	width: 50px;
+	margin-left: 0.5rem;
+
+	transition: all 0.3s ease-in-out;
+}
+
+.settingsIcon:hover {
+	cursor: pointer;
+	scale: 1.25;
+	rotate: 90deg;
+	margin-left: 1rem;
 }
 
 .colorPickerWrapper {
@@ -17,10 +26,35 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
+
+	padding-top: 1.5rem;
+	padding-right: 1.5rem;
 }
 
 .listColorPicker {
 	display: flex;
 	align-items: center;
 	justify-content: center;
+}
+
+.listColorPickerItemLink {
+	display: inline-block;
+
+	margin-left: 0.5rem;
+}
+
+.listColorPickerItem {
+	clip-path: circle();
+	width: 25px;
+	height: 25px;
+
+	transition: all 0.3s ease-in-out;
+}
+
+.listColorPickerItem:hover {
+	cursor: pointer;
+	scale: 1.25;
+
+	margin-left: 0.5rem;
+	margin-right: 0.5rem;
 }
