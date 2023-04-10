@@ -14,9 +14,18 @@ export function ColorPicker({ onClick }) {
 		"#ffc0cb",
 	];
 
+	const handleClickChangeTheme = (color) => {
+		onClick(color);
+		handleSettingsClick();
+	};
+
 	const colorsMapped = colors.map((color) => {
 		return (
-			<ListColorPickerItem key={color} color={color} onClick={onClick} />
+			<ListColorPickerItem
+				key={color}
+				color={color}
+				onClick={handleClickChangeTheme}
+			/>
 		);
 	});
 
