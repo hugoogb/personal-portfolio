@@ -1,6 +1,7 @@
 import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 import styles from "../styles/ColorPicker.module.css";
 import { ListColorPickerItem } from "./ListColorPickerItem";
+import { useState } from "react";
 
 export function ColorPicker({ onClick }) {
 	const colors = [
@@ -12,17 +13,32 @@ export function ColorPicker({ onClick }) {
 		"#800080",
 		"#ffc0cb",
 	];
+
 	const colorsMapped = colors.map((color) => {
 		return (
 			<ListColorPickerItem key={color} color={color} onClick={onClick} />
 		);
 	});
 
+	const [display, setDisplay] = useState("none");
+
+	const handleSettingsClick = () => {
+		display === "none" ? setDisplay("flex") : setDisplay("none");
+	};
+
 	return (
 		<div className={styles.colorPickerWrapper}>
 			<div className={styles.colorPickerContainer}>
-				<ul className={styles.listColorPicker}>{colorsMapped}</ul>
-				<Cog6ToothIcon className={styles.settingsIcon} />
+				<ul
+					className={styles.listColorPicker}
+					style={{ display: display }}
+				>
+					{colorsMapped}
+				</ul>
+				<Cog6ToothIcon
+					onClick={handleSettingsClick}
+					className={styles.settingsIcon}
+				/>
 			</div>
 		</div>
 	);
