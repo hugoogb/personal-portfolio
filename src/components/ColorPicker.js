@@ -40,7 +40,9 @@ export function ColorPicker({ onClick }) {
 			<div className={styles.colorPickerContainer}>
 				<ul
 					className={styles.listColorPicker}
-					style={{ display: display }}
+					style={{
+						opacity: display === "none" ? 0 : 1,
+					}}
 				>
 					{colorsMapped}
 				</ul>
