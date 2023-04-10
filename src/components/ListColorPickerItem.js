@@ -5,7 +5,7 @@ export function ListColorPickerItem({ color, onClick }) {
 		<li>
 			<button
 				className={styles.listColorPickerItemLink}
-				onClick={onClick(color)}
+				onClick={() => onClick(color)}
 			>
 				<div
 					className={styles.listColorPickerItem}
