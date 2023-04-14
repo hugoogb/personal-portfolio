@@ -40,7 +40,13 @@ export function HomeSection() {
 		<section id='home' className={cyGroteskGrandBold.className}>
 			<div className={styles.headerWrapper}>
 				<div className={styles.headerContainer}>
-					<h1 className={styles.nameHeader}>{splittedName}</h1>
+					<div className={styles.nameHeaderTextContainer}>
+						<h1 className={styles.nameHeader}>{splittedName}</h1>
+						<h2 className={styles.subtitleHeader}>
+							<span style={{ backgroundColor: color }}></span>
+							Web developer
+						</h2>
+					</div>
 					<div className={styles.profileImageContainer}>
 						<div
 							style={{ background: color }}
