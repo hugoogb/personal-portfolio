@@ -26,6 +26,8 @@
 	width: 400px;
 	height: 400px;
 	background: #fff;
+
+	overflow: visible;
 }
 
 .profileImageBackground {
@@ -35,6 +37,13 @@
 	scale: 0.925;
 
 	transition: all 0.3s ease-in-out;
+
+	position: relative;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	overflow: visible;
 }
 
 .spanTitle {

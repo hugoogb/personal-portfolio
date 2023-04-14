@@ -2,6 +2,7 @@ import styles from "../../styles/modules/Home.module.css";
 import localFont from "next/font/local";
 import { useContext } from "react";
 import { ColorContext } from "../PortfolioLayout.js";
+import Image from "next/image";
 
 const cyGroteskGrandBold = localFont({
 	src: [
@@ -44,7 +45,17 @@ export function HomeSection() {
 						<div
 							style={{ background: color }}
 							className={styles.profileImageBackground}
-						></div>
+						>
+							<Image
+								src={
+									"https://res.cloudinary.com/hugoogb/image/upload/v1681508123/IMG_2347-removebg-preview_bfhe2e.png"
+								}
+								alt={"Profile picture of hugoogb"}
+								width={433}
+								height={577}
+								className={styles.profileImage}
+							></Image>
+						</div>
 					</div>
 				</div>
 			</div>
