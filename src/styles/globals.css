@@ -29,8 +29,6 @@ ul {
 	list-style-type: none; /* Remove bullets */
 }
 
-@media (prefers-color-scheme: dark) {
-	html {
-		color-scheme: dark;
-	}
+html {
+	color-scheme: dark;
 }
