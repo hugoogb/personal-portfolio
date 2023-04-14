@@ -1,8 +1,8 @@
 import { Navbar } from "../components/Navbar.js";
-import { HomeSection } from "./HomeSection.js";
-import { AboutSection } from "./AboutSection.js";
-import { ProjectsSection } from "./ProjectsSection.js";
-import { ContactSection } from "./ContactSection.js";
+import { HomeSection } from "./sections/HomeSection.js";
+import { AboutSection } from "./sections/AboutSection.js";
+import { ProjectsSection } from "./sections/ProjectsSection.js";
+import { ContactSection } from "./sections/ContactSection.js";
 import { Footer } from "./Footer.js";
 import { createContext, useState } from "react";
 

@@ -1,7 +1,7 @@
 import localFont from "next/font/local";
 import styles from "../styles/Section.module.css";
 import { useContext } from "react";
-import { ColorContext } from "./PortfolioLayout.js";
+import { ColorContext } from "../PortfolioLayout.js";
 
 const cyGroteskKey = localFont({
 	src: [

@@ -1,5 +1,5 @@
 import styles from "../styles/Section.module.css";
-import { SectionTitle } from "./SectionTitle.js";
+import { SectionTitle } from "./SectionTitle.js/index.js";
 
 export function ContactSection() {
 	return (

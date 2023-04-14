@@ -1,7 +1,7 @@
 import styles from "../styles/Header.module.css";
 import localFont from "next/font/local";
 import { useContext } from "react";
-import { ColorContext } from "./PortfolioLayout.js";
+import { ColorContext } from "../PortfolioLayout.js";
 
 const cyGroteskGrandBold = localFont({
 	src: [
