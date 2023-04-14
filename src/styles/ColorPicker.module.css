@@ -19,33 +19,3 @@
 
 	padding: 0.5rem;
 }
-
-.listColorPicker {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-
-	transition: all 0.3s ease-in-out;
-}
-
-.listColorPickerItemLink {
-	display: inline-block;
-
-	margin-left: 0.5rem;
-}
-
-.listColorPickerItem {
-	clip-path: circle();
-	width: 25px;
-	height: 25px;
-
-	transition: all 0.3s ease-in-out;
-}
-
-.listColorPickerItem:hover {
-	cursor: pointer;
-	scale: 1.25;
-
-	margin-left: 0.5rem;
-	margin-right: 0.5rem;
-}
