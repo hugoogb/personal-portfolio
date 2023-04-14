@@ -1,5 +1,5 @@
 import styles from "../../styles/modules/Section.module.css";
-import { SectionTitle } from "./SectionTitle.js/index.js";
+import { SectionTitle } from "./SectionTitle.js";
 
 export function AboutSection() {
 	return (

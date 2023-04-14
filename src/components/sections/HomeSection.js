@@ -6,7 +6,7 @@ import { ColorContext } from "../PortfolioLayout.js";
 const cyGroteskGrandBold = localFont({
 	src: [
 		{
-			path: "../pages/fonts/Cy.Grotesk/Cy Grotesk Grand Bold.ttf",
+			path: "../../pages/fonts/Cy.Grotesk/Cy Grotesk Grand Bold.ttf",
 			weight: "700",
 			style: "normal",
 		},
