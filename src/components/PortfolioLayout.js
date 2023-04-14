@@ -7,10 +7,10 @@ import { ContactSection } from "./ContactSection.js";
 import { Footer } from "./Footer.js";
 import { createContext, useState } from "react";
 
-export const ColorContext = createContext("#ffffff");
+export const ColorContext = createContext("#000");
 
 export function PortfolioLayout() {
-	const [color, setColor] = useState("#ffffff");
+	const [color, setColor] = useState("#000");
 
 	return (
 		<>
