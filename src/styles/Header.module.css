@@ -28,12 +28,13 @@
 	background: #fff;
 }
 
-.profileImage {
+.profileImageBackground {
 	clip-path: circle();
 	width: 400px;
 	height: 400px;
-	background: #ddd;
 	scale: 0.925;
+
+	transition: all 0.3s ease-in-out;
 }
 
 .spanTitle {

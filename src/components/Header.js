@@ -41,7 +41,10 @@ export function Header() {
 				<div className={styles.headerContainer}>
 					<h1 className={styles.nameHeader}>{splittedName}</h1>
 					<div className={styles.profileImageContainer}>
-						<div className={styles.profileImage}></div>
+						<div
+							style={{ background: theme + "E6" }}
+							className={styles.profileImageBackground}
+						></div>
 					</div>
 				</div>
 			</div>
