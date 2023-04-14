@@ -16,6 +16,7 @@ export const NavItem = ({ id, activeId, setActiveId, children }) => {
 			<a
 				href={"#" + children.toLowerCase()}
 				onClick={() => setActiveId(id)}
+				style={{ fontWeight: activeId === id ? "600" : "400" }}
 			>
 				{children}
 				<span style={spanStyles} className={styles.navItemBar}></span>
