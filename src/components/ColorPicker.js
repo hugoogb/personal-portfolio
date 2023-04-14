@@ -13,7 +13,9 @@ export function ColorPicker({ onClick }) {
 		"#800080",
 		"#ffc0cb",
 	];
-
+	(color) => {
+		setTheme(color);
+	};
 	const handleClickChangeTheme = (color) => {
 		onClick(color);
 		handleSettingsClick();
@@ -36,21 +38,19 @@ export function ColorPicker({ onClick }) {
 	};
 
 	return (
-		<div className={styles.colorPickerWrapper}>
-			<div className={styles.colorPickerContainer}>
-				<ul
-					className={styles.listColorPicker}
-					style={{
-						opacity: display === "none" ? 0 : 1,
-					}}
-				>
-					{colorsMapped}
-				</ul>
-				<Cog6ToothIcon
-					onClick={handleSettingsClick}
-					className={styles.settingsIcon}
-				/>
-			</div>
+		<div className={styles.colorPickerContainer}>
+			<ul
+				className={styles.listColorPicker}
+				style={{
+					display: display,
+				}}
+			>
+				{colorsMapped}
+			</ul>
+			<Cog6ToothIcon
+				onClick={handleSettingsClick}
+				className={styles.settingsIcon}
+			/>
 		</div>
 	);
 }

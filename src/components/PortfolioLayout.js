@@ -1,5 +1,4 @@
-// import { Navbar } from "../components/Navbar.js";
-import { ColorPicker } from "./ColorPicker.js";
+import { Navbar } from "../components/Navbar.js";
 import { Header } from "./Header.js";
 import { HomeSection } from "./HomeSection.js";
 import { AboutSection } from "./AboutSection.js";
@@ -15,13 +14,8 @@ export function PortfolioLayout() {
 
 	return (
 		<>
-			<ColorPicker
-				onClick={(color) => {
-					setTheme(color);
-				}}
-			></ColorPicker>
 			<ThemeContext.Provider value={theme}>
-				{/* <Navbar></Navbar> */}
+				<Navbar setTheme={(color) => setTheme(color)}></Navbar>
 				<Header></Header>
 				<HomeSection></HomeSection>
 				<AboutSection></AboutSection>

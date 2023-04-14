@@ -12,22 +12,12 @@
 	margin-left: 1rem;
 }
 
-.colorPickerWrapper {
-	display: flex;
-	align-items: center;
-	justify-content: flex-end;
-	width: 100%;
-
-	position: absolute;
-	top: 0;
-}
-
 .colorPickerContainer {
 	display: flex;
 	align-items: center;
 	justify-content: center;
 
-	padding: 1.5rem;
+	padding: 0.5rem;
 }
 
 .listColorPicker {
