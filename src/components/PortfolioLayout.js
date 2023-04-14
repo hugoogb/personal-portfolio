@@ -1,5 +1,4 @@
 import { Navbar } from "../components/Navbar.js";
-import { Header } from "./Header.js";
 import { HomeSection } from "./HomeSection.js";
 import { AboutSection } from "./AboutSection.js";
 import { ProjectsSection } from "./ProjectsSection.js";
@@ -16,7 +15,6 @@ export function PortfolioLayout() {
 		<>
 			<ColorContext.Provider value={color}>
 				<Navbar setColor={setColor}></Navbar>
-				<Header></Header>
 				<HomeSection></HomeSection>
 				<AboutSection></AboutSection>
 				<ProjectsSection></ProjectsSection>
