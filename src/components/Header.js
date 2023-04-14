@@ -19,7 +19,11 @@ export function Header() {
 	const name = "Hugo García Benjumea";
 	const splittedName = name.split(" ").map((word) => {
 		return word === name.split(" ")[0] ? (
-			<span style={{ color: theme }} key={word}>
+			<span
+				className={styles.spanTitle}
+				style={{ color: theme }}
+				key={word}
+			>
 				{word}
 				<br></br>
 			</span>
