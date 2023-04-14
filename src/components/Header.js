@@ -1,7 +1,7 @@
 import styles from "../styles/Header.module.css";
 import localFont from "next/font/local";
 import { useContext } from "react";
-import { ThemeContext } from "./PortfolioLayout.js";
+import { ColorContext } from "./PortfolioLayout.js";
 
 const cyGroteskGrandBold = localFont({
 	src: [
@@ -14,7 +14,7 @@ const cyGroteskGrandBold = localFont({
 });
 
 export function Header() {
-	const theme = useContext(ThemeContext);
+	const theme = useContext(ColorContext);
 
 	const name = "Hugo García Benjumea";
 	const splittedName = name.split(" ").map((word) => {

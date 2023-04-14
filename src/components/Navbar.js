@@ -1,7 +1,7 @@
 import styles from "../styles/Navbar.module.css";
 import { ColorPicker } from "./ColorPicker";
 
-export function Navbar({ setTheme }) {
+export function Navbar({ setColor }) {
 	return (
 		<nav className={styles.navbar}>
 			<div className={styles.navbarContainer}>
@@ -11,7 +11,7 @@ export function Navbar({ setTheme }) {
 					<li>Projects</li>
 					<li>Contact</li>
 				</ul>
-				<ColorPicker onClick={setTheme}></ColorPicker>
+				<ColorPicker setColor={setColor}></ColorPicker>
 			</div>
 		</nav>
 	);

@@ -3,7 +3,7 @@ import styles from "../styles/ColorPicker.module.css";
 import { ListColorPickerItem } from "./ListColorPickerItem";
 import { useState } from "react";
 
-export function ColorPicker({ onClick }) {
+export function ColorPicker({ setColor }) {
 	const colors = [
 		"#ff0000",
 		"#0000ff",
@@ -13,11 +13,9 @@ export function ColorPicker({ onClick }) {
 		"#800080",
 		"#ffc0cb",
 	];
-	(color) => {
-		setTheme(color);
-	};
+
 	const handleClickChangeTheme = (color) => {
-		onClick(color);
+		setColor(color);
 		handleSettingsClick();
 	};
 
@@ -47,10 +45,7 @@ export function ColorPicker({ onClick }) {
 			>
 				{colorsMapped}
 			</ul>
-			<Cog6ToothIcon
-				onClick={handleSettingsClick}
-				className={styles.settingsIcon}
-			/>
+			<Cog6ToothIcon onClick={setColor} className={styles.settingsIcon} />
 		</div>
 	);
 }

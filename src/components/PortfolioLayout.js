@@ -7,22 +7,22 @@ import { ContactSection } from "./ContactSection.js";
 import { Footer } from "./Footer.js";
 import { createContext, useState } from "react";
 
-export const ThemeContext = createContext("#ffffff");
+export const ColorContext = createContext("#ffffff");
 
 export function PortfolioLayout() {
-	const [theme, setTheme] = useState("#ffffff");
+	const [color, setColor] = useState("#ffffff");
 
 	return (
 		<>
-			<ThemeContext.Provider value={theme}>
-				<Navbar setTheme={(color) => setTheme(color)}></Navbar>
+			<ColorContext.Provider value={color}>
+				<Navbar setColor={setColor}></Navbar>
 				<Header></Header>
 				<HomeSection></HomeSection>
 				<AboutSection></AboutSection>
 				<ProjectsSection></ProjectsSection>
 				<ContactSection></ContactSection>
 				<Footer></Footer>
-			</ThemeContext.Provider>
+			</ColorContext.Provider>
 		</>
 	);
 }

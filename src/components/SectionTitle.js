@@ -1,7 +1,7 @@
 import localFont from "next/font/local";
 import styles from "../styles/Section.module.css";
 import { useContext } from "react";
-import { ThemeContext } from "./PortfolioLayout.js";
+import { ColorContext } from "./PortfolioLayout.js";
 
 const cyGroteskKey = localFont({
 	src: [
@@ -14,7 +14,7 @@ const cyGroteskKey = localFont({
 });
 
 export function SectionTitle({ children }) {
-	const theme = useContext(ThemeContext);
+	const theme = useContext(ColorContext);
 
 	return (
 		<div className={cyGroteskKey.className}>
