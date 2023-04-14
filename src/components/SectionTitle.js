@@ -14,11 +14,11 @@ const cyGroteskKey = localFont({
 });
 
 export function SectionTitle({ children }) {
-	const theme = useContext(ColorContext);
+	const color = useContext(ColorContext);
 
 	return (
 		<div className={cyGroteskKey.className}>
-			<h2 className={styles.sectionTitle} style={{ color: theme }}>
+			<h2 className={styles.sectionTitle} style={{ color: color }}>
 				{children}
 			</h2>
 		</div>

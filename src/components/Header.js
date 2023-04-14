@@ -14,14 +14,14 @@ const cyGroteskGrandBold = localFont({
 });
 
 export function Header() {
-	const theme = useContext(ColorContext);
+	const color = useContext(ColorContext);
 
 	const name = "Hugo García Benjumea";
 	const splittedName = name.split(" ").map((word) => {
 		return word === name.split(" ")[0] ? (
 			<span
 				className={styles.spanTitle}
-				style={{ color: theme }}
+				style={{ color: color }}
 				key={word}
 			>
 				{word}
@@ -42,7 +42,7 @@ export function Header() {
 					<h1 className={styles.nameHeader}>{splittedName}</h1>
 					<div className={styles.profileImageContainer}>
 						<div
-							style={{ background: theme + "E6" }}
+							style={{ background: color }}
 							className={styles.profileImageBackground}
 						></div>
 					</div>
