@@ -38,7 +38,7 @@ export function ProjectsSection() {
 	});
 
 	return (
-		<section className={styles.section}>
+		<section id='projects' className={styles.section}>
 			<SectionTitle>Projects</SectionTitle>
 			<div className={stylesProject.projectsWrapper}>
 				{projectsMapped}

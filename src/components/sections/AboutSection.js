@@ -3,7 +3,7 @@ import { SectionTitle } from "./SectionTitle.js";
 
 export function AboutSection() {
 	return (
-		<section className={styles.section}>
+		<section id='about' className={styles.section}>
 			<SectionTitle>About</SectionTitle>
 			<p>Some text</p>
 		</section>

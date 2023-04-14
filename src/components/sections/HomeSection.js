@@ -36,7 +36,7 @@ export function HomeSection() {
 	});
 
 	return (
-		<section className={cyGroteskGrandBold.className}>
+		<section id='home' className={cyGroteskGrandBold.className}>
 			<div className={styles.headerWrapper}>
 				<div className={styles.headerContainer}>
 					<h1 className={styles.nameHeader}>{splittedName}</h1>
