@@ -1,4 +1,4 @@
-import styles from "../../styles/modules/Header.module.css";
+import styles from "../../styles/modules/Home.module.css";
 import localFont from "next/font/local";
 import { useContext } from "react";
 import { ColorContext } from "../PortfolioLayout.js";
