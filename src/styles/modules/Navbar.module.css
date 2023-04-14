@@ -32,6 +32,25 @@
 	gap: 1rem;
 }
 
+.navItem {
+	font-size: 18px;
+}
+
+.navItem a {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.navItemBar {
+	display: inline-block;
+	margin-top: 0.25rem;
+	height: 2px;
+
+	transition: all 0.3s ease-in-out;
+}
+
 .logoContainer {
 	display: flex;
 	align-items: center;
