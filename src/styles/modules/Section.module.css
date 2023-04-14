@@ -6,7 +6,9 @@
 }
 
 .sectionTitle {
+	font-size: 56px;
 	text-transform: uppercase;
+	letter-spacing: 0.5rem;
 
 	margin: 2rem;
 }
