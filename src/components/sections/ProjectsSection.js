@@ -1,6 +1,6 @@
 import { Project } from "../Project.js";
-import styles from "../styles/Section.module.css";
-import stylesProject from "../styles/Projects.module.css";
+import styles from "../../styles/modules/Section.module.css";
+import stylesProject from "../../styles/modules/Projects.module.css";
 import imageTest from "../../public/image.jpeg";
 import { SectionTitle } from "./SectionTitle.js/index.js";
 

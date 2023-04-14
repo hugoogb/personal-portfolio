@@ -1,5 +1,5 @@
 import Image from "next/image";
-import styles from "../styles/Projects.module.css";
+import styles from "../styles/modules/Projects.module.css";
 
 export function Project({ name, desc, urlPreview, imgSrc, imgAlt }) {
 	return (

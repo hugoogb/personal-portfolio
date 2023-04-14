@@ -1,5 +1,5 @@
 import localFont from "next/font/local";
-import styles from "../styles/Section.module.css";
+import styles from "../../styles/modules/Section.module.css";
 import { useContext } from "react";
 import { ColorContext } from "../PortfolioLayout.js";
 
