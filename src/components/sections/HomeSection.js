@@ -1,4 +1,5 @@
 import styles from "../../styles/modules/Home.module.css";
+import sectionStyles from "../../styles/modules/Section.module.css";
 import localFont from "next/font/local";
 import { useContext } from "react";
 import { ColorContext } from "../PortfolioLayout.js";
@@ -37,8 +38,12 @@ export function HomeSection() {
 	});
 
 	return (
-		<section id='home' className={cyGroteskGrandBold.className}>
-			<div className={styles.headerWrapper}>
+		<section
+			id='home'
+			style={{ height: "calc(100vh - 100px)" }}
+			className={sectionStyles.section}
+		>
+			<div className={cyGroteskGrandBold.className}>
 				<div className={styles.headerContainer}>
 					<div className={styles.nameHeaderTextContainer}>
 						<h1 className={styles.nameHeader}>{splittedName}</h1>

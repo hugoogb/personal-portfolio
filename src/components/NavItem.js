@@ -2,7 +2,7 @@ import { useContext } from "react";
 import styles from "../styles/modules/Navbar.module.css";
 import { ColorContext } from "./PortfolioLayout";
 
-export const NavItem = ({ id, activeId, setActiveId, children }) => {
+export const NavItem = ({ id, activeId, children }) => {
 	const color = useContext(ColorContext);
 
 	const spanStyles = Object.assign(
@@ -15,7 +15,6 @@ export const NavItem = ({ id, activeId, setActiveId, children }) => {
 		<li className={styles.navItem}>
 			<a
 				href={"#" + children.toLowerCase()}
-				onClick={() => setActiveId(id)}
 				style={{ fontWeight: activeId === id ? "600" : "400" }}
 			>
 				{children}

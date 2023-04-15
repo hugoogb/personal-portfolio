@@ -18,12 +18,7 @@ export function Navbar({ setColor }) {
 
 	const navItemsMapped = memoizedNavItems.map((item) => {
 		return (
-			<NavItem
-				key={item.id}
-				id={item.id}
-				activeId={activeId}
-				setActiveId={setActiveId}
-			>
+			<NavItem key={item.id} id={item.id} activeId={activeId}>
 				{item.name}
 			</NavItem>
 		);
