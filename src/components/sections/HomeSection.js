@@ -4,6 +4,7 @@ import localFont from "next/font/local";
 import { useContext } from "react";
 import { ColorContext } from "../PortfolioLayout.js";
 import Image from "next/image";
+import { ArrowDown } from "../ArrowDown";
 
 const cyGroteskGrandBold = localFont({
 	src: [
@@ -40,43 +41,47 @@ export function HomeSection() {
 	const homeSectionStyles = Object.assign(
 		{},
 		{ paddingTop: "20rem" },
-		{ marginTop: "0rem" },
-		{ marginBottom: "15rem" }
+		{ marginTop: "0rem" }
 	);
 
 	return (
-		<section
-			id='home'
-			style={homeSectionStyles}
-			className={sectionStyles.section}
-		>
-			<div className={cyGroteskGrandBold.className}>
-				<div className={styles.headerContainer}>
-					<div className={styles.nameHeaderTextContainer}>
-						<h1 className={styles.nameHeader}>{splittedName}</h1>
-						<h2 className={styles.subtitleHeader}>
-							<span style={{ backgroundColor: color }}></span>
-							Web developer
-						</h2>
-					</div>
-					<div className={styles.profileImageContainer}>
-						<div
-							style={{ background: color }}
-							className={styles.profileImageBackground}
-						>
-							<Image
-								src={
-									"https://res.cloudinary.com/hugoogb/image/upload/v1681508123/IMG_2347-removebg-preview_bfhe2e.png"
-								}
-								alt={"Profile picture of hugoogb"}
-								width={433}
-								height={577}
-								className={styles.profileImage}
-							></Image>
+		<>
+			<section
+				id='home'
+				style={homeSectionStyles}
+				className={sectionStyles.section}
+			>
+				<div className={cyGroteskGrandBold.className}>
+					<div className={styles.headerContainer}>
+						<div className={styles.nameHeaderTextContainer}>
+							<h1 className={styles.nameHeader}>
+								{splittedName}
+							</h1>
+							<h2 className={styles.subtitleHeader}>
+								<span style={{ backgroundColor: color }}></span>
+								Web developer
+							</h2>
+						</div>
+						<div className={styles.profileImageContainer}>
+							<div
+								style={{ background: color }}
+								className={styles.profileImageBackground}
+							>
+								<Image
+									src={
+										"https://res.cloudinary.com/hugoogb/image/upload/v1681508123/IMG_2347-removebg-preview_bfhe2e.png"
+									}
+									alt={"Profile picture of hugoogb"}
+									width={433}
+									height={577}
+									className={styles.profileImage}
+								></Image>
+							</div>
 						</div>
 					</div>
 				</div>
-			</div>
-		</section>
+			</section>
+			<ArrowDown nextSection={"about"}></ArrowDown>
+		</>
 	);
 }

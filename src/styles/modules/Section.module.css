@@ -5,7 +5,7 @@
 	align-items: center;
 
 	padding-top: 10rem;
-	margin-top: 10rem;
+	margin: 10rem 0;
 }
 
 .sectionTitle {
@@ -14,4 +14,21 @@
 	letter-spacing: 0.5rem;
 
 	margin: 5rem 0;
+}
+
+.arrowDownIconContainer {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.arrowDownIconLink {
+	display: inline-block;
+	border-radius: 20px;
+
+	padding: 1rem 1rem 0.5rem 1rem;
+}
+
+.arrowDownIcon {
+	width: 50px;
 }

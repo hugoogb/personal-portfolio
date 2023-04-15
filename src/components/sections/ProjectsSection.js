@@ -3,6 +3,7 @@ import styles from "../../styles/modules/Section.module.css";
 import stylesProject from "../../styles/modules/Projects.module.css";
 import imageTest from "../../../public/image.jpeg";
 import { SectionTitle } from "./SectionTitle.js";
+import { ArrowDown } from "../ArrowDown.js";
 
 export function ProjectsSection() {
 	const projects = [
@@ -38,11 +39,14 @@ export function ProjectsSection() {
 	});
 
 	return (
-		<section id='projects' className={styles.section}>
-			<SectionTitle>Projects</SectionTitle>
-			<div className={stylesProject.projectsWrapper}>
-				{projectsMapped}
-			</div>
-		</section>
+		<>
+			<section id='projects' className={styles.section}>
+				<SectionTitle>Projects</SectionTitle>
+				<div className={stylesProject.projectsWrapper}>
+					{projectsMapped}
+				</div>
+			</section>
+			<ArrowDown nextSection={"contact"}></ArrowDown>
+		</>
 	);
 }
