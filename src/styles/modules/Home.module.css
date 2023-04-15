@@ -13,8 +13,12 @@
 	justify-content: space-around;
 }
 
+.spanTitle {
+	transition: color 0.3s ease-in-out;
+}
+
 .subtitleHeader {
-	font-size: 36px;
+	font-size: min(36px, 3vw);
 	padding: 1rem;
 	text-transform: capitalize;
 
@@ -28,10 +32,10 @@
 .subtitleHeader span {
 	display: inline-block;
 	margin-right: 1rem;
-	height: 50px;
+	height: min(50px, 4.5vw);
 	width: 3px;
 
-	transition: all 0.3s ease-in-out;
+	transition: background-color 0.3s ease-in-out;
 }
 
 .headerContainer {
@@ -39,14 +43,13 @@
 	justify-content: center;
 	flex-wrap: wrap;
 	gap: 10rem;
-	margin-right: 5rem;
-	margin-left: 5rem;
+	margin: 0 5rem;
 }
 
 .profileImageContainer {
 	clip-path: circle();
-	width: 500px;
-	height: 500px;
+	width: min(500px, 50vw);
+	height: min(500px, 50vw);
 	background: #fff;
 
 	overflow: visible;
@@ -58,16 +61,22 @@
 	height: inherit;
 	scale: 0.935;
 
-	transition: all 0.3s ease-in-out;
+	transition: background-color 0.3s ease-in-out;
 
-	position: relative;
 	display: flex;
-	justify-content: center;
 	align-items: center;
+	justify-content: center;
 
-	overflow: visible;
+	width: 100%;
 }
 
-.spanTitle {
-	transition: all 0.3s ease-in-out;
+.profileImageBackground > div {
+	position: unset !important;
+}
+
+.profileImageBackground .profileImage {
+	object-fit: contain;
+	width: 100% !important;
+	position: relative !important;
+	height: unset !important;
 }

@@ -78,7 +78,8 @@
 }
 
 .buttonCV {
-	font-size: 20px;
+	font-size: min(20px, 2vw);
+	white-space: nowrap;
 
 	padding: 1rem;
 	margin: 1rem;

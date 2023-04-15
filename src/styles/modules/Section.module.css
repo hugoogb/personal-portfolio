@@ -9,7 +9,7 @@
 }
 
 .sectionTitle {
-	font-size: 56px;
+	font-size: min(56px, 5vw);
 	text-transform: uppercase;
 	letter-spacing: 0.5rem;
 

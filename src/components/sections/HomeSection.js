@@ -23,7 +23,7 @@ export function HomeSection() {
 		{},
 		{ color: color },
 		{ letterSpacing: "0.75rem" },
-		{ fontSize: "min(88px, 8vw)" }
+		{ fontSize: "min(88px, 7vw)" }
 	);
 
 	const name = "Hugo García Benjumea";
@@ -82,8 +82,7 @@ export function HomeSection() {
 										"https://res.cloudinary.com/hugoogb/image/upload/v1681508123/IMG_2347-removebg-preview_bfhe2e.png"
 									}
 									alt={"Profile picture of hugoogb"}
-									width={433}
-									height={577}
+									fill={true}
 									className={styles.profileImage}
 								></Image>
 							</div>
