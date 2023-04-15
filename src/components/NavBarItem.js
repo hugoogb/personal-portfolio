@@ -2,7 +2,7 @@ import { useContext } from "react";
 import styles from "../styles/modules/Navbar.module.css";
 import { ColorContext } from "./PortfolioLayout";
 
-export const NavItem = ({ id, activeId, children }) => {
+export const NavBarItem = ({ id, activeId, children }) => {
 	const color = useContext(ColorContext);
 
 	const spanStyles = Object.assign(

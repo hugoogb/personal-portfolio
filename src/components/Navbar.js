@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import styles from "../styles/modules/Navbar.module.css";
 import { ColorPicker } from "./ColorPicker";
 import { Logo } from "./Logo";
-import { NavItem } from "./NavItem";
+import { NavBarItem } from "./NavBarItem";
 
 export function Navbar({ setColor }) {
 	const [activeId, setActiveId] = useState(0);
@@ -18,9 +18,9 @@ export function Navbar({ setColor }) {
 
 	const navItemsMapped = memoizedNavItems.map((item) => {
 		return (
-			<NavItem key={item.id} id={item.id} activeId={activeId}>
+			<NavBarItem key={item.id} id={item.id} activeId={activeId}>
 				{item.name}
-			</NavItem>
+			</NavBarItem>
 		);
 	});
 
