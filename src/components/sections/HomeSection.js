@@ -19,12 +19,19 @@ const cyGroteskGrandBold = localFont({
 export function HomeSection() {
 	const color = useContext(ColorContext);
 
+	const spanTitleStyles = Object.assign(
+		{},
+		{ color: color },
+		{ letterSpacing: "0.75rem" },
+		{ fontSize: "min(88px, 8vw)" }
+	);
+
 	const name = "Hugo García Benjumea";
 	const splittedName = name.split(" ").map((word) => {
 		return word === name.split(" ")[0] ? (
 			<span
 				className={styles.spanTitle}
-				style={{ color: color }}
+				style={spanTitleStyles}
 				key={word}
 			>
 				{word}

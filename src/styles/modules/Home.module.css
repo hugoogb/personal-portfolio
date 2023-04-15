@@ -1,6 +1,7 @@
 .nameHeader {
 	text-transform: uppercase;
 	font-size: min(72px, 6vw);
+	letter-spacing: 0.25rem;
 
 	padding: 1rem;
 }
