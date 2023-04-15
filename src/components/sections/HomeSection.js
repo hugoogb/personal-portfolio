@@ -37,10 +37,17 @@ export function HomeSection() {
 		);
 	});
 
+	const homeSectionStyles = Object.assign(
+		{},
+		{ paddingTop: "20rem" },
+		{ marginTop: "0rem" },
+		{ marginBottom: "15rem" }
+	);
+
 	return (
 		<section
 			id='home'
-			style={{ height: "calc(100vh - 100px)" }}
+			style={homeSectionStyles}
 			className={sectionStyles.section}
 		>
 			<div className={cyGroteskGrandBold.className}>
