@@ -19,10 +19,12 @@ export function ColorPicker({ setColor }) {
 					onChange={setColor}
 				></HexColorPicker>
 			</div>
-			<Cog6ToothIcon
-				onClick={() => setDisplay(display ? false : true)}
-				className={styles.settingsIcon}
-			/>
+			<div className={styles.settingsIconContainer}>
+				<Cog6ToothIcon
+					onClick={() => setDisplay(display ? false : true)}
+					className={styles.settingsIcon}
+				/>
+			</div>
 		</div>
 	);
 }

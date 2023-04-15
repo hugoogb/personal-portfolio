@@ -3,6 +3,7 @@ import styles from "../styles/modules/Navbar.module.css";
 import { ColorPicker } from "./ColorPicker";
 import { Logo } from "./Logo";
 import { NavBarItem } from "./NavBarItem";
+import { ButtonCV } from "./ButtonCV";
 
 export function Navbar({ setColor }) {
 	const [activeId, setActiveId] = useState(0);
@@ -66,7 +67,10 @@ export function Navbar({ setColor }) {
 				<ul className={styles.ulNavbar}>{navItemsMapped}</ul>
 				<Logo end={true}></Logo>
 			</div>
-			<ColorPicker setColor={setColor}></ColorPicker>
+			<div className={styles.buttonColorPickerContainer}>
+				<ButtonCV></ButtonCV>
+				<ColorPicker setColor={setColor}></ColorPicker>
+			</div>
 		</nav>
 	);
 }
