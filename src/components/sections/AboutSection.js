@@ -3,7 +3,6 @@ import styles from "../../styles/modules/About.module.css";
 import { SectionTitle } from "./SectionTitle.js";
 import { useContext } from "react";
 import { ColorContext } from "../PortfolioLayout";
-import { ArrowDown } from "../ArrowDown";
 
 export function AboutSection() {
 	const color = useContext(ColorContext);
@@ -67,7 +66,6 @@ export function AboutSection() {
 					</div>
 				</div>
 			</section>
-			<ArrowDown nextSection={"projects"}></ArrowDown>
 		</>
 	);
 }

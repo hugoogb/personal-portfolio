@@ -3,7 +3,6 @@ import styles from "../../styles/modules/Section.module.css";
 import stylesProject from "../../styles/modules/Projects.module.css";
 import imageTest from "../../../public/image.jpeg";
 import { SectionTitle } from "./SectionTitle.js";
-import { ArrowDown } from "../ArrowDown.js";
 
 export function ProjectsSection() {
 	const projects = [
@@ -46,7 +45,6 @@ export function ProjectsSection() {
 					{projectsMapped}
 				</div>
 			</section>
-			<ArrowDown nextSection={"contact"}></ArrowDown>
 		</>
 	);
 }

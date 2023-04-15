@@ -15,20 +15,3 @@
 
 	margin: 5rem 0;
 }
-
-.arrowDownIconContainer {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
-.arrowDownIconLink {
-	display: inline-block;
-	border-radius: 10px;
-
-	padding: 1rem 1rem 0.5rem 1rem;
-}
-
-.arrowDownIcon {
-	width: 50px;
-}

@@ -4,7 +4,6 @@ import localFont from "next/font/local";
 import { useContext } from "react";
 import { ColorContext } from "../PortfolioLayout.js";
 import Image from "next/image";
-import { ArrowDown } from "../ArrowDown";
 import { ButtonCV } from "../ButtonCV";
 
 const cyGroteskGrandBold = localFont({
@@ -92,7 +91,6 @@ export function HomeSection() {
 					</div>
 				</div>
 			</section>
-			<ArrowDown nextSection={"about"}></ArrowDown>
 		</>
 	);
 }
