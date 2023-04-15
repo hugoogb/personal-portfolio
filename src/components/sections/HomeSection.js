@@ -5,6 +5,7 @@ import { useContext } from "react";
 import { ColorContext } from "../PortfolioLayout.js";
 import Image from "next/image";
 import { ArrowDown } from "../ArrowDown";
+import { ButtonCV } from "../ButtonCV";
 
 const cyGroteskGrandBold = localFont({
 	src: [
@@ -68,6 +69,9 @@ export function HomeSection() {
 								<span style={{ backgroundColor: color }}></span>
 								Web developer
 							</h2>
+							<div style={{ alignSelf: "flex-end" }}>
+								<ButtonCV></ButtonCV>
+							</div>
 						</div>
 						<div className={styles.profileImageContainer}>
 							<div
