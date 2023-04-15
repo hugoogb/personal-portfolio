@@ -8,16 +8,24 @@ export function ColorPicker({ setColor }) {
 	const color = useContext(ColorContext);
 	const [display, setDisplay] = useState(false);
 
+	const colorPickerWrapperStyles = Object.assign(
+		{},
+		{ height: display ? "232px" : "0" },
+		{ overflow: display ? "auto" : "hidden" }
+	);
+
 	return (
 		<div className={styles.pickerContainer}>
 			<div
-				style={{ display: display ? "inline-block" : "none" }}
-				className={styles.colorPickerContainer}
+				style={colorPickerWrapperStyles}
+				className={styles.colorPickerWrapper}
 			>
-				<HexColorPicker
-					color={color}
-					onChange={setColor}
-				></HexColorPicker>
+				<div className={styles.colorPickerContainer}>
+					<HexColorPicker
+						color={color}
+						onChange={setColor}
+					></HexColorPicker>
+				</div>
 			</div>
 			<div className={styles.settingsIconContainer}>
 				<Cog6ToothIcon
