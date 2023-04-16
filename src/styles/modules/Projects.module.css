@@ -39,7 +39,7 @@
 }
 
 .projectImageContainer {
-	width: 275px;
+	width: 500px;
 }
 
 .profileImageBackground {
@@ -72,4 +72,11 @@
 
 .projectLink:hover .projectImage {
 	opacity: 1;
+}
+
+@media (max-width: 720px) {
+	/* styles to apply when width is less than 720px */
+	.projectImage {
+		width: 275px;
+	}
 }
