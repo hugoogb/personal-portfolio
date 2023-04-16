@@ -1,6 +1,6 @@
 .nameHeader {
 	text-transform: uppercase;
-	font-size: min(72px, 6vw);
+	font-size: 72px;
 	letter-spacing: 0.25rem;
 
 	padding: 1rem;
@@ -14,11 +14,14 @@
 }
 
 .spanTitle {
+	letter-spacing: 0.75rem;
+	font-size: 88px;
+
 	transition: color 0.3s ease-in-out;
 }
 
 .subtitleHeader {
-	font-size: min(36px, 3vw);
+	font-size: 36px;
 	padding: 1rem;
 	text-transform: capitalize;
 
@@ -32,7 +35,7 @@
 .subtitleHeader span {
 	display: inline-block;
 	margin-right: 1rem;
-	height: min(50px, 4.5vw);
+	height: 50px;
 	width: 3px;
 
 	transition: background-color 0.3s ease-in-out;
@@ -48,8 +51,8 @@
 
 .profileImageContainer {
 	clip-path: circle();
-	width: min(500px, 50vw);
-	height: min(500px, 50vw);
+	width: 500px;
+	height: 500px;
 	background: #fff;
 
 	overflow: visible;

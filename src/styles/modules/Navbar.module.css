@@ -36,7 +36,7 @@
 }
 
 .navItem {
-	font-size: min(18px, 2vw);
+	font-size: 18px;
 }
 
 .navItem a {
@@ -65,7 +65,7 @@
 }
 
 .logoContainer span {
-	font-size: min(38px, 3vw);
+	font-size: 38px;
 }
 
 .logoSpan {
@@ -80,7 +80,7 @@
 }
 
 .buttonCV {
-	font-size: min(20px, 2vw);
+	font-size: 20px;
 	white-space: nowrap;
 
 	padding: 1rem;
