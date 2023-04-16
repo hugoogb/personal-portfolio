@@ -58,7 +58,7 @@
 }
 
 .navItem a:hover {
-	scale: 1.1;
+	scale: 1.25;
 }
 
 .logoContainer {
@@ -66,7 +66,7 @@
 	align-items: center;
 	justify-content: space-between;
 
-	gap: 0.5rem;
+	gap: 0.25rem;
 }
 
 .logoContainer span {
@@ -81,7 +81,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	gap: 0.5rem;
+	gap: 1rem;
 }
 
 .buttonCV {
@@ -138,9 +138,6 @@
 		display: flex;
 		align-items: center;
 		justify-content: center;
-
-		width: 62.5px;
-		margin: 0.5rem;
 	}
 
 	.menuIcon {
