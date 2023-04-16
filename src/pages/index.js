@@ -5,12 +5,13 @@ export default function Home() {
 	return (
 		<>
 			<Head>
-				<title>Personal Portfolio</title>
+				<html lang='en' />
+				<title>hugoogb</title>
 				<meta
 					name='viewport'
 					content='width=device-width, initial-scale=1'
 				/>
-				<link rel='icon' href='/favicon.ico' />
+				<link rel='icon' href='' />
 			</Head>
 			<PortfolioLayout></PortfolioLayout>
 		</>
