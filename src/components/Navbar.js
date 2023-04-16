@@ -66,7 +66,7 @@ export function Navbar({ setColor }) {
 	useEffect(() => {
 		const handleResize = () => {
 			const width = window.innerWidth;
-			if (width < 920) {
+			if (width <= 920) {
 				setDisplay("mobile");
 			} else {
 				setDisplay("desktop");
@@ -86,7 +86,7 @@ export function Navbar({ setColor }) {
 		{},
 		{
 			height:
-				display === "mobile" ? (visibility ? "160px" : "0") : "auto",
+				display === "mobile" ? (visibility ? "220px" : "0") : "auto",
 		},
 		{
 			overflow: visibility ? "auto" : "hidden",

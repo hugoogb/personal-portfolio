@@ -44,6 +44,7 @@
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+	padding: 0.5rem;
 
 	transition: all 0.3s ease-in-out;
 }
@@ -54,6 +55,10 @@
 	height: 2px;
 
 	transition: all 0.3s ease-in-out;
+}
+
+.navItem a:hover {
+	scale: 1.1;
 }
 
 .logoContainer {
