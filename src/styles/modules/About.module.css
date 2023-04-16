@@ -21,3 +21,15 @@
 	align-items: center;
 	justify-content: center;
 }
+
+@media (max-width: 720px) {
+	/* styles to apply when width is less than 720px */
+	.aboutContainer {
+		gap: 5rem;
+		margin: 0 2.5rem;
+	}
+
+	.aboutTextContainer {
+		font-size: 16px;
+	}
+}

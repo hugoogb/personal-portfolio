@@ -31,6 +31,39 @@
 	margin-right: 0.5rem;
 }
 
+.projectDesc {
+	align-self: flex-start;
+
+	margin-top: 1rem;
+	margin-left: 0.5rem;
+}
+
+.projectImageContainer {
+	width: 275px;
+}
+
+.profileImageBackground {
+	width: inherit;
+	height: inherit;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	width: 100%;
+}
+
+.projectImageContainer > div {
+	position: unset !important;
+}
+
+.projectImageContainer .projectImage {
+	object-fit: contain;
+	width: 100% !important;
+	position: relative !important;
+	height: unset !important;
+}
+
 .projectImage {
 	opacity: 0.75;
 
@@ -39,11 +72,4 @@
 
 .projectLink:hover .projectImage {
 	opacity: 1;
-}
-
-.projectDesc {
-	align-self: flex-start;
-
-	margin-top: 1rem;
-	margin-left: 0.5rem;
 }

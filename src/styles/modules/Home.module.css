@@ -54,8 +54,6 @@
 	width: 500px;
 	height: 500px;
 	background: #fff;
-
-	overflow: visible;
 }
 
 .profileImageBackground {
@@ -82,4 +80,39 @@
 	width: 100% !important;
 	position: relative !important;
 	height: unset !important;
+}
+
+@media (max-width: 920px) {
+	/* styles to apply when width is less than 920px */
+	.headerContainer {
+		margin: 0;
+	}
+}
+
+@media (max-width: 720px) {
+	/* styles to apply when width is less than 720px */
+	.headerContainer {
+		gap: 5rem;
+	}
+
+	.nameHeader {
+		font-size: 36px;
+	}
+
+	.spanTitle {
+		font-size: 42px;
+	}
+
+	.subtitleHeader {
+		font-size: 22px;
+	}
+
+	.subtitleHeader span {
+		height: 30px;
+	}
+
+	.profileImageContainer {
+		width: 300px;
+		height: 300px;
+	}
 }

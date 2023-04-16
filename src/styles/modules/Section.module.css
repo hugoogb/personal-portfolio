@@ -27,3 +27,10 @@
 		margin: 2.5rem 0;
 	}
 }
+
+@media (max-width: 720px) {
+	/* styles to apply when width is less than 720px */
+	.sectionTitle {
+		font-size: 32px;
+	}
+}

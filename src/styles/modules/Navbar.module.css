@@ -99,7 +99,7 @@
 }
 
 .buttonCV:hover {
-	scale: 1.25;
+	scale: 1.1;
 
 	font-weight: 600;
 }
@@ -156,5 +156,12 @@
 
 	.logoContainer {
 		display: none;
+	}
+}
+
+@media (max-width: 720px) {
+	/* styles to apply when width is less than 720px */
+	.buttonCV {
+		font-size: 16px;
 	}
 }

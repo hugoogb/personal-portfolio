@@ -38,19 +38,9 @@ export function HomeSection() {
 		);
 	});
 
-	const homeSectionStyles = Object.assign(
-		{},
-		{ paddingTop: "20rem" },
-		{ marginTop: "0rem" }
-	);
-
 	return (
 		<>
-			<section
-				id='home'
-				style={homeSectionStyles}
-				className={sectionStyles.section}
-			>
+			<section id='home' className={sectionStyles.section}>
 				<div className={cyGroteskGrandBold.className}>
 					<div className={styles.headerContainer}>
 						<div className={styles.nameHeaderTextContainer}>

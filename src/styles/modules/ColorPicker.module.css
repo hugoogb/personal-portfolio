@@ -41,3 +41,11 @@
 .colorPickerContainer {
 	padding: 1rem;
 }
+
+@media (max-width: 920px) {
+	/* styles to apply when width is less than 920px */
+	.colorPickerWrapper {
+		top: 4.5rem;
+		right: 0;
+	}
+}
