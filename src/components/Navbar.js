@@ -4,9 +4,12 @@ import { ColorPicker } from "./ColorPicker";
 import { Logo } from "./Logo";
 import { NavBarItem } from "./NavBarItem";
 import { ButtonCV } from "./ButtonCV";
+import { Bars3Icon } from "@heroicons/react/24/outline";
 
 export function Navbar({ setColor }) {
 	const [activeId, setActiveId] = useState(0);
+	const [display, setDisplay] = useState("");
+	const [visibility, setVisibility] = useState(false);
 
 	const memoizedNavItems = useMemo(() => {
 		return [
@@ -60,11 +63,49 @@ export function Navbar({ setColor }) {
 		return () => window.removeEventListener("scroll", handleScroll);
 	}, [memoizedNavItems]);
 
+	useEffect(() => {
+		const handleResize = () => {
+			const width = window.innerWidth;
+			if (width < 920) {
+				setDisplay("mobile");
+			} else {
+				setDisplay("desktop");
+			}
+		};
+
+		handleResize();
+
+		window.addEventListener("resize", handleResize);
+
+		return () => {
+			window.removeEventListener("resize", handleResize);
+		};
+	}, []);
+
+	const ulNavbarStyles = Object.assign(
+		{},
+		{
+			height:
+				display === "mobile" ? (visibility ? "160px" : "0") : "auto",
+		},
+		{
+			overflow: visibility ? "auto" : "hidden",
+		}
+	);
+
 	return (
 		<nav className={styles.navbar}>
 			<div className={styles.navbarContainer}>
 				<Logo end={false}></Logo>
-				<ul className={styles.ulNavbar}>{navItemsMapped}</ul>
+				<ul style={ulNavbarStyles} className={styles.ulNavbar}>
+					{navItemsMapped}
+				</ul>
+				<div className={styles.menuIconContainer}>
+					<Bars3Icon
+						onClick={() => setVisibility(visibility ? false : true)}
+						className={styles.menuIcon}
+					/>
+				</div>
 				<Logo end={true}></Logo>
 			</div>
 			<div className={styles.buttonColorPickerContainer}>

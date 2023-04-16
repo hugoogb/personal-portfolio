@@ -24,6 +24,8 @@
 	align-items: center;
 	justify-content: center;
 	gap: 2rem;
+
+	position: relative;
 }
 
 .ulNavbar {
@@ -94,4 +96,62 @@
 	scale: 1.25;
 
 	font-weight: 600;
+}
+
+.menuIconContainer {
+	display: none;
+}
+
+.menuIcon {
+	display: none;
+}
+
+@media (max-width: 920px) {
+	/* styles to apply when width is less than 920px */
+	.navbarContainer {
+		gap: 0.5rem;
+	}
+
+	.ulNavbar {
+		flex-direction: column;
+		align-items: flex-start;
+
+		position: absolute;
+		top: 4.5rem;
+
+		transition: all 0.3s ease-in-out;
+
+		scrollbar-width: none; /* hide scrollbar for Firefox and Edge */
+	}
+
+	/* Hide scrollbar for Chrome and Safari */
+	.ulNavbar::-webkit-scrollbar {
+		display: none;
+	}
+
+	.menuIconContainer {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		width: 62.5px;
+		margin: 0.5rem;
+	}
+
+	.menuIcon {
+		display: inline-block;
+		width: 50px;
+
+		cursor: pointer;
+
+		transition: all 0.3s ease-in-out;
+	}
+
+	.menuIcon:hover {
+		scale: 1.25;
+	}
+
+	.logoContainer {
+		display: none;
+	}
 }
