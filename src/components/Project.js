@@ -11,6 +11,7 @@ export function Project({ name, desc, urlPreview, imgSrc, imgAlt }) {
 						src={imgSrc}
 						alt={imgAlt}
 						fill={true}
+						sizes='(max-width: 720px) 275px, 500px'
 						className={styles.projectImage}
 					></Image>
 				</div>

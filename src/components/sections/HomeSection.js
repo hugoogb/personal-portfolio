@@ -66,6 +66,7 @@ export function HomeSection() {
 									}
 									alt={"Profile picture of hugoogb"}
 									fill={true}
+									sizes='(max-width: 720px) 300px, 500px'
 									className={styles.profileImage}
 								></Image>
 							</div>
