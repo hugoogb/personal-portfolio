@@ -46,6 +46,7 @@
 .headerContainer {
 	display: flex;
 	justify-content: center;
+	flex-wrap: wrap;
 	gap: 10rem;
 	margin: 0 5rem;
 }
