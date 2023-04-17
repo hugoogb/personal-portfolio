@@ -1,20 +1,12 @@
+import { Hanken_Grotesk } from "next/font/google";
 import styles from "../../styles/modules/Home.module.css";
 import sectionStyles from "../../styles/modules/Section.module.css";
-import localFont from "next/font/local";
 import { useContext } from "react";
 import { ColorContext } from "../PortfolioLayout.js";
 import Image from "next/image";
 import { ButtonCV } from "../ButtonCV";
 
-const cyGroteskGrandBold = localFont({
-	src: [
-		{
-			path: "../../fonts/Cy.Grotesk/Cy Grotesk Grand Bold.ttf",
-			weight: "700",
-			style: "normal",
-		},
-	],
-});
+const hankenGrotesk = Hanken_Grotesk({ subsets: ["latin"] });
 
 export function HomeSection() {
 	const color = useContext(ColorContext);
@@ -41,7 +33,7 @@ export function HomeSection() {
 	return (
 		<>
 			<section id='home' className={sectionStyles.section}>
-				<div className={cyGroteskGrandBold.className}>
+				<div className={hankenGrotesk.className}>
 					<div className={styles.headerContainer}>
 						<div className={styles.nameHeaderTextContainer}>
 							<h1 className={styles.nameHeader}>

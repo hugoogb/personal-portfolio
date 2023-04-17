@@ -1,7 +1,8 @@
 .nameHeader {
 	text-transform: uppercase;
-	font-size: 72px;
-	letter-spacing: 0.25rem;
+	font-size: 88px;
+	font-weight: 900;
+	letter-spacing: 0.5rem;
 
 	padding: 1rem;
 }
@@ -14,14 +15,15 @@
 }
 
 .spanTitle {
-	letter-spacing: 0.75rem;
-	font-size: 88px;
+	letter-spacing: 1rem;
+	font-size: 96px;
 
 	transition: color 0.3s ease-in-out;
 }
 
 .subtitleHeader {
-	font-size: 36px;
+	font-size: 42px;
+	font-weight: 600;
 	padding: 1rem;
 	text-transform: capitalize;
 
@@ -44,7 +46,6 @@
 .headerContainer {
 	display: flex;
 	justify-content: center;
-	flex-wrap: wrap;
 	gap: 10rem;
 	margin: 0 5rem;
 }
@@ -85,6 +86,7 @@
 @media (max-width: 920px) {
 	/* styles to apply when width is less than 920px */
 	.headerContainer {
+		flex-direction: column;
 		margin: 0;
 	}
 }
@@ -104,7 +106,7 @@
 	}
 
 	.subtitleHeader {
-		font-size: 22px;
+		font-size: 26px;
 	}
 
 	.subtitleHeader span {

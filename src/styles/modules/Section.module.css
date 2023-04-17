@@ -9,7 +9,8 @@
 }
 
 .sectionTitle {
-	font-size: 56px;
+	font-size: 62px;
+	font-weight: 700;
 	text-transform: uppercase;
 	letter-spacing: 0.5rem;
 
@@ -31,6 +32,6 @@
 @media (max-width: 720px) {
 	/* styles to apply when width is less than 720px */
 	.sectionTitle {
-		font-size: 32px;
+		font-size: 34px;
 	}
 }
