@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { PortfolioLayout } from "../components/PortfolioLayout.js";
 
-export default function Home() {
+export default function Index() {
 	return (
 		<>
 			<Head>
