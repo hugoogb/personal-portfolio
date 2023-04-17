@@ -70,10 +70,8 @@
 	justify-content: center;
 
 	width: 100%;
-}
 
-.profileImageBackground > div {
-	position: unset !important;
+	position: relative;
 }
 
 .profileImageBackground .profileImage {
