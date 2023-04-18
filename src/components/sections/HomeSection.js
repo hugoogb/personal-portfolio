@@ -34,45 +34,41 @@ export function HomeSection() {
 	const downloadUrl = `http://hugoogb.dev/api/download?fileName=${fileName}`;
 
 	return (
-		<>
-			<section id='home' className={sectionStyles.section}>
-				<div className={hankenGrotesk.className}>
-					<div className={styles.headerContainer}>
-						<div className={styles.nameHeaderTextContainer}>
-							<h1 className={styles.nameHeader}>
-								{splittedName}
-							</h1>
-							<h2 className={styles.subtitleHeader}>
-								<span style={{ backgroundColor: color }}></span>
-								Web developer
-							</h2>
-							<div style={{ alignSelf: "flex-end" }}>
-								<ButtonCV
-									downloadUrl={downloadUrl}
-									fileName={fileName}
-								></ButtonCV>
-							</div>
+		<section id='home' className={sectionStyles.section}>
+			<div className={hankenGrotesk.className}>
+				<div className={styles.headerContainer}>
+					<div className={styles.nameHeaderTextContainer}>
+						<h1 className={styles.nameHeader}>{splittedName}</h1>
+						<h2 className={styles.subtitleHeader}>
+							<span style={{ backgroundColor: color }}></span>
+							Web developer
+						</h2>
+						<div style={{ alignSelf: "flex-end" }}>
+							<ButtonCV
+								downloadUrl={downloadUrl}
+								fileName={fileName}
+							></ButtonCV>
 						</div>
-						<div className={styles.profileImageContainer}>
-							<div
-								style={{ background: color }}
-								className={styles.profileImageBackground}
-							>
-								<Image
-									src={
-										"https://res.cloudinary.com/hugoogb/image/upload/v1681508123/IMG_2347-removebg-preview_bfhe2e.png"
-									}
-									alt={"Profile picture of hugoogb"}
-									fill={true}
-									sizes='(max-width: 720px) 300px, 500px'
-									priority={true}
-									className={styles.profileImage}
-								></Image>
-							</div>
+					</div>
+					<div className={styles.profileImageContainer}>
+						<div
+							style={{ background: color }}
+							className={styles.profileImageBackground}
+						>
+							<Image
+								src={
+									"https://res.cloudinary.com/hugoogb/image/upload/v1681508123/IMG_2347-removebg-preview_bfhe2e.png"
+								}
+								alt={"Profile picture of hugoogb"}
+								fill={true}
+								sizes='(max-width: 720px) 300px, 500px'
+								priority={true}
+								className={styles.profileImage}
+							></Image>
 						</div>
 					</div>
 				</div>
-			</section>
-		</>
+			</div>
+		</section>
 	);
 }
