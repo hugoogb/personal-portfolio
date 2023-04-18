@@ -94,7 +94,7 @@ export function Navbar({ setColor }) {
 	);
 
 	const fileName = "CV-English.pdf";
-	const downloadUrl = `http://hugoogb.dev/api/download?fileName=${fileName}`;
+	const downloadUrl = `/api/download?fileName=${fileName}`;
 
 	return (
 		<nav className={styles.navbar}>

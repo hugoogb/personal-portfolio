@@ -31,7 +31,7 @@ export function HomeSection() {
 	});
 
 	const fileName = "CV-English.pdf";
-	const downloadUrl = `http://hugoogb.dev/api/download?fileName=${fileName}`;
+	const downloadUrl = `/api/download?fileName=${fileName}`;
 
 	return (
 		<section id='home' className={sectionStyles.section}>
