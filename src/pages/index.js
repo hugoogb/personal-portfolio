@@ -34,6 +34,7 @@ export default function Index() {
 					href='/favicon-16x16.png'
 				></link>
 				<link rel='manifest' href='/site.webmanifest'></link>
+				<link rel='canonical' href='https://hugoogb.dev'></link>
 			</Head>
 			<PortfolioLayout></PortfolioLayout>
 		</>
