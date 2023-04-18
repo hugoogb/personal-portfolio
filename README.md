@@ -1,3 +1,3 @@
 # hugoogb's Personal Porfolio
 
-Developed using React, NextJs and deployed to vercel.
+Developed using React, NextJs and deployed to Vercel.
