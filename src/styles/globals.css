@@ -29,6 +29,11 @@ ul {
 }
 
 html {
-	color-scheme: dark;
 	scroll-behavior: smooth;
+}
+
+@media (prefers-color-scheme: dark) {
+	html {
+		color-scheme: dark;
+	}
 }
