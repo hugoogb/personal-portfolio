@@ -30,6 +30,9 @@ export function HomeSection() {
 		);
 	});
 
+	const fileName = "CV-English.pdf";
+	const downloadUrl = `http://localhost:3000/api/download?fileName=${fileName}`;
+
 	return (
 		<>
 			<section id='home' className={sectionStyles.section}>
@@ -44,7 +47,10 @@ export function HomeSection() {
 								Web developer
 							</h2>
 							<div style={{ alignSelf: "flex-end" }}>
-								<ButtonCV></ButtonCV>
+								<ButtonCV
+									downloadUrl={downloadUrl}
+									fileName={fileName}
+								></ButtonCV>
 							</div>
 						</div>
 						<div className={styles.profileImageContainer}>
