@@ -31,7 +31,7 @@ export function HomeSection() {
 	});
 
 	const fileName = "CV-English.pdf";
-	const downloadUrl = `http://localhost:3000/api/download?fileName=${fileName}`;
+	const downloadUrl = `http://hugoogb.dev/api/download?fileName=${fileName}`;
 
 	return (
 		<>
