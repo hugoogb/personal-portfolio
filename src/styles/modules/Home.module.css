@@ -45,6 +45,7 @@
 
 .headerContainer {
 	display: flex;
+	align-items: center;
 	justify-content: center;
 	flex-wrap: wrap;
 	gap: 10rem;
@@ -52,10 +53,12 @@
 }
 
 .profileImageContainer {
-	clip-path: circle();
 	width: 500px;
 	height: 500px;
-	background: #ddd;
+	border-radius: 50%;
+	box-shadow: -5px -5px 10px rgba(255, 255, 255, 0.5),
+		5px 5px 10px rgba(0, 0, 0, 0.5);
+	background-color: #f0f0f0;
 }
 
 .profileImageBackground {
