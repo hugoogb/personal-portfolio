@@ -3,7 +3,6 @@
 	align-items: center;
 	justify-content: space-between;
 	width: 100%;
-	height: 100px;
 
 	position: -webkit-sticky; /* Required for WebKit-based browsers */
 	position: sticky; /* Standard syntax */
@@ -40,7 +39,14 @@
 	justify-content: center;
 	gap: 2rem;
 
+	padding: 0.75rem 1rem;
+
 	position: relative;
+
+	border-radius: 20px;
+	box-shadow: -5px -5px 10px rgba(255, 255, 255, 0.5),
+		5px 5px 10px rgba(0, 0, 0, 0.5);
+	background-color: #f0f0f0;
 }
 
 .ulNavbar {
@@ -52,6 +58,7 @@
 
 .navItem {
 	font-size: 18px;
+	color: black;
 }
 
 .navItem a {
@@ -86,6 +93,7 @@
 
 .logoContainer span {
 	font-size: 38px;
+	color: black;
 }
 
 .logoSpan {
@@ -129,12 +137,15 @@
 @media (max-width: 920px) {
 	/* styles to apply when width is less than 920px */
 	.navbarContainer {
-		gap: 0.5rem;
+		border-radius: 0;
+		box-shadow: none;
+		background-color: transparent;
 	}
 
 	.ulNavbar {
 		flex-direction: column;
-		align-items: flex-start;
+		justify-content: space-around;
+		gap: 0;
 
 		position: absolute;
 		top: 4.5rem;
@@ -142,6 +153,11 @@
 		transition: all 0.3s ease-in-out;
 
 		scrollbar-width: none; /* hide scrollbar for Firefox and Edge */
+
+		border-radius: 20px;
+		box-shadow: -5px -5px 10px rgba(255, 255, 255, 0.5),
+			5px 5px 10px rgba(0, 0, 0, 0.5);
+		background-color: #f0f0f0;
 	}
 
 	/* Hide scrollbar for Chrome and Safari */
@@ -170,6 +186,10 @@
 
 	.logoContainer {
 		display: none;
+	}
+
+	.navItem a {
+		padding: 0 1rem;
 	}
 }
 

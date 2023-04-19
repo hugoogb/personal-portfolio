@@ -20,7 +20,7 @@ export const NavBarItem = ({ id, activeId, children }) => {
 	return (
 		<li className={styles.navItem}>
 			<a
-				href={"#" + children.toLowerCase()}
+				href=''
 				style={{ fontWeight: activeId === id ? "600" : "400" }}
 				onClick={handleSectionClick}
 			>
