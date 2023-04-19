@@ -7,7 +7,7 @@ import { ButtonCV } from "./ButtonCV";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 
 export function Navbar({ setColor }) {
-	const [activeId, setActiveId] = useState(0);
+	const [activeId, setActiveId] = useState(null);
 	const [display, setDisplay] = useState("");
 	const [visibility, setVisibility] = useState(false);
 
