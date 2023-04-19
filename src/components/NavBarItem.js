@@ -11,11 +11,18 @@ export const NavBarItem = ({ id, activeId, children }) => {
 		{ width: activeId === id ? "35px" : "0" }
 	);
 
+	const handleSectionClick = (event) => {
+		event.preventDefault();
+		const section = document.getElementById(children.toLowerCase());
+		section.scrollIntoView({ behavior: "smooth" });
+	};
+
 	return (
 		<li className={styles.navItem}>
 			<a
 				href={"#" + children.toLowerCase()}
 				style={{ fontWeight: activeId === id ? "600" : "400" }}
+				onClick={handleSectionClick}
 			>
 				{children}
 				<span style={spanStyles} className={styles.navItemBar}></span>
