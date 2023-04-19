@@ -83,23 +83,6 @@
 	scale: 1.25;
 }
 
-.logoContainer {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-
-	gap: 0.25rem;
-}
-
-.logoContainer span {
-	font-size: 38px;
-	color: black;
-}
-
-.logoSpan {
-	font-weight: 700;
-}
-
 .buttonColorPickerContainer {
 	display: flex;
 	align-items: center;
@@ -182,10 +165,6 @@
 
 	.menuIcon:hover {
 		scale: 1.25;
-	}
-
-	.logoContainer {
-		display: none;
 	}
 
 	.navItem a {

@@ -1,7 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import styles from "../styles/modules/Navbar.module.css";
 import { ColorPicker } from "./ColorPicker";
-import { Logo } from "./Logo";
 import { NavBarItem } from "./NavBarItem";
 import { ButtonCV } from "./ButtonCV";
 import { Bars3Icon } from "@heroicons/react/24/outline";
@@ -99,7 +98,6 @@ export function Navbar({ setColor }) {
 	return (
 		<nav className={styles.navbar}>
 			<div className={styles.navbarContainer}>
-				<Logo end={false}></Logo>
 				<ul style={ulNavbarStyles} className={styles.ulNavbar}>
 					{navItemsMapped}
 				</ul>
@@ -109,7 +107,6 @@ export function Navbar({ setColor }) {
 						className={styles.menuIcon}
 					/>
 				</div>
-				<Logo end={true}></Logo>
 			</div>
 			<div className={styles.buttonColorPickerContainer}>
 				<ButtonCV
