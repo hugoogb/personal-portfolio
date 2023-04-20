@@ -1,4 +1,5 @@
 import styles from "../../styles/modules/Section.module.css";
+import { ContactForm } from "../ContactForm";
 import { SectionTitle } from "./SectionTitle.js";
 
 export function ContactSection() {
@@ -9,7 +10,7 @@ export function ContactSection() {
 			className={styles.section}
 		>
 			<SectionTitle>Contact</SectionTitle>
-			<p>Form with contact</p>
+			<ContactForm></ContactForm>
 		</section>
 	);
 }
