@@ -17,12 +17,15 @@ export default async function handler(req, res) {
 		},
 	});
 
+	const defaultFrom = "Portfolio contact form";
+
 	const mailOptions = {
-		from: `${name} <${email}>`,
+		from: `${defaultFrom} <${email}>`,
 		to: process.env.CONTACT_EMAIL,
-		subject: "Portfolio contact form",
-		text: `Contact email: ${email}\n\nMessage:\n${message}`,
+		subject: `${name}: ${subject}`,
+		// text: `Contact email: ${email}\n\nMessage:\n${message}`,
 		html: `<p><strong>From:</strong> ${name} &lt;${email}&gt;</p>
+                <p><strong>Subject:</strong> ${subject} </p>
                 <p><strong>Message:</strong></p>
                 <p>${message.replace(/\n/g, "<br />")}</p>`,
 	};
