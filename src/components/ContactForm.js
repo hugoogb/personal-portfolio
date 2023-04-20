@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { Input } from "./Input";
+import styles from "../styles/modules/Form.module.css";
+import { Modal } from "./Modal";
 
 export const ContactForm = () => {
 	const [name, setName] = useState("");
@@ -6,9 +9,45 @@ export const ContactForm = () => {
 	const [subject, setSubject] = useState("");
 	const [message, setMessage] = useState("");
 	const [status, setStatus] = useState("");
+	const [errors, setErrors] = useState({});
+	const [modalOpen, setModalOpen] = useState(false);
+
+	const validate = () => {
+		const errors = {};
+
+		if (!name) {
+			errors.name = "Name is required";
+		}
+
+		if (!email) {
+			errors.email = "Email is required";
+		} else if (!/\S+@\S+\.\S+/.test(email)) {
+			errors.email = "Email is invalid";
+		}
+
+		if (!subject) {
+			errors.subject = "Subject is required";
+		}
+
+		if (!message) {
+			errors.message = "Message is required";
+		}
+
+		if (!name && !email && !subject && !message) {
+			setErrors({});
+		} else {
+			setErrors(errors);
+		}
+
+		return Object.keys(errors).length === 0;
+	};
 
 	const handleSubmit = async (e) => {
 		e.preventDefault();
+
+		if (!validate()) {
+			return;
+		}
 
 		const formData = {
 			name: name,
@@ -33,54 +72,77 @@ export const ContactForm = () => {
 			setStatus("Success");
 		}
 
+		setModalOpen(true);
 		setName("");
 		setEmail("");
 		setSubject("");
 		setMessage("");
+		setErrors({});
 	};
 
 	return (
-		<form onSubmit={handleSubmit}>
-			<label>
-				Name:
-				<input
-					type='text'
+		<>
+			<form className={styles.form} onSubmit={handleSubmit}>
+				<Input
+					type={"text"}
+					placeholder={"Hugo García Benjumea"}
+					label={"Name"}
 					value={name}
-					onChange={(e) => setName(e.target.value)}
-				/>
-			</label>
-			<label>
-				Email:
-				<input
-					type='email'
+					onChange={(e) => {
+						setName(e.target.value);
+						validate();
+					}}
+					onBlur={validate}
+					error={errors.name}
+				></Input>
+				<Input
+					type={"email"}
+					placeholder={"hugogaben8.02@gmail.com"}
+					label={"Email"}
 					value={email}
-					onChange={(e) => setEmail(e.target.value)}
-				/>
-			</label>
-			<label>
-				Subject:
-				<input
-					type='text'
+					onChange={(e) => {
+						setEmail(e.target.value);
+						validate();
+					}}
+					onBlur={validate}
+					error={errors.email}
+				></Input>
+				<Input
+					type={"text"}
+					placeholder={"Why are you contacting me?"}
+					label={"Subject"}
 					value={subject}
-					onChange={(e) => setSubject(e.target.value)}
-				/>
-			</label>
-			<label>
-				Message:
-				<textarea
+					onChange={(e) => {
+						setSubject(e.target.value);
+						validate();
+					}}
+					onBlur={validate}
+					error={errors.subject}
+				></Input>
+				<Input
+					type={"textarea"}
+					placeholder={"Tell me more about it..."}
+					label={"Message"}
 					value={message}
-					onChange={(e) => setMessage(e.target.value)}
-				/>
-			</label>
-			<button type='submit'>Submit</button>
+					onChange={(e) => {
+						setMessage(e.target.value);
+						validate();
+					}}
+					onBlur={validate}
+					error={errors.message}
+				></Input>
+				<button type='submit' className={styles.button}>
+					Submit
+				</button>
+			</form>
 
-			{status && (
-				<p>
-					{status === "Success"
-						? "Thanks for contacting us!"
-						: "Oops! Something went wrong."}
-				</p>
+			{modalOpen && (
+				<Modal
+					isOpen={modalOpen}
+					onClose={() => setModalOpen(false)}
+					status={status}
+				></Modal>
 			)}
-		</form>
+		</>
 	);
 };
