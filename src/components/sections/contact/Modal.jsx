@@ -1,4 +1,4 @@
-import styles from "../styles/modules/Form.module.css";
+import styles from "@/styles/modules/Form.module.css";
 
 export const Modal = ({ status, isOpen, onClose }) => {
 	return (

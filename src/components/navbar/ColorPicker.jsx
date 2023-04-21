@@ -1,8 +1,8 @@
-import { Cog6ToothIcon } from "@heroicons/react/24/outline";
-import styles from "../styles/modules/ColorPicker.module.css";
 import { useContext, useState } from "react";
-import { ColorContext } from "./PortfolioLayout";
 import { HexColorPicker } from "react-colorful";
+import { Cog6ToothIcon } from "@heroicons/react/24/outline";
+import styles from "@/styles/modules/ColorPicker.module.css";
+import { ColorContext } from "@/components/PortfolioLayout.jsx";
 
 export function ColorPicker({ setColor }) {
 	const color = useContext(ColorContext);

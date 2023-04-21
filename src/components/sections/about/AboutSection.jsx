@@ -1,10 +1,10 @@
-import sectionStyles from "../../styles/modules/Section.module.css";
-import styles from "../../styles/modules/About.module.css";
-import { SectionTitle } from "./SectionTitle.js";
 import { useContext } from "react";
-import { ColorContext } from "../PortfolioLayout";
 import Image from "next/image";
-import { AboutIcons } from "../AboutIcons";
+import sectionStyles from "@/styles/modules/Section.module.css";
+import styles from "@/styles/modules/About.module.css";
+import { SectionTitle } from "@/components/sections/SectionTitle.jsx";
+import { ColorContext } from "@/components/PortfolioLayout.jsx";
+import { AboutIcons } from "@/components/sections/about/AboutIcons.jsx";
 
 export function AboutSection() {
 	const color = useContext(ColorContext);

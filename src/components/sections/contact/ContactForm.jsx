@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Input } from "./Input";
-import styles from "../styles/modules/Form.module.css";
-import { Modal } from "./Modal";
+import styles from "@/styles/modules/Form.module.css";
+import { Input } from "@/components/sections/contact/Input.jsx";
+import { Modal } from "@/components/sections/contact/Modal.jsx";
 
 export const ContactForm = () => {
 	const [name, setName] = useState("");
