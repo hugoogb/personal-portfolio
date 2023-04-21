@@ -6,7 +6,7 @@ export function ContactSection() {
 	return (
 		<section
 			id='contact'
-			style={{ marginBottom: "50rem" }}
+			style={{ marginBottom: "20rem" }}
 			className={styles.section}
 		>
 			<SectionTitle>Contact</SectionTitle>

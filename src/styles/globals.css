@@ -28,6 +28,17 @@ ul {
 	list-style-type: none; /* Remove bullets */
 }
 
+input,
+textarea {
+	border: none;
+	outline: none;
+	font-family: inherit;
+	font-size: inherit;
+	padding: 0;
+	margin: 0;
+	/* Add any additional styles you want here */
+}
+
 html {
 	scroll-behavior: smooth;
 }

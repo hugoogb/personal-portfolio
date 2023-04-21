@@ -15,7 +15,7 @@ export const Input = ({
 
 	return (
 		<label className={styles.inputLabel}>
-			<div>
+			<div className={styles.labelText}>
 				<span
 					style={{ backgroundColor: color }}
 					className={styles.labelBar}
@@ -28,7 +28,10 @@ export const Input = ({
 					value={value}
 					onChange={onChange}
 					onBlur={onBlur}
-					className={error ? styles.error : ""}
+					className={`${styles.input} ${error ? styles.error : ""}`}
+					style={
+						error ? { borderColor: "red" } : { borderColor: color }
+					}
 				/>
 			) : (
 				<input
@@ -37,7 +40,10 @@ export const Input = ({
 					value={value}
 					onChange={onChange}
 					onBlur={onBlur}
-					className={error ? styles.error : ""}
+					className={`${styles.input} ${error ? styles.error : ""}`}
+					style={
+						error ? { borderColor: "red" } : { borderColor: color }
+					}
 				/>
 			)}
 			{error && <span className={styles.errorMessage}>{error}</span>}

@@ -17,13 +17,28 @@
 .labelBar {
 	display: inline-block;
 	width: 2px;
-	height: 15px;
+	height: 18px;
 	margin-right: 0.5rem;
+
+	transition: background-color 0.3s ease-in-out;
+}
+
+.labelText {
+	font-size: 20px;
 }
 
 .inputLabel textarea {
 	resize: none;
 	height: 100px;
+}
+
+.input {
+	padding: 1rem;
+}
+
+.input:hover,
+.input:focus {
+	border: solid 1px;
 }
 
 .button {
@@ -38,13 +53,16 @@
 	box-shadow: -5px -5px 10px rgba(255, 255, 255, 0.5),
 		5px 5px 10px rgba(0, 0, 0, 0.5);
 	background-color: #f0f0f0;
+
+	font-size: 16px;
 }
 
-/* .error {
-	background-color: red;
-} */
+.error {
+	border: solid 1px;
+}
 
 .errorMessage {
+	font-style: italic;
 	align-self: flex-end;
 	color: red;
 }
