@@ -5,9 +5,11 @@ import esTranslation from "./locales/es.json";
 import caTranslation from "./locales/ca.json";
 
 i18n.use(initReactI18next).init({
-	lng: "en",
-	fallbackLng: "en",
+	fallbackLng: ["en", "es", "ca"],
 	// debug: true,
+	interpolation: {
+		escapeValue: false, // not needed for react as it escapes by default
+	},
 	resources: {
 		en: {
 			translation: enTranslation,
