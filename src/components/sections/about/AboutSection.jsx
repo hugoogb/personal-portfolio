@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import Image from "next/image";
+import { useTranslation } from "react-i18next";
 import sectionStyles from "@/styles/modules/Section.module.css";
 import styles from "@/styles/modules/About.module.css";
 import { SectionTitle } from "@/components/sections/SectionTitle.jsx";
@@ -7,6 +8,8 @@ import { ColorContext } from "@/components/PortfolioLayout.jsx";
 import { AboutIcons } from "@/components/sections/about/AboutIcons.jsx";
 
 export function AboutSection() {
+	const { t } = useTranslation();
+
 	const color = useContext(ColorContext);
 
 	const iconsFrontend = [
@@ -118,65 +121,87 @@ export function AboutSection() {
 	});
 
 	return (
-		<section id='about' className={sectionStyles.section}>
-			<SectionTitle>About</SectionTitle>
+		<section id={t("nav.about")} className={sectionStyles.section}>
+			<SectionTitle>{t("about.title")}</SectionTitle>
 			<div className={styles.aboutContainer}>
 				<div className={styles.aboutTextContainer}>
 					<p>
-						Hey there! My name is Hugo and I{"'"}m a{" "}
-						<span style={{ color: color }}>web developer</span>. My
-						main focus is developing{" "}
-						<span style={{ color: color }}>web applications</span>{" "}
-						but I also develop{" "}
-						<span style={{ color: color }}>mobile apps</span> using{" "}
-						<span style={{ color: color }}>React Native</span>.
-					</p>
-					<br></br>
-					<p>
-						I specialize in using{" "}
+						{t("about.text.intro")}
 						<span style={{ color: color }}>
-							Javascript frameworks
-						</span>{" "}
-						such as <span style={{ color: color }}>React</span> and{" "}
-						<span style={{ color: color }}>Vue </span>for frontend
-						development. I love the challenge of creating{" "}
-						<span style={{ color: color }}>responsive</span> and{" "}
-						<span style={{ color: color }}>dynamic</span> user
-						interfaces that enhance the user experience. Whether it
-						{"'"}s a{" "}
-						<span style={{ color: color }}>
-							simple landing page
-						</span>{" "}
-						or a a{" "}
-						<span style={{ color: color }}>
-							complex web application
+							{t("about.text.webDeveloper")}
 						</span>
-						, I take pride in crafting visually appealing and
-						intuitive designs that meet my clients{"'"} needs.
+						{t("about.text.mainFocus")}
+						<span style={{ color: color }}>
+							{t("about.text.webApps")}
+						</span>
+						{t("about.text.butAlso")}
+						<span style={{ color: color }}>
+							{t("about.text.mobileApps")}
+						</span>
+						{t("about.text.using")}
+						<span style={{ color: color }}>
+							{t("about.text.ReactNative")}
+						</span>
+						{t("about.text.endIntro")}
 					</p>
 					<br></br>
 					<p>
-						In addition to frontend development, I also have
-						knowledge of backend{" "}
-						<span style={{ color: color }}>Nodejs</span>{" "}
-						technologies such as{" "}
-						<span style={{ color: color }}>ExpressJS</span>. This
-						allows me to create robust and scalable applications.
+						{t("about.text.specializeIn")}
+						<span style={{ color: color }}>
+							{t("about.text.jsFrameworks")}
+						</span>
+						{t("about.text.suchAs")}
+						<span style={{ color: color }}>
+							{t("about.text.react")}
+						</span>
+						{t("about.text.and")}
+						<span style={{ color: color }}>
+							{t("about.text.vue")}
+						</span>
+						{t("about.text.forFrontendDev")}
+						<span style={{ color: color }}>
+							{t("about.text.responsive")}
+						</span>
+						{t("about.text.and")}
+						<span style={{ color: color }}>
+							{t("about.text.dynamic")}
+						</span>
+						{t("about.text.userInterfaces")}
+						<span style={{ color: color }}>
+							{t("about.text.simpleLandingPage")}
+						</span>
+						{t("about.text.orA")}
+						<span style={{ color: color }}>
+							{t("about.text.complexWebApp")}
+						</span>
+						{t("about.text.iTakePrideIn")}
+					</p>
+					<br></br>
+					<p>
+						{t("about.text.inAdditionTo")}
+						<span style={{ color: color }}>
+							{t("about.text.nodeJs")}
+						</span>
+						{t("about.text.technologiesSuchAs")}
+						<span style={{ color: color }}>
+							{t("about.text.ExpressJS")}
+						</span>
+						{t("about.text.robustApps")}
 					</p>
 				</div>
 				<div className={styles.aboutImagesContainer}>
 					<AboutIcons
-						title={"Frontend"}
+						title={t("about.categories.frontend")}
 						iconsMapped={iconsFrontendMapped}
 						color={color}
 					></AboutIcons>
 					<AboutIcons
-						title={"Backend"}
+						title={t("about.categories.backend")}
 						iconsMapped={iconsBackendMapped}
 						color={color}
 					></AboutIcons>
 					<AboutIcons
-						title={"Tools"}
+						title={t("about.categories.tools")}
 						iconsMapped={iconsToolsMapped}
 						color={color}
 					></AboutIcons>

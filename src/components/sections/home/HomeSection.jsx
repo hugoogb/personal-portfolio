@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import Image from "next/image";
 import { Hanken_Grotesk } from "next/font/google";
+import { useTranslation } from "react-i18next";
 import sectionStyles from "@/styles/modules/Section.module.css";
 import styles from "@/styles/modules/Home.module.css";
 import { ColorContext } from "@/components/PortfolioLayout.jsx";
@@ -9,6 +10,8 @@ import { ButtonCV } from "@/components/navbar/ButtonCV.jsx";
 const hankenGrotesk = Hanken_Grotesk({ subsets: ["latin"] });
 
 export function HomeSection() {
+	const { t } = useTranslation();
+
 	const color = useContext(ColorContext);
 
 	const name = "Hugo García Benjumea";
@@ -34,14 +37,14 @@ export function HomeSection() {
 	const downloadUrl = `/api/download?fileName=${fileName}`;
 
 	return (
-		<section id='home' className={sectionStyles.section}>
+		<section id={t("nav.home")} className={sectionStyles.section}>
 			<div className={hankenGrotesk.className}>
 				<div className={styles.headerContainer}>
 					<div className={styles.nameHeaderTextContainer}>
 						<h1 className={styles.nameHeader}>{splittedName}</h1>
 						<h2 className={styles.subtitleHeader}>
 							<span style={{ backgroundColor: color }}></span>
-							Web developer
+							{t("home.subtitle")}
 						</h2>
 						<div style={{ alignSelf: "flex-end" }}>
 							<ButtonCV

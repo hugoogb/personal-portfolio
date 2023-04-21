@@ -1,8 +1,11 @@
 import { useContext, useRef, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import styles from "@/styles/modules/Navbar.module.css";
 import { ColorContext } from "@/components/PortfolioLayout.jsx";
 
 export const ButtonCV = ({ downloadUrl, fileName }) => {
+	const { t } = useTranslation();
+
 	const color = useContext(ColorContext);
 
 	const elementRef = useRef(null);
@@ -41,7 +44,7 @@ export const ButtonCV = ({ downloadUrl, fileName }) => {
 			style={{ backgroundColor: color }}
 			className={styles.buttonCV}
 		>
-			Download CV
+			{t("nav.downloadButton")}
 		</button>
 	);
 };

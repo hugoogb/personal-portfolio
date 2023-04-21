@@ -1,9 +1,12 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import styles from "@/styles/modules/Form.module.css";
 import { Input } from "@/components/sections/contact/Input.jsx";
 import { Modal } from "@/components/sections/contact/Modal.jsx";
 
 export const ContactForm = () => {
+	const { t } = useTranslation();
+
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [subject, setSubject] = useState("");
@@ -16,21 +19,21 @@ export const ContactForm = () => {
 		const errors = {};
 
 		if (!name) {
-			errors.name = "Name is required";
+			errors.name = t("contact.form.name.errorRequired");
 		}
 
 		if (!email) {
-			errors.email = "Email is required";
+			errors.email = t("contact.form.email.errorRequired");
 		} else if (!/\S+@\S+\.\S+/.test(email)) {
-			errors.email = "Email is invalid";
+			errors.email = t("contact.form.email.errorInvalid");
 		}
 
 		if (!subject) {
-			errors.subject = "Subject is required";
+			errors.subject = t("contact.form.subject.errorRequired");
 		}
 
 		if (!message) {
-			errors.message = "Message is required";
+			errors.message = t("contact.form.message.errorRequired");
 		}
 
 		if (!name && !email && !subject && !message) {
@@ -86,7 +89,7 @@ export const ContactForm = () => {
 				<Input
 					type={"text"}
 					placeholder={"Hugo García Benjumea"}
-					label={"Name"}
+					label={t("contact.form.name.label")}
 					value={name}
 					onChange={(e) => {
 						setName(e.target.value);
@@ -98,7 +101,7 @@ export const ContactForm = () => {
 				<Input
 					type={"email"}
 					placeholder={"hugogaben8.02@gmail.com"}
-					label={"Email"}
+					label={t("contact.form.email.label")}
 					value={email}
 					onChange={(e) => {
 						setEmail(e.target.value);
@@ -109,8 +112,8 @@ export const ContactForm = () => {
 				></Input>
 				<Input
 					type={"text"}
-					placeholder={"Why are you contacting me?"}
-					label={"Subject"}
+					placeholder={t("contact.form.subject.placeholder")}
+					label={t("contact.form.subject.label")}
 					value={subject}
 					onChange={(e) => {
 						setSubject(e.target.value);
@@ -121,8 +124,8 @@ export const ContactForm = () => {
 				></Input>
 				<Input
 					type={"textarea"}
-					placeholder={"Tell me more about it..."}
-					label={"Message"}
+					placeholder={t("contact.form.message.placeholder")}
+					label={t("contact.form.message.label")}
 					value={message}
 					onChange={(e) => {
 						setMessage(e.target.value);
@@ -132,7 +135,7 @@ export const ContactForm = () => {
 					error={errors.message}
 				></Input>
 				<button type='submit' className={styles.button}>
-					Submit
+					{t("contact.submit")}
 				</button>
 			</form>
 
