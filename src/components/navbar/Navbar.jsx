@@ -92,7 +92,7 @@ export function Navbar({ setColor }) {
 		}
 	);
 
-	const fileName = "CV-English.pdf";
+	const fileName = "CV-en.pdf";
 	const downloadUrl = `/api/download?fileName=${fileName}`;
 
 	return (

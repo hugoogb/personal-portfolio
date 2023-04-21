@@ -30,7 +30,7 @@ export function HomeSection() {
 		);
 	});
 
-	const fileName = "CV-English.pdf";
+	const fileName = "CV-en.pdf";
 	const downloadUrl = `/api/download?fileName=${fileName}`;
 
 	return (
