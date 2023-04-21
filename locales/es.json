@@ -1,0 +1,97 @@
+{
+	"nav": {
+		"home": "Inicio",
+		"about": "Acerca",
+		"projects": "Proyectos",
+		"contact": "Contacto",
+		"downloadButton": "Descargar CV"
+	},
+	"home": {
+		"subtitle": "Desarrollador web"
+	},
+	"about": {
+		"title": "Acerca",
+		"text": {
+			"intro": "¡Hola! Me llamo Hugo y soy ",
+			"webDeveloper": "desarrollador web",
+			"mainFocus": ". Mi principal enfoque es desarrollar ",
+			"webApps": "aplicaciones web",
+			"butAlso": " pero también desarrollo ",
+			"mobileApps": "aplicaciones móviles",
+			"using": " utilizando ",
+			"ReactNative": "React Native",
+			"endIntro": ".",
+			"specializeIn": "Me especializo en el uso de ",
+			"jsFrameworks": "frameworks de Javascript",
+			"suchAs": " como ",
+			"react": "React",
+			"and": " y ",
+			"vue": "Vue",
+			"forFrontendDev": " para el desarrollo de frontend. Me encanta el desafío de crear interfaces de usuario ",
+			"responsive": "adaptativas",
+			"dynamic": "dinámicas",
+			"userInterfaces": " que mejoren la experiencia del usuario. Ya sea una ",
+			"simpleLandingPage": "página de destino sencilla",
+			"orA": " o una ",
+			"complexWebApp": "aplicación web compleja",
+			"iTakePrideIn": ", me enorgullece crear diseños visualmente atractivos e intuitivos que satisfagan las necesidades de mis clientes.",
+			"inAdditionTo": "Además del desarrollo de frontend, también tengo conocimientos en tecnologías de backend con ",
+			"nodeJs": "Nodejs",
+			"technologiesSuchAs": " como ",
+			"ExpressJS": "ExpressJS",
+			"robustApps": ". Esto me permite crear aplicaciones sólidas y escalables."
+		},
+		"categories": {
+			"frontend": "Frontend",
+			"backend": "Backend",
+			"tools": "Herramientas"
+		}
+	},
+	"projects": {
+		"title": "Proyectos",
+		"formula1Showcase": {
+			"description": "Información exhibida obtenida con la API de F1 creada",
+			"imgAlt": "Imagen de prueba"
+		},
+		"formula1API": {
+			"description": "API con expressjs que raspa el sitio de F1 con cheerio",
+			"imgAlt": "Imagen de prueba"
+		}
+	},
+	"contact": {
+		"title": "Contacto",
+		"form": {
+			"name": {
+				"label": "Nombre",
+				"errorRequired": "El nombre es obligatorio"
+			},
+			"email": {
+				"label": "Email",
+				"errorRequired": "El email es obligatorio",
+				"errorInvalid": "El email no es válido"
+			},
+			"subject": {
+				"label": "Asunto",
+				"placeholder": "¿Por qué te pones en contacto conmigo?",
+				"errorRequired": "El asunto es obligatorio"
+			},
+			"message": {
+				"label": "Mensaje",
+				"placeholder": "Cuéntame más...",
+				"errorRequired": "El mensaje es obligatorio"
+			}
+		},
+		"submit": "Enviar",
+		"modal": {
+			"success": {
+				"title": "Formulario enviado con éxito",
+				"message": "¡Gracias por contactarme!"
+			},
+			"error": {
+				"title": "Error al enviar el formulario",
+				"message": "¡Ups! Algo salió mal."
+			},
+			"close": "Cerrar"
+		}
+	}
+}

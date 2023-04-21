@@ -1,0 +1,97 @@
+{
+	"nav": {
+		"home": "Home",
+		"about": "About",
+		"projects": "Projects",
+		"contact": "Contact",
+		"downloadButton": "Download CV"
+	},
+	"home": {
+		"subtitle": "Web developer"
+	},
+	"about": {
+		"title": "About",
+		"text": {
+			"intro": "Hey there! My name is Hugo and I'm a ",
+			"webDeveloper": "web developer",
+			"mainFocus": ". My main focus is developing ",
+			"webApps": "web applications",
+			"butAlso": " but I also develop ",
+			"mobileApps": "mobile apps",
+			"using": " using ",
+			"ReactNative": "React Native",
+			"endIntro": ".",
+			"specializeIn": "I specialize in using ",
+			"jsFrameworks": "Javascript frameworks",
+			"suchAs": " such as ",
+			"react": "React",
+			"and": " and ",
+			"vue": "Vue",
+			"forFrontendDev": " for frontend development. I love the challenge of creating ",
+			"responsive": "responsive",
+			"dynamic": "dynamic",
+			"userInterfaces": " user interfaces that enhance the user experience. Whether it's a ",
+			"simpleLandingPage": "simple landing page",
+			"orA": " or a ",
+			"complexWebApp": "complex web application",
+			"iTakePrideIn": ", I take pride in crafting visually appealing and intuitive designs that meet my clients' needs.",
+			"inAdditionTo": "In addition to frontend development, I also have knowledge of backend ",
+			"nodeJs": "Nodejs",
+			"technologiesSuchAs": " technologies such as ",
+			"ExpressJS": "ExpressJS",
+			"robustApps": ". This allows me to create robust and scalable applications."
+		},
+		"categories": {
+			"frontend": "Frontend",
+			"backend": "Backend",
+			"tools": "Tools"
+		}
+	},
+	"projects": {
+		"title": "Projects",
+		"formula1Showcase": {
+			"description": "Showcase information retrieved with F1 API created",
+			"imgAlt": "Image test"
+		},
+		"formula1API": {
+			"description": "API with expressjs done scrapping F1 site with cheerio",
+			"imgAlt": "Image test"
+		}
+	},
+	"contact": {
+		"title": "Contact",
+		"form": {
+			"name": {
+				"label": "Name",
+				"errorRequired": "Name is required"
+			},
+			"email": {
+				"label": "Email",
+				"errorRequired": "Email is required",
+				"errorInvalid": "Email is invalid"
+			},
+			"subject": {
+				"label": "Subject",
+				"placeholder": "Why are you contacting me?",
+				"errorRequired": "Subject is required"
+			},
+			"message": {
+				"label": "Message",
+				"placeholder": "Tell me more about it...",
+				"errorRequired": "Message is required"
+			}
+		},
+		"submit": "Submit",
+		"modal": {
+			"success": {
+				"title": "Form submitted successfuly",
+				"message": "Thanks for contacting me!"
+			},
+			"error": {
+				"title": "Error submitting form",
+				"message": "Oops! Something went wrong."
+			},
+			"close": "Close"
+		}
+	}
+}

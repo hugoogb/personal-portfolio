@@ -1,0 +1,97 @@
+{
+	"nav": {
+		"home": "Inici",
+		"about": "Sobre",
+		"projects": "Projectes",
+		"contact": "Contacte",
+		"downloadButton": "Descarregar CV"
+	},
+	"home": {
+		"subtitle": "Desenvolupador web"
+	},
+	"about": {
+		"title": "Sobre",
+		"text": {
+			"intro": "Hola! Em dic Hugo i sóc ",
+			"webDeveloper": "desenvolupador web",
+			"mainFocus": ". La meva principal tasca és desenvolupar ",
+			"webApps": "aplicacions web",
+			"butAlso": " però també desenvolupo ",
+			"mobileApps": "aplicacions mòbils",
+			"using": " utilitzant ",
+			"ReactNative": "React Native",
+			"endIntro": ".",
+			"specializeIn": "Estic especialitzat en l'ús de ",
+			"jsFrameworks": "Frameworks Javascript",
+			"suchAs": " com ",
+			"react": "React",
+			"and": " i ",
+			"vue": "Vue",
+			"forFrontendDev": " per al desenvolupament frontend. M'encanta el repte de crear ",
+			"responsive": "interfícies de usuari adaptatives",
+			"dynamic": "interactives",
+			"userInterfaces": " que millorin l'experiència de l'usuari. Tant si es tracta d'una ",
+			"simpleLandingPage": "simple pàgina d'aterratge",
+			"orA": " o d'una ",
+			"complexWebApp": "aplicació web complexa",
+			"iTakePrideIn": ", em sento orgullós de crear dissenys atractius i intuïtius que satisfan les necessitats dels meus clients.",
+			"inAdditionTo": "A més del desenvolupament frontend, també tinc coneixements de tecnologies de backend ",
+			"nodeJs": "Nodejs",
+			"technologiesSuchAs": " com ",
+			"ExpressJS": "ExpressJS",
+			"robustApps": ". Això em permet crear aplicacions robustes i escalables."
+		},
+		"categories": {
+			"frontend": "Frontend",
+			"backend": "Backend",
+			"tools": "Eines"
+		}
+	},
+	"projects": {
+		"title": "Projectes",
+		"formula1Showcase": {
+			"description": "Informació exhibida obtinguda amb l'API de F1 creada",
+			"imgAlt": "Imatge de prova"
+		},
+		"formula1API": {
+			"description": "API amb expressjs que raspalla el lloc de F1 amb cheerio",
+			"imgAlt": "Imatge de prova"
+		}
+	},
+	"contact": {
+		"title": "Contacte",
+		"form": {
+			"name": {
+				"label": "Nom",
+				"errorRequired": "El nom és obligatori"
+			},
+			"email": {
+				"label": "Email",
+				"errorRequired": "L'email és obligatori",
+				"errorInvalid": "L'email no és vàlid"
+			},
+			"subject": {
+				"label": "Assumpte",
+				"placeholder": "Per què et poses en contacte amb mi?",
+				"errorRequired": "L'assumpte és obligatori"
+			},
+			"message": {
+				"label": "Missatge",
+				"placeholder": "Explica'm més...",
+				"errorRequired": "El missatge és obligatori"
+			}
+		},
+		"submit": "Enviar",
+		"modal": {
+			"success": {
+				"title": "Formulari enviat amb èxit",
+				"message": "Gràcies per contactar-me!"
+			},
+			"error": {
+				"title": "Error en enviar el formulari",
+				"message": "Oh! Hi ha hagut un error."
+			},
+			"close": "Tancar"
+		}
+	}
+}
