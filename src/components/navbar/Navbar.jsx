@@ -1,23 +1,27 @@
 import { useState, useEffect, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import styles from "@/styles/modules/Navbar.module.css";
 import { ColorPicker } from "@/components/navbar/ColorPicker.jsx";
 import { NavBarItem } from "@/components/navbar/NavBarItem.jsx";
 import { ButtonCV } from "@/components/navbar/ButtonCV.jsx";
+import { LanguageSelector } from "@/components/navbar/LanguageSelector.jsx";
 
 export function Navbar({ setColor }) {
+	const { t } = useTranslation();
+
 	const [activeId, setActiveId] = useState(null);
 	const [display, setDisplay] = useState("");
 	const [visibility, setVisibility] = useState(false);
 
 	const memoizedNavItems = useMemo(() => {
 		return [
-			{ id: 0, name: "Home" },
-			{ id: 1, name: "About" },
-			{ id: 2, name: "Projects" },
-			{ id: 3, name: "Contact" },
+			{ id: 0, name: t("nav.home") },
+			{ id: 1, name: t("nav.about") },
+			{ id: 2, name: t("nav.projects") },
+			{ id: 3, name: t("nav.contact") },
 		];
-	}, []);
+	}, [t]);
 
 	const navItemsMapped = memoizedNavItems.map((item) => {
 		return (
@@ -46,7 +50,7 @@ export function Navbar({ setColor }) {
 					const sectionName = section.getAttribute("id");
 					const activeSectionId = memoizedNavItems.findIndex(
 						(section) => {
-							return section.name.toLowerCase() == sectionName;
+							return section.name == sectionName;
 						}
 					);
 					setActiveId(activeSectionId);
@@ -92,7 +96,7 @@ export function Navbar({ setColor }) {
 		}
 	);
 
-	const fileName = "CV-English.pdf";
+	const fileName = "CV-en.pdf";
 	const downloadUrl = `/api/download?fileName=${fileName}`;
 
 	return (
@@ -109,6 +113,7 @@ export function Navbar({ setColor }) {
 				</div>
 			</div>
 			<div className={styles.buttonColorPickerContainer}>
+				<LanguageSelector></LanguageSelector>
 				<ButtonCV
 					downloadUrl={downloadUrl}
 					fileName={fileName}

@@ -1,6 +1,9 @@
+import { useTranslation } from "react-i18next";
 import styles from "@/styles/modules/Form.module.css";
 
 export const Modal = ({ status, isOpen, onClose }) => {
+	const { t } = useTranslation();
+
 	return (
 		<div
 			style={{ display: isOpen ? "flex" : "none" }}
@@ -18,21 +21,21 @@ export const Modal = ({ status, isOpen, onClose }) => {
 					{status === "Success" ? (
 						<>
 							<h3 className={styles.modalTitle}>
-								Form submitted successfuly
+								{t("contact.modal.success.title")}
 							</h3>
-							<p>Thanks for contacting me!</p>
+							<p>{t("contact.modal.success.message")}</p>
 						</>
 					) : (
 						<>
 							<h3 className={styles.modalTitle}>
-								Error submitting form
+								{t("contact.modal.error.title")}
 							</h3>
-							<p>Oops! Something went wrong.</p>
+							<p>{t("contact.modal.error.message")}</p>
 						</>
 					)}
 				</div>
 				<button className={styles.button} onClick={onClose}>
-					Close
+					{t("contact.modal.close")}
 				</button>
 			</div>
 		</div>

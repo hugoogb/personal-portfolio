@@ -13,7 +13,7 @@ export const NavBarItem = ({ id, activeId, children }) => {
 
 	const handleSectionClick = (event) => {
 		event.preventDefault();
-		const section = document.getElementById(children.toLowerCase());
+		const section = document.getElementById(children);
 		section.scrollIntoView({ behavior: "smooth" });
 	};
 
