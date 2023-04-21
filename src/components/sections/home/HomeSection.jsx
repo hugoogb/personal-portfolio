@@ -1,10 +1,10 @@
-import { Hanken_Grotesk } from "next/font/google";
-import styles from "../../styles/modules/Home.module.css";
-import sectionStyles from "../../styles/modules/Section.module.css";
 import { useContext } from "react";
-import { ColorContext } from "../PortfolioLayout.js";
 import Image from "next/image";
-import { ButtonCV } from "../ButtonCV";
+import { Hanken_Grotesk } from "next/font/google";
+import sectionStyles from "@/styles/modules/Section.module.css";
+import styles from "@/styles/modules/Home.module.css";
+import { ColorContext } from "@/components/PortfolioLayout.jsx";
+import { ButtonCV } from "@/components/navbar/ButtonCV.jsx";
 
 const hankenGrotesk = Hanken_Grotesk({ subsets: ["latin"] });
 

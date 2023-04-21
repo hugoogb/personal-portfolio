@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { PortfolioLayout } from "../components/PortfolioLayout.js";
+import { PortfolioLayout } from "@/components/PortfolioLayout";
 
 export default function Index() {
 	return (

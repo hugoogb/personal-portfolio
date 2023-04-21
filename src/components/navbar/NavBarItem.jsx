@@ -1,6 +1,6 @@
 import { useContext } from "react";
-import styles from "../styles/modules/Navbar.module.css";
-import { ColorContext } from "./PortfolioLayout";
+import styles from "@/styles/modules/Navbar.module.css";
+import { ColorContext } from "@/components/PortfolioLayout.jsx";
 
 export const NavBarItem = ({ id, activeId, children }) => {
 	const color = useContext(ColorContext);

@@ -1,8 +1,8 @@
-import { Project } from "../Project.js";
-import styles from "../../styles/modules/Section.module.css";
-import stylesProject from "../../styles/modules/Projects.module.css";
-import imageTest from "../../../public/image.jpeg";
-import { SectionTitle } from "./SectionTitle.js";
+import styles from "@/styles/modules/Section.module.css";
+import stylesProject from "@/styles/modules/Projects.module.css";
+import { SectionTitle } from "@/components/sections/SectionTitle.jsx";
+import { Project } from "@/components/sections/projects/Project.jsx";
+import imageTest from "../../../../public/image.jpeg";
 
 export function ProjectsSection() {
 	const projects = [

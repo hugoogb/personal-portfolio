@@ -1,6 +1,6 @@
-import styles from "../../styles/modules/Section.module.css";
-import { ContactForm } from "../ContactForm";
-import { SectionTitle } from "./SectionTitle.js";
+import styles from "@/styles/modules/Section.module.css";
+import { SectionTitle } from "@/components/sections/SectionTitle.jsx";
+import { ContactForm } from "@/components/sections/contact/ContactForm.jsx";
 
 export function ContactSection() {
 	return (

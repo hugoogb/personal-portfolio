@@ -1,6 +1,6 @@
 import { useContext, useRef, useEffect } from "react";
-import styles from "../styles/modules/Navbar.module.css";
-import { ColorContext } from "./PortfolioLayout";
+import styles from "@/styles/modules/Navbar.module.css";
+import { ColorContext } from "@/components/PortfolioLayout.jsx";
 
 export const ButtonCV = ({ downloadUrl, fileName }) => {
 	const color = useContext(ColorContext);

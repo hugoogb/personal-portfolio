@@ -1,10 +1,10 @@
-import { Navbar } from "../components/Navbar.js";
-import { HomeSection } from "./sections/HomeSection.js";
-import { AboutSection } from "./sections/AboutSection.js";
-import { ProjectsSection } from "./sections/ProjectsSection.js";
-import { ContactSection } from "./sections/ContactSection.js";
-import { Footer } from "./Footer.js";
 import { createContext, useState } from "react";
+import { Navbar } from "@/components/navbar/Navbar.jsx";
+import { HomeSection } from "@/components/sections/home/HomeSection.jsx";
+import { AboutSection } from "@/components/sections/about/AboutSection.jsx";
+import { ProjectsSection } from "@/components/sections/projects/ProjectsSection.jsx";
+import { ContactSection } from "@/components/sections/contact/ContactSection.jsx";
+import { Footer } from "@/components/footer/Footer.jsx";
 
 export const ColorContext = createContext("#ff5400");
 

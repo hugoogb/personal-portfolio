@@ -1,4 +1,4 @@
-import styles from "../styles/modules/About.module.css";
+import styles from "@/styles/modules/About.module.css";
 
 export const AboutIcons = ({ title, iconsMapped, color }) => {
 	return (

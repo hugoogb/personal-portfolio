@@ -1,9 +1,9 @@
 import { useState, useEffect, useMemo } from "react";
-import styles from "../styles/modules/Navbar.module.css";
-import { ColorPicker } from "./ColorPicker";
-import { NavBarItem } from "./NavBarItem";
-import { ButtonCV } from "./ButtonCV";
 import { Bars3Icon } from "@heroicons/react/24/outline";
+import styles from "@/styles/modules/Navbar.module.css";
+import { ColorPicker } from "@/components/navbar/ColorPicker.jsx";
+import { NavBarItem } from "@/components/navbar/NavBarItem.jsx";
+import { ButtonCV } from "@/components/navbar/ButtonCV.jsx";
 
 export function Navbar({ setColor }) {
 	const [activeId, setActiveId] = useState(null);
