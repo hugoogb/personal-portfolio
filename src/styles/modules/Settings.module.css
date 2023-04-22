@@ -16,13 +16,6 @@
 	rotate: 90deg;
 }
 
-.settingsContainer {
-	position: relative;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-}
-
 .settingsWrapper {
 	position: absolute;
 	top: 6rem;
@@ -36,6 +29,10 @@
 /* Hide scrollbar for Chrome and Safari */
 .settingsWrapper::-webkit-scrollbar {
 	display: none;
+}
+
+.settingsMenuContainer {
+	padding: 1rem;
 }
 
 .settingsContainer {
@@ -100,7 +97,27 @@
 @media (max-width: 920px) {
 	/* styles to apply when width is less than 920px */
 	.settingsWrapper {
-		top: 4.5rem;
 		right: 0;
+	}
+}
+
+@media (max-width: 720px) {
+	/* styles to apply when width is less than 720px */
+	.settingsContainer {
+		gap: 1.75rem;
+	}
+
+	.settingsMenuContainer {
+		padding-left: 0.5rem;
+	}
+
+	.languageSelectorContainer {
+		flex-direction: column;
+
+		margin-right: 0.5rem;
+	}
+
+	.colorPickerContainer {
+		margin-right: 0.25rem;
 	}
 }

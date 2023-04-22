@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { HexColorPicker } from "react-colorful";
 import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 import styles from "@/styles/modules/Settings.module.css";
@@ -7,16 +7,45 @@ import { LanguageSelector } from "@/components/navbar/LanguageSelector.jsx";
 
 export function SettingsMenu({ setColor }) {
 	const color = useContext(ColorContext);
-	const [display, setDisplay] = useState(false);
+	const [display, setDisplay] = useState("");
+	const [visibility, setVisibility] = useState(false);
+
+	useEffect(() => {
+		const handleResize = () => {
+			const width = window.innerWidth;
+			if (width <= 720) {
+				setDisplay("mobile");
+			} else {
+				setDisplay("desktop");
+			}
+		};
+
+		handleResize();
+
+		window.addEventListener("resize", handleResize);
+
+		return () => {
+			window.removeEventListener("resize", handleResize);
+		};
+	}, []);
 
 	const settingsWrapperStyles = Object.assign(
 		{},
-		{ height: display ? "337px" : "0" },
-		{ overflow: display ? "auto" : "hidden" }
+		{
+			height:
+				display === "mobile"
+					? visibility
+						? "457px"
+						: "0"
+					: visibility
+					? "337px"
+					: "0",
+		},
+		{ overflow: visibility ? "auto" : "hidden" }
 	);
 
 	return (
-		<div className={styles.settingsContainer}>
+		<div className={styles.settingsMenuContainer}>
 			<div
 				style={settingsWrapperStyles}
 				className={styles.settingsWrapper}
@@ -33,7 +62,7 @@ export function SettingsMenu({ setColor }) {
 			</div>
 			<div className={styles.settingsIconContainer}>
 				<Cog6ToothIcon
-					onClick={() => setDisplay(display ? false : true)}
+					onClick={() => setVisibility(visibility ? false : true)}
 					className={styles.settingsIcon}
 				/>
 			</div>
