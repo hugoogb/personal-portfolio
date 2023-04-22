@@ -8,10 +8,10 @@ import { ProjectsSection } from "@/components/sections/projects/ProjectsSection.
 import { ContactSection } from "@/components/sections/contact/ContactSection.jsx";
 import { Footer } from "@/components/footer/Footer.jsx";
 
-export const ColorContext = createContext("#ff5400");
+export const ColorContext = createContext("#3142db");
 
 export function PortfolioLayout() {
-	const [color, setColor] = useState("#ff5400");
+	const [color, setColor] = useState("#3142db");
 
 	return (
 		<I18nextProvider i18n={i18n}>
