@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 
 export default function handler(req, res) {
-	let { fileName } = req.query;
+	let { fileName, language } = req.query;
 	fileName = path.basename(fileName); // sanitize fileName
 	const filePath = path.join(process.cwd(), "public", "uploads", fileName);
 
@@ -11,7 +11,7 @@ export default function handler(req, res) {
 			const fileContents = fs.readFileSync(filePath);
 			res.setHeader(
 				"Content-disposition",
-				`attachment; filename=${fileName}`
+				`attachment; filename=CV-Hugo_García_Benjumea-lang_${language}`
 			);
 			res.setHeader("Content-Type", "application/pdf");
 			res.send(fileContents);
