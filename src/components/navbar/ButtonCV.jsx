@@ -2,9 +2,10 @@ import { useContext, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "@/styles/modules/Navbar.module.css";
 import { ColorContext } from "@/components/PortfolioLayout.jsx";
+import Image from "next/image";
 
 export const ButtonCV = ({ downloadUrl, fileName }) => {
-	const { t } = useTranslation();
+	const { t, i18n } = useTranslation();
 
 	const color = useContext(ColorContext);
 
@@ -45,6 +46,17 @@ export const ButtonCV = ({ downloadUrl, fileName }) => {
 			className={styles.buttonCV}
 		>
 			{t("nav.downloadButton")}
+			<Image
+				className={styles.imageButtonCV}
+				src={
+					i18n.resolvedLanguage === "en"
+						? "/flags/en.png"
+						: `/flags/${i18n.resolvedLanguage}.svg`
+				}
+				alt={i18n.resolvedLanguage + " circular flag"}
+				width={24}
+				height={24}
+			/>
 		</button>
 	);
 };

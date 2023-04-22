@@ -33,11 +33,10 @@ export const LanguageSelector = () => {
 					onClick={() => handleLanguageChange(code)}
 				>
 					<Image
-						className='language-selector__button-flag'
 						src={flag}
 						alt={label + " circular flag"}
-						width={code === "en" ? 28 : 24}
-						height={code === "en" ? 28 : 24}
+						width={24}
+						height={24}
 					/>
 					<span
 						style={
