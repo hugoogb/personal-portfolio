@@ -95,9 +95,6 @@ export function Navbar({ setColor }) {
 		}
 	);
 
-	const fileName = "CV-en.pdf";
-	const downloadUrl = `/api/download?fileName=${fileName}`;
-
 	return (
 		<nav className={styles.navbar}>
 			<div className={styles.navbarContainer}>
@@ -112,10 +109,7 @@ export function Navbar({ setColor }) {
 				</div>
 			</div>
 			<div className={styles.buttonColorPickerContainer}>
-				<ButtonCV
-					downloadUrl={downloadUrl}
-					fileName={fileName}
-				></ButtonCV>
+				<ButtonCV></ButtonCV>
 				<SettingsMenu setColor={setColor}></SettingsMenu>
 			</div>
 		</nav>

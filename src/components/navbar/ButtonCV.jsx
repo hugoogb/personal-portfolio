@@ -4,8 +4,11 @@ import styles from "@/styles/modules/Navbar.module.css";
 import { ColorContext } from "@/components/PortfolioLayout.jsx";
 import Image from "next/image";
 
-export const ButtonCV = ({ downloadUrl, fileName }) => {
+export const ButtonCV = () => {
 	const { t, i18n } = useTranslation();
+
+	const fileName = `CV-${i18n.resolvedLanguage}.pdf`;
+	const downloadUrl = `/api/download?fileName=${fileName}&language=${i18n.resolvedLanguage}`;
 
 	const color = useContext(ColorContext);
 

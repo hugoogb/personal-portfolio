@@ -33,9 +33,6 @@ export function HomeSection() {
 		);
 	});
 
-	const fileName = "CV-en.pdf";
-	const downloadUrl = `/api/download?fileName=${fileName}`;
-
 	return (
 		<section id={t("nav.home")} className={sectionStyles.section}>
 			<div className={hankenGrotesk.className}>
@@ -47,10 +44,7 @@ export function HomeSection() {
 							{t("home.subtitle")}
 						</h2>
 						<div style={{ alignSelf: "flex-end" }}>
-							<ButtonCV
-								downloadUrl={downloadUrl}
-								fileName={fileName}
-							></ButtonCV>
+							<ButtonCV></ButtonCV>
 						</div>
 					</div>
 					<div className={styles.profileImageContainer}>
