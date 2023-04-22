@@ -2,10 +2,9 @@ import { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import styles from "@/styles/modules/Navbar.module.css";
-import { ColorPicker } from "@/components/navbar/ColorPicker.jsx";
+import { SettingsMenu } from "@/components/navbar/SettingsMenu.jsx";
 import { NavBarItem } from "@/components/navbar/NavBarItem.jsx";
 import { ButtonCV } from "@/components/navbar/ButtonCV.jsx";
-import { LanguageSelector } from "@/components/navbar/LanguageSelector.jsx";
 
 export function Navbar({ setColor }) {
 	const { t } = useTranslation();
@@ -113,12 +112,11 @@ export function Navbar({ setColor }) {
 				</div>
 			</div>
 			<div className={styles.buttonColorPickerContainer}>
-				<LanguageSelector></LanguageSelector>
 				<ButtonCV
 					downloadUrl={downloadUrl}
 					fileName={fileName}
 				></ButtonCV>
-				<ColorPicker setColor={setColor}></ColorPicker>
+				<SettingsMenu setColor={setColor}></SettingsMenu>
 			</div>
 		</nav>
 	);

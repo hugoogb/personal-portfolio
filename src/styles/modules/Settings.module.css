@@ -1,0 +1,106 @@
+.settingsIconContainer {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.settingsIcon {
+	width: 50px;
+
+	transition: all 0.3s ease-in-out;
+}
+
+.settingsIcon:hover {
+	cursor: pointer;
+	scale: 1.25;
+	rotate: 90deg;
+}
+
+.settingsContainer {
+	position: relative;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.settingsWrapper {
+	position: absolute;
+	top: 6rem;
+	right: 1.25rem;
+
+	transition: all 0.3s ease-in-out;
+
+	scrollbar-width: none; /* hide scrollbar for Firefox and Edge */
+}
+
+/* Hide scrollbar for Chrome and Safari */
+.settingsWrapper::-webkit-scrollbar {
+	display: none;
+}
+
+.settingsContainer {
+	padding: 1rem;
+
+	display: flex;
+	flex-direction: column;
+	align-items: flex-end;
+	justify-content: center;
+	gap: 2.5rem;
+}
+
+.colorPickerContainer {
+	margin-right: 0.75rem;
+}
+
+.languageSelectorContainer {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 1.5rem;
+
+	padding: 0.5rem 1.5rem 0.75rem 1.5rem;
+
+	border-radius: 20px;
+	box-shadow: -5px -5px 10px rgba(255, 255, 255, 0.5),
+		5px 5px 10px rgba(0, 0, 0, 0.5);
+	background-color: #f0f0f0;
+}
+
+.languageSelectorButton {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	cursor: pointer;
+
+	padding: 0.5rem;
+
+	border-bottom: solid 3px;
+
+	transition: all 0.3s ease-in-out;
+}
+
+.languageSelectorButtonLabel {
+	color: black;
+	font-size: 14px;
+
+	margin-left: 0.5rem;
+
+	transition: all 0.3s ease-in-out;
+}
+
+.languageSelectorButton:hover {
+	scale: 1.15;
+}
+
+.languageSelectorButton:hover .languageSelectorButtonLabel {
+	font-weight: 600;
+}
+
+@media (max-width: 920px) {
+	/* styles to apply when width is less than 920px */
+	.settingsWrapper {
+		top: 4.5rem;
+		right: 0;
+	}
+}
