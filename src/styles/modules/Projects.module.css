@@ -13,10 +13,6 @@
 	transition: all 0.3s ease-in-out;
 }
 
-.projectLink:hover {
-	scale: 1.05;
-}
-
 .projectContainer {
 	display: flex;
 	flex-direction: column;

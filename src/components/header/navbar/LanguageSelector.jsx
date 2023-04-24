@@ -43,7 +43,7 @@ export const LanguageSelector = () => {
 					style={
 						selectedLanguage === code
 							? { borderColor: color }
-							: { borderColor: "black" }
+							: { borderColor: "transparent" }
 					}
 					onClick={() => handleLanguageChange(code)}
 				>

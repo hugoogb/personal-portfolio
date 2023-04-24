@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import styles from "@/styles/modules/Settings.module.css";
 
 export const DarkModeToggle = () => {
 	const [isDarkMode, setIsDarkMode] = useState(false);

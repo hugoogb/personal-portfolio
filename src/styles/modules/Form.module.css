@@ -17,23 +17,32 @@
 .labelBar {
 	display: inline-block;
 	width: 2px;
-	height: 18px;
+	height: 20px;
 	margin-right: 0.5rem;
 
 	transition: background-color 0.3s ease-in-out;
 }
 
 .labelText {
-	font-size: 20px;
+	font-size: var(--text-size-m);
+	color: var(--text-color);
 }
 
 .inputLabel textarea {
 	resize: none;
 	height: 100px;
+	border-radius: var(--border-radius-s);
+	background: var(--card-background-color);
+	color: var(--text-color);
+	box-shadow: var(--box-shadow-button);
 }
 
 .input {
 	padding: 1rem;
+	border-radius: var(--border-radius-s);
+	background: var(--card-background-color);
+	color: var(--text-color);
+	box-shadow: var(--box-shadow-button);
 }
 
 .input:hover,

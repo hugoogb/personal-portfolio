@@ -1,32 +1,28 @@
-.navbar {
+.header {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	width: 100%;
+	padding: 1rem 2rem;
 
 	position: -webkit-sticky; /* Required for WebKit-based browsers */
 	position: sticky; /* Standard syntax */
 	top: 0;
 
-	padding: 1rem 2rem;
-
 	z-index: 999;
 }
 
-.navbarContainer {
+.navbar {
+	position: relative;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	gap: 2rem;
-
 	padding: 0.75rem 1rem;
+	border-radius: var(--border-radius-m);
 
-	position: relative;
-
-	border-radius: 20px;
-	box-shadow: -5px -5px 10px rgba(255, 255, 255, 0.5),
-		5px 5px 10px rgba(0, 0, 0, 0.5);
-	background-color: #f0f0f0;
+	background: var(--background-nav);
+	border: var(--border-nav);
 }
 
 .ulNavbar {
@@ -37,8 +33,7 @@
 }
 
 .navItem {
-	font-size: 18px;
-	color: black;
+	font-size: var(--text-size-s);
 }
 
 .navItem a {
@@ -59,10 +54,6 @@
 	transition: all 0.3s ease-in-out;
 }
 
-.navItem a:hover {
-	scale: 1.25;
-}
-
 .buttonColorPickerContainer {
 	display: flex;
 	align-items: center;
@@ -71,12 +62,10 @@
 }
 
 .buttonCV {
-	font-size: 20px;
 	white-space: nowrap;
 
 	padding: 1rem;
 	margin: 1rem;
-	border-radius: 10px;
 
 	cursor: pointer;
 
@@ -89,12 +78,6 @@
 
 .imageButtonCV {
 	margin-left: 1rem;
-}
-
-.buttonCV:hover {
-	scale: 1.1;
-
-	font-weight: 600;
 }
 
 .menuIconContainer {
@@ -149,10 +132,6 @@
 		cursor: pointer;
 
 		transition: all 0.3s ease-in-out;
-	}
-
-	.menuIcon:hover {
-		scale: 1.25;
 	}
 
 	.navItem a {

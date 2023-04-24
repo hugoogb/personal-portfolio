@@ -7,8 +7,10 @@
 	--border-radius-full: 50%;
 	--text-size-s: 14px;
 	--text-size-m: 22px;
+	--text-size-ml: 32px;
 	--text-size-l: 36px;
 	--text-size-xl: 48px;
+	--text-size-xml: 56px;
 	--text-size-xxl: 72px;
 }
 
@@ -18,6 +20,8 @@
 	--text-color: #0d1117;
 	--box-shadow-button: rgb(240, 242, 248) 0px 0px 0px 2px;
 	--box-shadow-button-hover: rgb(240, 242, 248) 0px 0px 0px 5px;
+	--background-nav: #ede9e9;
+	--border-nav: none;
 }
 
 .dark-theme {
@@ -26,6 +30,8 @@
 	--text-color: #f0f2f8;
 	--box-shadow-button: rgb(48, 54, 61) 0px 0px 0px 2px;
 	--box-shadow-button-hover: rgb(48, 54, 61) 0px 0px 0px 5px;
+	--background-nav: #0d1117;
+	--border-nav: 2px solid rgb(48, 54, 61);
 }
 
 * {

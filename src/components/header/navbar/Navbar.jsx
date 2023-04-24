@@ -97,8 +97,8 @@ export function Navbar({ setColor }) {
 	);
 
 	return (
-		<nav className={styles.navbar}>
-			<div className={styles.navbarContainer}>
+		<div className={styles.header}>
+			<nav className={styles.navbar}>
 				<ul style={ulNavbarStyles} className={styles.ulNavbar}>
 					{navItemsMapped}
 				</ul>
@@ -108,12 +108,12 @@ export function Navbar({ setColor }) {
 						className={styles.menuIcon}
 					/>
 				</div>
-			</div>
+			</nav>
 			<div className={styles.buttonColorPickerContainer}>
 				<DarkModeToggle></DarkModeToggle>
 				<ButtonCV></ButtonCV>
 				<SettingsMenu setColor={setColor}></SettingsMenu>
 			</div>
-		</nav>
+		</div>
 	);
 }
