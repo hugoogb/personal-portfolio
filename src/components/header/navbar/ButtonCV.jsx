@@ -46,7 +46,7 @@ export const ButtonCV = () => {
 			ref={elementRef}
 			onClick={handleDownload}
 			style={{ backgroundColor: color }}
-			className={styles.buttonCV}
+			className={`button ${styles.buttonCV}`}
 		>
 			{t("nav.downloadButton")}
 			<Image

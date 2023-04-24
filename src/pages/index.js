@@ -5,7 +5,7 @@ export default function Index() {
 	return (
 		<>
 			<Head>
-				<title>hugoogb</title>
+				<title>Hugo GB | Web Developer</title>
 				<meta
 					name='viewport'
 					content='width=device-width, initial-scale=1'

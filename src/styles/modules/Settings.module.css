@@ -12,7 +12,6 @@
 
 .settingsIcon:hover {
 	cursor: pointer;
-	scale: 1.25;
 	rotate: 90deg;
 }
 
@@ -54,13 +53,11 @@
 	align-items: center;
 	justify-content: center;
 	gap: 1.5rem;
-
 	padding: 0.5rem 1.5rem 0.75rem 1.5rem;
+	border-radius: var(--border-radius-m);
 
-	border-radius: 20px;
-	box-shadow: -5px -5px 10px rgba(255, 255, 255, 0.5),
-		5px 5px 10px rgba(0, 0, 0, 0.5);
-	background-color: #f0f0f0;
+	background: var(--background-nav);
+	border: var(--border-nav);
 }
 
 .languageSelectorButton {
@@ -78,20 +75,12 @@
 }
 
 .languageSelectorButtonLabel {
-	color: black;
-	font-size: 14px;
+	font-size: var(--text-size-s);
+	color: var(--text-color);
 
 	margin-left: 0.5rem;
 
 	transition: all 0.3s ease-in-out;
-}
-
-.languageSelectorButton:hover {
-	scale: 1.15;
-}
-
-.languageSelectorButton:hover .languageSelectorButtonLabel {
-	font-weight: 600;
 }
 
 @media (max-width: 920px) {

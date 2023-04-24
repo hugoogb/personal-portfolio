@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
 import styles from "@/styles/modules/Settings.module.css";
@@ -12,11 +12,26 @@ const languageOptions = [
 
 export const LanguageSelector = () => {
 	const { i18n } = useTranslation();
-
 	const color = useContext(ColorContext);
+	const [selectedLanguage, setSelectedLanguage] = useState(
+		i18n.resolvedLanguage
+	);
+
+	useEffect(() => {
+		const savedLanguage = localStorage.getItem("language");
+		if (
+			savedLanguage &&
+			languageOptions.some(({ code }) => code === savedLanguage)
+		) {
+			i18n.changeLanguage(savedLanguage);
+			setSelectedLanguage(savedLanguage);
+		}
+	}, [i18n]);
 
 	function handleLanguageChange(newLanguage) {
 		i18n.changeLanguage(newLanguage);
+		setSelectedLanguage(newLanguage);
+		localStorage.setItem("language", newLanguage);
 	}
 
 	return (
@@ -26,9 +41,9 @@ export const LanguageSelector = () => {
 					key={code}
 					className={styles.languageSelectorButton}
 					style={
-						i18n.resolvedLanguage === code
+						selectedLanguage === code
 							? { borderColor: color }
-							: { borderColor: "black" }
+							: { borderColor: "transparent" }
 					}
 					onClick={() => handleLanguageChange(code)}
 				>
@@ -40,7 +55,7 @@ export const LanguageSelector = () => {
 					/>
 					<span
 						style={
-							i18n.resolvedLanguage === code
+							selectedLanguage === code
 								? { fontWeight: "600" }
 								: {}
 						}

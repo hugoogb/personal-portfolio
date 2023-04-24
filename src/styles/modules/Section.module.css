@@ -3,13 +3,10 @@
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
-
-	padding-top: 10rem;
-	margin-top: 10rem;
 }
 
 .sectionTitle {
-	font-size: 62px;
+	font-size: var(--text-size-xml);
 	font-weight: 700;
 	text-transform: uppercase;
 	letter-spacing: 0.5rem;
@@ -21,11 +18,6 @@
 
 @media (max-width: 920px) {
 	/* styles to apply when width is less than 920px */
-	.section {
-		padding-top: 5rem;
-		margin-top: 5rem;
-	}
-
 	.sectionTitle {
 		margin: 2.5rem 0;
 	}
