@@ -2,9 +2,9 @@ import { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import styles from "@/styles/modules/Navbar.module.css";
-import { SettingsMenu } from "@/components/navbar/SettingsMenu.jsx";
-import { NavBarItem } from "@/components/navbar/NavBarItem.jsx";
-import { ButtonCV } from "@/components/navbar/ButtonCV.jsx";
+import { SettingsMenu } from "@/components/header/navbar/SettingsMenu.jsx";
+import { NavBarItem } from "@/components/header/navbar/NavBarItem.jsx";
+import { ButtonCV } from "@/components/header/navbar/ButtonCV.jsx";
 
 export function Navbar({ setColor }) {
 	const { t } = useTranslation();

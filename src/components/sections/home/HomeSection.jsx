@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import sectionStyles from "@/styles/modules/Section.module.css";
 import styles from "@/styles/modules/Home.module.css";
 import { ColorContext } from "@/components/PortfolioLayout.jsx";
-import { ButtonCV } from "@/components/navbar/ButtonCV.jsx";
+import { ButtonCV } from "@/components/header/navbar/ButtonCV.jsx";
 
 const hankenGrotesk = Hanken_Grotesk({ subsets: ["latin"] });
 

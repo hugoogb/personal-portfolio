@@ -1,7 +1,7 @@
 import { createContext, useState } from "react";
 import { I18nextProvider } from "react-i18next";
 import i18n from "../../i18n.js";
-import { Navbar } from "@/components/navbar/Navbar.jsx";
+import { Header } from "@/components/header/Header.jsx";
 import { HomeSection } from "@/components/sections/home/HomeSection.jsx";
 import { AboutSection } from "@/components/sections/about/AboutSection.jsx";
 import { ProjectsSection } from "@/components/sections/projects/ProjectsSection.jsx";
@@ -16,7 +16,7 @@ export function PortfolioLayout() {
 	return (
 		<I18nextProvider i18n={i18n}>
 			<ColorContext.Provider value={color}>
-				<Navbar setColor={setColor}></Navbar>
+				<Header setColor={setColor}></Header>
 				<HomeSection></HomeSection>
 				<AboutSection></AboutSection>
 				<ProjectsSection></ProjectsSection>
