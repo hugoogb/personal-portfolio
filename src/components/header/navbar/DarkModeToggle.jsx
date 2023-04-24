@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import styles from "@/styles/modules/Settings.module.css";
 
 export const DarkModeToggle = () => {
 	const [isDarkMode, setIsDarkMode] = useState(false);
@@ -31,10 +32,8 @@ export const DarkModeToggle = () => {
 	};
 
 	return (
-		<div>
-			<button onClick={toggleDarkMode}>
-				{isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
-			</button>
-		</div>
+		<button className='button' onClick={toggleDarkMode}>
+			{isDarkMode ? "Switch to light mode" : "Switch to dark mode"}
+		</button>
 	);
 };

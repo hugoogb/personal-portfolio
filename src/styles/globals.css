@@ -1,15 +1,31 @@
 :root {
-	--border-radius: 16px;
+	--box-shadow-transition: box-shadow 0.2s ease-out 0s;
+	--box-shadow-card-hover: rgba(100, 100, 111, 0.1) 0px 5px 24px 0px;
+	--border-radius-s: 16px;
+	--border-radius-m: 32px;
+	--border-radius-l: 64px;
+	--border-radius-full: 50%;
+	--text-size-s: 14px;
+	--text-size-m: 22px;
+	--text-size-l: 36px;
+	--text-size-xl: 48px;
+	--text-size-xxl: 72px;
 }
 
 .light-theme {
 	--background-color: #f7f2f2;
+	--card-background-color: #fff;
 	--text-color: #0d1117;
+	--box-shadow-button: rgb(240, 242, 248) 0px 0px 0px 2px;
+	--box-shadow-button-hover: rgb(240, 242, 248) 0px 0px 0px 5px;
 }
 
 .dark-theme {
 	--background-color: #090c10;
+	--card-background-color: #0d1117;
 	--text-color: #f0f2f8;
+	--box-shadow-button: rgb(48, 54, 61) 0px 0px 0px 2px;
+	--box-shadow-button-hover: rgb(48, 54, 61) 0px 0px 0px 5px;
 }
 
 * {
@@ -60,4 +76,20 @@ html {
 body {
 	background-color: var(--background-color);
 	color: var(--text-color);
+}
+
+.button {
+	font-size: var(--text-size-s);
+	background-color: var(--card-background-color);
+	color: var(--text-color);
+	padding: 1rem;
+	border-radius: var(--border-radius-m);
+	cursor: pointer;
+
+	box-shadow: var(--box-shadow-button);
+	transition: var(--box-shadow-transition);
+}
+
+.button:hover {
+	box-shadow: var(--box-shadow-button-hover);
 }

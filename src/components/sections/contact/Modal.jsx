@@ -34,7 +34,7 @@ export const Modal = ({ status, isOpen, onClose }) => {
 						</>
 					)}
 				</div>
-				<button className={styles.button} onClick={onClose}>
+				<button className='button' onClick={onClose}>
 					{t("contact.modal.close")}
 				</button>
 			</div>

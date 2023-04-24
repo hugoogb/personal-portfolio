@@ -134,7 +134,7 @@ export const ContactForm = () => {
 					onBlur={validate}
 					error={errors.message}
 				></Input>
-				<button type='submit' className={styles.button}>
+				<button type='submit' className='button'>
 					{t("contact.submit")}
 				</button>
 			</form>
