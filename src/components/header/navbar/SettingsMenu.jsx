@@ -1,45 +1,39 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { HexColorPicker } from "react-colorful";
 import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 import styles from "@/styles/modules/Settings.module.css";
 import { ColorContext } from "@/components/PortfolioLayout.jsx";
 import { LanguageSelector } from "@/components/header/navbar/LanguageSelector.jsx";
 
-export function SettingsMenu({ setColor }) {
+export const SettingsMenu = ({ setColor }) => {
 	const color = useContext(ColorContext);
-	const [display, setDisplay] = useState("");
 	const [visibility, setVisibility] = useState(false);
+	const settingsRef = useRef(null);
+	const iconSettingsRef = useRef(null);
 
 	useEffect(() => {
-		const handleResize = () => {
-			const width = window.innerWidth;
-			if (width <= 720) {
-				setDisplay("mobile");
-			} else {
-				setDisplay("desktop");
+		const handleClickOutside = (event) => {
+			if (
+				settingsRef.current &&
+				!settingsRef.current.contains(event.target) &&
+				iconSettingsRef.current &&
+				!iconSettingsRef.current.contains(event.target)
+			) {
+				setVisibility(false);
 			}
 		};
 
-		handleResize();
-
-		window.addEventListener("resize", handleResize);
+		document.addEventListener("mousedown", handleClickOutside);
 
 		return () => {
-			window.removeEventListener("resize", handleResize);
+			document.removeEventListener("mousedown", handleClickOutside);
 		};
 	}, []);
 
 	const settingsWrapperStyles = Object.assign(
 		{},
 		{
-			height:
-				display === "mobile"
-					? visibility
-						? "457px"
-						: "0"
-					: visibility
-					? "337px"
-					: "0",
+			height: visibility ? "475px" : "0",
 		},
 		{ overflow: visibility ? "auto" : "hidden" }
 	);
@@ -47,25 +41,25 @@ export function SettingsMenu({ setColor }) {
 	return (
 		<>
 			<div
+				ref={settingsRef}
 				style={settingsWrapperStyles}
 				className={styles.settingsWrapper}
 			>
 				<div className={styles.settingsContainer}>
 					<LanguageSelector></LanguageSelector>
-					<div className={styles.colorPickerContainer}>
-						<HexColorPicker
-							color={color}
-							onChange={setColor}
-						></HexColorPicker>
-					</div>
+					<HexColorPicker
+						color={color}
+						onChange={setColor}
+					></HexColorPicker>
 				</div>
 			</div>
-			<div className={styles.settingsIconContainer}>
-				<Cog6ToothIcon
-					onClick={() => setVisibility(visibility ? false : true)}
-					className={styles.settingsIcon}
-				/>
+			<div
+				ref={iconSettingsRef}
+				className={styles.settingsIconContainer}
+				onClick={() => setVisibility(!visibility)}
+			>
+				<Cog6ToothIcon className={styles.settingsIcon} />
 			</div>
 		</>
 	);
-}
+};

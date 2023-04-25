@@ -60,7 +60,7 @@
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	border-radius: var(--border-radius-l);
+	border-radius: var(--border-radius-m);
 	box-shadow: var(--box-shadow-button);
 	background-color: var(--card-background-color);
 }

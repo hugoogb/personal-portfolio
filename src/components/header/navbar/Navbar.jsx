@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import styles from "@/styles/modules/Header.module.css";
@@ -13,6 +13,8 @@ export function Navbar({ setColor }) {
 	const [activeId, setActiveId] = useState(null);
 	const [display, setDisplay] = useState("");
 	const [visibility, setVisibility] = useState(false);
+	const navbarRef = useRef(null);
+	const iconMenuNavbarRef = useRef(null);
 
 	const memoizedNavItems = useMemo(() => {
 		return [
@@ -87,6 +89,25 @@ export function Navbar({ setColor }) {
 		};
 	}, []);
 
+	useEffect(() => {
+		const handleClickOutside = (event) => {
+			if (
+				navbarRef.current &&
+				!navbarRef.current.contains(event.target) &&
+				iconMenuNavbarRef.current &&
+				!iconMenuNavbarRef.current.contains(event.target)
+			) {
+				setVisibility(false);
+			}
+		};
+
+		document.addEventListener("mousedown", handleClickOutside);
+
+		return () => {
+			document.removeEventListener("mousedown", handleClickOutside);
+		};
+	}, []);
+
 	const ulNavbarStyles = Object.assign(
 		{},
 		{
@@ -104,26 +125,32 @@ export function Navbar({ setColor }) {
 			border:
 				display === "mobile" || display === "tablet"
 					? visibility
-						? ""
+						? "var(--border-nav)"
 						: "none"
-					: "",
+					: "none",
 		}
 	);
 
 	return (
 		<div className={styles.header}>
 			<nav className={styles.navbar}>
-				<ul style={ulNavbarStyles} className={styles.ulNavbar}>
+				<ul
+					ref={navbarRef}
+					style={ulNavbarStyles}
+					className={styles.ulNavbar}
+				>
 					{navItemsMapped}
 				</ul>
-				<div className={styles.menuIconContainer}>
-					<Bars3Icon
-						onClick={() => setVisibility(visibility ? false : true)}
-						className={styles.menuIcon}
-					/>
+				<div
+					ref={iconMenuNavbarRef}
+					className={styles.menuIconContainer}
+					onClick={() => setVisibility(!visibility)}
+				>
+					<Bars3Icon className={styles.menuIcon} />
 				</div>
 			</nav>
 			<div className={styles.buttonColorPickerContainer}>
+				<DarkModeToggle></DarkModeToggle>
 				<div
 					style={{
 						display: display === "mobile" ? "none" : "inline-block",
@@ -131,7 +158,6 @@ export function Navbar({ setColor }) {
 				>
 					<ButtonCV></ButtonCV>
 				</div>
-				<DarkModeToggle></DarkModeToggle>
 				<SettingsMenu setColor={setColor}></SettingsMenu>
 			</div>
 		</div>

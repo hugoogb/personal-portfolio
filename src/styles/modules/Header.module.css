@@ -133,7 +133,7 @@
 		border-radius: var(--border-radius-m);
 
 		background: var(--background-nav);
-		border: var(--border-nav);
+		/* border: var(--border-nav); */
 	}
 
 	/* Hide scrollbar for Chrome and Safari */
