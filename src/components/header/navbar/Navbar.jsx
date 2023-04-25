@@ -125,9 +125,9 @@ export function Navbar({ setColor }) {
 			border:
 				display === "mobile" || display === "tablet"
 					? visibility
-						? ""
+						? "var(--border-nav)"
 						: "none"
-					: "",
+					: "none",
 		}
 	);
 
@@ -150,6 +150,7 @@ export function Navbar({ setColor }) {
 				</div>
 			</nav>
 			<div className={styles.buttonColorPickerContainer}>
+				<DarkModeToggle></DarkModeToggle>
 				<div
 					style={{
 						display: display === "mobile" ? "none" : "inline-block",
@@ -157,7 +158,6 @@ export function Navbar({ setColor }) {
 				>
 					<ButtonCV></ButtonCV>
 				</div>
-				<DarkModeToggle></DarkModeToggle>
 				<SettingsMenu setColor={setColor}></SettingsMenu>
 			</div>
 		</div>
