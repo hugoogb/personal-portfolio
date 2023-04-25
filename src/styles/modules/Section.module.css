@@ -54,6 +54,14 @@
 
 @media (max-width: 720px) {
 	/* styles to apply when width is less than 720px */
+	.cardContainer {
+		padding: 1rem;
+	}
+
+	.sectionWrapper {
+		gap: 2.5rem;
+	}
+
 	.sectionTitle {
 		font-size: 34px;
 	}

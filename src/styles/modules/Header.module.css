@@ -96,6 +96,14 @@
 
 @media (max-width: 920px) {
 	/* styles to apply when width is less than 920px */
+	.headerWrapper {
+		margin: 0 1rem;
+	}
+
+	.header {
+		padding: 1rem 1.5rem;
+	}
+
 	.navbarContainer {
 		border-radius: 0;
 		box-shadow: none;
@@ -106,6 +114,7 @@
 		border-radius: 0;
 		background: none;
 		border: none;
+		padding: 0;
 	}
 
 	.ulNavbar {
@@ -158,6 +167,14 @@
 
 @media (max-width: 720px) {
 	/* styles to apply when width is less than 720px */
+	.headerWrapper {
+		margin: 0 0.5rem;
+	}
+
+	.header {
+		padding: 1rem;
+	}
+
 	.ulNavbar {
 		left: -1rem;
 

@@ -84,7 +84,7 @@ export const ContactForm = () => {
 	};
 
 	return (
-		<>
+		<div className={styles.formContainer}>
 			<form className={styles.form} onSubmit={handleSubmit}>
 				<Input
 					type={"text"}
@@ -146,6 +146,6 @@ export const ContactForm = () => {
 					status={status}
 				></Modal>
 			)}
-		</>
+		</div>
 	);
 };
