@@ -1,6 +1,6 @@
 import { useContext, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import styles from "@/styles/modules/Navbar.module.css";
+import styles from "@/styles/modules/Header.module.css";
 import { ColorContext } from "@/components/PortfolioLayout.jsx";
 import Image from "next/image";
 

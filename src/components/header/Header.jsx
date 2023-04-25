@@ -1,4 +1,4 @@
-import styles from "@/styles/modules/Navbar.module.css";
+import styles from "@/styles/modules/Header.module.css";
 import { Navbar } from "@/components/header/navbar/Navbar.jsx";
 
 export const Header = ({ setColor }) => {
