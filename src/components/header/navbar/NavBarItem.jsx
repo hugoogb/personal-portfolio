@@ -1,5 +1,5 @@
 import { useContext } from "react";
-import styles from "@/styles/modules/Navbar.module.css";
+import styles from "@/styles/modules/Header.module.css";
 import { ColorContext } from "@/components/PortfolioLayout.jsx";
 
 export const NavBarItem = ({ id, activeId, children }) => {

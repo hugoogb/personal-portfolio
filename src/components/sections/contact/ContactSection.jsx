@@ -1,19 +1,18 @@
 import { useTranslation } from "react-i18next";
-import styles from "@/styles/modules/Section.module.css";
-import { SectionTitle } from "@/components/sections/SectionTitle.jsx";
 import { ContactForm } from "@/components/sections/contact/ContactForm.jsx";
+import memoji from "/public/memojis/image5.png";
+import { SectionCard } from "@/components/sections/SectionCard.jsx";
 
 export function ContactSection() {
 	const { t } = useTranslation();
 
 	return (
-		<section
+		<SectionCard
 			id={t("nav.contact")}
-			style={{ marginBottom: "20rem" }}
-			className={styles.section}
+			title={t("contact.title")}
+			memoji={memoji}
 		>
-			<SectionTitle>{t("contact.title")}</SectionTitle>
 			<ContactForm></ContactForm>
-		</section>
+		</SectionCard>
 	);
 }

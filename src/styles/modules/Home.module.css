@@ -48,13 +48,12 @@
 	justify-content: center;
 	flex-wrap: wrap;
 	gap: 5rem;
-	margin: 0 5rem;
 }
 
 .profileImageBackground {
 	clip-path: circle();
-	width: 500px;
-	height: 500px;
+	width: 375px;
+	height: 375px;
 	border-radius: var(--border-radius-full);
 
 	transition: background-color 0.3s ease-in-out;
@@ -62,8 +61,6 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-
-	width: 100%;
 
 	position: relative;
 }
@@ -77,9 +74,9 @@
 
 @media (max-width: 920px) {
 	/* styles to apply when width is less than 920px */
-	.headerContainer {
-		flex-direction: column;
-		margin: 0;
+	.profileImageBackground {
+		width: 300px;
+		height: 300px;
 	}
 }
 
@@ -97,8 +94,8 @@
 		height: 30px;
 	}
 
-	.profileImageContainer {
-		width: 300px;
-		height: 300px;
+	.profileImageBackground {
+		width: 250px;
+		height: 250px;
 	}
 }

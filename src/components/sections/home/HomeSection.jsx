@@ -2,10 +2,11 @@ import { useContext } from "react";
 import Image from "next/image";
 import { Hanken_Grotesk } from "next/font/google";
 import { useTranslation } from "react-i18next";
-import sectionStyles from "@/styles/modules/Section.module.css";
 import styles from "@/styles/modules/Home.module.css";
+import stylesSection from "@/styles/modules/Section.module.css";
 import { ColorContext } from "@/components/PortfolioLayout.jsx";
 import { ButtonCV } from "@/components/header/navbar/ButtonCV.jsx";
+import memoji from "/public/memojis/image3.png";
 
 const hankenGrotesk = Hanken_Grotesk({ subsets: ["latin"] });
 
@@ -34,34 +35,38 @@ export function HomeSection() {
 	});
 
 	return (
-		<section id={t("nav.home")} className={sectionStyles.section}>
+		<section id={t("nav.home")} className={stylesSection.section}>
 			<div className={hankenGrotesk.className}>
-				<div className={styles.headerContainer}>
-					<div className={styles.nameHeaderTextContainer}>
-						<h1 className={styles.nameHeader}>{splittedName}</h1>
-						<h2 className={styles.subtitleHeader}>
-							<span style={{ backgroundColor: color }}></span>
-							{t("home.subtitle")}
-						</h2>
-						<div style={{ alignSelf: "flex-end" }}>
-							<ButtonCV></ButtonCV>
-						</div>
-					</div>
-					<div className={styles.profileImageContainer}>
-						<div
-							style={{ background: color }}
-							className={styles.profileImageBackground}
-						>
-							<Image
-								src={
-									"https://res.cloudinary.com/hugoogb/image/upload/v1681508123/IMG_2347-removebg-preview_bfhe2e.png"
-								}
-								alt={"Profile picture of hugoogb"}
-								fill={true}
-								sizes='(max-width: 720px) 300px, 500px'
-								priority={true}
-								className={styles.profileImage}
-							></Image>
+				<div className={stylesSection.cardWrapper}>
+					<div className={stylesSection.cardContainer}>
+						<div className={styles.headerContainer}>
+							<div className={styles.nameHeaderTextContainer}>
+								<h1 className={styles.nameHeader}>
+									{splittedName}
+								</h1>
+								<h2 className={styles.subtitleHeader}>
+									<span
+										style={{ backgroundColor: color }}
+									></span>
+									{t("home.subtitle")}
+								</h2>
+								<div style={{ alignSelf: "flex-end" }}>
+									<ButtonCV></ButtonCV>
+								</div>
+							</div>
+							<div
+								style={{ background: color }}
+								className={styles.profileImageBackground}
+							>
+								<Image
+									src={memoji}
+									alt={"Memoji of Hugo GB"}
+									fill={true}
+									sizes='(max-width: 720px) 250px, (max-width: 920px) 300px, 375px'
+									priority={true}
+									className={styles.profileImage}
+								></Image>
+							</div>
 						</div>
 					</div>
 				</div>

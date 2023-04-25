@@ -45,7 +45,7 @@ export function SettingsMenu({ setColor }) {
 	);
 
 	return (
-		<div className={styles.settingsMenuContainer}>
+		<>
 			<div
 				style={settingsWrapperStyles}
 				className={styles.settingsWrapper}
@@ -66,6 +66,6 @@ export function SettingsMenu({ setColor }) {
 					className={styles.settingsIcon}
 				/>
 			</div>
-		</div>
+		</>
 	);
 }

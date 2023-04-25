@@ -1,15 +1,21 @@
+.headerWrapper {
+	position: -webkit-sticky; /* Required for WebKit-based browsers */
+	position: sticky; /* Standard syntax */
+	top: 1rem;
+	margin: 0 2rem;
+
+	z-index: 999;
+
+	background: var(--card-background-color);
+	border-radius: var(--border-radius-l);
+}
+
 .header {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	width: 100%;
 	padding: 1rem 2rem;
-
-	position: -webkit-sticky; /* Required for WebKit-based browsers */
-	position: sticky; /* Standard syntax */
-	top: 0;
-
-	z-index: 999;
 }
 
 .navbar {
@@ -90,10 +96,25 @@
 
 @media (max-width: 920px) {
 	/* styles to apply when width is less than 920px */
+	.headerWrapper {
+		margin: 0 1rem;
+	}
+
+	.header {
+		padding: 1rem 1.5rem;
+	}
+
 	.navbarContainer {
 		border-radius: 0;
 		box-shadow: none;
 		background-color: transparent;
+	}
+
+	.navbar {
+		border-radius: 0;
+		background: none;
+		border: none;
+		padding: 0;
 	}
 
 	.ulNavbar {
@@ -106,12 +127,13 @@
 
 		transition: all 0.3s ease-in-out;
 
-		scrollbar-width: none; /* hide scrollbar for Firefox and Edge */
+		/* hide scrollbar for Firefox and Edge */
+		scrollbar-width: none;
 
-		border-radius: 20px;
-		box-shadow: -5px -5px 10px rgba(255, 255, 255, 0.5),
-			5px 5px 10px rgba(0, 0, 0, 0.5);
-		background-color: #f0f0f0;
+		border-radius: var(--border-radius-m);
+
+		background: var(--background-nav);
+		border: var(--border-nav);
 	}
 
 	/* Hide scrollbar for Chrome and Safari */
@@ -134,6 +156,10 @@
 		transition: all 0.3s ease-in-out;
 	}
 
+	.menuIcon:hover {
+		rotate: 90deg;
+	}
+
 	.navItem a {
 		padding: 0 1rem;
 	}
@@ -141,23 +167,21 @@
 
 @media (max-width: 720px) {
 	/* styles to apply when width is less than 720px */
-	.navbar {
-		padding: 0.5rem 1rem;
+	.headerWrapper {
+		margin: 0 0.5rem;
+	}
+
+	.header {
+		padding: 1rem;
 	}
 
 	.ulNavbar {
-		left: 0;
+		left: -1rem;
 
 		margin-top: 0.75rem;
 	}
 
 	.navbarContainer {
 		padding-left: 0.5rem;
-	}
-
-	.buttonCV {
-		font-size: 14px;
-
-		margin: 0;
 	}
 }

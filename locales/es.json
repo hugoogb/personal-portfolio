@@ -12,7 +12,9 @@
 	"about": {
 		"title": "Acerca",
 		"text": {
-			"intro": "¡Hola! Me llamo Hugo y soy ",
+			"intro": "¡Hola! Me llamo ",
+			"name": "Hugo",
+			"introNext": " y soy ",
 			"webDeveloper": "desarrollador web",
 			"mainFocus": ". Mi principal enfoque es desarrollar ",
 			"webApps": "aplicaciones web",

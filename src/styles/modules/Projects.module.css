@@ -70,6 +70,10 @@
 
 @media (max-width: 720px) {
 	/* styles to apply when width is less than 720px */
+	.projectsWrapper {
+		margin: 0;
+	}
+
 	.projectImageContainer {
 		width: 275px;
 	}

@@ -1,11 +1,11 @@
 import { useContext } from "react";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
-import sectionStyles from "@/styles/modules/Section.module.css";
 import styles from "@/styles/modules/About.module.css";
-import { SectionTitle } from "@/components/sections/SectionTitle.jsx";
 import { ColorContext } from "@/components/PortfolioLayout.jsx";
 import { AboutIcons } from "@/components/sections/about/AboutIcons.jsx";
+import memoji from "/public/memojis/image4.png";
+import { SectionCard } from "@/components/sections/SectionCard.jsx";
 
 export function AboutSection() {
 	const { t } = useTranslation();
@@ -121,12 +121,19 @@ export function AboutSection() {
 	});
 
 	return (
-		<section id={t("nav.about")} className={sectionStyles.section}>
-			<SectionTitle>{t("about.title")}</SectionTitle>
+		<SectionCard
+			id={t("nav.about")}
+			title={t("about.title")}
+			memoji={memoji}
+		>
 			<div className={styles.aboutContainer}>
 				<div className={styles.aboutTextContainer}>
 					<p>
 						{t("about.text.intro")}
+						<span className={styles.aboutTextName}>
+							{t("about.text.name")}
+						</span>
+						{t("about.text.introNext")}
 						<span style={{ color: color }}>
 							{t("about.text.webDeveloper")}
 						</span>
@@ -207,6 +214,6 @@ export function AboutSection() {
 					></AboutIcons>
 				</div>
 			</div>
-		</section>
+		</SectionCard>
 	);
 }
