@@ -130,6 +130,10 @@ export function AboutSection() {
 				<div className={styles.aboutTextContainer}>
 					<p>
 						{t("about.text.intro")}
+						<span className={styles.aboutTextName}>
+							{t("about.text.name")}
+						</span>
+						{t("about.text.introNext")}
 						<span style={{ color: color }}>
 							{t("about.text.webDeveloper")}
 						</span>

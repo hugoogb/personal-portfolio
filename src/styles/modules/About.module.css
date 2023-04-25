@@ -1,6 +1,6 @@
 .aboutContainer {
 	display: flex;
-	align-items: center;
+	align-items: flex-start;
 	justify-content: center;
 	gap: 5rem;
 	flex-wrap: wrap;
@@ -19,6 +19,11 @@
 	flex-direction: column;
 	justify-content: center;
 	gap: 3.5rem;
+}
+
+.aboutTextName {
+	font-size: var(--text-size-xl);
+	font-weight: 500;
 }
 
 .aboutTextContainer > p > span {

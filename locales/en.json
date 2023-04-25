@@ -12,7 +12,9 @@
 	"about": {
 		"title": "About",
 		"text": {
-			"intro": "Hey there! My name is Hugo and I'm a ",
+			"intro": "Hey there! My name is ",
+			"name": "Hugo",
+			"introNext": " and I'm a ",
 			"webDeveloper": "web developer",
 			"mainFocus": ". My main focus is developing ",
 			"webApps": "web applications",
