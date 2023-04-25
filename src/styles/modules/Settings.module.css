@@ -40,12 +40,9 @@
 	gap: 2.5rem;
 }
 
-.colorPickerContainer {
-	margin-right: 0.75rem;
-}
-
 .languageSelectorContainer {
 	display: flex;
+	flex-direction: column;
 	align-items: center;
 	justify-content: center;
 	gap: 1.5rem;
@@ -97,12 +94,6 @@
 	}
 
 	.languageSelectorContainer {
-		flex-direction: column;
-
 		margin-right: 0.5rem;
-	}
-
-	.colorPickerContainer {
-		margin-right: 0.25rem;
 	}
 }
