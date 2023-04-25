@@ -5,6 +5,7 @@ import styles from "@/styles/modules/Header.module.css";
 import { SettingsMenu } from "@/components/header/navbar/SettingsMenu.jsx";
 import { NavBarItem } from "@/components/header/navbar/NavBarItem.jsx";
 import { ButtonCV } from "@/components/header/navbar/ButtonCV.jsx";
+import { DarkModeToggle } from "@/components/header/navbar/DarkModeToggle";
 
 export function Navbar({ setColor }) {
 	const { t } = useTranslation();
@@ -122,6 +123,7 @@ export function Navbar({ setColor }) {
 				>
 					<ButtonCV></ButtonCV>
 				</div>
+				<DarkModeToggle></DarkModeToggle>
 				<SettingsMenu setColor={setColor}></SettingsMenu>
 			</div>
 		</div>

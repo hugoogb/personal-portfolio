@@ -4,7 +4,6 @@ import { Cog6ToothIcon } from "@heroicons/react/24/outline";
 import styles from "@/styles/modules/Settings.module.css";
 import { ColorContext } from "@/components/PortfolioLayout.jsx";
 import { LanguageSelector } from "@/components/header/navbar/LanguageSelector.jsx";
-import { DarkModeToggle } from "@/components/header/navbar/DarkModeToggle";
 
 export function SettingsMenu({ setColor }) {
 	const color = useContext(ColorContext);
@@ -52,7 +51,6 @@ export function SettingsMenu({ setColor }) {
 				className={styles.settingsWrapper}
 			>
 				<div className={styles.settingsContainer}>
-					<DarkModeToggle></DarkModeToggle>
 					<LanguageSelector></LanguageSelector>
 					<div className={styles.colorPickerContainer}>
 						<HexColorPicker
