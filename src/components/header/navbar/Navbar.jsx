@@ -99,6 +99,14 @@ export function Navbar({ setColor }) {
 		},
 		{
 			overflow: visibility ? "auto" : "hidden",
+		},
+		{
+			border:
+				display === "mobile" || display === "tablet"
+					? visibility
+						? ""
+						: "none"
+					: "",
 		}
 	);
 

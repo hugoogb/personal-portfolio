@@ -102,6 +102,12 @@
 		background-color: transparent;
 	}
 
+	.navbar {
+		border-radius: 0;
+		background: none;
+		border: none;
+	}
+
 	.ulNavbar {
 		flex-direction: column;
 		justify-content: space-around;
@@ -112,12 +118,13 @@
 
 		transition: all 0.3s ease-in-out;
 
-		scrollbar-width: none; /* hide scrollbar for Firefox and Edge */
+		/* hide scrollbar for Firefox and Edge */
+		scrollbar-width: none;
 
-		border-radius: 20px;
-		box-shadow: -5px -5px 10px rgba(255, 255, 255, 0.5),
-			5px 5px 10px rgba(0, 0, 0, 0.5);
-		background-color: #f0f0f0;
+		border-radius: var(--border-radius-m);
+
+		background: var(--background-nav);
+		border: var(--border-nav);
 	}
 
 	/* Hide scrollbar for Chrome and Safari */
@@ -140,6 +147,10 @@
 		transition: all 0.3s ease-in-out;
 	}
 
+	.menuIcon:hover {
+		rotate: 90deg;
+	}
+
 	.navItem a {
 		padding: 0 1rem;
 	}
@@ -147,23 +158,13 @@
 
 @media (max-width: 720px) {
 	/* styles to apply when width is less than 720px */
-	.navbar {
-		padding: 0.5rem 1rem;
-	}
-
 	.ulNavbar {
-		left: 0;
+		left: -1rem;
 
 		margin-top: 0.75rem;
 	}
 
 	.navbarContainer {
 		padding-left: 0.5rem;
-	}
-
-	.buttonCV {
-		font-size: 14px;
-
-		margin: 0;
 	}
 }
