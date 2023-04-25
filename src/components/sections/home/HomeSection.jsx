@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Hanken_Grotesk } from "next/font/google";
 import { useTranslation } from "react-i18next";
 import styles from "@/styles/modules/Home.module.css";
+import stylesSection from "@/styles/modules/Section.module.css";
 import { ColorContext } from "@/components/PortfolioLayout.jsx";
 import { ButtonCV } from "@/components/header/navbar/ButtonCV.jsx";
 import memoji from "/public/memojis/image3.png";
@@ -34,10 +35,10 @@ export function HomeSection() {
 	});
 
 	return (
-		<section id={t("nav.home")} className='section'>
+		<section id={t("nav.home")} className={stylesSection.section}>
 			<div className={hankenGrotesk.className}>
-				<div className='cardWrapper'>
-					<div className='cardContainer'>
+				<div className={stylesSection.cardWrapper}>
+					<div className={stylesSection.cardContainer}>
 						<div className={styles.headerContainer}>
 							<div className={styles.nameHeaderTextContainer}>
 								<h1 className={styles.nameHeader}>

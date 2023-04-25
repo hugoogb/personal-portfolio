@@ -4,6 +4,7 @@ import { SectionTitle } from "@/components/sections/SectionTitle.jsx";
 import { Project } from "@/components/sections/projects/Project.jsx";
 import imageTest from "/public/image.jpeg";
 import memoji from "/public/memojis/image2.png";
+import { SectionCard } from "../SectionCard";
 
 export function ProjectsSection() {
 	const { t } = useTranslation();
@@ -41,19 +42,12 @@ export function ProjectsSection() {
 	});
 
 	return (
-		<section id={t("nav.projects")} className='section'>
-			<div className='cardWrapper'>
-				<div className='cardContainer'>
-					<div className='sectionWrapper'>
-						<SectionTitle memoji={memoji}>
-							{t("projects.title")}
-						</SectionTitle>
-						<div className={styles.projectsWrapper}>
-							{projectsMapped}
-						</div>
-					</div>
-				</div>
-			</div>
-		</section>
+		<SectionCard
+			id={t("nav.projects")}
+			title={t("projects.title")}
+			memoji={memoji}
+		>
+			<div className={styles.projectsWrapper}>{projectsMapped}</div>
+		</SectionCard>
 	);
 }
