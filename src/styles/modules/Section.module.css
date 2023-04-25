@@ -54,15 +54,23 @@
 
 @media (max-width: 720px) {
 	/* styles to apply when width is less than 720px */
+	.cardWrapper {
+		margin: 2.5rem 1rem;
+	}
+
 	.cardContainer {
-		padding: 1rem;
+		padding: 2rem 1rem;
 	}
 
 	.sectionWrapper {
 		gap: 2.5rem;
 	}
 
+	.sectionTitleContainer > img {
+		display: none;
+	}
+
 	.sectionTitle {
-		font-size: 34px;
+		font-size: var(--text-size-l);
 	}
 }
