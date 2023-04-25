@@ -5,7 +5,6 @@ import styles from "@/styles/modules/Navbar.module.css";
 import { SettingsMenu } from "@/components/header/navbar/SettingsMenu.jsx";
 import { NavBarItem } from "@/components/header/navbar/NavBarItem.jsx";
 import { ButtonCV } from "@/components/header/navbar/ButtonCV.jsx";
-import { DarkModeToggle } from "./DarkModeToggle";
 
 export function Navbar({ setColor }) {
 	const { t } = useTranslation();
@@ -69,8 +68,10 @@ export function Navbar({ setColor }) {
 	useEffect(() => {
 		const handleResize = () => {
 			const width = window.innerWidth;
-			if (width <= 920) {
+			if (width <= 720) {
 				setDisplay("mobile");
+			} else if (width <= 920) {
+				setDisplay("tablet");
 			} else {
 				setDisplay("desktop");
 			}
@@ -89,7 +90,11 @@ export function Navbar({ setColor }) {
 		{},
 		{
 			height:
-				display === "mobile" ? (visibility ? "220px" : "0") : "auto",
+				display === "mobile" || display === "tablet"
+					? visibility
+						? "220px"
+						: "0"
+					: "auto",
 		},
 		{
 			overflow: visibility ? "auto" : "hidden",
@@ -110,8 +115,13 @@ export function Navbar({ setColor }) {
 				</div>
 			</nav>
 			<div className={styles.buttonColorPickerContainer}>
-				<DarkModeToggle></DarkModeToggle>
-				<ButtonCV></ButtonCV>
+				<div
+					style={{
+						display: display === "mobile" ? "none" : "inline-block",
+					}}
+				>
+					<ButtonCV></ButtonCV>
+				</div>
 				<SettingsMenu setColor={setColor}></SettingsMenu>
 			</div>
 		</div>

@@ -1,15 +1,21 @@
+.headerWrapper {
+	position: -webkit-sticky; /* Required for WebKit-based browsers */
+	position: sticky; /* Standard syntax */
+	top: 1rem;
+	margin: 0 2rem;
+
+	z-index: 999;
+
+	background: var(--card-background-color);
+	border-radius: var(--border-radius-l);
+}
+
 .header {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
 	width: 100%;
 	padding: 1rem 2rem;
-
-	position: -webkit-sticky; /* Required for WebKit-based browsers */
-	position: sticky; /* Standard syntax */
-	top: 0;
-
-	z-index: 999;
 }
 
 .navbar {

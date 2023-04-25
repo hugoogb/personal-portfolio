@@ -1,4 +1,6 @@
 import "@/styles/globals.css";
+import "@/styles/card.css";
+import "@/styles/section.css";
 import { Raleway } from "next/font/google";
 
 const raleway = Raleway({ subsets: ["latin"] });

@@ -1,9 +1,9 @@
 import { useTranslation } from "react-i18next";
-import styles from "@/styles/modules/Section.module.css";
-import stylesProject from "@/styles/modules/Projects.module.css";
+import styles from "@/styles/modules/Projects.module.css";
 import { SectionTitle } from "@/components/sections/SectionTitle.jsx";
 import { Project } from "@/components/sections/projects/Project.jsx";
-import imageTest from "../../../../public/image.jpeg";
+import imageTest from "/public/image.jpeg";
+import memoji from "/public/memojis/image2.png";
 
 export function ProjectsSection() {
 	const { t } = useTranslation();
@@ -41,10 +41,18 @@ export function ProjectsSection() {
 	});
 
 	return (
-		<section id={t("nav.projects")} className={styles.section}>
-			<SectionTitle>{t("projects.title")}</SectionTitle>
-			<div className={stylesProject.projectsWrapper}>
-				{projectsMapped}
+		<section id={t("nav.projects")} className='section'>
+			<div className='cardWrapper'>
+				<div className='cardContainer'>
+					<div className='sectionWrapper'>
+						<SectionTitle memoji={memoji}>
+							{t("projects.title")}
+						</SectionTitle>
+						<div className={styles.projectsWrapper}>
+							{projectsMapped}
+						</div>
+					</div>
+				</div>
 			</div>
 		</section>
 	);

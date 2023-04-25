@@ -1,11 +1,11 @@
 import { useContext } from "react";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
-import sectionStyles from "@/styles/modules/Section.module.css";
 import styles from "@/styles/modules/About.module.css";
 import { SectionTitle } from "@/components/sections/SectionTitle.jsx";
 import { ColorContext } from "@/components/PortfolioLayout.jsx";
 import { AboutIcons } from "@/components/sections/about/AboutIcons.jsx";
+import memoji from "/public/memojis/image4.png";
 
 export function AboutSection() {
 	const { t } = useTranslation();
@@ -121,90 +121,98 @@ export function AboutSection() {
 	});
 
 	return (
-		<section id={t("nav.about")} className={sectionStyles.section}>
-			<SectionTitle>{t("about.title")}</SectionTitle>
-			<div className={styles.aboutContainer}>
-				<div className={styles.aboutTextContainer}>
-					<p>
-						{t("about.text.intro")}
-						<span style={{ color: color }}>
-							{t("about.text.webDeveloper")}
-						</span>
-						{t("about.text.mainFocus")}
-						<span style={{ color: color }}>
-							{t("about.text.webApps")}
-						</span>
-						{t("about.text.butAlso")}
-						<span style={{ color: color }}>
-							{t("about.text.mobileApps")}
-						</span>
-						{t("about.text.using")}
-						<span style={{ color: color }}>
-							{t("about.text.ReactNative")}
-						</span>
-						{t("about.text.endIntro")}
-					</p>
-					<br></br>
-					<p>
-						{t("about.text.specializeIn")}
-						<span style={{ color: color }}>
-							{t("about.text.jsFrameworks")}
-						</span>
-						{t("about.text.suchAs")}
-						<span style={{ color: color }}>
-							{t("about.text.react")}
-						</span>
-						{t("about.text.and")}
-						<span style={{ color: color }}>
-							{t("about.text.vue")}
-						</span>
-						{t("about.text.forFrontendDev")}
-						<span style={{ color: color }}>
-							{t("about.text.responsive")}
-						</span>
-						{t("about.text.and")}
-						<span style={{ color: color }}>
-							{t("about.text.dynamic")}
-						</span>
-						{t("about.text.userInterfaces")}
-						<span style={{ color: color }}>
-							{t("about.text.simpleLandingPage")}
-						</span>
-						{t("about.text.orA")}
-						<span style={{ color: color }}>
-							{t("about.text.complexWebApp")}
-						</span>
-						{t("about.text.iTakePrideIn")}
-					</p>
-					<br></br>
-					<p>
-						{t("about.text.inAdditionTo")}
-						<span style={{ color: color }}>
-							{t("about.text.nodeJs")}
-						</span>
-						{t("about.text.technologiesSuchAs")}
-						<span style={{ color: color }}>
-							{t("about.text.ExpressJS")}
-						</span>
-						{t("about.text.robustApps")}
-					</p>
-				</div>
-				<div className={styles.aboutImagesContainer}>
-					<AboutIcons
-						title={t("about.categories.frontend")}
-						iconsMapped={iconsFrontendMapped}
-						color={color}
-					></AboutIcons>
-					<AboutIcons
-						title={t("about.categories.backend")}
-						iconsMapped={iconsBackendMapped}
-						color={color}
-					></AboutIcons>
-					<AboutIcons
-						title={t("about.categories.tools")}
-						iconsMapped={iconsToolsMapped}
-						color={color}
-					></AboutIcons>
+		<section id={t("nav.about")} className='section'>
+			<div className='cardWrapper'>
+				<div className='cardContainer'>
+					<div className='sectionWrapper'>
+						<SectionTitle memoji={memoji}>
+							{t("about.title")}
+						</SectionTitle>
+						<div className={styles.aboutContainer}>
+							<div className={styles.aboutTextContainer}>
+								<p>
+									{t("about.text.intro")}
+									<span style={{ color: color }}>
+										{t("about.text.webDeveloper")}
+									</span>
+									{t("about.text.mainFocus")}
+									<span style={{ color: color }}>
+										{t("about.text.webApps")}
+									</span>
+									{t("about.text.butAlso")}
+									<span style={{ color: color }}>
+										{t("about.text.mobileApps")}
+									</span>
+									{t("about.text.using")}
+									<span style={{ color: color }}>
+										{t("about.text.ReactNative")}
+									</span>
+									{t("about.text.endIntro")}
+								</p>
+								<br></br>
+								<p>
+									{t("about.text.specializeIn")}
+									<span style={{ color: color }}>
+										{t("about.text.jsFrameworks")}
+									</span>
+									{t("about.text.suchAs")}
+									<span style={{ color: color }}>
+										{t("about.text.react")}
+									</span>
+									{t("about.text.and")}
+									<span style={{ color: color }}>
+										{t("about.text.vue")}
+									</span>
+									{t("about.text.forFrontendDev")}
+									<span style={{ color: color }}>
+										{t("about.text.responsive")}
+									</span>
+									{t("about.text.and")}
+									<span style={{ color: color }}>
+										{t("about.text.dynamic")}
+									</span>
+									{t("about.text.userInterfaces")}
+									<span style={{ color: color }}>
+										{t("about.text.simpleLandingPage")}
+									</span>
+									{t("about.text.orA")}
+									<span style={{ color: color }}>
+										{t("about.text.complexWebApp")}
+									</span>
+									{t("about.text.iTakePrideIn")}
+								</p>
+								<br></br>
+								<p>
+									{t("about.text.inAdditionTo")}
+									<span style={{ color: color }}>
+										{t("about.text.nodeJs")}
+									</span>
+									{t("about.text.technologiesSuchAs")}
+									<span style={{ color: color }}>
+										{t("about.text.ExpressJS")}
+									</span>
+									{t("about.text.robustApps")}
+								</p>
+							</div>
+							<div className={styles.aboutImagesContainer}>
+								<AboutIcons
+									title={t("about.categories.frontend")}
+									iconsMapped={iconsFrontendMapped}
+									color={color}
+								></AboutIcons>
+								<AboutIcons
+									title={t("about.categories.backend")}
+									iconsMapped={iconsBackendMapped}
+									color={color}
+								></AboutIcons>
+								<AboutIcons
+									title={t("about.categories.tools")}
+									iconsMapped={iconsToolsMapped}
+									color={color}
+								></AboutIcons>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</section>

@@ -22,6 +22,7 @@
 	--box-shadow-button-hover: rgb(240, 242, 248) 0px 0px 0px 5px;
 	--background-nav: #ede9e9;
 	--border-nav: none;
+	--box-shadow-card: transparent 0px 0px 0px 2px inset;
 }
 
 .dark-theme {
@@ -32,6 +33,7 @@
 	--box-shadow-button-hover: rgb(48, 54, 61) 0px 0px 0px 5px;
 	--background-nav: #0d1117;
 	--border-nav: 2px solid rgb(48, 54, 61);
+	--box-shadow-card: rgb(48, 54, 61) 0px 0px 0px 2px inset;
 }
 
 * {

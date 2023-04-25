@@ -5,13 +5,25 @@
 	align-items: center;
 }
 
+.sectionWrapper {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 5rem;
+}
+
+.sectionTitleContainer {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 2.5rem;
+}
+
 .sectionTitle {
 	font-size: var(--text-size-xml);
 	font-weight: 700;
 	text-transform: uppercase;
 	letter-spacing: 0.5rem;
-
-	margin: 5rem 0;
 
 	transition: color 0.3s ease-in-out;
 }
