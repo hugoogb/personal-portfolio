@@ -5,7 +5,7 @@ import styles from "@/styles/modules/About.module.css";
 import { ColorContext } from "@/components/PortfolioLayout.jsx";
 import { AboutIcons } from "@/components/sections/about/AboutIcons.jsx";
 import memoji from "/public/memojis/image4.png";
-import { SectionCard } from "../SectionCard";
+import { SectionCard } from "@/components/sections/SectionCard.jsx";
 
 export function AboutSection() {
 	const { t } = useTranslation();

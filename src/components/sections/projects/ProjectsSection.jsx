@@ -1,10 +1,9 @@
 import { useTranslation } from "react-i18next";
 import styles from "@/styles/modules/Projects.module.css";
-import { SectionTitle } from "@/components/sections/SectionTitle.jsx";
 import { Project } from "@/components/sections/projects/Project.jsx";
 import imageTest from "/public/image.jpeg";
 import memoji from "/public/memojis/image2.png";
-import { SectionCard } from "../SectionCard";
+import { SectionCard } from "@/components/sections/SectionCard.jsx";
 
 export function ProjectsSection() {
 	const { t } = useTranslation();
