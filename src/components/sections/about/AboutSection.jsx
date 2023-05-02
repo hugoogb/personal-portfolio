@@ -21,7 +21,7 @@ export function AboutSection() {
 		{
 			id: 1,
 			src: "/icons/css3.svg",
-			alt: "CSS3 svg icon",
+			alt: "CSS3",
 		},
 		{
 			id: 2,
@@ -83,40 +83,43 @@ export function AboutSection() {
 
 	const iconsFrontendMapped = iconsFrontend.map((icon) => {
 		return (
-			<Image
-				key={icon.id}
-				src={icon.src}
-				alt={icon.alt + " svg icon"}
-				width={48}
-				height={48}
-				className={styles.aboutIcon}
-			/>
+			<div key={icon.id} title={icon.alt}>
+				<Image
+					src={icon.src}
+					alt={icon.alt + " svg icon"}
+					width={48}
+					height={48}
+					className={styles.aboutIcon}
+				/>
+			</div>
 		);
 	});
 
 	const iconsBackendMapped = iconsBackend.map((icon) => {
 		return (
-			<Image
-				key={icon.id}
-				src={icon.src}
-				alt={icon.alt + " svg icon"}
-				width={48}
-				height={48}
-				className={styles.aboutIcon}
-			/>
+			<div key={icon.id} title={icon.alt}>
+				<Image
+					src={icon.src}
+					alt={icon.alt + " svg icon"}
+					width={48}
+					height={48}
+					className={styles.aboutIcon}
+				/>
+			</div>
 		);
 	});
 
 	const iconsToolsMapped = iconsTools.map((icon) => {
 		return (
-			<Image
-				key={icon.id}
-				src={icon.src}
-				alt={icon.alt + " svg icon"}
-				width={48}
-				height={48}
-				className={styles.aboutIcon}
-			/>
+			<div key={icon.id} title={icon.alt}>
+				<Image
+					src={icon.src}
+					alt={icon.alt + " svg icon"}
+					width={48}
+					height={48}
+					className={styles.aboutIcon}
+				/>
+			</div>
 		);
 	});
 
