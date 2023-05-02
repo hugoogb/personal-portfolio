@@ -39,7 +39,7 @@ export const DarkModeToggle = () => {
 				checked={isDarkMode}
 				onChange={toggleDarkMode}
 			/>
-			<label htmlFor='dn' lassName={styles.toggle}>
+			<label htmlFor='dn' className={styles.toggle}>
 				<span className={styles.toggle__handler}>
 					<span
 						className={`${styles.crater} ${styles.crater_1}`}
