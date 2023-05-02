@@ -1,0 +1,75 @@
+.footer {
+	margin: 1rem 2rem;
+
+	background: var(--card-background-color);
+	border-radius: var(--border-radius-l);
+}
+
+.footerWrapper {
+	padding: 1rem 2rem;
+}
+
+.footerContainer {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	gap: 10rem;
+}
+
+.socialsContainer {
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	justify-content: space-around;
+
+	gap: 1rem;
+
+	margin: 1rem 0;
+	width: 125px;
+}
+
+.anchorSocial {
+	padding: 0.5rem;
+}
+
+.socialIconButton {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.socialIcon {
+	margin: 0.25rem 0.5rem 0.25rem 0.25rem;
+}
+
+.socialIconButton > p {
+	margin-right: 0.5rem;
+}
+
+.arrowLink {
+	width: 0;
+	overflow: hidden;
+
+	transition: width 0.3s ease-in-out;
+
+	scrollbar-width: none; /* hide scrollbar for Firefox and Edge */
+}
+
+/* Hide scrollbar for Chrome and Safari */
+.arrowLink::-webkit-scrollbar {
+	display: none;
+}
+
+.anchorSocial:hover .arrowLink {
+	width: 24px;
+	overflow: auto;
+}
+
+@media (max-width: 720px) {
+	/* styles to apply when width is less than 720px */
+	.footerContainer {
+		flex-direction: column;
+		gap: 2.5rem;
+	}
+}
