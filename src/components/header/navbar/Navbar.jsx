@@ -132,7 +132,7 @@ export function Navbar({ setColor }) {
 	);
 
 	return (
-		<div className={styles.header}>
+		<header className={styles.header}>
 			<nav className={styles.navbar}>
 				<ul
 					ref={navbarRef}
@@ -160,6 +160,6 @@ export function Navbar({ setColor }) {
 				</div>
 				<SettingsMenu setColor={setColor}></SettingsMenu>
 			</div>
-		</div>
+		</header>
 	);
 }
