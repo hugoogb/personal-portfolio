@@ -11,10 +11,21 @@ export const NavBarItem = ({ id, activeId, children }) => {
 		{ width: activeId === id ? "35px" : "0" }
 	);
 
-	const handleSectionClick = (event) => {
+	const handleSectionClickOffset = (event, offset = 0) => {
 		event.preventDefault();
 		const section = document.getElementById(children);
-		section.scrollIntoView({ behavior: "smooth" });
+		const sectionTop = section.getBoundingClientRect().top;
+		const scrollTop =
+			window.pageYOffset || document.documentElement.scrollTop;
+		const finalScrollTop = scrollTop + sectionTop - offset;
+		window.scrollTo({
+			top: finalScrollTop,
+			behavior: "smooth",
+		});
+	};
+
+	const handleSectionClick = (event) => {
+		handleSectionClickOffset(event, 100);
 	};
 
 	return (

@@ -34,10 +34,9 @@ export function Navbar({ setColor }) {
 	});
 
 	useEffect(() => {
-		// Function to check for currently viewed section
 		const handleScroll = () => {
 			// Get current vertical scroll position
-			const scrollPosition = window.pageYOffset;
+			const scrollPosition = window.pageYOffset + 200; // add 100px offset
 
 			// Loop through all sections on the page
 			const sections = document.querySelectorAll("section");
