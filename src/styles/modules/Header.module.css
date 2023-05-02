@@ -184,4 +184,8 @@
 	.navbarContainer {
 		padding-left: 0.5rem;
 	}
+
+	.menuIcon {
+		width: 35px;
+	}
 }

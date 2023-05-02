@@ -96,4 +96,8 @@
 	.languageSelectorContainer {
 		margin-right: 0.5rem;
 	}
+
+	.settingsIcon {
+		width: 35px;
+	}
 }

@@ -92,6 +92,10 @@
 	}
 
 	.aboutIconsTitle {
-		font-size: 20px;
+		font-size: var(--text-size-m);
+	}
+
+	.aboutTextName {
+		font-size: var(--text-size-ml);
 	}
 }
