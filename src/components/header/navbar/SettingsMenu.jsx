@@ -12,6 +12,19 @@ export const SettingsMenu = ({ setColor }) => {
 	const iconSettingsRef = useRef(null);
 
 	useEffect(() => {
+		const savedColor = localStorage.getItem("color");
+
+		if (savedColor) {
+			setColor(savedColor);
+		}
+	}, [setColor]);
+
+	const handleColorChange = (color) => {
+		setColor(color);
+		localStorage.setItem("color", color);
+	};
+
+	useEffect(() => {
 		const handleClickOutside = (event) => {
 			if (
 				settingsRef.current &&
@@ -49,7 +62,7 @@ export const SettingsMenu = ({ setColor }) => {
 					<LanguageSelector></LanguageSelector>
 					<HexColorPicker
 						color={color}
-						onChange={setColor}
+						onChange={handleColorChange}
 					></HexColorPicker>
 				</div>
 			</div>
