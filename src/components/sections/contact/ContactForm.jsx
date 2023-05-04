@@ -87,6 +87,7 @@ export const ContactForm = () => {
 		<div className={styles.formContainer}>
 			<form className={styles.form} onSubmit={handleSubmit}>
 				<Input
+					name={"name"}
 					type={"text"}
 					placeholder={"Hugo García Benjumea"}
 					label={t("contact.form.name.label")}
@@ -99,6 +100,7 @@ export const ContactForm = () => {
 					error={errors.name}
 				></Input>
 				<Input
+					name={"email"}
 					type={"email"}
 					placeholder={"hugogaben8.02@gmail.com"}
 					label={t("contact.form.email.label")}
@@ -111,6 +113,7 @@ export const ContactForm = () => {
 					error={errors.email}
 				></Input>
 				<Input
+					name={"subject"}
 					type={"text"}
 					placeholder={t("contact.form.subject.placeholder")}
 					label={t("contact.form.subject.label")}
@@ -123,6 +126,7 @@ export const ContactForm = () => {
 					error={errors.subject}
 				></Input>
 				<Input
+					name={"message"}
 					type={"textarea"}
 					placeholder={t("contact.form.message.placeholder")}
 					label={t("contact.form.message.label")}
