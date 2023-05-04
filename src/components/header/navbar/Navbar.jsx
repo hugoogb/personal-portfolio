@@ -11,7 +11,6 @@ export function Navbar({ setColor }) {
 	const { t } = useTranslation();
 
 	const [activeId, setActiveId] = useState(null);
-	const [display, setDisplay] = useState("");
 	const [visibility, setVisibility] = useState(false);
 	const navbarRef = useRef(null);
 	const iconMenuNavbarRef = useRef(null);
@@ -68,27 +67,6 @@ export function Navbar({ setColor }) {
 	}, [memoizedNavItems]);
 
 	useEffect(() => {
-		const handleResize = () => {
-			const width = window.innerWidth;
-			if (width <= 720) {
-				setDisplay("mobile");
-			} else if (width <= 920) {
-				setDisplay("tablet");
-			} else {
-				setDisplay("desktop");
-			}
-		};
-
-		handleResize();
-
-		window.addEventListener("resize", handleResize);
-
-		return () => {
-			window.removeEventListener("resize", handleResize);
-		};
-	}, []);
-
-	useEffect(() => {
 		const handleClickOutside = (event) => {
 			if (
 				navbarRef.current &&
@@ -107,36 +85,29 @@ export function Navbar({ setColor }) {
 		};
 	}, []);
 
-	const ulNavbarStyles = Object.assign(
+	const ulNavbarMobileStyles = Object.assign(
 		{},
 		{
-			height:
-				display === "mobile" || display === "tablet"
-					? visibility
-						? "220px"
-						: "0"
-					: "auto",
+			height: visibility ? "220px" : "0",
 		},
 		{
 			overflow: visibility ? "auto" : "hidden",
 		},
 		{
-			border:
-				display === "mobile" || display === "tablet"
-					? visibility
-						? "var(--border-nav)"
-						: "none"
-					: "none",
+			border: visibility ? "var(--border-nav)" : "none",
 		}
 	);
 
 	return (
 		<header className={styles.header}>
 			<nav className={styles.navbar}>
+				<ul ref={navbarRef} className={styles.ulNavbar}>
+					{navItemsMapped}
+				</ul>
 				<ul
 					ref={navbarRef}
-					style={ulNavbarStyles}
-					className={styles.ulNavbar}
+					style={ulNavbarMobileStyles}
+					className={styles.ulNavbarMobile}
 				>
 					{navItemsMapped}
 				</ul>
@@ -150,11 +121,7 @@ export function Navbar({ setColor }) {
 			</nav>
 			<div className={styles.buttonColorPickerContainer}>
 				<DarkModeToggle></DarkModeToggle>
-				<div
-					style={{
-						display: display === "mobile" ? "none" : "inline-block",
-					}}
-				>
+				<div className={styles.buttonCVnav}>
 					<ButtonCV></ButtonCV>
 				</div>
 				<SettingsMenu setColor={setColor}></SettingsMenu>

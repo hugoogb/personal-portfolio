@@ -38,6 +38,10 @@
 	gap: 1rem;
 }
 
+.ulNavbarMobile {
+	display: none;
+}
+
 .navItem {
 	font-size: var(--text-size-s);
 }
@@ -118,12 +122,18 @@
 	}
 
 	.ulNavbar {
+		display: none;
+	}
+
+	.ulNavbarMobile {
+		display: flex;
 		flex-direction: column;
 		justify-content: space-around;
 		gap: 0;
 
 		position: absolute;
 		top: 4.5rem;
+		left: 0.05rem;
 
 		transition: all 0.3s ease-in-out;
 
@@ -133,7 +143,6 @@
 		border-radius: var(--border-radius-m);
 
 		background: var(--background-nav);
-		/* border: var(--border-nav); */
 	}
 
 	/* Hide scrollbar for Chrome and Safari */
@@ -187,5 +196,9 @@
 
 	.menuIcon {
 		width: 35px;
+	}
+
+	.buttonCVnav {
+		display: none;
 	}
 }
