@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Bars3Icon } from "@heroicons/react/24/outline";
 import styles from "@/styles/modules/Header.module.css";
 import { SettingsMenu } from "@/components/header/navbar/SettingsMenu.jsx";
 import { NavBarItem } from "@/components/header/navbar/NavBarItem.jsx";
 import { ButtonCV } from "@/components/header/navbar/ButtonCV.jsx";
 import { DarkModeToggle } from "@/components/header/navbar/DarkModeToggle";
+import { IconMenu2 } from "@tabler/icons-react";
 
 export function Navbar({ setColor }) {
 	const { t } = useTranslation();
@@ -85,7 +85,10 @@ export function Navbar({ setColor }) {
 					className={styles.menuIconContainer}
 					onClick={() => setVisibility(!visibility)}
 				>
-					<Bars3Icon className={styles.menuIcon} />
+					<IconMenu2
+						size={48}
+						className={styles.menuIcon}
+					></IconMenu2>
 				</div>
 			</nav>
 			<div className={styles.buttonColorPickerContainer}>
