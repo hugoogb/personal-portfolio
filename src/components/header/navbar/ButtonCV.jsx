@@ -2,7 +2,7 @@ import { useContext, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "@/styles/modules/Header.module.css";
 import { ColorContext } from "@/components/PortfolioLayout.jsx";
-import Image from "next/image";
+import { IconDownload } from "@tabler/icons-react";
 
 export const ButtonCV = () => {
 	const { t, i18n } = useTranslation();
@@ -49,17 +49,7 @@ export const ButtonCV = () => {
 			className={`button ${styles.buttonCV}`}
 		>
 			{t("nav.downloadButton")}
-			<Image
-				className={styles.imageButtonCV}
-				src={
-					i18n.resolvedLanguage === "en"
-						? "/flags/en.png"
-						: `/flags/${i18n.resolvedLanguage}.svg`
-				}
-				alt={i18n.resolvedLanguage + " circular flag"}
-				width={24}
-				height={24}
-			/>
+			<IconDownload size={24} className={styles.iconDownload} />
 		</button>
 	);
 };

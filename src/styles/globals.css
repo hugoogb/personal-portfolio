@@ -79,6 +79,14 @@ textarea {
 
 html {
 	scroll-behavior: smooth;
+
+	/* hide scrollbar for Firefox and Edge */
+	scrollbar-width: none;
+}
+
+/* Hide scrollbar for Chrome and Safari */
+html::-webkit-scrollbar {
+	display: none;
 }
 
 body {

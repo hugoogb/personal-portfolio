@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import styles from "@/styles/modules/Header.module.css";
@@ -15,56 +15,20 @@ export function Navbar({ setColor }) {
 	const navbarRef = useRef(null);
 	const iconMenuNavbarRef = useRef(null);
 
-	const memoizedNavItems = useMemo(() => {
-		return [
-			{ id: 0, name: t("nav.home") },
-			{ id: 1, name: t("nav.about") },
-			{ id: 2, name: t("nav.projects") },
-			{ id: 3, name: t("nav.contact") },
-		];
-	}, [t]);
+	const navItems = [
+		{ id: 0, name: t("nav.home") },
+		{ id: 1, name: t("nav.about") },
+		{ id: 2, name: t("nav.projects") },
+		{ id: 3, name: t("nav.contact") },
+	];
 
-	const navItemsMapped = memoizedNavItems.map((item) => {
+	const navItemsMapped = navItems.map((item) => {
 		return (
 			<NavBarItem key={item.id} id={item.id} activeId={activeId}>
 				{item.name}
 			</NavBarItem>
 		);
 	});
-
-	useEffect(() => {
-		const handleScroll = () => {
-			// Get current vertical scroll position
-			const scrollPosition = window.pageYOffset + 200; // add 100px offset
-
-			// Loop through all sections on the page
-			const sections = document.querySelectorAll("section");
-			for (let i = 0; i < sections.length; i++) {
-				const section = sections[i];
-
-				// Check if section is within viewable area
-				if (
-					section.offsetTop + section.offsetHeight > scrollPosition &&
-					section.offsetTop < scrollPosition + window.innerHeight
-				) {
-					const sectionName = section.getAttribute("id");
-					const activeSectionId = memoizedNavItems.findIndex(
-						(section) => {
-							return section.name == sectionName;
-						}
-					);
-					setActiveId(activeSectionId);
-					break; // Stop looping once we find the first section in view
-				}
-			}
-		};
-
-		// Add event listener for scroll events
-		window.addEventListener("scroll", handleScroll);
-
-		// Remove event listener on component unmount
-		return () => window.removeEventListener("scroll", handleScroll);
-	}, [memoizedNavItems]);
 
 	useEffect(() => {
 		const handleClickOutside = (event) => {

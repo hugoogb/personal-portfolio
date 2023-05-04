@@ -55,7 +55,7 @@ export const Footer = () => {
 					<div className={styles.arrowLink}>
 						<IconExternalLink
 							color={"var(--text-color)"}
-							size={24}
+							size={20}
 						/>
 					</div>
 				</div>
@@ -66,12 +66,7 @@ export const Footer = () => {
 	return (
 		<footer className={styles.footer}>
 			<div className={styles.footerWrapper}>
-				<div className={styles.footerContainer}>
-					<div className={styles.socialsContainer}>
-						{socialsMapped}
-					</div>
-					<ButtonCV></ButtonCV>
-				</div>
+				<div className={styles.footerContainer}>{socialsMapped}</div>
 			</div>
 		</footer>
 	);
