@@ -1,7 +1,7 @@
 {
 	"nav": {
 		"home": "Inici",
-		"about": "Sobre",
+		"about": "Sobre mi",
 		"projects": "Projectes",
 		"contact": "Contacte",
 		"downloadButton": "Descarregar CV"
@@ -10,7 +10,7 @@
 		"subtitle": "Desenvolupador web"
 	},
 	"about": {
-		"title": "Sobre",
+		"title": "Sobre mi",
 		"text": {
 			"intro": "Hola! Em dic ",
 			"name": "Hugo",
@@ -94,6 +94,24 @@
 				"message": "Oh! Hi ha hagut un error."
 			},
 			"close": "Tancar"
+		}
+	},
+	"head": {
+		"home": {
+			"title": "Hugo GB | Desenvolupador Web",
+			"description": "Pàgina principal del portafoli personal de Hugo."
+		},
+		"about": {
+			"title": "Hugo GB | Sobre mi",
+			"description": "Pàgina Sobre mi del portafoli personal de Hugo."
+		},
+		"projects": {
+			"title": "Hugo GB | Projectes",
+			"description": "Pàgina de projectes del portafoli personal de Hugo."
+		},
+		"contact": {
+			"title": "Hugo GB | Contacte",
+			"description": "Pàgina de contacte del portafoli personal de Hugo."
 		}
 	}
 }
