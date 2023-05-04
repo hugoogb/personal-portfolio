@@ -65,8 +65,12 @@ export const Footer = () => {
 
 	return (
 		<footer className={styles.footer}>
-			<div className={styles.footerWrapper}>
-				<div className={styles.footerContainer}>{socialsMapped}</div>
+			<div className={styles.footerAbsolute}>
+				<div className={styles.footerWrapper}>
+					<div className={styles.footerContainer}>
+						{socialsMapped}
+					</div>
+				</div>
 			</div>
 		</footer>
 	);

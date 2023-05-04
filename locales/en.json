@@ -95,5 +95,23 @@
 			},
 			"close": "Close"
 		}
+	},
+	"head": {
+		"home": {
+			"title": "Hugo GB | Web Developer",
+			"description": "Hugo's personal portfolio home page."
+		},
+		"about": {
+			"title": "Hugo GB | About",
+			"description": "Hugo's personal portfolio about page."
+		},
+		"projects": {
+			"title": "Hugo GB | Projects",
+			"description": "Hugo's personal portfolio projects page."
+		},
+		"contact": {
+			"title": "Hugo GB | Contact",
+			"description": "Hugo's personal portfolio contact page."
+		}
 	}
 }

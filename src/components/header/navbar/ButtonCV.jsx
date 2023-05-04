@@ -1,7 +1,7 @@
 import { useContext, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "@/styles/modules/Header.module.css";
-import { ColorContext } from "@/components/PortfolioLayout.jsx";
+import { ColorContext } from "@/components/Layout.jsx";
 import { IconDownload } from "@tabler/icons-react";
 
 export const ButtonCV = () => {

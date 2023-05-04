@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
 import styles from "@/styles/modules/Settings.module.css";
-import { ColorContext } from "@/components/PortfolioLayout";
+import { ColorContext } from "@/components/Layout";
 
 const languageOptions = [
 	{ code: "en", label: "English", flag: "/flags/en.png" },

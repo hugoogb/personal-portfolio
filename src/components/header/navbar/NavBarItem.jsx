@@ -1,8 +1,9 @@
 import { useContext } from "react";
 import styles from "@/styles/modules/Header.module.css";
-import { ColorContext } from "@/components/PortfolioLayout.jsx";
+import { ColorContext } from "@/components/Layout.jsx";
+import Link from "next/link";
 
-export const NavBarItem = ({ id, activeId, children }) => {
+export const NavBarItem = ({ href, id, activeId, children }) => {
 	const color = useContext(ColorContext);
 
 	const spanStyles = Object.assign(
@@ -11,33 +12,15 @@ export const NavBarItem = ({ id, activeId, children }) => {
 		{ width: activeId === id ? "35px" : "0" }
 	);
 
-	const handleSectionClickOffset = (event, offset = 0) => {
-		event.preventDefault();
-		const section = document.getElementById(children);
-		const sectionTop = section.getBoundingClientRect().top;
-		const scrollTop =
-			window.pageYOffset || document.documentElement.scrollTop;
-		const finalScrollTop = scrollTop + sectionTop - offset;
-		window.scrollTo({
-			top: finalScrollTop,
-			behavior: "smooth",
-		});
-	};
-
-	const handleSectionClick = (event) => {
-		handleSectionClickOffset(event, 100);
-	};
-
 	return (
 		<li className={styles.navItem}>
-			<a
-				href=''
+			<Link
+				href={href}
 				style={{ fontWeight: activeId === id ? "600" : "400" }}
-				onClick={handleSectionClick}
 			>
 				{children}
 				<span style={spanStyles} className={styles.navItemBar}></span>
-			</a>
+			</Link>
 		</li>
 	);
 };

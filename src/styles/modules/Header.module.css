@@ -1,7 +1,10 @@
-.headerWrapper {
+.header {
 	position: absolute;
 	top: 1rem;
-	width: calc(100vw - 2 * 2rem);
+	width: 100vw;
+}
+
+.headerAbsolute {
 	margin: 0 2rem;
 
 	z-index: 999;
@@ -10,11 +13,16 @@
 	border-radius: var(--border-radius-l);
 }
 
-.header {
+.headerWrapper {
+	padding: 1rem 2rem;
+}
+
+.headerContainer {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 1rem 2rem;
+
+	gap: 1.5rem;
 }
 
 .navbar {
@@ -157,7 +165,6 @@
 
 	.menuIcon {
 		display: inline-block;
-		width: 50px;
 
 		cursor: pointer;
 

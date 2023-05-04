@@ -3,7 +3,7 @@ import Image from "next/image";
 import { useTranslation } from "react-i18next";
 import styles from "@/styles/modules/Home.module.css";
 import stylesSection from "@/styles/modules/Section.module.css";
-import { ColorContext } from "@/components/PortfolioLayout.jsx";
+import { ColorContext } from "@/components/Layout.jsx";
 import { ButtonCV } from "@/components/header/navbar/ButtonCV.jsx";
 import memoji from "/public/memojis/image3.png";
 import { HomeTitle } from "@/components/sections/home/HomeTitle.jsx";

@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Bars3Icon } from "@heroicons/react/24/outline";
 import styles from "@/styles/modules/Header.module.css";
 import { SettingsMenu } from "@/components/header/navbar/SettingsMenu.jsx";
 import { NavBarItem } from "@/components/header/navbar/NavBarItem.jsx";
 import { ButtonCV } from "@/components/header/navbar/ButtonCV.jsx";
 import { DarkModeToggle } from "@/components/header/navbar/DarkModeToggle";
+import { IconMenu2 } from "@tabler/icons-react";
 
 export function Navbar({ setColor }) {
 	const { t } = useTranslation();
@@ -16,15 +16,20 @@ export function Navbar({ setColor }) {
 	const iconMenuNavbarRef = useRef(null);
 
 	const navItems = [
-		{ id: 0, name: t("nav.home") },
-		{ id: 1, name: t("nav.about") },
-		{ id: 2, name: t("nav.projects") },
-		{ id: 3, name: t("nav.contact") },
+		{ id: 0, name: t("nav.home"), href: "/" },
+		{ id: 1, name: t("nav.about"), href: "/about" },
+		{ id: 2, name: t("nav.projects"), href: "/projects" },
+		{ id: 3, name: t("nav.contact"), href: "/contact" },
 	];
 
 	const navItemsMapped = navItems.map((item) => {
 		return (
-			<NavBarItem key={item.id} id={item.id} activeId={activeId}>
+			<NavBarItem
+				key={item.id}
+				href={item.href}
+				id={item.id}
+				activeId={activeId}
+			>
 				{item.name}
 			</NavBarItem>
 		);
@@ -63,7 +68,7 @@ export function Navbar({ setColor }) {
 	);
 
 	return (
-		<header className={styles.header}>
+		<div className={styles.headerContainer}>
 			<nav className={styles.navbar}>
 				<ul ref={navbarRef} className={styles.ulNavbar}>
 					{navItemsMapped}
@@ -80,7 +85,10 @@ export function Navbar({ setColor }) {
 					className={styles.menuIconContainer}
 					onClick={() => setVisibility(!visibility)}
 				>
-					<Bars3Icon className={styles.menuIcon} />
+					<IconMenu2
+						size={48}
+						className={styles.menuIcon}
+					></IconMenu2>
 				</div>
 			</nav>
 			<div className={styles.buttonColorPickerContainer}>
@@ -90,6 +98,6 @@ export function Navbar({ setColor }) {
 				</div>
 				<SettingsMenu setColor={setColor}></SettingsMenu>
 			</div>
-		</header>
+		</div>
 	);
 }

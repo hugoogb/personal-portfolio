@@ -2,7 +2,7 @@ import { useContext } from "react";
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
 import styles from "@/styles/modules/About.module.css";
-import { ColorContext } from "@/components/PortfolioLayout.jsx";
+import { ColorContext } from "@/components/Layout.jsx";
 import { AboutIcons } from "@/components/sections/about/AboutIcons.jsx";
 import memoji from "/public/memojis/image4.png";
 import { SectionCard } from "@/components/sections/SectionCard.jsx";
@@ -102,11 +102,7 @@ export function AboutSection() {
 	const iconsToolsMapped = mapIcons(iconsTools);
 
 	return (
-		<SectionCard
-			id={t("nav.about")}
-			title={t("about.title")}
-			memoji={memoji}
-		>
+		<SectionCard title={t("about.title")} memoji={memoji}>
 			<div className={styles.aboutContainer}>
 				<div className={styles.aboutTextContainer}>
 					<p>
