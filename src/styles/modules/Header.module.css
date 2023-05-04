@@ -1,7 +1,7 @@
 .headerWrapper {
-	position: -webkit-sticky; /* Required for WebKit-based browsers */
-	position: sticky; /* Standard syntax */
+	position: absolute;
 	top: 1rem;
+	width: calc(100vw - 2 * 2rem);
 	margin: 0 2rem;
 
 	z-index: 999;
@@ -14,7 +14,6 @@
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	width: 100%;
 	padding: 1rem 2rem;
 }
 
@@ -36,6 +35,10 @@
 	align-items: center;
 	justify-content: center;
 	gap: 1rem;
+}
+
+.ulNavbarMobile {
+	display: none;
 }
 
 .navItem {
@@ -82,8 +85,8 @@
 	justify-content: center;
 }
 
-.imageButtonCV {
-	margin-left: 1rem;
+.iconDownload {
+	margin-left: 0.75rem;
 }
 
 .menuIconContainer {
@@ -118,12 +121,18 @@
 	}
 
 	.ulNavbar {
+		display: none;
+	}
+
+	.ulNavbarMobile {
+		display: flex;
 		flex-direction: column;
 		justify-content: space-around;
 		gap: 0;
 
 		position: absolute;
 		top: 4.5rem;
+		left: 0.05rem;
 
 		transition: all 0.3s ease-in-out;
 
@@ -133,7 +142,6 @@
 		border-radius: var(--border-radius-m);
 
 		background: var(--background-nav);
-		/* border: var(--border-nav); */
 	}
 
 	/* Hide scrollbar for Chrome and Safari */
@@ -187,5 +195,9 @@
 
 	.menuIcon {
 		width: 35px;
+	}
+
+	.buttonCVnav {
+		display: none;
 	}
 }

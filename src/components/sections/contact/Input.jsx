@@ -3,6 +3,7 @@ import styles from "@/styles/modules/Form.module.css";
 import { ColorContext } from "@/components/PortfolioLayout.jsx";
 
 export const Input = ({
+	name,
 	type,
 	label,
 	placeholder,
@@ -24,6 +25,7 @@ export const Input = ({
 			</div>
 			{type === "textarea" ? (
 				<textarea
+					name={name}
 					placeholder={placeholder}
 					value={value}
 					onChange={onChange}
@@ -32,9 +34,11 @@ export const Input = ({
 					style={
 						error ? { borderColor: "red" } : { borderColor: color }
 					}
+					autoComplete='off'
 				/>
 			) : (
 				<input
+					name={name}
 					type={type}
 					placeholder={placeholder}
 					value={value}
@@ -44,6 +48,7 @@ export const Input = ({
 					style={
 						error ? { borderColor: "red" } : { borderColor: color }
 					}
+					autoComplete={name === "subject" ? "off" : "name"}
 				/>
 			)}
 			{error && <span className={styles.errorMessage}>{error}</span>}

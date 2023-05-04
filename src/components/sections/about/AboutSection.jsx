@@ -81,47 +81,25 @@ export function AboutSection() {
 		},
 	];
 
-	const iconsFrontendMapped = iconsFrontend.map((icon) => {
-		return (
-			<div key={icon.id} title={icon.alt}>
-				<Image
-					src={icon.src}
-					alt={icon.alt + " svg icon"}
-					width={48}
-					height={48}
-					className={styles.aboutIcon}
-				/>
-			</div>
-		);
-	});
+	const mapIcons = (icons) => {
+		return icons.map((icon) => {
+			return (
+				<div key={icon.id} title={icon.alt}>
+					<Image
+						src={icon.src}
+						alt={icon.alt + " svg icon"}
+						width={48}
+						height={48}
+						className={styles.aboutIcon}
+					/>
+				</div>
+			);
+		});
+	};
 
-	const iconsBackendMapped = iconsBackend.map((icon) => {
-		return (
-			<div key={icon.id} title={icon.alt}>
-				<Image
-					src={icon.src}
-					alt={icon.alt + " svg icon"}
-					width={48}
-					height={48}
-					className={styles.aboutIcon}
-				/>
-			</div>
-		);
-	});
-
-	const iconsToolsMapped = iconsTools.map((icon) => {
-		return (
-			<div key={icon.id} title={icon.alt}>
-				<Image
-					src={icon.src}
-					alt={icon.alt + " svg icon"}
-					width={48}
-					height={48}
-					className={styles.aboutIcon}
-				/>
-			</div>
-		);
-	});
+	const iconsFrontendMapped = mapIcons(iconsFrontend);
+	const iconsBackendMapped = mapIcons(iconsBackend);
+	const iconsToolsMapped = mapIcons(iconsTools);
 
 	return (
 		<SectionCard

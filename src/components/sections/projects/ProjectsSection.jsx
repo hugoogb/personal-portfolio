@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import styles from "@/styles/modules/Projects.module.css";
 import { Project } from "@/components/sections/projects/Project.jsx";
-import imageTest from "/public/image.jpeg";
+import imageTest from "/public/images/image.jpeg";
 import memoji from "/public/memojis/image2.png";
 import { SectionCard } from "@/components/sections/SectionCard.jsx";
 

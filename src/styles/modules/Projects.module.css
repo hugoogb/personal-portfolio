@@ -36,11 +36,7 @@
 
 .projectImageContainer {
 	width: 500px;
-}
-
-.profileImageBackground {
-	width: inherit;
-	height: inherit;
+	height: auto;
 
 	display: flex;
 	align-items: center;

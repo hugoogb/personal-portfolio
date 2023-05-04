@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Bars3Icon } from "@heroicons/react/24/outline";
 import styles from "@/styles/modules/Header.module.css";
@@ -11,82 +11,24 @@ export function Navbar({ setColor }) {
 	const { t } = useTranslation();
 
 	const [activeId, setActiveId] = useState(null);
-	const [display, setDisplay] = useState("");
 	const [visibility, setVisibility] = useState(false);
 	const navbarRef = useRef(null);
 	const iconMenuNavbarRef = useRef(null);
 
-	const memoizedNavItems = useMemo(() => {
-		return [
-			{ id: 0, name: t("nav.home") },
-			{ id: 1, name: t("nav.about") },
-			{ id: 2, name: t("nav.projects") },
-			{ id: 3, name: t("nav.contact") },
-		];
-	}, [t]);
+	const navItems = [
+		{ id: 0, name: t("nav.home") },
+		{ id: 1, name: t("nav.about") },
+		{ id: 2, name: t("nav.projects") },
+		{ id: 3, name: t("nav.contact") },
+	];
 
-	const navItemsMapped = memoizedNavItems.map((item) => {
+	const navItemsMapped = navItems.map((item) => {
 		return (
 			<NavBarItem key={item.id} id={item.id} activeId={activeId}>
 				{item.name}
 			</NavBarItem>
 		);
 	});
-
-	useEffect(() => {
-		const handleScroll = () => {
-			// Get current vertical scroll position
-			const scrollPosition = window.pageYOffset + 200; // add 100px offset
-
-			// Loop through all sections on the page
-			const sections = document.querySelectorAll("section");
-			for (let i = 0; i < sections.length; i++) {
-				const section = sections[i];
-
-				// Check if section is within viewable area
-				if (
-					section.offsetTop + section.offsetHeight > scrollPosition &&
-					section.offsetTop < scrollPosition + window.innerHeight
-				) {
-					const sectionName = section.getAttribute("id");
-					const activeSectionId = memoizedNavItems.findIndex(
-						(section) => {
-							return section.name == sectionName;
-						}
-					);
-					setActiveId(activeSectionId);
-					break; // Stop looping once we find the first section in view
-				}
-			}
-		};
-
-		// Add event listener for scroll events
-		window.addEventListener("scroll", handleScroll);
-
-		// Remove event listener on component unmount
-		return () => window.removeEventListener("scroll", handleScroll);
-	}, [memoizedNavItems]);
-
-	useEffect(() => {
-		const handleResize = () => {
-			const width = window.innerWidth;
-			if (width <= 720) {
-				setDisplay("mobile");
-			} else if (width <= 920) {
-				setDisplay("tablet");
-			} else {
-				setDisplay("desktop");
-			}
-		};
-
-		handleResize();
-
-		window.addEventListener("resize", handleResize);
-
-		return () => {
-			window.removeEventListener("resize", handleResize);
-		};
-	}, []);
 
 	useEffect(() => {
 		const handleClickOutside = (event) => {
@@ -107,36 +49,29 @@ export function Navbar({ setColor }) {
 		};
 	}, []);
 
-	const ulNavbarStyles = Object.assign(
+	const ulNavbarMobileStyles = Object.assign(
 		{},
 		{
-			height:
-				display === "mobile" || display === "tablet"
-					? visibility
-						? "220px"
-						: "0"
-					: "auto",
+			height: visibility ? "220px" : "0",
 		},
 		{
 			overflow: visibility ? "auto" : "hidden",
 		},
 		{
-			border:
-				display === "mobile" || display === "tablet"
-					? visibility
-						? "var(--border-nav)"
-						: "none"
-					: "none",
+			border: visibility ? "var(--border-nav)" : "none",
 		}
 	);
 
 	return (
 		<header className={styles.header}>
 			<nav className={styles.navbar}>
+				<ul ref={navbarRef} className={styles.ulNavbar}>
+					{navItemsMapped}
+				</ul>
 				<ul
 					ref={navbarRef}
-					style={ulNavbarStyles}
-					className={styles.ulNavbar}
+					style={ulNavbarMobileStyles}
+					className={styles.ulNavbarMobile}
 				>
 					{navItemsMapped}
 				</ul>
@@ -150,11 +85,7 @@ export function Navbar({ setColor }) {
 			</nav>
 			<div className={styles.buttonColorPickerContainer}>
 				<DarkModeToggle></DarkModeToggle>
-				<div
-					style={{
-						display: display === "mobile" ? "none" : "inline-block",
-					}}
-				>
+				<div className={styles.buttonCVnav}>
 					<ButtonCV></ButtonCV>
 				</div>
 				<SettingsMenu setColor={setColor}></SettingsMenu>
