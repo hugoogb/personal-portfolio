@@ -2,7 +2,7 @@ import { useContext } from "react";
 import { Hanken_Grotesk } from "next/font/google";
 import { useTranslation } from "react-i18next";
 import styles from "@/styles/modules/Home.module.css";
-import { ColorContext } from "@/components/PortfolioLayout.jsx";
+import { ColorContext } from "@/components/Layout.jsx";
 
 const hankenGrotesk = Hanken_Grotesk({ subsets: ["latin"] });
 

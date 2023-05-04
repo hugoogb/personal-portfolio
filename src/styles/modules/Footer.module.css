@@ -1,7 +1,10 @@
 .footer {
 	position: absolute;
 	bottom: 1rem;
-	width: calc(100vw - 2 * 2rem);
+	width: 100vw;
+}
+
+.footerAbsolute {
 	margin: 0 2rem;
 
 	z-index: 999;

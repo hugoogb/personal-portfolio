@@ -16,15 +16,20 @@ export function Navbar({ setColor }) {
 	const iconMenuNavbarRef = useRef(null);
 
 	const navItems = [
-		{ id: 0, name: t("nav.home") },
-		{ id: 1, name: t("nav.about") },
-		{ id: 2, name: t("nav.projects") },
-		{ id: 3, name: t("nav.contact") },
+		{ id: 0, name: t("nav.home"), href: "/" },
+		{ id: 1, name: t("nav.about"), href: "/about" },
+		{ id: 2, name: t("nav.projects"), href: "/projects" },
+		{ id: 3, name: t("nav.contact"), href: "/contact" },
 	];
 
 	const navItemsMapped = navItems.map((item) => {
 		return (
-			<NavBarItem key={item.id} id={item.id} activeId={activeId}>
+			<NavBarItem
+				key={item.id}
+				href={item.href}
+				id={item.id}
+				activeId={activeId}
+			>
 				{item.name}
 			</NavBarItem>
 		);
@@ -63,7 +68,7 @@ export function Navbar({ setColor }) {
 	);
 
 	return (
-		<header className={styles.header}>
+		<div className={styles.headerContainer}>
 			<nav className={styles.navbar}>
 				<ul ref={navbarRef} className={styles.ulNavbar}>
 					{navItemsMapped}
@@ -90,6 +95,6 @@ export function Navbar({ setColor }) {
 				</div>
 				<SettingsMenu setColor={setColor}></SettingsMenu>
 			</div>
-		</header>
+		</div>
 	);
 }
