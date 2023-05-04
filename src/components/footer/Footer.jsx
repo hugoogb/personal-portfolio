@@ -1,37 +1,37 @@
 import styles from "@/styles/modules/Footer.module.css";
 import { ButtonCV } from "@/components/header/navbar/ButtonCV.jsx";
 import {
-	LogoGithub,
-	LogoLinkedin,
-	LogoTwitter,
-	LogoInstagram,
-	ArrowForward,
-} from "react-ionicons";
+	IconBrandGithub,
+	IconBrandInstagram,
+	IconBrandLinkedin,
+	IconBrandTwitter,
+	IconExternalLink,
+} from "@tabler/icons-react";
 
 export const Footer = () => {
 	const socials = [
 		{
 			id: 0,
 			name: "GitHub",
-			icon: LogoGithub,
+			icon: IconBrandGithub,
 			link: "https://github.com/hugoogb",
 		},
 		{
 			id: 1,
 			name: "LinkedIn",
-			icon: LogoLinkedin,
+			icon: IconBrandLinkedin,
 			link: "https://www.linkedin.com/in/hugoogb/",
 		},
 		{
 			id: 2,
 			name: "Twitter",
-			icon: LogoTwitter,
+			icon: IconBrandTwitter,
 			link: "https://twitter.com/hugoo_gb",
 		},
 		{
 			id: 3,
 			name: "Instagram",
-			icon: LogoInstagram,
+			icon: IconBrandInstagram,
 			link: "https://www.instagram.com/hugoo_gb/",
 		},
 	];
@@ -48,18 +48,14 @@ export const Footer = () => {
 				<div className={styles.socialIconButton}>
 					<social.icon
 						color={"var(--text-color)"}
-						width='24px'
-						height='24px'
-						title={social.name}
-						cssClasses={styles.socialIcon}
+						size={24}
+						className={styles.socialIcon}
 					/>
 					<p>{social.name}</p>
 					<div className={styles.arrowLink}>
-						<ArrowForward
+						<IconExternalLink
 							color={"var(--text-color)"}
-							width='24px'
-							height='24px'
-							title='Follow link'
+							size={24}
 						/>
 					</div>
 				</div>
