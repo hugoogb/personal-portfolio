@@ -58,7 +58,6 @@
 }
 
 .profileImageBackground {
-	clip-path: circle();
 	width: 375px;
 	height: 375px;
 	border-radius: var(--border-radius-full);
