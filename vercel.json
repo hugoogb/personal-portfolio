@@ -1,7 +1,8 @@
 {
 	"functions": {
 		"src/pages/api/*.js": {
-			"excludeFiles": "**/*.md,**/*.txt,node_modules/@tabler/**/*,node_modules/**/*.test.js"
+			"includeFiles": "node_modules/**/*,!node_modules/**/*.test.js,!node_modules/@tabler/**/*",
+			"excludeFiles": "**/*.md,**/*.txt"
 		}
 	}
 }
