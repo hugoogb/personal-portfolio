@@ -1,6 +1,6 @@
 {
 	"functions": {
-		"api/screenshot.js": {
+		"/api/*.js": {
 			"includeFiles": "node_modules/**/*,!node_modules/**/*.test.js",
 			"excludeFiles": "**/*.md,**/*.txt"
 		}
