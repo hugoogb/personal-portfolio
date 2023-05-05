@@ -78,6 +78,18 @@
 	height: unset !important;
 }
 
+.iconChangeImage {
+	position: absolute;
+	bottom: 1.5rem;
+	right: 1.5rem;
+
+	transition: all 0.3s ease-in-out;
+}
+
+.iconChangeImage:hover {
+	rotate: 90deg;
+}
+
 @media (max-width: 920px) {
 	/* styles to apply when width is less than 920px */
 	.profileImageBackground {
@@ -103,5 +115,10 @@
 	.profileImageBackground {
 		width: 250px;
 		height: 250px;
+	}
+
+	.iconChangeImage {
+		bottom: 0.75rem;
+		right: 0.75rem;
 	}
 }

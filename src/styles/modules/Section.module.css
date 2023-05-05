@@ -9,7 +9,7 @@
 }
 
 .cardContainer {
-	padding: 2rem;
+	padding: 2rem 3rem 3rem 3rem;
 	border-radius: var(--border-radius-l);
 	background-color: var(--card-background-color);
 	box-shadow: var(--box-shadow-card);
