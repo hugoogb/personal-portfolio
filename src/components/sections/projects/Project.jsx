@@ -34,6 +34,7 @@ export function Project({ name, desc, urlPreview }) {
 						width={500}
 						height={300}
 						className={styles.projectImage}
+						unoptimized={true}
 					></Image>
 				)}
 				<p className={styles.projectDesc}>{desc}</p>
