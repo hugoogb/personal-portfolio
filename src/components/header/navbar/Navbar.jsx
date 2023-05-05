@@ -28,6 +28,7 @@ export function Navbar({ setColor }) {
 				key={item.id}
 				href={item.href}
 				id={item.id}
+				setActiveId={setActiveId}
 				activeId={activeId}
 			>
 				{item.name}
