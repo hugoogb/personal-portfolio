@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "@/styles/modules/Header.module.css";
 import { SettingsMenu } from "@/components/header/navbar/SettingsMenu.jsx";
@@ -6,21 +6,27 @@ import { NavBarItem } from "@/components/header/navbar/NavBarItem.jsx";
 import { ButtonCV } from "@/components/header/navbar/ButtonCV.jsx";
 import { DarkModeToggle } from "@/components/header/navbar/DarkModeToggle";
 import { IconMenu2 } from "@tabler/icons-react";
+import { useRouter } from "next/router";
 
 export function Navbar({ setColor }) {
 	const { t } = useTranslation();
+
+	const router = useRouter();
 
 	const [activeId, setActiveId] = useState(null);
 	const [visibility, setVisibility] = useState(false);
 	const navbarRef = useRef(null);
 	const iconMenuNavbarRef = useRef(null);
 
-	const navItems = [
-		{ id: 0, name: t("nav.home"), href: "/" },
-		{ id: 1, name: t("nav.about"), href: "/about" },
-		{ id: 2, name: t("nav.projects"), href: "/projects" },
-		{ id: 3, name: t("nav.contact"), href: "/contact" },
-	];
+	const navItems = useMemo(
+		() => [
+			{ id: 0, name: t("nav.home"), href: "/" },
+			{ id: 1, name: t("nav.about"), href: "/about" },
+			{ id: 2, name: t("nav.projects"), href: "/projects" },
+			{ id: 3, name: t("nav.contact"), href: "/contact" },
+		],
+		[t]
+	);
 
 	const navItemsMapped = navItems.map((item) => {
 		return (
@@ -34,6 +40,14 @@ export function Navbar({ setColor }) {
 			</NavBarItem>
 		);
 	});
+
+	useEffect(() => {
+		const currentPath = router.asPath;
+		const activeIndex = navItems.findIndex(
+			(item) => item.href === currentPath
+		);
+		setActiveId(activeIndex !== -1 ? activeIndex : null);
+	}, [navItems, router.asPath]);
 
 	useEffect(() => {
 		const handleClickOutside = (event) => {

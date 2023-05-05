@@ -21,6 +21,8 @@
 	transition: all 0.3s ease-in-out;
 
 	scrollbar-width: none; /* hide scrollbar for Firefox and Edge */
+
+	z-index: 999;
 }
 
 /* Hide scrollbar for Chrome and Safari */
