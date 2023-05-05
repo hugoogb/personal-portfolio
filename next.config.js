@@ -5,9 +5,9 @@ const nextConfig = {
 		remotePatterns: [
 			{
 				protocol: "https",
-				hostname: "res.cloudinary.com",
+				hostname: "hugoogb.dev",
 				port: "",
-				pathname: "/hugoogb/**",
+				pathname: "",
 			},
 		],
 	},
