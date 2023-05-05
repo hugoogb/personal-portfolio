@@ -1,7 +1,7 @@
 import puppeteer from "puppeteer";
 
 async function takeScreenshot(url) {
-	const browser = await puppeteer.launch();
+	const browser = await puppeteer.launch({ headless: "new" });
 	const page = await browser.newPage();
 	await page.setViewport({ width: 1280, height: 720 });
 	await page.goto(url);
