@@ -34,24 +34,8 @@
 	margin-left: 0.5rem;
 }
 
-.projectImageContainer {
-	width: 500px;
-	height: auto;
-
-	display: flex;
-	align-items: center;
-	justify-content: center;
-
-	width: 100%;
-
-	position: relative;
-}
-
-.projectImageContainer .projectImage {
+.projectImage {
 	object-fit: contain;
-	width: 100% !important;
-	position: relative !important;
-	height: unset !important;
 }
 
 .projectImage {
