@@ -6,8 +6,6 @@ const nextConfig = {
 			{
 				protocol: "https",
 				hostname: "hugoogb.dev",
-				port: "",
-				pathname: "",
 			},
 		],
 	},
