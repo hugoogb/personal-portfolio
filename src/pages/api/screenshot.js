@@ -1,20 +1,48 @@
-import puppeteer from "puppeteer";
+import puppeteer from "puppeteer-core";
+import chrome from "chrome-aws-lambda";
 
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 
-const getBrowser = () =>
+/** The code below determines the executable location for Chrome to
+ * start up and take the screenshot when running a local development environment.
+ *
+ * If the code is running on Windows, find chrome.exe in the default location.
+ * If the code is running on Linux, find the Chrome installation in the default location.
+ * If the code is running on MacOS, find the Chrome installation in the default location.
+ * You may need to update this code when running it locally depending on the location of
+ * your Chrome installation on your operating system.
+ */
+
+const exePath =
+	process.platform === "win32"
+		? "C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe"
+		: process.platform === "linux"
+		? "/usr/bin/google-chrome"
+		: "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome";
+
+async function getOptions() {
+	let options;
 	IS_PRODUCTION
-		? // Connect to browserless so we don't run Chrome on the same hardware in production
-		  puppeteer.connect({
-				browserWSEndpoint: `wss://chrome.browserless.io?token=${process.env.BROWSERLESS_API_TOKEN}`,
+		? (options = {
+				args: chrome.args,
+				executablePath: await chrome.executablePath,
+				headless: chrome.headless,
 		  })
-		: // Run the browser locally while in development
-		  puppeteer.launch({ headless: "new" });
+		: (options = {
+				args: [],
+				executablePath: exePath,
+				headless: true,
+		  });
+
+	return options;
+}
 
 async function takeScreenshot(url) {
-	let browser = null;
+	// get options for browser
+	const options = await getOptions();
 
-	browser = await getBrowser();
+	// launch a new headless browser with dev / prod options
+	const browser = await puppeteer.launch(options);
 
 	const page = await browser.newPage();
 
