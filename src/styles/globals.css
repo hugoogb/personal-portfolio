@@ -14,20 +14,6 @@
 	--text-size-xxl: 72px;
 }
 
-::-webkit-scrollbar {
-	width: 10px;
-}
-
-::-webkit-scrollbar-thumb {
-	background-color: var(--scrollbar-thumb-color);
-	border-radius: var(--border-radius-s);
-}
-
-::-webkit-scrollbar-track {
-	background-color: var(--background-color);
-	border-radius: var(--border-radius-s);
-}
-
 .light-theme {
 	--background-color: #f7f2f2;
 	--card-background-color: #fff;
@@ -37,7 +23,6 @@
 	--background-nav: #ede9e9;
 	--border-nav: none;
 	--box-shadow-card: transparent 0px 0px 0px 2px inset;
-	--scrollbar-thumb-color: #0d1117;
 }
 
 .dark-theme {
@@ -49,7 +34,6 @@
 	--background-nav: #0d1117;
 	--border-nav: 2px solid rgb(48, 54, 61);
 	--box-shadow-card: rgb(48, 54, 61) 0px 0px 0px 2px inset;
-	--scrollbar-thumb-color: #ede9e9;
 }
 
 * {
