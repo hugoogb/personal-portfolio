@@ -11,7 +11,7 @@ export default function handler(req, res) {
 			const fileContents = fs.readFileSync(filePath);
 			res.setHeader(
 				"Content-disposition",
-				`attachment; filename=CV-Hugo_García_Benjumea-lang_${language}`
+				`attachment; filename=CV-Hugo_García_Benjumea-lang_${language}.pdf`
 			);
 			res.setHeader("Content-Type", "application/pdf");
 			res.send(fileContents);
