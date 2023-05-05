@@ -1,0 +1,15 @@
+.layout {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.layoutContent {
+	min-height: calc(100vh - 152px - 128px);
+	width: 100%;
+
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
