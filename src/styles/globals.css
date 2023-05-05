@@ -14,6 +14,18 @@
 	--text-size-xxl: 72px;
 }
 
+::-webkit-scrollbar {
+	width: 20px;
+}
+
+::-webkit-scrollbar-thumb {
+	border-radius: var(--border-radius-s);
+}
+
+::-webkit-scrollbar-track {
+	border-radius: var(--border-radius-s);
+}
+
 .light-theme {
 	--background-color: #f7f2f2;
 	--card-background-color: #fff;
@@ -25,6 +37,21 @@
 	--box-shadow-card: transparent 0px 0px 0px 2px inset;
 }
 
+/* Set the scrollbar width and color */
+.light-theme::-webkit-scrollbar {
+	background-color: #f7f2f2;
+}
+
+/* Set the scrollbar thumb color */
+.light-theme::-webkit-scrollbar-thumb {
+	background-color: #fff;
+}
+
+/* Set the scrollbar track color */
+.light-theme::-webkit-scrollbar-track {
+	background-color: #f7f2f2;
+}
+
 .dark-theme {
 	--background-color: #090c10;
 	--card-background-color: #0d1117;
@@ -34,6 +61,21 @@
 	--background-nav: #0d1117;
 	--border-nav: 2px solid rgb(48, 54, 61);
 	--box-shadow-card: rgb(48, 54, 61) 0px 0px 0px 2px inset;
+}
+
+/* Set the scrollbar width and color */
+.dark-theme::-webkit-scrollbar {
+	background-color: #090c10;
+}
+
+/* Set the scrollbar thumb color */
+.dark-theme::-webkit-scrollbar-thumb {
+	background-color: #0d1117;
+}
+
+/* Set the scrollbar track color */
+.dark-theme::-webkit-scrollbar-track {
+	background-color: #090c10;
 }
 
 * {
@@ -79,14 +121,6 @@ textarea {
 
 html {
 	scroll-behavior: smooth;
-
-	/* hide scrollbar for Firefox and Edge */
-	scrollbar-width: none;
-}
-
-/* Hide scrollbar for Chrome and Safari */
-html::-webkit-scrollbar {
-	display: none;
 }
 
 body {
