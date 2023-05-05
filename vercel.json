@@ -1,0 +1,8 @@
+{
+	"functions": {
+		"api/*": {
+			"includeFiles": ["node_modules/**/*", "!node_modules/**/*.test.js"],
+			"excludeFiles": ["**/*.md"]
+		}
+	}
+}
