@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import styles from "@/styles/modules/Projects.module.css";
 import { Project } from "@/components/sections/projects/Project.jsx";
-import imageTest from "/public/images/image.jpeg";
 import memoji from "/public/memojis/image2.png";
 import { SectionCard } from "@/components/sections/SectionCard.jsx";
 
@@ -14,16 +13,18 @@ export function ProjectsSection() {
 			name: "Formula 1 Showcase",
 			desc: t("projects.formula1Showcase.description"),
 			urlPreview: "https://f1-showcase.vercel.app",
-			imgSrc: imageTest,
-			imgAlt: t("projects.formula1Showcase.imgAlt"),
 		},
 		{
 			id: 1,
 			name: "Formula 1 API",
 			desc: t("projects.formula1API.description"),
 			urlPreview: "https://f1-api.vercel.app",
-			imgSrc: imageTest,
-			imgAlt: t("projects.formula1API.imgAlt"),
+		},
+		{
+			id: 2,
+			name: "Personal portfolio",
+			desc: t("projects.personalPortfolio.description"),
+			urlPreview: "https://hugoogb.dev",
 		},
 	];
 
@@ -34,8 +35,6 @@ export function ProjectsSection() {
 				name={project.name}
 				desc={project.desc}
 				urlPreview={project.urlPreview}
-				imgSrc={project.imgSrc}
-				imgAlt={project.imgAlt}
 			></Project>
 		);
 	});

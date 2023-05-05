@@ -52,13 +52,15 @@
 	"projects": {
 		"title": "Projects",
 		"formula1Showcase": {
-			"description": "Showcase information retrieved with F1 API created",
-			"imgAlt": "Image test"
+			"description": "Showcase information retrieved with F1 API created"
 		},
 		"formula1API": {
-			"description": "API with expressjs done scrapping F1 site with cheerio",
-			"imgAlt": "Image test"
-		}
+			"description": "API with expressjs done scrapping F1 site with cheerio"
+		},
+		"personalPortfolio": {
+			"description": "Hugo GB's personal portfolio"
+		},
+		"alt": "preview image"
 	},
 	"contact": {
 		"title": "Contact",
