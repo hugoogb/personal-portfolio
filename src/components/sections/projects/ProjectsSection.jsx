@@ -20,6 +20,12 @@ export function ProjectsSection() {
 			desc: t("projects.formula1API.description"),
 			urlPreview: "https://f1-api.vercel.app",
 		},
+		{
+			id: 2,
+			name: "Personal portfolio",
+			desc: t("projects.personalPortfolio.description"),
+			urlPreview: "https://hugoogb.dev",
+		},
 	];
 
 	const projectsMapped = projects.map((project) => {

@@ -57,6 +57,9 @@
 		"formula1API": {
 			"description": "API amb expressjs que raspalla el lloc de F1 amb cheerio"
 		},
+		"personalPortfolio": {
+			"description": "Portafoli personal d'en Hugo GB"
+		},
 		"alt": "imatge de vista prèvia"
 	},
 	"contact": {
