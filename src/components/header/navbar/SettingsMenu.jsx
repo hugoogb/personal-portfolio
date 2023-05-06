@@ -3,7 +3,7 @@ import { HexColorPicker } from "react-colorful";
 import styles from "@/styles/modules/Settings.module.css";
 import { ColorContext } from "@/components/Layout.jsx";
 import { LanguageSelector } from "@/components/header/navbar/LanguageSelector.jsx";
-// import { IconSettings } from "@tabler/icons-react";
+import { IconSettings } from "@tabler/icons-react";
 
 export const SettingsMenu = ({ setColor }) => {
 	const color = useContext(ColorContext);
@@ -71,10 +71,10 @@ export const SettingsMenu = ({ setColor }) => {
 				className={styles.settingsIconContainer}
 				onClick={() => setVisibility(!visibility)}
 			>
-				{/* <IconSettings
+				<IconSettings
 					size={48}
 					className={styles.settingsIcon}
-				></IconSettings> */}
+				></IconSettings>
 			</div>
 		</>
 	);

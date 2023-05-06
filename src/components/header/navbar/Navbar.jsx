@@ -5,7 +5,7 @@ import { SettingsMenu } from "@/components/header/navbar/SettingsMenu.jsx";
 import { NavBarItem } from "@/components/header/navbar/NavBarItem.jsx";
 import { ButtonCV } from "@/components/header/navbar/ButtonCV.jsx";
 import { DarkModeToggle } from "@/components/header/navbar/DarkModeToggle";
-// import { IconMenu2 } from "@tabler/icons-react";
+import { IconMenu2 } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 
 export function Navbar({ setColor }) {
@@ -99,10 +99,10 @@ export function Navbar({ setColor }) {
 					className={styles.menuIconContainer}
 					onClick={() => setVisibility(!visibility)}
 				>
-					{/* <IconMenu2
+					<IconMenu2
 						size={48}
 						className={styles.menuIcon}
-					></IconMenu2> */}
+					></IconMenu2>
 				</div>
 			</nav>
 			<div className={styles.buttonColorPickerContainer}>
