@@ -2,7 +2,7 @@ import { useContext, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "@/styles/modules/Header.module.css";
 import { ColorContext } from "@/components/Layout.jsx";
-// import { IconDownload } from "@tabler/icons-react";
+import { IconDownload } from "@tabler/icons-react";
 
 export const ButtonCV = () => {
 	const { t, i18n } = useTranslation();
@@ -49,7 +49,7 @@ export const ButtonCV = () => {
 			className={`button ${styles.buttonCV}`}
 		>
 			{t("nav.downloadButton")}
-			{/* <IconDownload size={24} className={styles.iconDownload} /> */}
+			<IconDownload size={24} className={styles.iconDownload} />
 		</button>
 	);
 };
