@@ -101,3 +101,18 @@ body {
 .button:hover {
 	box-shadow: var(--box-shadow-button-hover);
 }
+
+.imageContainer {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	position: relative;
+}
+
+.image {
+	object-fit: contain;
+	width: 100% !important;
+	position: relative !important;
+	height: unset !important;
+}

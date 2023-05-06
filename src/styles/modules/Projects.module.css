@@ -34,8 +34,9 @@
 	margin-left: 0.5rem;
 }
 
-.projectImage {
-	object-fit: contain;
+.projectImageContainer {
+	width: 500px;
+	height: auto;
 }
 
 .projectImage {

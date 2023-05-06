@@ -63,19 +63,6 @@
 	border-radius: var(--border-radius-full);
 
 	transition: background-color 0.3s ease-in-out;
-
-	display: flex;
-	align-items: center;
-	justify-content: center;
-
-	position: relative;
-}
-
-.profileImageBackground .profileImage {
-	object-fit: contain;
-	width: 100% !important;
-	position: relative !important;
-	height: unset !important;
 }
 
 .iconChangeImage {

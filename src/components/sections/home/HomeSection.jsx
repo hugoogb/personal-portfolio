@@ -30,7 +30,7 @@ export function HomeSection() {
 						</div>
 						<div
 							style={{ background: color }}
-							className={styles.profileImageBackground}
+							className={`imageContainer ${styles.profileImageBackground}`}
 						>
 							{activeImage === 0 ? (
 								<Image
@@ -39,7 +39,7 @@ export function HomeSection() {
 									fill={true}
 									sizes='(max-width: 720px) 250px, (max-width: 920px) 300px, 375px'
 									priority={true}
-									className={styles.profileImage}
+									className={`image ${styles.profileImage}`}
 								></Image>
 							) : (
 								<Image
@@ -48,7 +48,7 @@ export function HomeSection() {
 									fill={true}
 									sizes='(max-width: 720px) 250px, (max-width: 920px) 300px, 375px'
 									priority={true}
-									className={styles.profileImage}
+									className={`image ${styles.profileImage}`}
 								></Image>
 							)}
 							<div className={styles.iconChangeImage}>
