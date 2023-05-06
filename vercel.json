@@ -6,8 +6,7 @@
 				"node_modules/next/dist",
 				"node_modules/react-dom/cjs",
 				"node_modules/puppeteer-core/lib"
-			],
-			"excludeFiles": ["**/*.md", "**/*.txt"]
+			]
 		}
 	}
 }
