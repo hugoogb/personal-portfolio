@@ -1,6 +1,5 @@
 import puppeteer from "puppeteer-core";
-// import chromium from "@sparticuz/chromium-min";
-import chromium from "@sparticuz/chromium";
+import chromium from "@sparticuz/chromium-min";
 
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 
@@ -26,10 +25,9 @@ async function getOptions() {
 	IS_PRODUCTION
 		? (options = {
 				args: chromium.args,
-				// executablePath: await chromium.executablePath(
-				// 	"https://github.com/Sparticuz/chromium/releases/download/v113.0.1/chromium-v113.0.1-pack.tar"
-				// ),
-				executablePath: await chromium.executablePath(),
+				executablePath: await chromium.executablePath(
+					"https://github.com/Sparticuz/chromium/releases/download/v113.0.1/chromium-v113.0.1-pack.tar"
+				),
 				headless: chromium.headless,
 				ignoreHTTPSErrors: true,
 		  })
