@@ -8,7 +8,7 @@ import { ButtonCV } from "@/components/header/navbar/ButtonCV.jsx";
 import memoji from "/public/memojis/image3.png";
 import memoji2 from "/public/memojis/image1.png";
 import { HomeTitle } from "@/components/sections/home/HomeTitle.jsx";
-import { IconRefresh } from "@tabler/icons-react";
+// import { IconRefresh } from "@tabler/icons-react";
 
 export function HomeSection() {
 	const { t } = useTranslation();
@@ -60,7 +60,7 @@ export function HomeSection() {
 										)
 									}
 								>
-									<IconRefresh size={24}></IconRefresh>
+									{/* <IconRefresh size={24}></IconRefresh> */}
 								</button>
 							</div>
 						</div>
