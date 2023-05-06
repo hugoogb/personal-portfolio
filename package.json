@@ -10,7 +10,7 @@
 	},
 	"dependencies": {
 		"@vercel/analytics": "^1.0.1",
-		"chrome-aws-lambda": "^9.1.0",
+		"chrome-aws-lambda": "^10.1.0",
 		"i18next": "^22.4.15",
 		"next": "13.2.4",
 		"nodemailer": "^6.9.1",
