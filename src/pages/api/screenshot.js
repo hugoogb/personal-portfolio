@@ -22,6 +22,7 @@ const exePath =
 
 async function getOptions() {
 	let options;
+	console.log("setting options");
 	IS_PRODUCTION
 		? (options = {
 				args: chromium.args,
@@ -47,6 +48,7 @@ async function takeScreenshot(url) {
 
 	// launch a new headless browser with dev / prod options
 	const browser = await puppeteer.launch(options);
+	console.log(`browser: ${browser}`);
 
 	const page = await browser.newPage();
 
@@ -57,11 +59,15 @@ async function takeScreenshot(url) {
 
 	await page.goto(url, { waitUntil: "networkidle0" });
 
+	console.log(`page: ${page}`);
+
 	const screenshot = await page.screenshot({
 		clip: { x: 0, y: 0, width: 1280, height: 720 },
 	});
 
 	await browser.close();
+
+	console.log(`screenshot: ${screenshot}`);
 
 	return screenshot;
 }
