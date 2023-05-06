@@ -1,5 +1,5 @@
 import puppeteer from "puppeteer-core";
-import chrome from "chrome-aws-lambda";
+const chromium = require("@sparticuz/chromium-min");
 
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 
@@ -24,9 +24,13 @@ async function getOptions() {
 	let options;
 	IS_PRODUCTION
 		? (options = {
-				args: chrome.args,
-				executablePath: await chrome.executablePath,
-				headless: chrome.headless,
+				args: chromium.args,
+				defaultViewport: chromium.defaultViewport,
+				executablePath: await chromium.executablePath(
+					"https://github.com/Sparticuz/chromium/releases/download/v113.0.1/chromium-v113.0.1-pack.tar"
+				),
+				headless: chromium.headless,
+				ignoreHTTPSErrors: true,
 		  })
 		: (options = {
 				args: [],
@@ -54,7 +58,6 @@ async function takeScreenshot(url) {
 	await page.goto(url, { waitUntil: "networkidle0" });
 
 	const screenshot = await page.screenshot({
-		type: "webp",
 		clip: { x: 0, y: 0, width: 1280, height: 720 },
 	});
 
