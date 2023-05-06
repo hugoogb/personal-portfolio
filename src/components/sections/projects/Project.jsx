@@ -13,7 +13,6 @@ export function Project({ name, desc, urlPreview }) {
 			const response = await fetch(
 				`/api/screenshot?url=${encodeURIComponent(urlPreview)}`
 			);
-			console.log(`response: ${response}`);
 			const screenshotBlob = await response.blob();
 			const screenshotUrl = URL.createObjectURL(screenshotBlob);
 			setScreenshot(screenshotUrl);

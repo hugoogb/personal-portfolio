@@ -1,5 +1,6 @@
 import puppeteer from "puppeteer-core";
-const chromium = require("@sparticuz/chromium-min");
+// import chromium from "@sparticuz/chromium-min";
+import chromium from "@sparticuz/chromium";
 
 const IS_PRODUCTION = process.env.NODE_ENV === "production";
 
@@ -22,14 +23,13 @@ const exePath =
 
 async function getOptions() {
 	let options;
-	console.log("setting options");
 	IS_PRODUCTION
 		? (options = {
 				args: chromium.args,
-				defaultViewport: chromium.defaultViewport,
-				executablePath: await chromium.executablePath(
-					"https://github.com/Sparticuz/chromium/releases/download/v113.0.1/chromium-v113.0.1-pack.tar"
-				),
+				// executablePath: await chromium.executablePath(
+				// 	"https://github.com/Sparticuz/chromium/releases/download/v113.0.1/chromium-v113.0.1-pack.tar"
+				// ),
+				executablePath: await chromium.executablePath(),
 				headless: chromium.headless,
 				ignoreHTTPSErrors: true,
 		  })
@@ -48,7 +48,6 @@ async function takeScreenshot(url) {
 
 	// launch a new headless browser with dev / prod options
 	const browser = await puppeteer.launch(options);
-	console.log(`browser: ${browser}`);
 
 	const page = await browser.newPage();
 
@@ -57,17 +56,14 @@ async function takeScreenshot(url) {
 		height: 720,
 	});
 
-	await page.goto(url, { waitUntil: "networkidle0" });
-
-	console.log(`page: ${page}`);
+	// await page.goto(url, { waitUntil: "networkidle0" });
+	await page.goto(url);
 
 	const screenshot = await page.screenshot({
 		clip: { x: 0, y: 0, width: 1280, height: 720 },
 	});
 
 	await browser.close();
-
-	console.log(`screenshot: ${screenshot}`);
 
 	return screenshot;
 }
