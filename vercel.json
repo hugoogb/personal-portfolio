@@ -1,8 +1,13 @@
 {
 	"functions": {
-		"src/pages/api/*.js": {
-			"includeFiles": "node_modules/**/*,!node_modules/**/*.test.js,!node_modules/@tabler/**/*",
-			"excludeFiles": "**/*.md,**/*.txt"
+		"api/screenshot.js": {
+			"includeFiles": [
+				"node_modules/chrome-aws-lambda/bin",
+				"node_modules/next/dist",
+				"node_modules/react-dom/cjs",
+				"node_modules/puppeteer-core/lib"
+			],
+			"excludeFiles": ["**/*.md", "**/*.txt"]
 		}
 	}
 }
