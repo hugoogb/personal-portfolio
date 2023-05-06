@@ -54,9 +54,6 @@
 		"formula1Showcase": {
 			"description": "Informació exhibida obtinguda amb l'API de F1 creada"
 		},
-		"formula1API": {
-			"description": "API amb expressjs que raspalla el lloc de F1 amb cheerio"
-		},
 		"personalPortfolio": {
 			"description": "Portafoli personal d'en Hugo GB"
 		},
