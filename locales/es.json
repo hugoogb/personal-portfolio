@@ -7,16 +7,16 @@
 		"downloadButton": "Descargar CV"
 	},
 	"home": {
-		"subtitle": "Desarrollador web"
+		"subtitle": "Desarrollador Web Fullstack"
 	},
 	"about": {
 		"title": "Acerca de",
 		"text": {
-			"intro": "¡Hola! Me llamo ",
+			"intro": "¡Hola! Mi nombre es ",
 			"name": "Hugo",
-			"introNext": " y soy ",
-			"webDeveloper": "desarrollador web",
-			"mainFocus": ". Mi principal enfoque es desarrollar ",
+			"introNext": " y soy un ",
+			"webDeveloper": "Desarrollador Web Fullstack",
+			"mainFocus": ". Mi enfoque principal es desarrollar ",
 			"webApps": "aplicaciones web",
 			"butAlso": " pero también desarrollo ",
 			"mobileApps": "aplicaciones móviles",
@@ -27,21 +27,24 @@
 			"jsFrameworks": "frameworks de Javascript",
 			"suchAs": " como ",
 			"react": "React",
-			"and": " y ",
+			"comma": ", ",
 			"vue": "Vue",
-			"forFrontendDev": " para el desarrollo de frontend. Me encanta el desafío de crear interfaces de usuario ",
-			"responsive": "adaptativas",
+			"and": " y ",
+			"angular": "Angular",
+			"forFrontendDev": " para el desarrollo frontend. Me encanta el desafío de crear interfaces de usuario ",
+			"responsive": "responsivas",
 			"dynamic": "dinámicas",
 			"userInterfaces": " que mejoren la experiencia del usuario. Ya sea una ",
-			"simpleLandingPage": "página de destino sencilla",
+			"simpleLandingPage": "página de inicio sencilla",
 			"orA": " o una ",
 			"complexWebApp": "aplicación web compleja",
-			"iTakePrideIn": ", me enorgullece crear diseños visualmente atractivos e intuitivos que satisfagan las necesidades de mis clientes.",
-			"inAdditionTo": "Además del desarrollo de frontend, también tengo conocimientos en tecnologías de backend con ",
-			"nodeJs": "Nodejs",
+			"iTakePrideIn": ", me enorgullezco de diseñar interfaces visualmente atractivas e intuitivas que satisfacen las necesidades de mis clientes.",
+			"inAdditionTo": "Además del desarrollo frontend, también tengo conocimientos de tecnologías backend como ",
+			"nodeJs": "Node.js",
 			"technologiesSuchAs": " como ",
-			"ExpressJS": "ExpressJS",
-			"robustApps": ". Esto me permite crear aplicaciones sólidas y escalables."
+			"ExpressJS": "Express.js",
+			"loopback": "LoopBack",
+			"robustApps": ". Esto me permite crear aplicaciones robustas y escalables."
 		},
 		"categories": {
 			"frontend": "Frontend",

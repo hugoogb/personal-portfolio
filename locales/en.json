@@ -7,7 +7,7 @@
 		"downloadButton": "Download CV"
 	},
 	"home": {
-		"subtitle": "Web developer"
+		"subtitle": "Fullstack Web Developer"
 	},
 	"about": {
 		"title": "About",
@@ -15,7 +15,7 @@
 			"intro": "Hey there! My name is ",
 			"name": "Hugo",
 			"introNext": " and I'm a ",
-			"webDeveloper": "web developer",
+			"webDeveloper": "Fullstack Web Developer",
 			"mainFocus": ". My main focus is developing ",
 			"webApps": "web applications",
 			"butAlso": " but I also develop ",
@@ -27,8 +27,10 @@
 			"jsFrameworks": "Javascript frameworks",
 			"suchAs": " such as ",
 			"react": "React",
-			"and": " and ",
+			"comma": ", ",
 			"vue": "Vue",
+			"and": " and ",
+			"angular": "Angular",
 			"forFrontendDev": " for frontend development. I love the challenge of creating ",
 			"responsive": "responsive",
 			"dynamic": "dynamic",
@@ -41,6 +43,7 @@
 			"nodeJs": "Nodejs",
 			"technologiesSuchAs": " technologies such as ",
 			"ExpressJS": "ExpressJS",
+			"loopback": "Loopback",
 			"robustApps": ". This allows me to create robust and scalable applications."
 		},
 		"categories": {
