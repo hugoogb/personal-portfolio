@@ -6,7 +6,7 @@ import stylesSection from "@/styles/modules/Section.module.css";
 import { ColorContext } from "@/components/Layout.jsx";
 import { ButtonCV } from "@/components/header/navbar/ButtonCV.jsx";
 import memoji from "/public/memojis/image3.png";
-import memoji2 from "/public/memojis/image1.png";
+import memoji2 from "/public/memojis/image0.png";
 import { HomeTitle } from "@/components/sections/home/HomeTitle.jsx";
 import { IconRefresh } from "@tabler/icons-react";
 
