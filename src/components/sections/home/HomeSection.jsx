@@ -24,9 +24,9 @@ export function HomeSection() {
 					<div className={styles.headerContainer}>
 						<div className={styles.nameHeaderTextContainer}>
 							<HomeTitle></HomeTitle>
-							<div style={{ alignSelf: "flex-end" }}>
-								<ButtonCV></ButtonCV>
-							</div>
+							{/* <div style={{ alignSelf: "flex-end" }}> */}
+							{/* <ButtonCV></ButtonCV> */}
+							{/* </div> */}
 						</div>
 						<div
 							style={{ background: color }}

@@ -108,7 +108,7 @@ export function Navbar({ setColor }) {
 			<div className={styles.buttonColorPickerContainer}>
 				<DarkModeToggle></DarkModeToggle>
 				<div className={styles.buttonCVnav}>
-					<ButtonCV></ButtonCV>
+					{/* <ButtonCV></ButtonCV> */}
 				</div>
 				<SettingsMenu setColor={setColor}></SettingsMenu>
 			</div>
