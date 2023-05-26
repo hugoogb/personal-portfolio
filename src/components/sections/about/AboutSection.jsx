@@ -30,54 +30,89 @@ export function AboutSection() {
 		},
 		{
 			id: 3,
+			src: "/icons/typescript.svg",
+			alt: "Typescript",
+		},
+		{
+			id: 4,
 			src: "/icons/reactjs.svg",
 			alt: "Reactjs",
 		},
 		{
-			id: 4,
+			id: 5,
 			src: "/icons/vuejs.svg",
 			alt: "Vuejs",
+		},
+		{
+			id: 6,
+			src: "/icons/angular.svg",
+			alt: "Angular",
 		},
 	];
 
 	const iconsBackend = [
 		{
-			id: 5,
+			id: 0,
 			src: "/icons/nextjs.svg",
 			alt: "Nextjs",
 		},
 		{
-			id: 6,
+			id: 1,
 			src: "/icons/nodejs.svg",
 			alt: "Nodejs",
 		},
 		{
-			id: 7,
+			id: 2,
 			src: "/icons/expressjs.svg",
 			alt: "Expressjs",
 		},
 		{
-			id: 8,
+			id: 3,
 			src: "/icons/firebase.svg",
 			alt: "Firebase",
+		},
+		{
+			id: 4,
+			src: "/icons/loopback.svg",
+			alt: "Loopback",
+		},
+		{
+			id: 5,
+			src: "/icons/mongodb.svg",
+			alt: "MongoDB",
+		},
+		{
+			id: 6,
+			src: "/icons/mysql.svg",
+			alt: "MySql",
 		},
 	];
 
 	const iconsTools = [
 		{
-			id: 9,
+			id: 0,
 			src: "/icons/npm.svg",
 			alt: "Npm",
 		},
 		{
-			id: 10,
+			id: 1,
 			src: "/icons/git.svg",
 			alt: "Git",
 		},
 		{
-			id: 11,
+			id: 2,
 			src: "/icons/github.svg",
-			alt: "GitHub",
+			alt: "Github",
+		},
+		{
+			id: 3,
+			src: "/icons/bitbucket.svg",
+			alt: "Bitbucket",
+		},
+		{
+			id: 4,
+			src: "/icons/jira.svg",
+			alt: "Jira",
 		},
 	];
 
