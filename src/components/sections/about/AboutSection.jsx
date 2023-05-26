@@ -173,9 +173,13 @@ export function AboutSection() {
 						<span style={{ color: color }}>
 							{t("about.text.react")}
 						</span>
-						{t("about.text.and")}
+						{t("about.text.comma")}
 						<span style={{ color: color }}>
 							{t("about.text.vue")}
+						</span>
+						{t("about.text.and")}
+						<span style={{ color: color }}>
+							{t("about.text.angular")}
 						</span>
 						{t("about.text.forFrontendDev")}
 						<span style={{ color: color }}>
@@ -204,6 +208,10 @@ export function AboutSection() {
 						{t("about.text.technologiesSuchAs")}
 						<span style={{ color: color }}>
 							{t("about.text.ExpressJS")}
+						</span>
+						{t("about.text.and")}
+						<span style={{ color: color }}>
+							{t("about.text.loopback")}
 						</span>
 						{t("about.text.robustApps")}
 					</p>
