@@ -11,6 +11,13 @@ export function ProjectsSection() {
 
   const projects = [
     {
+      id: 0,
+      name: "Formula 1 Showcase",
+      desc: t("projects.formula1Showcase.description"),
+      urlPreview: "https://f1-showcase.vercel.app",
+      src: Img_f1showcase,
+    },
+    {
       id: 1,
       name: "Personal portfolio",
       desc: t("projects.personalPortfolio.description"),
