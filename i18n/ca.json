@@ -1,119 +1,93 @@
 {
-	"nav": {
-		"home": "Inici",
-		"about": "Sobre mi",
-		"projects": "Projectes",
-		"contact": "Contacte",
-		"downloadButton": "Descarregar CV"
-	},
-	"home": {
-		"subtitle": "Desenvolupador Web Fullstack"
-	},
-	"about": {
-		"title": "Sobre mi",
-		"text": {
-			"intro": "Hola! Em dic ",
-			"name": "Hugo",
-			"introNext": " i sóc un ",
-			"webDeveloper": "Desenvolupador Web Fullstack",
-			"mainFocus": ". El meu principal focus és desenvolupar ",
-			"webApps": "aplicacions web",
-			"butAlso": " però també desenvolupo ",
-			"mobileApps": "aplicacions mòbils",
-			"using": " utilitzant ",
-			"ReactNative": "React Native",
-			"endIntro": ".",
-			"specializeIn": "Em especialitzo en l'ús de ",
-			"jsFrameworks": "frameworks de Javascript",
-			"suchAs": " com ",
-			"react": "React",
-			"comma": ", ",
-			"vue": "Vue",
-			"and": " i ",
-			"angular": "Angular",
-			"forFrontendDev": " per al desenvolupament frontend. M'encanta el repte de crear interfícies d'usuari ",
-			"responsive": "responsives",
-			"dynamic": "dinàmiques",
-			"userInterfaces": " que millorin l'experiència de l'usuari. Ja sigui una ",
-			"simpleLandingPage": "pàgina d'inici senzilla",
-			"orA": " o una ",
-			"complexWebApp": "aplicació web complexa",
-			"iTakePrideIn": ", em sent orgullós de dissenyar interfícies visualment atractives i intuïtives que satisfan les necessitats dels meus clients.",
-			"inAdditionTo": "A més del desenvolupament frontend, també tinc coneixements de tecnologies backend com ",
-			"nodeJs": "Node.js",
-			"technologiesSuchAs": " com ",
-			"ExpressJS": "Express.js",
-			"loopback": "LoopBack",
-			"robustApps": ". Això em permet crear aplicacions robustes i escalables."
-		},
-		"categories": {
-			"frontend": "Frontend",
-			"backend": "Backend",
-			"tools": "Eines"
-		}
-	},
-	"projects": {
-		"title": "Projectes",
-		"formula1Showcase": {
-			"description": "Informació exhibida obtinguda amb l'API de F1 creada"
-		},
-		"personalPortfolio": {
-			"description": "Portafoli personal d'en Hugo GB"
-		},
-		"alt": "imatge de vista prèvia"
-	},
-	"contact": {
-		"title": "Contacte",
-		"form": {
-			"name": {
-				"label": "Nom",
-				"errorRequired": "El nom és obligatori"
-			},
-			"email": {
-				"label": "Email",
-				"errorRequired": "L'email és obligatori",
-				"errorInvalid": "L'email no és vàlid"
-			},
-			"subject": {
-				"label": "Assumpte",
-				"placeholder": "Per què et poses en contacte amb mi?",
-				"errorRequired": "L'assumpte és obligatori"
-			},
-			"message": {
-				"label": "Missatge",
-				"placeholder": "Explica'm més...",
-				"errorRequired": "El missatge és obligatori"
-			}
-		},
-		"submit": "Enviar",
-		"modal": {
-			"success": {
-				"title": "Formulari enviat amb èxit",
-				"message": "Gràcies per contactar-me!"
-			},
-			"error": {
-				"title": "Error en enviar el formulari",
-				"message": "Oh! Hi ha hagut un error."
-			},
-			"close": "Tancar"
-		}
-	},
-	"head": {
-		"home": {
-			"title": "Hugo GB | Desenvolupador Web",
-			"description": "Pàgina principal del portafoli personal de Hugo."
-		},
-		"about": {
-			"title": "Hugo GB | Sobre mi",
-			"description": "Pàgina Sobre mi del portafoli personal de Hugo."
-		},
-		"projects": {
-			"title": "Hugo GB | Projectes",
-			"description": "Pàgina de projectes del portafoli personal de Hugo."
-		},
-		"contact": {
-			"title": "Hugo GB | Contacte",
-			"description": "Pàgina de contacte del portafoli personal de Hugo."
-		}
-	}
+  "nav": {
+    "home": "Inici",
+    "about": "Sobre mi",
+    "projects": "Projectes",
+    "contact": "Contacte",
+    "downloadButton": "Descarregar CV"
+  },
+  "home": {
+    "subtitle": "Desenvolupador Web Fullstack"
+  },
+  "about": {
+    "title": "Sobre mi",
+    "text": {
+      "intro": "Hola! El meu nom és ",
+      "name": "Hugo",
+      "introSection": ". Sóc un desenvolupador web fullstack amb passió per crear aplicacions modernes, funcionals i ben estructurades. Des del backend fins al frontend, m’encanta tot el procés de desenvolupament i gaudeixo especialment quan puc resoldre problemes complexos. A més, tinc experiència en la creació d’aplicacions mòbils.",
+      "tecnologiesSection": "Treballo principalment amb tecnologies com Express per construir APIs robustes i escalables. Al frontend, sovint faig servir frameworks com React i Angular per desenvolupar interfícies interactives. També utilitzo Astro per crear llocs ràpids i optimitzats. A més, tinc experiència en el desenvolupament d’aplicacions mòbils amb React Native, cosa que em permet crear aplicacions multiplataforma amb una excel·lent experiència d'usuari.",
+      "learningSection": "Em considero una persona que aprèn ràpid i sempre busco maneres de millorar les meves habilitats i mantenir-me actualitzat amb les últimes tendències tecnològiques. Tant si treballo en equip com individualment, gaudeixo col·laborant en projectes i trobant solucions innovadores que aportin valor real.",
+      "finalSection": "Si estàs buscant algú que pugui construir aplicacions de principi a fi, m’encantaria treballar amb tu i ajudar a portar el teu projecte al següent nivell.",
+      "letsTalk": "Parlem!"
+    },
+    "categories": {
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "tools": "Eines"
+    }
+  },
+  "projects": {
+    "title": "Projectes",
+    "formula1Showcase": {
+      "description": "Informació mostrada obtinguda amb l'API de F1 creada"
+    },
+    "personalPortfolio": {
+      "description": "Portfolio personal d'Hugo GB"
+    },
+    "alt": "imatge de vista prèvia"
+  },
+  "contact": {
+    "title": "Contacte",
+    "form": {
+      "name": {
+        "label": "Nom",
+        "errorRequired": "El nom és obligatori"
+      },
+      "email": {
+        "label": "Email",
+        "errorRequired": "El correu electrònic és obligatori",
+        "errorInvalid": "El correu electrònic no és vàlid"
+      },
+      "subject": {
+        "label": "Assumpte",
+        "placeholder": "Per què et poses en contacte amb mi?",
+        "errorRequired": "L'assumpte és obligatori"
+      },
+      "message": {
+        "label": "Missatge",
+        "placeholder": "Explica'm més...",
+        "errorRequired": "El missatge és obligatori"
+      }
+    },
+    "submit": "Enviar",
+    "modal": {
+      "success": {
+        "title": "Formulari enviat amb èxit",
+        "message": "Gràcies per contactar-me!"
+      },
+      "error": {
+        "title": "Error en enviar el formulari",
+        "message": "Ups! Alguna cosa ha fallat."
+      },
+      "close": "Tancar"
+    }
+  },
+  "head": {
+    "home": {
+      "title": "Hugo GB | Desenvolupador Web",
+      "description": "Pàgina principal del portafoli personal d'Hugo."
+    },
+    "about": {
+      "title": "Hugo GB | Sobre mi",
+      "description": "Pàgina sobre mi del portafoli personal d'Hugo."
+    },
+    "projects": {
+      "title": "Hugo GB | Projectes",
+      "description": "Pàgina de projectes del portafoli personal d'Hugo."
+    },
+    "contact": {
+      "title": "Hugo GB | Contacte",
+      "description": "Pàgina de contacte del portafoli personal d'Hugo."
+    }
+  }
 }

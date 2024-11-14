@@ -1,119 +1,93 @@
 {
-	"nav": {
-		"home": "Inicio",
-		"about": "Acerca de",
-		"projects": "Proyectos",
-		"contact": "Contacto",
-		"downloadButton": "Descargar CV"
-	},
-	"home": {
-		"subtitle": "Desarrollador Web Fullstack"
-	},
-	"about": {
-		"title": "Acerca de",
-		"text": {
-			"intro": "¡Hola! Mi nombre es ",
-			"name": "Hugo",
-			"introNext": " y soy un ",
-			"webDeveloper": "Desarrollador Web Fullstack",
-			"mainFocus": ". Mi enfoque principal es desarrollar ",
-			"webApps": "aplicaciones web",
-			"butAlso": " pero también desarrollo ",
-			"mobileApps": "aplicaciones móviles",
-			"using": " utilizando ",
-			"ReactNative": "React Native",
-			"endIntro": ".",
-			"specializeIn": "Me especializo en el uso de ",
-			"jsFrameworks": "frameworks de Javascript",
-			"suchAs": " como ",
-			"react": "React",
-			"comma": ", ",
-			"vue": "Vue",
-			"and": " y ",
-			"angular": "Angular",
-			"forFrontendDev": " para el desarrollo frontend. Me encanta el desafío de crear interfaces de usuario ",
-			"responsive": "responsivas",
-			"dynamic": "dinámicas",
-			"userInterfaces": " que mejoren la experiencia del usuario. Ya sea una ",
-			"simpleLandingPage": "página de inicio sencilla",
-			"orA": " o una ",
-			"complexWebApp": "aplicación web compleja",
-			"iTakePrideIn": ", me enorgullezco de diseñar interfaces visualmente atractivas e intuitivas que satisfacen las necesidades de mis clientes.",
-			"inAdditionTo": "Además del desarrollo frontend, también tengo conocimientos de tecnologías backend como ",
-			"nodeJs": "Node.js",
-			"technologiesSuchAs": " como ",
-			"ExpressJS": "Express.js",
-			"loopback": "LoopBack",
-			"robustApps": ". Esto me permite crear aplicaciones robustas y escalables."
-		},
-		"categories": {
-			"frontend": "Frontend",
-			"backend": "Backend",
-			"tools": "Herramientas"
-		}
-	},
-	"projects": {
-		"title": "Proyectos",
-		"formula1Showcase": {
-			"description": "Información exhibida obtenida con la API de F1 creada"
-		},
-		"personalPortfolio": {
-			"description": "Portfolio personal de Hugo GB"
-		},
-		"alt": "imagen de vista previa"
-	},
-	"contact": {
-		"title": "Contacto",
-		"form": {
-			"name": {
-				"label": "Nombre",
-				"errorRequired": "El nombre es obligatorio"
-			},
-			"email": {
-				"label": "Email",
-				"errorRequired": "El email es obligatorio",
-				"errorInvalid": "El email no es válido"
-			},
-			"subject": {
-				"label": "Asunto",
-				"placeholder": "¿Por qué te pones en contacto conmigo?",
-				"errorRequired": "El asunto es obligatorio"
-			},
-			"message": {
-				"label": "Mensaje",
-				"placeholder": "Cuéntame más...",
-				"errorRequired": "El mensaje es obligatorio"
-			}
-		},
-		"submit": "Enviar",
-		"modal": {
-			"success": {
-				"title": "Formulario enviado con éxito",
-				"message": "¡Gracias por contactarme!"
-			},
-			"error": {
-				"title": "Error al enviar el formulario",
-				"message": "¡Ups! Algo salió mal."
-			},
-			"close": "Cerrar"
-		}
-	},
-	"head": {
-		"home": {
-			"title": "Hugo GB | Desarrollador Web",
-			"description": "Página principal del portafolio personal de Hugo."
-		},
-		"about": {
-			"title": "Hugo GB | Acerca de",
-			"description": "Página Acerca de del portafolio personal de Hugo."
-		},
-		"projects": {
-			"title": "Hugo GB | Proyectos",
-			"description": "Página de proyectos del portafolio personal de Hugo."
-		},
-		"contact": {
-			"title": "Hugo GB | Contacto",
-			"description": "Página de contacto del portafolio personal de Hugo."
-		}
-	}
+  "nav": {
+    "home": "Inicio",
+    "about": "Acerca",
+    "projects": "Proyectos",
+    "contact": "Contacto",
+    "downloadButton": "Descargar CV"
+  },
+  "home": {
+    "subtitle": "Desarrollador Web Fullstack"
+  },
+  "about": {
+    "title": "Acerca",
+    "text": {
+      "intro": "¡Hola! Mi nombre es ",
+      "name": "Hugo",
+      "introSection": ". Soy un desarrollador web fullstack con pasión por crear aplicaciones modernas, funcionales y bien estructuradas. Desde el backend hasta el frontend, me encanta todo el proceso de desarrollo y disfruto especialmente cuando puedo resolver problemas complejos. Además, tengo experiencia en la creación de aplicaciones móviles.",
+      "tecnologiesSection": "Trabajo principalmente con tecnologías como Express para construir APIs robustas y escalables. En el frontend, suelo usar frameworks como React y Angular para desarrollar interfaces interactivas. También utilizo Astro para crear sitios rápidos y optimizados. Además, tengo experiencia en el desarrollo de aplicaciones móviles con React Native, lo que me permite crear aplicaciones multiplataforma con una excelente experiencia de usuario.",
+      "learningSection": "Me considero alguien que aprende rápido y siempre estoy buscando maneras de mejorar mis habilidades y actualizarme en las últimas tendencias tecnológicas. Ya sea trabajando en equipo o de forma individual, disfruto colaborar en proyectos y encontrar soluciones innovadoras que aporten valor real.",
+      "finalSection": "Si estás buscando a alguien que pueda construir aplicaciones de principio a fin, me encantaría trabajar contigo y ayudar a llevar tu proyecto al siguiente nivel.",
+      "letsTalk": "¡Hablemos!"
+    },
+    "categories": {
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "tools": "Herramientas"
+    }
+  },
+  "projects": {
+    "title": "Proyectos",
+    "formula1Showcase": {
+      "description": "Información exhibida obtenida con la API de F1 creada"
+    },
+    "personalPortfolio": {
+      "description": "Portfolio personal de Hugo GB"
+    },
+    "alt": "imagen de vista previa"
+  },
+  "contact": {
+    "title": "Contacto",
+    "form": {
+      "name": {
+        "label": "Nombre",
+        "errorRequired": "El nombre es obligatorio"
+      },
+      "email": {
+        "label": "Email",
+        "errorRequired": "El email es obligatorio",
+        "errorInvalid": "El email no es válido"
+      },
+      "subject": {
+        "label": "Asunto",
+        "placeholder": "¿Por qué te pones en contacto conmigo?",
+        "errorRequired": "El asunto es obligatorio"
+      },
+      "message": {
+        "label": "Mensaje",
+        "placeholder": "Cuéntame más...",
+        "errorRequired": "El mensaje es obligatorio"
+      }
+    },
+    "submit": "Enviar",
+    "modal": {
+      "success": {
+        "title": "Formulario enviado con éxito",
+        "message": "¡Gracias por contactarme!"
+      },
+      "error": {
+        "title": "Error al enviar el formulario",
+        "message": "¡Ups! Algo salió mal."
+      },
+      "close": "Cerrar"
+    }
+  },
+  "head": {
+    "home": {
+      "title": "Hugo GB | Desarrollador Web",
+      "description": "Página principal del portafolio personal de Hugo."
+    },
+    "about": {
+      "title": "Hugo GB | Acerca",
+      "description": "Página de acerca del portafolio personal de Hugo."
+    },
+    "projects": {
+      "title": "Hugo GB | Proyectos",
+      "description": "Página de proyectos del portafolio personal de Hugo."
+    },
+    "contact": {
+      "title": "Hugo GB | Contacto",
+      "description": "Página de contacto del portafolio personal de Hugo."
+    }
+  }
 }

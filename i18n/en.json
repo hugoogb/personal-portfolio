@@ -1,119 +1,93 @@
 {
-	"nav": {
-		"home": "Home",
-		"about": "About",
-		"projects": "Projects",
-		"contact": "Contact",
-		"downloadButton": "Download CV"
-	},
-	"home": {
-		"subtitle": "Fullstack Web Developer"
-	},
-	"about": {
-		"title": "About",
-		"text": {
-			"intro": "Hey there! My name is ",
-			"name": "Hugo",
-			"introNext": " and I'm a ",
-			"webDeveloper": "Fullstack Web Developer",
-			"mainFocus": ". My main focus is developing ",
-			"webApps": "web applications",
-			"butAlso": " but I also develop ",
-			"mobileApps": "mobile apps",
-			"using": " using ",
-			"ReactNative": "React Native",
-			"endIntro": ".",
-			"specializeIn": "I specialize in using ",
-			"jsFrameworks": "Javascript frameworks",
-			"suchAs": " such as ",
-			"react": "React",
-			"comma": ", ",
-			"vue": "Vue",
-			"and": " and ",
-			"angular": "Angular",
-			"forFrontendDev": " for frontend development. I love the challenge of creating ",
-			"responsive": "responsive",
-			"dynamic": "dynamic",
-			"userInterfaces": " user interfaces that enhance the user experience. Whether it's a ",
-			"simpleLandingPage": "simple landing page",
-			"orA": " or a ",
-			"complexWebApp": "complex web application",
-			"iTakePrideIn": ", I take pride in crafting visually appealing and intuitive designs that meet my clients' needs.",
-			"inAdditionTo": "In addition to frontend development, I also have knowledge of backend ",
-			"nodeJs": "Nodejs",
-			"technologiesSuchAs": " technologies such as ",
-			"ExpressJS": "ExpressJS",
-			"loopback": "Loopback",
-			"robustApps": ". This allows me to create robust and scalable applications."
-		},
-		"categories": {
-			"frontend": "Frontend",
-			"backend": "Backend",
-			"tools": "Tools"
-		}
-	},
-	"projects": {
-		"title": "Projects",
-		"formula1Showcase": {
-			"description": "Showcase information retrieved with F1 API created"
-		},
-		"personalPortfolio": {
-			"description": "Hugo GB's personal portfolio"
-		},
-		"alt": "preview image"
-	},
-	"contact": {
-		"title": "Contact",
-		"form": {
-			"name": {
-				"label": "Name",
-				"errorRequired": "Name is required"
-			},
-			"email": {
-				"label": "Email",
-				"errorRequired": "Email is required",
-				"errorInvalid": "Email is invalid"
-			},
-			"subject": {
-				"label": "Subject",
-				"placeholder": "Why are you contacting me?",
-				"errorRequired": "Subject is required"
-			},
-			"message": {
-				"label": "Message",
-				"placeholder": "Tell me more about it...",
-				"errorRequired": "Message is required"
-			}
-		},
-		"submit": "Submit",
-		"modal": {
-			"success": {
-				"title": "Form submitted successfuly",
-				"message": "Thanks for contacting me!"
-			},
-			"error": {
-				"title": "Error submitting form",
-				"message": "Oops! Something went wrong."
-			},
-			"close": "Close"
-		}
-	},
-	"head": {
-		"home": {
-			"title": "Hugo GB | Web Developer",
-			"description": "Hugo's personal portfolio home page."
-		},
-		"about": {
-			"title": "Hugo GB | About",
-			"description": "Hugo's personal portfolio about page."
-		},
-		"projects": {
-			"title": "Hugo GB | Projects",
-			"description": "Hugo's personal portfolio projects page."
-		},
-		"contact": {
-			"title": "Hugo GB | Contact",
-			"description": "Hugo's personal portfolio contact page."
-		}
-	}
+  "nav": {
+    "home": "Home",
+    "about": "About",
+    "projects": "Projects",
+    "contact": "Contact",
+    "downloadButton": "Download CV"
+  },
+  "home": {
+    "subtitle": "Fullstack Web Developer"
+  },
+  "about": {
+    "title": "About",
+    "text": {
+      "intro": "Hi! My name is ",
+      "name": "Hugo",
+      "introSection": ". I’m a fullstack web developer with a passion for creating modern, functional, and well-structured applications. From backend to frontend, I love the entire development process and especially enjoy solving complex problems. I also have experience in mobile app development.",
+      "tecnologiesSection": "I primarily work with technologies like Express to build robust and scalable APIs. On the frontend, I often use frameworks like React and Angular to develop interactive interfaces. I also use Astro to create fast and optimized sites. Additionally, I have experience in mobile app development with React Native, which allows me to build cross-platform applications with a great user experience.",
+      "learningSection": "I’m a quick learner, always looking to improve my skills and stay up-to-date with the latest technology trends. Whether working in a team or individually, I enjoy collaborating on projects and finding innovative solutions that bring real value.",
+      "finalSection": "If you're looking for someone who can build applications from start to finish, I’d love to work with you and help take your project to the next level.",
+      "letsTalk": "Let’s talk!"
+    },
+    "categories": {
+      "frontend": "Frontend",
+      "backend": "Backend",
+      "tools": "Tools"
+    }
+  },
+  "projects": {
+    "title": "Projects",
+    "formula1Showcase": {
+      "description": "Displayed information obtained with the created F1 API"
+    },
+    "personalPortfolio": {
+      "description": "Personal portfolio of Hugo GB"
+    },
+    "alt": "preview image"
+  },
+  "contact": {
+    "title": "Contact",
+    "form": {
+      "name": {
+        "label": "Name",
+        "errorRequired": "Name is required"
+      },
+      "email": {
+        "label": "Email",
+        "errorRequired": "Email is required",
+        "errorInvalid": "Email is not valid"
+      },
+      "subject": {
+        "label": "Subject",
+        "placeholder": "Why are you contacting me?",
+        "errorRequired": "Subject is required"
+      },
+      "message": {
+        "label": "Message",
+        "placeholder": "Tell me more...",
+        "errorRequired": "Message is required"
+      }
+    },
+    "submit": "Send",
+    "modal": {
+      "success": {
+        "title": "Form submitted successfully",
+        "message": "Thank you for contacting me!"
+      },
+      "error": {
+        "title": "Error submitting form",
+        "message": "Oops! Something went wrong."
+      },
+      "close": "Close"
+    }
+  },
+  "head": {
+    "home": {
+      "title": "Hugo GB | Web Developer",
+      "description": "Home page of Hugo's personal portfolio."
+    },
+    "about": {
+      "title": "Hugo GB | About",
+      "description": "About page of Hugo's personal portfolio."
+    },
+    "projects": {
+      "title": "Hugo GB | Projects",
+      "description": "Projects page of Hugo's personal portfolio."
+    },
+    "contact": {
+      "title": "Hugo GB | Contact",
+      "description": "Contact page of Hugo's personal portfolio."
+    }
+  }
 }
