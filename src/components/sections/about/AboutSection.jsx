@@ -163,7 +163,6 @@ export function AboutSection() {
             </span>
             {t("about.text.introSection")}
           </p>
-          {/* <p>{t("about.text.tecnologiesSection")}</p> */}
           <p>{t("about.text.learningSection")}</p>
           <p>{t("about.text.finalSection")}</p>
 
