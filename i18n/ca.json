@@ -29,12 +29,25 @@
   "projects": {
     "title": "Projectes",
     "formula1Showcase": {
-      "description": "Informació mostrada obtinguda amb l'API de F1 creada"
+      "description": "Plataforma que mostra els equips de Fórmula 1 amb dades obtingudes mitjançant una API personalitzada."
     },
     "personalPortfolio": {
-      "description": "Portfolio personal d'Hugo GB"
+      "description": "Lloc web personal on es destaquen projectes, habilitats i experiència professional."
     },
-    "alt": "imatge de vista prèvia"
+    "autodetailinges": {
+      "description": "Pàgina informativa per a una empresa de serveis de detailing de cotxes, optimitzada per a SEO i rendiment."
+    },
+    "UNImate": {
+      "description": "Aplicació mòbil desenvolupada amb React Native dissenyada per ajudar estudiants universitaris: fòrum, informació sobre universitats (facultats, carreres universitàries), connectar amb persones noves, etc."
+    },
+    "footballShirtShop": {
+      "description": "Demo de botiga en línia per a la compra de samarretes de futbol personalitzades, amb un disseny intuïtiu i segur."
+    },
+    "alt": "imatge de vista prèvia",
+    "techStack": {
+      "frontend": "Frontend",
+      "backend": "Backend"
+    }
   },
   "contact": {
     "title": "Contacte",
