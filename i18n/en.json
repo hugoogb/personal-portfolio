@@ -29,12 +29,25 @@
   "projects": {
     "title": "Projects",
     "formula1Showcase": {
-      "description": "Displayed information obtained with the created F1 API"
+      "description": "Platform showcasing Formula 1 teams with data obtained through a custom API."
     },
     "personalPortfolio": {
-      "description": "Personal portfolio of Hugo GB"
+      "description": "Personal website highlighting projects, skills, and professional experience."
     },
-    "alt": "preview image"
+    "autodetailinges": {
+      "description": "Informative page for a car detailing services company, optimized for SEO and performance."
+    },
+    "UNImate": {
+      "description": "Mobile app developed with React Native designed to help university students: forum, information about universities (faculties, degrees), connecting with new people, etc."
+    },
+    "footballShirtShop": {
+      "description": "Demo of an online store for purchasing personalized football shirts, with an intuitive and secure design."
+    },
+    "alt": "preview image",
+    "techStack": {
+      "frontend": "Frontend",
+      "backend": "Backend"
+    }
   },
   "contact": {
     "title": "Contact",

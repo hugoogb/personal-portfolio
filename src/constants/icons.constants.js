@@ -27,12 +27,12 @@ export const FRONTEND_ICONS = [
   {
     id: 5,
     src: "reactjs.svg",
-    alt: "Reactjs",
+    alt: "React",
   },
   {
     id: 6,
     src: "vuejs.svg",
-    alt: "Vuejs",
+    alt: "Vue",
   },
   {
     id: 7,
@@ -50,7 +50,7 @@ export const BACKEND_ICONS = [
   {
     id: 1,
     src: "nodejs.svg",
-    alt: "Nodejs",
+    alt: "Node",
   },
   {
     id: 2,

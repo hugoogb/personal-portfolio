@@ -7,7 +7,11 @@ import { AboutIcons } from "@/components/sections/about/AboutIcons.jsx";
 import memoji from "/public/memojis/image4.png";
 import { SectionCard } from "@/components/sections/SectionCard.jsx";
 import Link from "next/link";
-import { BACKEND_ICONS, FRONTEND_ICONS, TOOLS_ICONS } from "./about.constants";
+import {
+  BACKEND_ICONS,
+  FRONTEND_ICONS,
+  TOOLS_ICONS,
+} from "../../../constants/icons.constants";
 
 export function AboutSection() {
   const { t } = useTranslation();
