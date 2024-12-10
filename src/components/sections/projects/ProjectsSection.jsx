@@ -17,6 +17,7 @@ export function ProjectsSection() {
         urlPreview={project.urlPreview}
         src={project.src}
         techStack={project.techStack}
+        workInProgress={project.workInProgress}
       ></Project>
     );
   });
