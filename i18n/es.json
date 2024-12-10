@@ -28,6 +28,7 @@
   },
   "projects": {
     "title": "Proyectos",
+    "workInProgress": "Trabajo en proceso",
     "formula1Showcase": {
       "description": "Plataforma que muestra los equipos de Fórmula 1 con datos obtenidos mediante una API personalizada."
     },

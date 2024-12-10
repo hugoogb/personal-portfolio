@@ -53,7 +53,7 @@ export function Project({
         {workInProgress && (
           <>
             <hr className={styles.projectWorkInProgressSeparator}></hr>
-            <p className={styles.projectWorkInProgress}>Work in progress</p>
+            <p className={styles.projectWorkInProgress}>{t("projects.workInProgress")}</p>
           </>
         )}
       </div>
