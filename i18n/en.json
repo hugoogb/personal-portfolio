@@ -28,6 +28,7 @@
   },
   "projects": {
     "title": "Projects",
+    "workInProgress": "Work in progress",
     "formula1Showcase": {
       "description": "Platform showcasing Formula 1 teams with data obtained through a custom API."
     },

@@ -5,7 +5,14 @@ import { mapTechStackToIcons } from "@/utils/iconsTechStackMapper";
 import { BACKEND_ICONS, FRONTEND_ICONS } from "@/constants/icons.constants";
 import { ProjectTechStack } from "./ProjectTechStack";
 
-export function Project({ name, desc, urlPreview, src, techStack }) {
+export function Project({
+  name,
+  desc,
+  urlPreview,
+  src,
+  techStack,
+  workInProgress,
+}) {
   const { t } = useTranslation();
 
   const frontendIcons = mapTechStackToIcons(techStack.frontend, FRONTEND_ICONS);
@@ -42,6 +49,13 @@ export function Project({ name, desc, urlPreview, src, techStack }) {
             />
           )}
         </div>
+
+        {workInProgress && (
+          <>
+            <hr className={styles.projectWorkInProgressSeparator}></hr>
+            <p className={styles.projectWorkInProgress}>{t("projects.workInProgress")}</p>
+          </>
+        )}
       </div>
     </a>
   );

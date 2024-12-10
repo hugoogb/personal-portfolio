@@ -12,6 +12,7 @@ export const PROJECTS = [
     },
     urlPreview: "https://f1-showcase.vercel.app",
     src: Img_f1showcase,
+    workInProgress: false,
   },
   {
     id: 1,
@@ -23,6 +24,7 @@ export const PROJECTS = [
     },
     urlPreview: "https://hugoogb.dev",
     src: Img_personalPortfolio,
+    workInProgress: false,
   },
   {
     id: 2,
@@ -32,8 +34,9 @@ export const PROJECTS = [
       frontend: ["Astro"],
       backend: [],
     },
-    urlPreview: "",
+    urlPreview: "https://autodetailing-es.vercel.app/",
     src: "",
+    workInProgress: true,
   },
   {
     id: 3,
@@ -45,6 +48,7 @@ export const PROJECTS = [
     },
     urlPreview: "",
     src: "",
+    workInProgress: true,
   },
   {
     id: 3,
@@ -56,5 +60,6 @@ export const PROJECTS = [
     },
     urlPreview: "",
     src: "",
+    workInProgress: true,
   },
 ];
