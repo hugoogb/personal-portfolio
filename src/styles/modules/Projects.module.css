@@ -95,10 +95,6 @@
   transition: transform 0.3s ease;
 }
 
-.projectTechIcon:hover {
-  transform: scale(1.1);
-}
-
 .projectTechIcon span {
   font-size: 0.85rem;
 }

@@ -1,5 +1,6 @@
 import Img_f1showcase from "/public/images/f1-showcase.png";
 import Img_personalPortfolio from "/public/images/personal-portfolio.png";
+import Img_autodetailingEs from "/public/images/autodetailing-es.png";
 
 export const PROJECTS = [
   {
@@ -35,31 +36,7 @@ export const PROJECTS = [
       backend: [],
     },
     urlPreview: "https://autodetailing-es.vercel.app/",
-    src: "",
-    workInProgress: true,
-  },
-  {
-    id: 3,
-    name: "UNImate",
-    desc: "projects.UNImate.description",
-    techStack: {
-      frontend: ["React"],
-      backend: ["Firebase"],
-    },
-    urlPreview: "",
-    src: "",
-    workInProgress: true,
-  },
-  {
-    id: 3,
-    name: "Football shirt shop",
-    desc: "projects.footballShirtShop.description",
-    techStack: {
-      frontend: ["PHP"],
-      backend: ["MySql"],
-    },
-    urlPreview: "",
-    src: "",
+    src: Img_autodetailingEs,
     workInProgress: true,
   },
 ];

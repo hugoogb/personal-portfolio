@@ -30,19 +30,13 @@
     "title": "Projectes",
     "workInProgress": "Treball en procés",
     "formula1Showcase": {
-      "description": "Plataforma que mostra els equips de Fórmula 1 amb dades obtingudes mitjançant una API personalitzada."
+      "description": "Plataforma que mostra els equips de Fórmula 1 amb dades obtingudes mitjançant una API personalitzada"
     },
     "personalPortfolio": {
-      "description": "Lloc web personal on es destaquen projectes, habilitats i experiència professional."
+      "description": "Lloc web personal on es destaquen projectes, habilitats i experiència professional"
     },
     "autodetailinges": {
-      "description": "Pàgina informativa per a una empresa de serveis de detailing de cotxes, optimitzada per a SEO i rendiment."
-    },
-    "UNImate": {
-      "description": "Aplicació mòbil desenvolupada amb React Native dissenyada per ajudar estudiants universitaris: fòrum, informació sobre universitats (facultats, carreres universitàries), connectar amb persones noves, etc."
-    },
-    "footballShirtShop": {
-      "description": "Demo de botiga en línia per a la compra de samarretes de futbol personalitzades, amb un disseny intuïtiu i segur."
+      "description": "Pàgina informativa per a una empresa de serveis de detailing de cotxes, optimitzada per a SEO i rendiment"
     },
     "alt": "imatge de vista prèvia",
     "techStack": {

@@ -30,19 +30,13 @@
     "title": "Projects",
     "workInProgress": "Work in progress",
     "formula1Showcase": {
-      "description": "Platform showcasing Formula 1 teams with data obtained through a custom API."
+      "description": "Platform showcasing Formula 1 teams with data obtained through a custom API"
     },
     "personalPortfolio": {
-      "description": "Personal website highlighting projects, skills, and professional experience."
+      "description": "Personal website highlighting projects, skills, and professional experience"
     },
     "autodetailinges": {
-      "description": "Informative page for a car detailing services company, optimized for SEO and performance."
-    },
-    "UNImate": {
-      "description": "Mobile app developed with React Native designed to help university students: forum, information about universities (faculties, degrees), connecting with new people, etc."
-    },
-    "footballShirtShop": {
-      "description": "Demo of an online store for purchasing personalized football shirts, with an intuitive and secure design."
+      "description": "Informative page for a car detailing services company, optimized for SEO and performance"
     },
     "alt": "preview image",
     "techStack": {
