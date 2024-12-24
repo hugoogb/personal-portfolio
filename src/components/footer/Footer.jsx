@@ -1,11 +1,10 @@
 import styles from "@/styles/modules/Footer.module.css";
 import {
   IconBrandGithub,
-  IconBrandInstagram,
   IconBrandLinkedin,
-  IconBrandTwitter,
   IconExternalLink,
 } from "@tabler/icons-react";
+import { ExternalLinkButton } from "../shared/ExternalLinkButton";
 
 export const Footer = () => {
   const socials = [
@@ -37,25 +36,12 @@ export const Footer = () => {
 
   const socialsMapped = socials.map((social) => {
     return (
-      <a
+      <ExternalLinkButton
         key={social.id}
-        className={`button ${styles.anchorSocial}`}
-        href={social.link}
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        <div className={styles.socialIconButton}>
-          <social.icon
-            color={"var(--text-color)"}
-            size={24}
-            className={styles.socialIcon}
-          />
-          <p>{social.name}</p>
-          <div className={styles.arrowLink}>
-            <IconExternalLink color={"var(--text-color)"} size={20} />
-          </div>
-        </div>
-      </a>
+        text={social.name}
+        link={social.link}
+        icon={social.icon}
+      />
     );
   });
 
