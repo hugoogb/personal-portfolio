@@ -42,6 +42,11 @@
     "techStack": {
       "frontend": "Frontend",
       "backend": "Backend"
+    },
+    "github": {
+      "all": "Codi",
+      "frontend": "Codi frontend",
+      "backend": "Codi backend"
     }
   },
   "contact": {

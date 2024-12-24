@@ -4,6 +4,8 @@ import styles from "@/styles/modules/Projects.module.css";
 import { mapTechStackToIcons } from "@/utils/iconsTechStackMapper";
 import { BACKEND_ICONS, FRONTEND_ICONS } from "@/constants/icons.constants";
 import { ProjectTechStack } from "./ProjectTechStack";
+import { ExternalLinkButton } from "@/components/shared/ExternalLinkButton";
+import { IconBrandGithub } from "@tabler/icons-react";
 
 export function Project({
   name,
@@ -12,6 +14,7 @@ export function Project({
   src,
   techStack,
   workInProgress,
+  githubUrl,
 }) {
   const { t } = useTranslation();
 
@@ -30,22 +33,47 @@ export function Project({
               fill={true}
               className={`image ${styles.projectImage}`}
               unoptimized={true}
-            ></Image>
+            />
           </div>
         )}
         <p className={styles.projectDesc}>{desc}</p>
         <hr className={styles.projectSeparator}></hr>
         <div className={styles.projectTechStack}>
+          {githubUrl.all && (
+            <ExternalLinkButton
+              text={t("projects.github.all")}
+              link={githubUrl.all}
+              icon={IconBrandGithub}
+            />
+          )}
+
           {techStack.frontend?.length > 0 && (
             <ProjectTechStack
               title={t("projects.techStack.frontend")}
               icons={frontendIcons}
             />
           )}
+
+          {githubUrl.frontend && (
+            <ExternalLinkButton
+              text={t("projects.github.frontend")}
+              link={githubUrl.frontend}
+              icon={IconBrandGithub}
+            />
+          )}
+
           {techStack.backend?.length > 0 && (
             <ProjectTechStack
               title={t("projects.techStack.backend")}
               icons={backendIcons}
+            />
+          )}
+
+          {githubUrl.backend && (
+            <ExternalLinkButton
+              text={t("projects.github.backend")}
+              link={githubUrl.backend}
+              icon={IconBrandGithub}
             />
           )}
         </div>
@@ -53,7 +81,9 @@ export function Project({
         {workInProgress && (
           <>
             <hr className={styles.projectWorkInProgressSeparator}></hr>
-            <p className={styles.projectWorkInProgress}>{t("projects.workInProgress")}</p>
+            <p className={styles.projectWorkInProgress}>
+              {t("projects.workInProgress")}
+            </p>
           </>
         )}
       </div>

@@ -13,6 +13,11 @@ export const PROJECTS = [
     },
     urlPreview: "https://f1-showcase.vercel.app",
     src: Img_f1showcase,
+    githubUrl: {
+      all: "https://github.com/hugoogb/personal-portfolio",
+      frontend: "",
+      backend: "",
+    },
     workInProgress: false,
   },
   {
@@ -25,6 +30,11 @@ export const PROJECTS = [
     },
     urlPreview: "https://hugoogb.dev",
     src: Img_personalPortfolio,
+    githubUrl: {
+      all: "",
+      frontend: "https://github.com/hugoogb/f1-showcase",
+      backend: "https://github.com/hugoogb/f1-api",
+    },
     workInProgress: false,
   },
   {
@@ -37,6 +47,11 @@ export const PROJECTS = [
     },
     urlPreview: "https://autodetailing-es.vercel.app/",
     src: Img_autodetailingEs,
+    githubUrl: {
+      all: "",
+      frontend: "",
+      backend: "",
+    },
     workInProgress: true,
   },
 ];
