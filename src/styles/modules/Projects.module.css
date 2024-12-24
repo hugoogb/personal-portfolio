@@ -27,7 +27,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: flex-start;
+  justify-content: center;
   text-align: center;
   padding: 1rem;
 }
@@ -75,6 +75,8 @@
   margin-top: 1.5rem;
   display: flex;
   flex-direction: column;
+  align-items: center;
+  justify-content: center;
   gap: 1rem;
 }
 
@@ -93,10 +95,6 @@
   gap: 0.25rem;
   text-align: center;
   transition: transform 0.3s ease;
-}
-
-.projectTechIcon:hover {
-  transform: scale(1.1);
 }
 
 .projectTechIcon span {

@@ -1,5 +1,6 @@
 import Img_f1showcase from "/public/images/f1-showcase.png";
 import Img_personalPortfolio from "/public/images/personal-portfolio.png";
+import Img_autodetailingEs from "/public/images/autodetailing-es.png";
 
 export const PROJECTS = [
   {
@@ -12,6 +13,11 @@ export const PROJECTS = [
     },
     urlPreview: "https://f1-showcase.vercel.app",
     src: Img_f1showcase,
+    githubUrl: {
+      all: "https://github.com/hugoogb/personal-portfolio",
+      frontend: "",
+      backend: "",
+    },
     workInProgress: false,
   },
   {
@@ -24,6 +30,11 @@ export const PROJECTS = [
     },
     urlPreview: "https://hugoogb.dev",
     src: Img_personalPortfolio,
+    githubUrl: {
+      all: "",
+      frontend: "https://github.com/hugoogb/f1-showcase",
+      backend: "https://github.com/hugoogb/f1-api",
+    },
     workInProgress: false,
   },
   {
@@ -35,31 +46,12 @@ export const PROJECTS = [
       backend: [],
     },
     urlPreview: "https://autodetailing-es.vercel.app/",
-    src: "",
-    workInProgress: true,
-  },
-  {
-    id: 3,
-    name: "UNImate",
-    desc: "projects.UNImate.description",
-    techStack: {
-      frontend: ["React"],
-      backend: ["Firebase"],
+    src: Img_autodetailingEs,
+    githubUrl: {
+      all: "",
+      frontend: "",
+      backend: "",
     },
-    urlPreview: "",
-    src: "",
-    workInProgress: true,
-  },
-  {
-    id: 3,
-    name: "Football shirt shop",
-    desc: "projects.footballShirtShop.description",
-    techStack: {
-      frontend: ["PHP"],
-      backend: ["MySql"],
-    },
-    urlPreview: "",
-    src: "",
     workInProgress: true,
   },
 ];

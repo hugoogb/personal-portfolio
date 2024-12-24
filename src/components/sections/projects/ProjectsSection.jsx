@@ -18,6 +18,7 @@ export function ProjectsSection() {
         src={project.src}
         techStack={project.techStack}
         workInProgress={project.workInProgress}
+        githubUrl={project.githubUrl}
       ></Project>
     );
   });
