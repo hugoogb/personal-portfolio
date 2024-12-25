@@ -32,14 +32,8 @@
     "formula1Showcase": {
       "description": "Platform showcasing Formula 1 teams with data obtained through a custom API"
     },
-    "personalPortfolio": {
-      "description": "Personal website highlighting projects, skills, and professional experience"
-    },
     "autodetailinges": {
       "description": "Informative page for a car detailing services company, optimized for SEO and performance"
-    },
-    "dashboard": {
-      "description": "Dashboard for a car detailing service company with relevant information and charts"
     },
     "alt": "preview image",
     "techStack": {

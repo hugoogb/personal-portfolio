@@ -15,23 +15,6 @@ export const PROJECTS = [
     urlPreview: "https://f1-showcase.vercel.app",
     src: Img_f1showcase,
     githubUrl: {
-      all: "https://github.com/hugoogb/personal-portfolio",
-      frontend: "",
-      backend: "",
-    },
-    workInProgress: false,
-  },
-  {
-    id: 1,
-    name: "Personal portfolio",
-    desc: "projects.personalPortfolio.description",
-    techStack: {
-      frontend: ["React"],
-      backend: ["Nextjs"],
-    },
-    urlPreview: "https://hugoogb.dev",
-    src: Img_personalPortfolio,
-    githubUrl: {
       all: "",
       frontend: "https://github.com/hugoogb/f1-showcase",
       backend: "https://github.com/hugoogb/f1-api",
@@ -39,7 +22,7 @@ export const PROJECTS = [
     workInProgress: false,
   },
   {
-    id: 2,
+    id: 1,
     name: "autodetailing.es",
     desc: "projects.autodetailinges.description",
     techStack: {
@@ -53,23 +36,5 @@ export const PROJECTS = [
       frontend: "",
       backend: "",
     },
-    workInProgress: true,
-  },
-  {
-    id: 3,
-    name: "Dashboard",
-    desc: "projects.dashboard.description",
-    techStack: {
-      frontend: ["React"],
-      backend: ["Nextjs"],
-    },
-    urlPreview: "https://autodetailing-dashboard.vercel.app/",
-    src: Img_dashboard,
-    githubUrl: {
-      all: "https://github.com/hugoogb/autodetailing-dashboard",
-      frontend: "",
-      backend: "",
-    },
-    workInProgress: true,
   },
 ];

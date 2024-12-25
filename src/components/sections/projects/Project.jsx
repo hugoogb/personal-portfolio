@@ -77,15 +77,6 @@ export function Project({
             />
           )}
         </div>
-
-        {workInProgress && (
-          <>
-            <hr className={styles.projectWorkInProgressSeparator}></hr>
-            <p className={styles.projectWorkInProgress}>
-              {t("projects.workInProgress")}
-            </p>
-          </>
-        )}
       </div>
     </a>
   );

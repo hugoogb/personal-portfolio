@@ -32,14 +32,8 @@
     "formula1Showcase": {
       "description": "Plataforma que mostra els equips de Fórmula 1 amb dades obtingudes mitjançant una API personalitzada"
     },
-    "personalPortfolio": {
-      "description": "Lloc web personal on es destaquen projectes, habilitats i experiència professional"
-    },
     "autodetailinges": {
       "description": "Pàgina informativa per a una empresa de serveis de detailing de cotxes, optimitzada per a SEO i rendiment"
-    },
-    "dashboard": {
-      "description": "Quadre de comandament per a una empresa de serveis de detailing de cotxes amb informació rellevant i gràfics"
     },
     "alt": "imatge de vista prèvia",
     "techStack": {
