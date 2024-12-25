@@ -38,6 +38,9 @@
     "autodetailinges": {
       "description": "Página informativa para una empresa de servicios de detailing de coches, optimizada para SEO y rendimiento"
     },
+    "dashboard": {
+      "description": "Dashboard para una empresa de servicios de detailing de coches con información relevante y gráficos"
+    },
     "alt": "imagen de vista previa",
     "techStack": {
       "frontend": "Frontend",

@@ -1,118 +1,142 @@
+import { IconBrandNodejs } from "@tabler/icons-react";
+import { IconBrandSupabase } from "@tabler/icons-react";
+import { IconBrandMongodb } from "@tabler/icons-react";
+import { IconDatabase } from "@tabler/icons-react";
+import { IconBrandNpm } from "@tabler/icons-react";
+import { IconBrandGit } from "@tabler/icons-react";
+import { IconBrandVercel } from "@tabler/icons-react";
+import { IconBrandVercelFilled } from "@tabler/icons-react";
+import { IconLayoutKanbanFilled } from "@tabler/icons-react";
+import { IconBrandBitbucketFilled } from "@tabler/icons-react";
+import { IconBrandBitbucket } from "@tabler/icons-react";
+import { IconBrandPnpm } from "@tabler/icons-react";
+import { IconBrandGithub } from "@tabler/icons-react";
+import { IconBrandMysql } from "@tabler/icons-react";
+import { IconBrandFirebase } from "@tabler/icons-react";
+import { IconBrandAstro } from "@tabler/icons-react";
+import {
+  IconBrandAngular,
+  IconBrandNextjs,
+  IconBrandReact,
+  IconBrandVue,
+} from "@tabler/icons-react";
+import {
+  IconBrandCss3,
+  IconBrandHtml5,
+  IconBrandJavascript,
+  IconBrandTypescript,
+} from "@tabler/icons-react";
+
 export const FRONTEND_ICONS = [
   {
     id: 0,
-    src: "html-5.svg",
-    alt: "HTML",
+    icon: IconBrandHtml5,
+    name: "HTML",
   },
   {
     id: 1,
-    src: "css3.svg",
-    alt: "CSS3",
+    icon: IconBrandCss3,
+    name: "CSS",
   },
   {
     id: 2,
-    src: "javascript.svg",
-    alt: "Javascript",
+    icon: IconBrandJavascript,
+    name: "Javascript",
   },
   {
     id: 3,
-    src: "typescript.svg",
-    alt: "Typescript",
+    icon: IconBrandTypescript,
+    name: "Typescript",
   },
   {
     id: 4,
-    src: "astro.svg",
-    alt: "Astro",
+    icon: IconBrandAstro,
+    name: "Astro",
   },
   {
     id: 5,
-    src: "reactjs.svg",
-    alt: "React",
+    icon: IconBrandReact,
+    name: "React",
   },
   {
     id: 6,
-    src: "vuejs.svg",
-    alt: "Vue",
+    icon: IconBrandVue,
+    name: "Vue",
   },
   {
     id: 7,
-    src: "angular.svg",
-    alt: "Angular",
+    icon: IconBrandAngular,
+    name: "Angular",
   },
 ];
 
 export const BACKEND_ICONS = [
   {
     id: 0,
-    src: "nextjs.svg",
-    alt: "Nextjs",
+    icon: IconBrandNodejs,
+    name: "Nodejs",
   },
   {
     id: 1,
-    src: "nodejs.svg",
-    alt: "Node",
+    icon: IconBrandNextjs,
+    name: "Nextjs",
   },
   {
     id: 2,
-    src: "expressjs.svg",
-    alt: "Expressjs",
+    icon: IconBrandSupabase,
+    name: "Supabase",
   },
   {
     id: 3,
-    src: "loopback.svg",
-    alt: "Loopback",
+    icon: IconBrandFirebase,
+    name: "Firebase",
   },
   {
     id: 4,
-    src: "supabase.svg",
-    alt: "Supabase",
+    icon: IconBrandMongodb,
+    name: "Mongodb",
   },
   {
     id: 5,
-    src: "firebase.svg",
-    alt: "Firebase",
-  },
-  {
-    id: 6,
-    src: "mongodb.svg",
-    alt: "MongoDB",
-  },
-  {
-    id: 7,
-    src: "mysql.svg",
-    alt: "MySql",
+    icon: IconDatabase,
+    name: "Database",
   },
 ];
 
 export const TOOLS_ICONS = [
   {
     id: 0,
-    src: "npm.svg",
-    alt: "Npm",
+    icon: IconBrandNpm,
+    name: "Npm",
   },
   {
     id: 1,
-    src: "git.svg",
-    alt: "Git",
+    icon: IconBrandPnpm,
+    name: "Pnpm",
   },
   {
     id: 2,
-    src: "github.svg",
-    alt: "Github",
+    icon: IconBrandGit,
+    name: "Git",
   },
   {
     id: 3,
-    src: "bitbucket.svg",
-    alt: "Bitbucket",
+    icon: IconBrandGithub,
+    name: "Github",
   },
   {
     id: 4,
-    src: "jira.svg",
-    alt: "Jira",
+    icon: IconBrandBitbucketFilled,
+    name: "Bitbucket",
   },
   {
     id: 5,
-    src: "vercel.svg",
-    alt: "Vercel",
+    icon: IconLayoutKanbanFilled,
+    name: "Jira",
+  },
+  {
+    id: 6,
+    icon: IconBrandVercelFilled,
+    name: "Vercel",
   },
 ];

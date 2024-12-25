@@ -38,6 +38,9 @@
     "autodetailinges": {
       "description": "Informative page for a car detailing services company, optimized for SEO and performance"
     },
+    "dashboard": {
+      "description": "Dashboard for a car detailing service company with relevant information and charts"
+    },
     "alt": "preview image",
     "techStack": {
       "frontend": "Frontend",

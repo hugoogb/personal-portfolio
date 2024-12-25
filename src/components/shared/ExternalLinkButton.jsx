@@ -13,14 +13,10 @@ export const ExternalLinkButton = ({ id, text, link, icon, children }) => {
       rel="noopener noreferrer"
     >
       <div className={styles.iconButton}>
-        <IconComponent
-          color={"var(--text-color)"}
-          size={24}
-          className={styles.icon}
-        />
+        <IconComponent stroke={1.25} size={24} className={styles.icon} />
         <p>{text}</p>
         <div className={styles.arrowLink}>
-          <IconExternalLink color={"var(--text-color)"} size={20} />
+          <IconExternalLink size={20} />
         </div>
       </div>
     </a>

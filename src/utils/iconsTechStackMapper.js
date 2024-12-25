@@ -1,8 +1,10 @@
+import { IconError404 } from "@tabler/icons-react";
+
 export const mapTechStackToIcons = (techArray, iconsArray) => {
   return techArray.map((tech) => {
     const icon = iconsArray.find(
-      (icon) => icon.alt.toLowerCase() === tech.toLowerCase()
+      (icon) => icon.name.toLowerCase() === tech.toLowerCase()
     );
-    return icon ? { ...icon, name: tech } : { src: "", alt: tech, name: tech };
+    return icon ? { ...icon } : { icon: IconError404, name: tech };
   });
 };

@@ -1,6 +1,7 @@
 import Img_f1showcase from "/public/images/f1-showcase.png";
 import Img_personalPortfolio from "/public/images/personal-portfolio.png";
 import Img_autodetailingEs from "/public/images/autodetailing-es.png";
+import Img_dashboard from "/public/images/dashboard.png";
 
 export const PROJECTS = [
   {
@@ -9,7 +10,7 @@ export const PROJECTS = [
     desc: "projects.formula1Showcase.description",
     techStack: {
       frontend: ["Vue"],
-      backend: ["Node", "Expressjs"],
+      backend: ["Nodejs", "Expressjs"],
     },
     urlPreview: "https://f1-showcase.vercel.app",
     src: Img_f1showcase,
@@ -49,6 +50,23 @@ export const PROJECTS = [
     src: Img_autodetailingEs,
     githubUrl: {
       all: "",
+      frontend: "",
+      backend: "",
+    },
+    workInProgress: true,
+  },
+  {
+    id: 3,
+    name: "Dashboard",
+    desc: "projects.dashboard.description",
+    techStack: {
+      frontend: ["React"],
+      backend: ["Nextjs"],
+    },
+    urlPreview: "https://autodetailing-dashboard.vercel.app/",
+    src: Img_dashboard,
+    githubUrl: {
+      all: "https://github.com/hugoogb/autodetailing-dashboard",
       frontend: "",
       backend: "",
     },
