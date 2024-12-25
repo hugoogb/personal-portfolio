@@ -82,22 +82,22 @@ export const BACKEND_ICONS = [
     name: "Nextjs",
   },
   {
-    id: 4,
+    id: 2,
     icon: IconBrandSupabase,
     name: "Supabase",
   },
   {
-    id: 5,
+    id: 3,
     icon: IconBrandFirebase,
     name: "Firebase",
   },
   {
-    id: 6,
+    id: 4,
     icon: IconBrandMongodb,
     name: "Mongodb",
   },
   {
-    id: 7,
+    id: 5,
     icon: IconDatabase,
     name: "Database",
   },
@@ -125,17 +125,17 @@ export const TOOLS_ICONS = [
     name: "Github",
   },
   {
-    id: 3,
+    id: 4,
     icon: IconBrandBitbucketFilled,
     name: "Bitbucket",
   },
   {
-    id: 4,
+    id: 5,
     icon: IconLayoutKanbanFilled,
     name: "Jira",
   },
   {
-    id: 5,
+    id: 6,
     icon: IconBrandVercelFilled,
     name: "Vercel",
   },

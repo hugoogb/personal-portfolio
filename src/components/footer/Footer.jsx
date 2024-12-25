@@ -1,9 +1,5 @@
 import styles from "@/styles/modules/Footer.module.css";
-import {
-  IconBrandGithub,
-  IconBrandLinkedin,
-  IconExternalLink,
-} from "@tabler/icons-react";
+import { IconBrandGithub, IconBrandLinkedin } from "@tabler/icons-react";
 import { ExternalLinkButton } from "../shared/ExternalLinkButton";
 
 export const Footer = () => {
@@ -20,18 +16,6 @@ export const Footer = () => {
       icon: IconBrandLinkedin,
       link: "https://www.linkedin.com/in/hugoogb/",
     },
-    // {
-    // 	id: 2,
-    // 	name: "Twitter",
-    // 	icon: IconBrandTwitter,
-    // 	link: "https://twitter.com/hugoo_gb",
-    // },
-    // {
-    // 	id: 3,
-    // 	name: "Instagram",
-    // 	icon: IconBrandInstagram,
-    // 	link: "https://www.instagram.com/hugoo_gb/",
-    // },
   ];
 
   const socialsMapped = socials.map((social) => {

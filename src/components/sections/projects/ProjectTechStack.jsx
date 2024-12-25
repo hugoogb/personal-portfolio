@@ -8,7 +8,7 @@ export function ProjectTechStack({ title, icons }) {
       <div className={styles.projectTechStackIconsWrapper}>
         {icons.map((icon, index) => (
           <div key={index} className={styles.projectTechIcon} title={icon.name}>
-            <icon.icon stroke={1.25} width={24} height={24} />
+            <icon.icon stroke={1.25} size={24} />
             <span>{icon.name}</span>
           </div>
         ))}

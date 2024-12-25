@@ -22,12 +22,7 @@ export function AboutSection() {
     return icons.map((icon) => {
       return (
         <div key={icon.id} title={icon.name}>
-          <icon.icon
-            stroke={1.25}
-            width={48}
-            height={48}
-            className={styles.aboutIcon}
-          />
+          <icon.icon stroke={1.25} size={48} className={styles.aboutIcon} />
         </div>
       );
     });
