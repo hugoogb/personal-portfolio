@@ -35,10 +35,14 @@
     "autodetailinges": {
       "description": "Pàgina informativa per a una empresa de serveis de detailing de cotxes, optimitzada per a SEO i rendiment"
     },
+    "avatar-generator": {
+      "description": "Proporciona una biblioteca de generació d'avatars personalitzables que és agnòstica als frameworks. Integració fàcil amb opcions personalitzables."
+    },
     "alt": "imatge de vista prèvia",
     "techStack": {
       "frontend": "Frontend",
-      "backend": "Backend"
+      "backend": "Backend",
+      "tools": "Eines"
     },
     "github": {
       "all": "Codi",
