@@ -35,10 +35,14 @@
     "autodetailinges": {
       "description": "Informative page for a car detailing services company, optimized for SEO and performance"
     },
+    "avatar-generator": {
+      "description": "Provides a customizable avatar generation library that is framework-agnostic. Easy integration with customizable options."
+    },
     "alt": "preview image",
     "techStack": {
       "frontend": "Frontend",
-      "backend": "Backend"
+      "backend": "Backend",
+      "tools": "Tools"
     },
     "github": {
       "all": "Code",

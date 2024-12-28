@@ -1,7 +1,6 @@
 import Img_f1showcase from "/public/images/f1-showcase.png";
-import Img_personalPortfolio from "/public/images/personal-portfolio.png";
 import Img_autodetailingEs from "/public/images/autodetailing-es.png";
-import Img_dashboard from "/public/images/dashboard.png";
+import Img_avatarGenerator from "/public/images/avatar-generator.png";
 
 export const PROJECTS = [
   {
@@ -11,6 +10,7 @@ export const PROJECTS = [
     techStack: {
       frontend: ["Vue"],
       backend: ["Nodejs", "Expressjs"],
+      tools: [],
     },
     urlPreview: "https://f1-showcase.vercel.app",
     src: Img_f1showcase,
@@ -19,7 +19,6 @@ export const PROJECTS = [
       frontend: "https://github.com/hugoogb/f1-showcase",
       backend: "https://github.com/hugoogb/f1-api",
     },
-    workInProgress: false,
   },
   {
     id: 1,
@@ -28,11 +27,29 @@ export const PROJECTS = [
     techStack: {
       frontend: ["Astro"],
       backend: [],
+      tools: [],
     },
     urlPreview: "https://autodetailing-es.vercel.app/",
     src: Img_autodetailingEs,
     githubUrl: {
       all: "",
+      frontend: "",
+      backend: "",
+    },
+  },
+  {
+    id: 2,
+    name: "@avatar-generator",
+    desc: "projects.avatar-generator.description",
+    techStack: {
+      frontend: ["Astro"],
+      backend: [],
+      tools: ["npm", "pnpm"],
+    },
+    urlPreview: "https://avatar-generator-two.vercel.app/",
+    src: Img_avatarGenerator,
+    githubUrl: {
+      all: "https://github.com/hugoogb/avatar-generator",
       frontend: "",
       backend: "",
     },

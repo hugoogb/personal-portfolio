@@ -2,7 +2,11 @@ import { useTranslation } from "react-i18next";
 import Image from "next/image";
 import styles from "@/styles/modules/Projects.module.css";
 import { mapTechStackToIcons } from "@/utils/iconsTechStackMapper";
-import { BACKEND_ICONS, FRONTEND_ICONS } from "@/constants/icons.constants";
+import {
+  BACKEND_ICONS,
+  FRONTEND_ICONS,
+  TOOLS_ICONS,
+} from "@/constants/icons.constants";
 import { ProjectTechStack } from "./ProjectTechStack";
 import { ExternalLinkButton } from "@/components/shared/ExternalLinkButton";
 import { IconBrandGithub } from "@tabler/icons-react";
@@ -20,6 +24,7 @@ export function Project({
 
   const frontendIcons = mapTechStackToIcons(techStack.frontend, FRONTEND_ICONS);
   const backendIcons = mapTechStackToIcons(techStack.backend, BACKEND_ICONS);
+  const toolsIcons = mapTechStackToIcons(techStack.tools, TOOLS_ICONS);
 
   return (
     <a href={urlPreview} target="_blank" className={styles.projectLink}>
@@ -74,6 +79,13 @@ export function Project({
               text={t("projects.github.backend")}
               link={githubUrl.backend}
               icon={IconBrandGithub}
+            />
+          )}
+
+          {techStack.tools?.length > 0 && (
+            <ProjectTechStack
+              title={t("projects.techStack.tools")}
+              icons={toolsIcons}
             />
           )}
         </div>
