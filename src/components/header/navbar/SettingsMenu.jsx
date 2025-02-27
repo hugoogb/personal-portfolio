@@ -1,27 +1,26 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { HexColorPicker } from "react-colorful";
 import styles from "@/styles/modules/Settings.module.css";
 import { ColorContext } from "@/components/Layout.jsx";
 import { LanguageSelector } from "@/components/header/navbar/LanguageSelector.jsx";
 import { IconSettings } from "@tabler/icons-react";
 
-export const SettingsMenu = ({ setColor }) => {
-	const color = useContext(ColorContext);
+export const SettingsMenu = () => {
+	const { color, setColor } = useContext(ColorContext);
 	const [visibility, setVisibility] = useState(false);
+	const [HexColorPicker, setHexColorPicker] = useState(null);
 	const settingsRef = useRef(null);
 	const iconSettingsRef = useRef(null);
 
+	// Load the color picker component only on the client side
 	useEffect(() => {
-		const savedColor = localStorage.getItem("color");
+		// Dynamically import the HexColorPicker
+		import('react-colorful').then(mod => {
+			setHexColorPicker(() => mod.HexColorPicker);
+		});
+	}, []);
 
-		if (savedColor) {
-			setColor(savedColor);
-		}
-	}, [setColor]);
-
-	const handleColorChange = (color) => {
-		setColor(color);
-		localStorage.setItem("color", color);
+	const handleColorChange = (newColor) => {
+		setColor(newColor);
 	};
 
 	useEffect(() => {
@@ -60,10 +59,11 @@ export const SettingsMenu = ({ setColor }) => {
 			>
 				<div className={styles.settingsContainer}>
 					<LanguageSelector></LanguageSelector>
-					<HexColorPicker
-						color={color}
-						onChange={handleColorChange}
-					></HexColorPicker>
+					{HexColorPicker && (
+						<div className={styles.colorPickerWrapper}>
+							<HexColorPicker color={color} onChange={handleColorChange} />
+						</div>
+					)}
 				</div>
 			</div>
 			<div

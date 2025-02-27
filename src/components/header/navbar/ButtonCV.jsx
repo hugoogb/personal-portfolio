@@ -11,7 +11,7 @@ export const ButtonCV = () => {
   const fileName = `CV-${lang}.pdf`;
   const downloadUrl = `/api/download?fileName=${fileName}&language=${lang}`;
 
-  const color = useContext(ColorContext);
+  const { color } = useContext(ColorContext);
 
   const elementRef = useRef(null);
 

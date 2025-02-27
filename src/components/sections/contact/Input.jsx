@@ -12,7 +12,7 @@ export const Input = ({
 	onBlur,
 	error,
 }) => {
-	const color = useContext(ColorContext);
+	const { color } = useContext(ColorContext);
 
 	return (
 		<label className={styles.inputLabel}>

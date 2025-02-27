@@ -3,7 +3,11 @@ import { Layout } from "@/components/Layout";
 import "@/styles/globals.css";
 import { Raleway } from "next/font/google";
 
-const raleway = Raleway({ subsets: ["latin"] });
+const raleway = Raleway({ 
+  subsets: ["latin"],
+  display: 'swap',
+  fallback: ['system-ui', 'sans-serif']
+});
 
 export default function App({ Component, pageProps }) {
   return (

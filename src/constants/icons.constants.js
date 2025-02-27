@@ -4,21 +4,18 @@ import { IconBrandMongodb } from "@tabler/icons-react";
 import { IconDatabase } from "@tabler/icons-react";
 import { IconBrandNpm } from "@tabler/icons-react";
 import { IconBrandGit } from "@tabler/icons-react";
-import { IconBrandVercel } from "@tabler/icons-react";
 import { IconBrandVercelFilled } from "@tabler/icons-react";
+import { IconBrandDocker } from "@tabler/icons-react";
 import { IconLayoutKanbanFilled } from "@tabler/icons-react";
 import { IconBrandBitbucketFilled } from "@tabler/icons-react";
-import { IconBrandBitbucket } from "@tabler/icons-react";
 import { IconBrandPnpm } from "@tabler/icons-react";
 import { IconBrandGithub } from "@tabler/icons-react";
-import { IconBrandMysql } from "@tabler/icons-react";
 import { IconBrandFirebase } from "@tabler/icons-react";
 import { IconBrandAstro } from "@tabler/icons-react";
 import {
   IconBrandAngular,
   IconBrandNextjs,
   IconBrandReact,
-  IconBrandVue,
 } from "@tabler/icons-react";
 import {
   IconBrandCss3,
@@ -60,11 +57,6 @@ export const FRONTEND_ICONS = [
   },
   {
     id: 6,
-    icon: IconBrandVue,
-    name: "Vue",
-  },
-  {
-    id: 7,
     icon: IconBrandAngular,
     name: "Angular",
   },
@@ -83,23 +75,23 @@ export const BACKEND_ICONS = [
   },
   {
     id: 2,
-    icon: IconBrandSupabase,
-    name: "Supabase",
-  },
-  {
-    id: 3,
-    icon: IconBrandFirebase,
-    name: "Firebase",
-  },
-  {
-    id: 4,
     icon: IconBrandMongodb,
     name: "Mongodb",
   },
   {
-    id: 5,
+    id: 3,
     icon: IconDatabase,
     name: "Database",
+  },
+  {
+    id: 4,
+    icon: IconBrandSupabase,
+    name: "Supabase",
+  },
+  {
+    id: 5,
+    icon: IconBrandFirebase,
+    name: "Firebase",
   },
 ];
 
@@ -139,4 +131,10 @@ export const TOOLS_ICONS = [
     icon: IconBrandVercelFilled,
     name: "Vercel",
   },
+  {
+    id: 7,
+    icon: IconBrandDocker,
+    name: "Docker",
+  },
+  
 ];

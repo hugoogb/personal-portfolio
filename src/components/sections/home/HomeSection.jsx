@@ -13,7 +13,7 @@ import { IconRefresh } from "@tabler/icons-react";
 export function HomeSection() {
 	const { t } = useTranslation();
 
-	const color = useContext(ColorContext);
+	const { color } = useContext(ColorContext);
 
 	const [activeImage, setActiveImage] = useState(0);
 

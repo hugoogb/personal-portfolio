@@ -16,7 +16,7 @@ import {
 export function AboutSection() {
   const { t } = useTranslation();
 
-  const color = useContext(ColorContext);
+  const { color } = useContext(ColorContext);
 
   const mapIcons = (icons) => {
     return icons.map((icon) => {

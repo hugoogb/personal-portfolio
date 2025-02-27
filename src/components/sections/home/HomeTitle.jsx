@@ -4,12 +4,17 @@ import { useTranslation } from "react-i18next";
 import styles from "@/styles/modules/Home.module.css";
 import { ColorContext } from "@/components/Layout.jsx";
 
-const hankenGrotesk = Hanken_Grotesk({ subsets: ["latin"] });
+const hankenGrotesk = Hanken_Grotesk({ 
+  subsets: ["latin"],
+  weight: ['400', '500', '700', '900'],
+  display: 'swap',
+  variable: '--font-hanken-grotesk',
+});
 
 export const HomeTitle = () => {
 	const { t } = useTranslation();
 
-	const color = useContext(ColorContext);
+	const { color } = useContext(ColorContext);
 
 	const name = "Hugo García Benjumea";
 	const splittedName = name.split(" ").map((word) => {

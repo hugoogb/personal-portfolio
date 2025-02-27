@@ -10,8 +10,9 @@ import {
 import { ProjectTechStack } from "./ProjectTechStack";
 import { ExternalLinkButton } from "@/components/shared/ExternalLinkButton";
 import { IconBrandGithub } from "@tabler/icons-react";
+import { memo } from "react";
 
-export function Project({
+export const Project = memo(function Project({
   name,
   desc,
   urlPreview,
@@ -27,7 +28,13 @@ export function Project({
   const toolsIcons = mapTechStackToIcons(techStack.tools, TOOLS_ICONS);
 
   return (
-    <a href={urlPreview} target="_blank" className={styles.projectLink}>
+    <a 
+      href={urlPreview} 
+      target="_blank" 
+      rel="noopener noreferrer"
+      className={styles.projectLink}
+      aria-label={`View ${name} project`}
+    >
       <div className={styles.projectContainer}>
         <h3 className={styles.projectTitle}>{name}</h3>
         {src && (
@@ -37,7 +44,9 @@ export function Project({
               alt={`${name} ${t("projects.alt")}`}
               fill={true}
               className={`image ${styles.projectImage}`}
-              unoptimized={true}
+              sizes="(max-width: 500px) 100vw, 500px"
+              priority={false}
+              loading="lazy"
             />
           </div>
         )}
@@ -92,4 +101,4 @@ export function Project({
       </div>
     </a>
   );
-}
+});
