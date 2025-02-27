@@ -14,17 +14,6 @@ export const LanguageSelector = () => {
 	const [currentLanguage, setCurrentLanguage] = useState("en");
 	const { color } = useContext(ColorContext);
 
-	useEffect(() => {
-		// Set initial language from localStorage or i18n
-		const savedLanguage = localStorage.getItem("language") || i18n.language;
-		setCurrentLanguage(savedLanguage);
-		
-		// Make sure i18n is using the correct language
-		if (savedLanguage !== i18n.language) {
-			changeLanguage(savedLanguage);
-		}
-	}, []);
-
 	const changeLanguage = async (lng) => {
 		try {
 			// Load the language file if not already loaded
@@ -54,6 +43,18 @@ export const LanguageSelector = () => {
 			console.error(`Failed to load locale ${locale}:`, error);
 		}
 	};
+
+	useEffect(() => {
+		// Set initial language from localStorage or i18n
+		const savedLanguage = localStorage.getItem("language") || i18n.language;
+		setCurrentLanguage(savedLanguage);
+		
+		// Make sure i18n is using the correct language
+		if (savedLanguage !== i18n.language) {
+			changeLanguage(savedLanguage);
+		}
+	}, [changeLanguage]);
+
 
 	return (
 		<div className={styles.languageSelectorContainer}>
