@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useCallback } from "react";
 import Image from "next/image";
 import styles from "@/styles/modules/Settings.module.css";
 import i18n from "../../../../i18n.js";
@@ -14,7 +14,17 @@ export const LanguageSelector = () => {
 	const [currentLanguage, setCurrentLanguage] = useState("en");
 	const { color } = useContext(ColorContext);
 
-	const changeLanguage = async (lng) => {
+	// Function to load locale dynamically
+	const loadLocale = useCallback(async (locale) => {
+		try {
+			const module = await import(`../../../../i18n/${locale}.json`);
+			i18n.addResourceBundle(locale, 'common', module.default);
+		} catch (error) {
+			console.error(`Failed to load locale ${locale}:`, error);
+		}
+	}, []);
+
+	const changeLanguage = useCallback(async (lng) => {
 		try {
 			// Load the language file if not already loaded
 			if (!i18n.hasResourceBundle(lng, 'common')) {
@@ -32,17 +42,7 @@ export const LanguageSelector = () => {
 		} catch (error) {
 			console.error("Error changing language:", error);
 		}
-	};
-
-	// Function to load locale dynamically
-	const loadLocale = async (locale) => {
-		try {
-			const module = await import(`../../../../i18n/${locale}.json`);
-			i18n.addResourceBundle(locale, 'common', module.default);
-		} catch (error) {
-			console.error(`Failed to load locale ${locale}:`, error);
-		}
-	};
+	}, [loadLocale]);
 
 	useEffect(() => {
 		// Set initial language from localStorage or i18n
@@ -54,7 +54,6 @@ export const LanguageSelector = () => {
 			changeLanguage(savedLanguage);
 		}
 	}, [changeLanguage]);
-
 
 	return (
 		<div className={styles.languageSelectorContainer}>
