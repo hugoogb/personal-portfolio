@@ -17,8 +17,8 @@ export const LanguageSelector = () => {
 	// Function to load locale dynamically
 	const loadLocale = useCallback(async (locale) => {
 		try {
-			const module = await import(`../../../../i18n/${locale}.json`);
-			i18n.addResourceBundle(locale, 'common', module.default);
+			const translations = await import(`../../../../i18n/${locale}.json`);
+			i18n.addResourceBundle(locale, 'common', translations.default);
 		} catch (error) {
 			console.error(`Failed to load locale ${locale}:`, error);
 		}
