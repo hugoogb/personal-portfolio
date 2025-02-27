@@ -8,7 +8,7 @@ import { DarkModeToggle } from "@/components/header/navbar/DarkModeToggle";
 import { IconMenu2 } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 
-export function Navbar({ setColor }) {
+export function Navbar() {
   const { t } = useTranslation();
 
   const router = useRouter();
@@ -105,7 +105,7 @@ export function Navbar({ setColor }) {
         <div className={styles.buttonCVnav}>
           <ButtonCV></ButtonCV>
         </div>
-        <SettingsMenu setColor={setColor}></SettingsMenu>
+        <SettingsMenu></SettingsMenu>
       </div>
     </div>
   );

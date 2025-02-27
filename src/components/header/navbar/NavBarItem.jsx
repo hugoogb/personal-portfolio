@@ -4,7 +4,7 @@ import { ColorContext } from "@/components/Layout.jsx";
 import Link from "next/link";
 
 export const NavBarItem = ({ href, id, activeId, children }) => {
-	const color = useContext(ColorContext);
+	const { color } = useContext(ColorContext);
 
 	const spanStyles = Object.assign(
 		{},

@@ -1,8 +1,8 @@
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import Image from "next/image";
-import { useTranslation } from "react-i18next";
 import styles from "@/styles/modules/Settings.module.css";
-import { ColorContext } from "@/components/Layout";
+import i18n from "../../../../i18n.js";
+import { ColorContext } from "@/components/Layout.jsx";
 
 const languageOptions = [
 	{ code: "en", label: "English", flag: "/flags/en.png" },
@@ -11,28 +11,49 @@ const languageOptions = [
 ];
 
 export const LanguageSelector = () => {
-	const { i18n } = useTranslation();
-	const color = useContext(ColorContext);
-	const [selectedLanguage, setSelectedLanguage] = useState(
-		i18n.resolvedLanguage
-	);
+	const [currentLanguage, setCurrentLanguage] = useState("en");
+	const { color } = useContext(ColorContext);
 
 	useEffect(() => {
-		const savedLanguage = localStorage.getItem("language");
-		if (
-			savedLanguage &&
-			languageOptions.some(({ code }) => code === savedLanguage)
-		) {
-			i18n.changeLanguage(savedLanguage);
-			setSelectedLanguage(savedLanguage);
+		// Set initial language from localStorage or i18n
+		const savedLanguage = localStorage.getItem("language") || i18n.language;
+		setCurrentLanguage(savedLanguage);
+		
+		// Make sure i18n is using the correct language
+		if (savedLanguage !== i18n.language) {
+			changeLanguage(savedLanguage);
 		}
-	}, [i18n]);
+	}, []);
 
-	function handleLanguageChange(newLanguage) {
-		i18n.changeLanguage(newLanguage);
-		setSelectedLanguage(newLanguage);
-		localStorage.setItem("language", newLanguage);
-	}
+	const changeLanguage = async (lng) => {
+		try {
+			// Load the language file if not already loaded
+			if (!i18n.hasResourceBundle(lng, 'common')) {
+				await loadLocale(lng);
+			}
+			
+			// Change the language
+			await i18n.changeLanguage(lng);
+			
+			// Save to localStorage
+			localStorage.setItem("language", lng);
+			
+			// Update state
+			setCurrentLanguage(lng);
+		} catch (error) {
+			console.error("Error changing language:", error);
+		}
+	};
+
+	// Function to load locale dynamically
+	const loadLocale = async (locale) => {
+		try {
+			const module = await import(`../../../../i18n/${locale}.json`);
+			i18n.addResourceBundle(locale, 'common', module.default);
+		} catch (error) {
+			console.error(`Failed to load locale ${locale}:`, error);
+		}
+	};
 
 	return (
 		<div className={styles.languageSelectorContainer}>
@@ -41,11 +62,11 @@ export const LanguageSelector = () => {
 					key={code}
 					className={styles.languageSelectorButton}
 					style={
-						selectedLanguage === code
+						currentLanguage === code
 							? { borderColor: color }
 							: { borderColor: "transparent" }
 					}
-					onClick={() => handleLanguageChange(code)}
+					onClick={() => changeLanguage(code)}
 				>
 					<Image
 						src={flag}
@@ -55,7 +76,7 @@ export const LanguageSelector = () => {
 					/>
 					<span
 						style={
-							selectedLanguage === code
+							currentLanguage === code
 								? { fontWeight: "600" }
 								: {}
 						}

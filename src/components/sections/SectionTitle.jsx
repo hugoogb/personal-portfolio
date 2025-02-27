@@ -7,7 +7,7 @@ import styles from "@/styles/modules/Section.module.css";
 const hankenGrotesk = Hanken_Grotesk({ subsets: ["latin"] });
 
 export function SectionTitle({ memoji, children }) {
-	const color = useContext(ColorContext);
+	const { color } = useContext(ColorContext);
 
 	return (
 		<div className={hankenGrotesk.className}>
