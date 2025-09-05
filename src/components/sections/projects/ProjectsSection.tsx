@@ -1,17 +1,18 @@
 import { useTranslation } from "react-i18next";
 import type { FC } from 'react';
-import {  useState, useEffect  } from 'react';
+import { useState, useEffect } from 'react';
 import styles from "@/styles/modules/Projects.module.css";
 import { Project } from "@/components/sections/projects/Project";
 import memoji from "/public/memojis/image2.png";
 import { SectionCard } from "@/components/sections/SectionCard";
 import { PROJECTS } from "../../../constants/projects.constants";
 import { LoadingSpinner } from "@/components/LoadingSpinner";
+import type { Project as ProjectType } from "@/types/project.types";
 
-export function ProjectsSection() {
+export const ProjectsSection: FC = () => {
   const { t } = useTranslation();
-  const [isLoading, setIsLoading] = useState(true);
-  const [projects, setProjects] = useState([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [projects, setProjects] = useState<ProjectType[]>([]);
 
   useEffect(() => {
     // Simulate loading delay
@@ -27,14 +28,9 @@ export function ProjectsSection() {
     return (
       <Project
         key={project.id}
-        name={project.name}
+        {...project}
         desc={t(project.desc)}
-        urlPreview={project.urlPreview}
-        src={project.src}
-        techStack={project.techStack}
-        workInProgress={project.workInProgress}
-        githubUrl={project.githubUrl}
-      ></Project>
+      />
     );
   });
 

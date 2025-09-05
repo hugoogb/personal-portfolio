@@ -1,12 +1,14 @@
+import type { FC, ReactNode } from 'react';
 import styles from "@/styles/modules/shared/ExternalLinkButton.module.css";
 import { IconExternalLink } from "@tabler/icons-react";
+import type { Icon } from "@tabler/icons-react";
 
 interface ExternalLinkButtonProps {
-  id: any;
-  text: any;
-  link: any;
-  icon: any;
-  children: ReactNode;
+  id?: string;
+  text: string;
+  link: string;
+  icon?: Icon;
+  children?: ReactNode;
 }
 
 export const ExternalLinkButton: FC<ExternalLinkButtonProps> = ({ id, text, link, icon, children  }) => {

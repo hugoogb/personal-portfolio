@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 import type { SupportedLocale } from "@/types/i18n.types";
 
-interface DownloadQuery {
+interface DownloadQuery extends Record<string, string | string[] | undefined> {
   fileName?: string;
   language?: SupportedLocale;
 }

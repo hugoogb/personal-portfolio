@@ -4,7 +4,7 @@ import { LoadingSpinner } from '@/components/LoadingSpinner';
 /**
  * Higher-order component for lazy loading with custom fallback
  */
-export function withLazyLoading<T extends object = {}>(
+export function withLazyLoading<T = Record<string, unknown>>(
   importFunc: () => Promise<{ default: ComponentType<T> }>,
   fallback?: ReactNode
 ) {
@@ -13,7 +13,7 @@ export function withLazyLoading<T extends object = {}>(
   return function LazyLoadedComponent(props: T) {
     return (
       <Suspense fallback={fallback || <LoadingSpinner />}>
-        <LazyComponent {...props} />
+        <LazyComponent {...(props as any)} />
       </Suspense>
     );
   };
@@ -22,7 +22,7 @@ export function withLazyLoading<T extends object = {}>(
 /**
  * Utility for creating lazy-loaded sections with intersection observer
  */
-export function createLazySection<T extends object = {}>(
+export function createLazySection<T = Record<string, unknown>>(
   importFunc: () => Promise<{ default: ComponentType<T> }>,
   fallback?: ReactNode
 ) {

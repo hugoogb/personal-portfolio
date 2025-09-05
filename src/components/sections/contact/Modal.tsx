@@ -1,10 +1,11 @@
+import type { FC } from 'react';
 import { useTranslation } from "react-i18next";
 import styles from "@/styles/modules/Form.module.css";
 
 interface ModalProps {
-  status: any;
-  isOpen: any;
-  onClose: any;
+  status: string;
+  isOpen: boolean;
+  onClose: () => void;
 }
 
 export const Modal: FC<ModalProps> = ({ status, isOpen, onClose  }) => {

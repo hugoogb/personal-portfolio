@@ -11,9 +11,14 @@ import { ProjectTechStack } from "./ProjectTechStack";
 import { ExternalLinkButton } from "@/components/shared/ExternalLinkButton";
 import { IconBrandGithub } from "@tabler/icons-react";
 import type { FC } from 'react';
-import {  memo  } from 'react';
+import { memo } from 'react';
+import type { Project as ProjectType } from "@/types/project.types";
 
-export const Project = memo(function Project({
+interface ProjectProps extends ProjectType {
+  workInProgress?: boolean;
+}
+
+export const Project: FC<ProjectProps> = memo(function Project({
   name,
   desc,
   urlPreview,
