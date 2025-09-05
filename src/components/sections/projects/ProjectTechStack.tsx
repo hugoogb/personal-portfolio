@@ -1,7 +1,13 @@
-import Image from "next/image";
+import type { FC } from 'react';
 import styles from "@/styles/modules/Projects.module.css";
+import type { TechIcon } from "@/constants/icons.constants";
 
-export function ProjectTechStack({ title, icons }) {
+interface ProjectTechStackProps {
+  title: string;
+  icons: TechIcon[];
+}
+
+export const ProjectTechStack: FC<ProjectTechStackProps> = ({ title, icons }) => {
   return (
     <div>
       <h5>{title}</h5>
