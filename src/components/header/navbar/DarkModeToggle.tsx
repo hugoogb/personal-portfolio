@@ -2,7 +2,7 @@ import type { FC } from 'react';
 import {  useState, useEffect  } from 'react';
 import styles from "@/styles/modules/DarkModeToggle.module.css";
 
-export const DarkModeToggle = () => {
+export const DarkModeToggle: FC = () => {
 	const [isDarkMode, setIsDarkMode] = useState(false);
 
 	useEffect(() => {
@@ -20,7 +20,7 @@ export const DarkModeToggle = () => {
 	const toggleDarkMode = () => {
 		const newIsDarkMode = !isDarkMode;
 		setIsDarkMode(newIsDarkMode);
-		localStorage.setItem("isDarkMode", newIsDarkMode);
+		localStorage.setItem("isDarkMode", newIsDarkMode.toString());
 
 		// Remove the old theme class and add the new one based on the new state
 		if (newIsDarkMode) {
