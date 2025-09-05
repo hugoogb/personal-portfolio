@@ -1,22 +1,23 @@
 import type { FC } from 'react';
-import {  useEffect, useState, useContext, useCallback  } from 'react';
+import { useEffect, useState, useContext, useCallback } from 'react';
 import Image from "next/image";
 import styles from "@/styles/modules/Settings.module.css";
 import i18n from "../../../../i18n";
 import { ColorContext } from "@/components/Layout";
+import type { SupportedLocale } from "@/types/i18n.types";
 
 const languageOptions = [
-	{ code: "en", label: "English", flag: "/flags/en.png" },
-	{ code: "es", label: "Español", flag: "/flags/es.svg" },
-	{ code: "ca", label: "Català", flag: "/flags/ca.svg" },
+	{ code: "en" as const, label: "English", flag: "/flags/en.png" },
+	{ code: "es" as const, label: "Español", flag: "/flags/es.svg" },
+	{ code: "ca" as const, label: "Català", flag: "/flags/ca.svg" },
 ];
 
-export const LanguageSelector = () => {
-	const [currentLanguage, setCurrentLanguage] = useState("en");
+export const LanguageSelector: FC = () => {
+	const [currentLanguage, setCurrentLanguage] = useState<SupportedLocale>("en");
 	const { color } = useContext(ColorContext);
 
 	// Function to load locale dynamically
-	const loadLocale = useCallback(async (locale) => {
+	const loadLocale = useCallback(async (locale: SupportedLocale) => {
 		try {
 			const translations = await import(`../../../../i18n/${locale}.json`);
 			i18n.addResourceBundle(locale, 'common', translations.default);
@@ -25,7 +26,7 @@ export const LanguageSelector = () => {
 		}
 	}, []);
 
-	const changeLanguage = useCallback(async (lng) => {
+	const changeLanguage = useCallback(async (lng: SupportedLocale) => {
 		try {
 			// Load the language file if not already loaded
 			if (!i18n.hasResourceBundle(lng, 'common')) {
@@ -48,11 +49,15 @@ export const LanguageSelector = () => {
 	useEffect(() => {
 		// Set initial language from localStorage or i18n
 		const savedLanguage = localStorage.getItem("language") || i18n.language;
-		setCurrentLanguage(savedLanguage);
+		const validLanguage = ['en', 'es', 'ca'].includes(savedLanguage) 
+			? (savedLanguage as SupportedLocale) 
+			: 'en';
+		
+		setCurrentLanguage(validLanguage);
 		
 		// Make sure i18n is using the correct language
-		if (savedLanguage !== i18n.language) {
-			changeLanguage(savedLanguage);
+		if (validLanguage !== i18n.language) {
+			changeLanguage(validLanguage);
 		}
 	}, [changeLanguage]);
 

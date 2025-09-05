@@ -1,9 +1,10 @@
+import type { FC } from 'react';
 import styles from "@/styles/modules/About.module.css";
 
 interface AboutIconsProps {
-  title: any;
-  iconsMapped: any;
-  color: any;
+  title: string;
+  iconsMapped: any[];
+  color: string;
 }
 
 export const AboutIcons: FC<AboutIconsProps> = ({ title, iconsMapped, color  }) => {

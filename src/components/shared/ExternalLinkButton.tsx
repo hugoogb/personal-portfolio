@@ -6,7 +6,7 @@ interface ExternalLinkButtonProps {
   text: any;
   link: any;
   icon: any;
-  children: any;
+  children: ReactNode;
 }
 
 export const ExternalLinkButton: FC<ExternalLinkButtonProps> = ({ id, text, link, icon, children  }) => {

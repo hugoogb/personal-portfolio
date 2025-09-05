@@ -1,13 +1,19 @@
 import Image from "next/image";
-import type { FC } from 'react';
-import {  useContext  } from 'react';
+import type { FC, ReactNode } from 'react';
+import { useContext } from 'react';
 import { Hanken_Grotesk } from "next/font/google";
 import { ColorContext } from "@/components/Layout";
 import styles from "@/styles/modules/Section.module.css";
+import type { StaticImageData } from 'next/image';
 
 const hankenGrotesk = Hanken_Grotesk({ subsets: ["latin"] });
 
-export function SectionTitle({ memoji, children }) {
+interface SectionTitleProps {
+  memoji: StaticImageData;
+  children: ReactNode;
+}
+
+export const SectionTitle: FC<SectionTitleProps> = ({ memoji, children }) => {
 	const { color } = useContext(ColorContext);
 
 	return (

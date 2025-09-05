@@ -47,21 +47,15 @@ export const ContactForm: FC = () => {
 			errors.message = t("contact.form.message.errorRequired");
 		}
 
-		if (!name && !email && !subject && !message) {
-			setErrors({});
-		} else {
-			setErrors(errors);
-		}
-
-		return Object.keys(errors).length === 0;
+		return errors;
 	};
 
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
 		const validationErrors = validate();
+		setErrors(validationErrors);
 		if (Object.keys(validationErrors).length > 0) {
-			setErrors(validationErrors);
 			return;
 		}
 

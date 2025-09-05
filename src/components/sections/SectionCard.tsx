@@ -1,15 +1,18 @@
+import type { FC, ReactNode } from 'react';
 import { SectionTitle } from "@/components/sections/SectionTitle";
 import styles from "@/styles/modules/Section.module.css";
+import type { StaticImageData } from 'next/image';
 
 interface SectionCardProps {
-  title: any;
-  memoji: any;
-  children: any;
+  id?: string;
+  title: string;
+  memoji: StaticImageData;
+  children?: ReactNode;
 }
 
-export const SectionCard: FC<SectionCardProps> = ({ title, memoji, children  }) => {
+export const SectionCard: FC<SectionCardProps> = ({ id, title, memoji, children  }) => {
 	return (
-		<section className={styles.section}>
+		<section id={id} className={styles.section}>
 			<div className={styles.cardWrapper}>
 				<div className={styles.cardContainer}>
 					<div className={styles.sectionWrapper}>

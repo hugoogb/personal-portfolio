@@ -1,5 +1,5 @@
-import type { FC } from 'react';
-import {  useState, useEffect, useRef, useMemo  } from 'react';
+import type { FC, MouseEvent } from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import { useTranslation } from "react-i18next";
 import styles from "@/styles/modules/Header.module.css";
 import { SettingsMenu } from "@/components/header/navbar/SettingsMenu";
@@ -9,15 +9,15 @@ import { DarkModeToggle } from "@/components/header/navbar/DarkModeToggle";
 import { IconMenu2 } from "@tabler/icons-react";
 import { useRouter } from "next/router";
 
-export function Navbar() {
+export const Navbar: FC = () => {
   const { t } = useTranslation();
 
   const router = useRouter();
 
-  const [activeId, setActiveId] = useState(null);
-  const [visibility, setVisibility] = useState(false);
-  const navbarRef = useRef(null);
-  const iconMenuNavbarRef = useRef(null);
+  const [activeId, setActiveId] = useState<number | null>(null);
+  const [visibility, setVisibility] = useState<boolean>(false);
+  const navbarRef = useRef<HTMLUListElement>(null);
+  const iconMenuNavbarRef = useRef<HTMLDivElement>(null);
 
   const navItems = useMemo(
     () => [
@@ -49,12 +49,13 @@ export function Navbar() {
   }, [navItems, router.asPath]);
 
   useEffect(() => {
-    const handleClickOutside = (event) => {
+    const handleClickOutside = (event: MouseEvent | Event) => {
+      const target = event.target as Node;
       if (
         navbarRef.current &&
-        !navbarRef.current.contains(event.target) &&
+        !navbarRef.current.contains(target) &&
         iconMenuNavbarRef.current &&
-        !iconMenuNavbarRef.current.contains(event.target)
+        !iconMenuNavbarRef.current.contains(target)
       ) {
         setVisibility(false);
       }

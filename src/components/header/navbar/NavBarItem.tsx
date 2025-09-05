@@ -1,14 +1,14 @@
-import type { FC } from 'react';
-import {  useContext  } from 'react';
+import type { FC, ReactNode } from 'react';
+import { useContext } from 'react';
 import styles from "@/styles/modules/Header.module.css";
 import { ColorContext } from "@/components/Layout";
 import Link from "next/link";
 
 interface NavBarItemProps {
-  href: any;
-  id: any;
-  activeId: any;
-  children: any;
+  href: string;
+  id: number;
+  activeId: number | null;
+  children: ReactNode;
 }
 
 export const NavBarItem: FC<NavBarItemProps> = ({ href, id, activeId, children  }) => {
