@@ -14,9 +14,8 @@
     "text": {
       "intro": "¡Hola! Mi nombre es ",
       "name": "Hugo",
-      "introSection": ". Soy un desarrollador web fullstack con pasión por crear aplicaciones modernas, funcionales y bien estructuradas. Desde el backend hasta el frontend, me encanta todo el proceso de desarrollo y disfruto especialmente cuando puedo resolver problemas complejos. Además, tengo experiencia en la creación de aplicaciones móviles.",
-      "tecnologiesSection": "Trabajo principalmente con tecnologías como Express para construir APIs robustas y escalables. En el frontend, suelo usar frameworks como React y Angular para desarrollar interfaces interactivas. También utilizo Astro para crear sitios rápidos y optimizados. Además, tengo experiencia en el desarrollo de aplicaciones móviles con React Native, lo que me permite crear aplicaciones multiplataforma con una excelente experiencia de usuario.",
-      "learningSection": "Me considero alguien que aprende rápido y siempre estoy buscando maneras de mejorar mis habilidades y actualizarme en las últimas tendencias tecnológicas. Ya sea trabajando en equipo o de forma individual, disfruto colaborar en proyectos y encontrar soluciones innovadoras que aporten valor real.",
+      "introSection": ". Soy desarrollador web fullstack con experiencia profesional en backends de Node.js y .NET (C#), y frontends de Angular.",
+      "learningSection": "Me considero muy resolutivo y disfruto abordando problemas complejos con soluciones creativas. Trabajo con React, Next.js y Astro para aplicaciones web modernas, siempre encontrando formas eficientes de entregar resultados.",
       "finalSection": "Si estás buscando a alguien que pueda construir aplicaciones de principio a fin, me encantaría trabajar contigo y ayudar a llevar tu proyecto al siguiente nivel.",
       "letsTalk": "¡Hablemos!"
     },
