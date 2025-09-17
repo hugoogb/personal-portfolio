@@ -21,6 +21,7 @@ import {
   IconBrandHtml5,
   IconBrandJavascript,
   IconBrandTypescript,
+  IconBrandCSharp,
 } from "@tabler/icons-react";
 
 export interface TechIcon {
@@ -90,13 +91,8 @@ export const BACKEND_ICONS: TechIcon[] = [
   },
   {
     id: 4,
-    icon: IconBrandSupabase,
-    name: "Supabase",
-  },
-  {
-    id: 5,
-    icon: IconBrandFirebase,
-    name: "Firebase",
+    icon: IconBrandCSharp,
+    name: ".NET (C#)",
   },
 ];
 
@@ -133,13 +129,8 @@ export const TOOLS_ICONS: TechIcon[] = [
   },
   {
     id: 6,
-    icon: IconBrandVercelFilled,
-    name: "Vercel",
-  },
-  {
-    id: 7,
     icon: IconBrandDocker,
     name: "Docker",
   },
-  
+
 ];

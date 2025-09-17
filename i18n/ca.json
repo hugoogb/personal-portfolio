@@ -14,9 +14,8 @@
     "text": {
       "intro": "Hola! El meu nom és ",
       "name": "Hugo",
-      "introSection": ". Sóc un desenvolupador web fullstack amb passió per crear aplicacions modernes, funcionals i ben estructurades. Des del backend fins al frontend, m’encanta tot el procés de desenvolupament i gaudeixo especialment quan puc resoldre problemes complexos. A més, tinc experiència en la creació d’aplicacions mòbils.",
-      "tecnologiesSection": "Treballo principalment amb tecnologies com Express per construir APIs robustes i escalables. Al frontend, sovint faig servir frameworks com React i Angular per desenvolupar interfícies interactives. També utilitzo Astro per crear llocs ràpids i optimitzats. A més, tinc experiència en el desenvolupament d’aplicacions mòbils amb React Native, cosa que em permet crear aplicacions multiplataforma amb una excel·lent experiència d'usuari.",
-      "learningSection": "Em considero una persona que aprèn ràpid i sempre busco maneres de millorar les meves habilitats i mantenir-me actualitzat amb les últimes tendències tecnològiques. Tant si treballo en equip com individualment, gaudeixo col·laborant en projectes i trobant solucions innovadores que aportin valor real.",
+      "introSection": ". Sóc desenvolupador web fullstack amb experiència professional en backends de Node.js i .NET (C#), i frontends d'Angular.",
+      "learningSection": "Em considero molt resolutiu i gaudeixo abordant problemes complexos amb solucions creatives. Treballo amb React, Next.js i Astro per a aplicacions web modernes, sempre trobant formes eficients d'entregar resultats.",
       "finalSection": "Si estàs buscant algú que pugui construir aplicacions de principi a fi, m’encantaria treballar amb tu i ajudar a portar el teu projecte al següent nivell.",
       "letsTalk": "Parlem!"
     },
