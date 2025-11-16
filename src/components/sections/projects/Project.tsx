@@ -10,9 +10,10 @@ import {
 import { ProjectTechStack } from "./ProjectTechStack";
 import { ExternalLinkButton } from "@/components/shared/ExternalLinkButton";
 import { IconBrandGithub } from "@tabler/icons-react";
-import type { FC } from 'react';
-import { memo } from 'react';
+import type { FC } from "react";
+import { memo } from "react";
 import type { Project as ProjectType } from "@/types/project.types";
+import { ALT_TEXT, ARIA_LABELS } from "@/constants/strings.constants";
 
 interface ProjectProps extends ProjectType {
   workInProgress?: boolean;
@@ -34,12 +35,12 @@ export const Project: FC<ProjectProps> = memo(function Project({
   const toolsIcons = mapTechStackToIcons(techStack.tools, TOOLS_ICONS);
 
   return (
-    <a 
-      href={urlPreview} 
-      target="_blank" 
+    <a
+      href={urlPreview}
+      target="_blank"
       rel="noopener noreferrer"
       className={styles.projectLink}
-      aria-label={`View ${name} project`}
+      aria-label={ARIA_LABELS.VIEW_PROJECT(name)}
     >
       <div className={styles.projectContainer}>
         <h3 className={styles.projectTitle}>{name}</h3>
@@ -47,7 +48,7 @@ export const Project: FC<ProjectProps> = memo(function Project({
           <div className={`imageContainer ${styles.projectImageContainer}`}>
             <Image
               src={src}
-              alt={`${name} ${t("projects.alt")}`}
+              alt={ALT_TEXT.PROJECT(name)}
               fill={true}
               className={`image ${styles.projectImage}`}
               sizes="(max-width: 500px) 100vw, 500px"

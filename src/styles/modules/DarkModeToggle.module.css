@@ -11,10 +11,10 @@
 	cursor: pointer;
 	display: inline-block;
 	position: relative;
-	width: 90px;
-	height: 50px;
+	width: 54px;
+	height: 30px;
 	background-color: #b8e8fe;
-	border-radius: 84px;
+	border-radius: 50px;
 	transition: background-color 200ms cubic-bezier(0.445, 0.05, 0.55, 0.95);
 }
 
@@ -22,10 +22,10 @@
 	display: inline-block;
 	position: relative;
 	z-index: 1;
-	top: 3px;
-	left: 3px;
-	width: 44px;
-	height: 44px;
+	top: 2px;
+	left: 2px;
+	width: 26px;
+	height: 26px;
 	background-color: #ffcf96;
 	border-radius: 50px;
 	box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
@@ -40,22 +40,22 @@
 	border-radius: 100%;
 }
 .toggle__handler .crater_1 {
-	top: 18px;
-	left: 10px;
-	width: 4px;
-	height: 4px;
+	top: 11px;
+	left: 6px;
+	width: 2px;
+	height: 2px;
 }
 .toggle__handler .crater_2 {
-	top: 28px;
-	left: 22px;
-	width: 6px;
-	height: 6px;
+	top: 17px;
+	left: 13px;
+	width: 3px;
+	height: 3px;
 }
 .toggle__handler .crater_3 {
-	top: 10px;
-	left: 25px;
-	width: 8px;
-	height: 8px;
+	top: 6px;
+	left: 15px;
+	width: 4px;
+	height: 4px;
 }
 
 .star {
@@ -66,27 +66,27 @@
 }
 
 .star_1 {
-	top: 10px;
-	left: 35px;
+	top: 6px;
+	left: 21px;
 	z-index: 0;
-	width: 30px;
-	height: 3px;
+	width: 18px;
+	height: 2px;
 }
 
 .star_2 {
-	top: 18px;
-	left: 28px;
+	top: 11px;
+	left: 17px;
 	z-index: 1;
-	width: 30px;
-	height: 3px;
+	width: 18px;
+	height: 2px;
 }
 
 .star_3 {
-	top: 27px;
-	left: 40px;
+	top: 16px;
+	left: 24px;
 	z-index: 0;
-	width: 30px;
-	height: 3px;
+	width: 18px;
+	height: 2px;
 }
 
 .star_4,
@@ -97,30 +97,30 @@
 }
 
 .star_4 {
-	top: 16px;
-	left: 11px;
+	top: 10px;
+	left: 7px;
 	z-index: 0;
-	width: 2px;
-	height: 2px;
-	transform: translate3d(3px, 0, 0);
+	width: 1px;
+	height: 1px;
+	transform: translate3d(2px, 0, 0);
 }
 
 .star_5 {
-	top: 32px;
-	left: 17px;
-	z-index: 0;
-	width: 3px;
-	height: 3px;
-	transform: translate3d(3px, 0, 0);
-}
-
-.star_6 {
-	top: 36px;
-	left: 28px;
+	top: 19px;
+	left: 10px;
 	z-index: 0;
 	width: 2px;
 	height: 2px;
-	transform: translate3d(3px, 0, 0);
+	transform: translate3d(2px, 0, 0);
+}
+
+.star_6 {
+	top: 22px;
+	left: 17px;
+	z-index: 0;
+	width: 1px;
+	height: 1px;
+	transform: translate3d(2px, 0, 0);
 }
 
 input:checked + .toggle {
@@ -134,7 +134,7 @@ input:checked + .toggle:after {
 }
 input:checked + .toggle .toggle__handler {
 	background-color: #ffe5b5;
-	transform: translate3d(40px, 0, 0) rotate(0);
+	transform: translate3d(24px, 0, 0) rotate(0);
 }
 input:checked + .toggle .toggle__handler .crater {
 	opacity: 1;

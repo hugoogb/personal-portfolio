@@ -15,6 +15,11 @@ export interface I18nConfig {
   react: {
     useSuspense: boolean;
   };
+  resources?: {
+    [key: string]: {
+      [namespace: string]: any;
+    };
+  };
 }
 
 export interface TranslationKeys {
@@ -23,23 +28,23 @@ export interface TranslationKeys {
   'nav.about': string;
   'nav.projects': string;
   'nav.contact': string;
-  
+
   // Home section
   'home.greeting': string;
   'home.name': string;
   'home.title': string;
   'home.description': string;
-  
+
   // About section
   'about.title': string;
   'about.description': string;
-  
+
   // Projects section
   'projects.title': string;
   'projects.formula1Showcase.description': string;
   'projects.autodetailinges.description': string;
   'projects.avatar-generator.description': string;
-  
+
   // Contact section
   'contact.title': string;
   'contact.form.name': string;
@@ -47,7 +52,7 @@ export interface TranslationKeys {
   'contact.form.subject': string;
   'contact.form.message': string;
   'contact.form.send': string;
-  
+
   // Common
   'common.loading': string;
   'common.error': string;
