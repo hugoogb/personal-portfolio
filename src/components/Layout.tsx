@@ -9,31 +9,35 @@ import styles from "@/styles/modules/Layout.module.css";
 import { useRouter } from "next/router";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import type { ColorContextValue, LayoutProps } from "@/types/common.types";
+import { STORAGE_KEYS, DEFAULTS } from "@/constants/strings.constants";
 
 export const ColorContext = createContext<ColorContextValue>({
-  color: "#3142db",
-  setColor: () => {}
+  color: DEFAULTS.COLOR,
+  setColor: () => {},
 });
 
 export const Layout: FC<LayoutProps> = ({ children }) => {
   const router = useRouter();
   const [color, setColor] = useState<string>(() => {
     // Use function to initialize state from localStorage only on client
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('color') || "#3142db";
+    if (typeof window !== "undefined") {
+      return localStorage.getItem(STORAGE_KEYS.COLOR) || DEFAULTS.COLOR;
     }
-    return "#3142db";
+    return DEFAULTS.COLOR;
   });
-  
+
   const handleColorChange = useCallback((newColor: string) => {
     setColor(newColor);
-    localStorage.setItem('color', newColor);
+    localStorage.setItem(STORAGE_KEYS.COLOR, newColor);
   }, []);
-  
-  const colorContextValue = useMemo<ColorContextValue>(() => ({
-    color,
-    setColor: handleColorChange
-  }), [color, handleColorChange]);
+
+  const colorContextValue = useMemo<ColorContextValue>(
+    () => ({
+      color,
+      setColor: handleColorChange,
+    }),
+    [color, handleColorChange]
+  );
 
   return (
     <>
@@ -43,9 +47,7 @@ export const Layout: FC<LayoutProps> = ({ children }) => {
           <div className={styles.layout}>
             <Header />
             <div className={styles.layoutContent}>
-              <ErrorBoundary>
-                {children}
-              </ErrorBoundary>
+              <ErrorBoundary>{children}</ErrorBoundary>
             </div>
             <Footer />
           </div>

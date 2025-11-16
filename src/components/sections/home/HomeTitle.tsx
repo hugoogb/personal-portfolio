@@ -1,50 +1,45 @@
-import type { FC } from 'react';
-import {  useContext  } from 'react';
+import { useContext } from "react";
 import { Hanken_Grotesk } from "next/font/google";
 import { useTranslation } from "react-i18next";
 import styles from "@/styles/modules/Home.module.css";
 import { ColorContext } from "@/components/Layout";
 
-const hankenGrotesk = Hanken_Grotesk({ 
+const hankenGrotesk = Hanken_Grotesk({
   subsets: ["latin"],
-  weight: ['400', '500', '700', '900'],
-  display: 'swap',
-  variable: '--font-hanken-grotesk',
+  weight: ["400", "500", "700", "900"],
+  display: "swap",
+  variable: "--font-hanken-grotesk",
 });
 
 export const HomeTitle = () => {
-	const { t } = useTranslation();
+  const { t } = useTranslation();
 
-	const { color } = useContext(ColorContext);
+  const { color } = useContext(ColorContext);
 
-	const name = "Hugo García Benjumea";
-	const splittedName = name.split(" ").map((word) => {
-		return word === name.split(" ")[0] ? (
-			<span
-				className={styles.spanTitle}
-				style={{ color: color }}
-				key={word}
-			>
-				{word}
-				<br></br>
-			</span>
-		) : (
-			<span key={word}>
-				{word}
-				<br></br>
-			</span>
-		);
-	});
+  const name = "Hugo García Benjumea";
+  const splittedName = name.split(" ").map((word) => {
+    return word === name.split(" ")[0] ? (
+      <span className={styles.spanTitle} style={{ color: color }} key={word}>
+        {word}
+        <br></br>
+      </span>
+    ) : (
+      <span key={word}>
+        {word}
+        <br></br>
+      </span>
+    );
+  });
 
-	return (
-		<div className={hankenGrotesk.className}>
-			<div className={styles.nameSubtitleContainer}>
-				<h1 className={styles.nameHeader}>{splittedName}</h1>
-				<h2 className={styles.subtitleHeader}>
-					<span style={{ backgroundColor: color }}></span>
-					{t("home.subtitle")}
-				</h2>
-			</div>
-		</div>
-	);
+  return (
+    <div className={hankenGrotesk.className}>
+      <div className={styles.nameSubtitleContainer}>
+        <h1 className={styles.nameHeader}>{splittedName}</h1>
+        <h2 className={styles.subtitleHeader}>
+          <span style={{ backgroundColor: color }}></span>
+          {t("home.subtitle")}
+        </h2>
+      </div>
+    </div>
+  );
 };

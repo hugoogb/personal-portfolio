@@ -102,5 +102,14 @@
       "title": "Hugo GB | Contacte",
       "description": "Pàgina de contacte del portafoli personal d'Hugo."
     }
+  },
+  "settings": {
+    "title": "Configuració",
+    "toggle": "Obrir/tancar configuració",
+    "close": "Tancar configuració",
+    "language": "Idioma",
+    "color": "Color d'Accent",
+    "reset": "Restablir",
+    "resetColor": "Restablir color per defecte"
   }
 }

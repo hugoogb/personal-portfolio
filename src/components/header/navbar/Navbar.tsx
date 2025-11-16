@@ -1,5 +1,5 @@
-import type { FC, MouseEvent } from 'react';
-import { useState, useEffect, useRef, useMemo } from 'react';
+import type { FC, MouseEvent } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "@/styles/modules/Header.module.css";
 import { SettingsMenu } from "@/components/header/navbar/SettingsMenu";
@@ -8,6 +8,7 @@ import { ButtonCV } from "@/components/header/navbar/ButtonCV";
 import { DarkModeToggle } from "@/components/header/navbar/DarkModeToggle";
 import { IconMenu2 } from "@tabler/icons-react";
 import { useRouter } from "next/router";
+import { ICON_SIZES } from "@/constants/design.constants";
 
 export const Navbar: FC = () => {
   const { t } = useTranslation();
@@ -71,7 +72,7 @@ export const Navbar: FC = () => {
   const ulNavbarMobileStyles = Object.assign(
     {},
     {
-      height: visibility ? "220px" : "0",
+      height: visibility ? "180px" : "0",
     },
     {
       overflow: visibility ? "auto" : "hidden",
@@ -99,16 +100,16 @@ export const Navbar: FC = () => {
           className={styles.menuIconContainer}
           onClick={() => setVisibility(!visibility)}
         >
-          <IconMenu2 size={48} className={styles.menuIcon}></IconMenu2>
+          <IconMenu2 size={ICON_SIZES.lg} className={styles.menuIcon} />
         </div>
       </nav>
       <div className={styles.buttonColorPickerContainer}>
-        <DarkModeToggle></DarkModeToggle>
         <div className={styles.buttonCVnav}>
           <ButtonCV></ButtonCV>
         </div>
+        <DarkModeToggle></DarkModeToggle>
         <SettingsMenu></SettingsMenu>
       </div>
     </div>
   );
-}
+};
