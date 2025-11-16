@@ -1,11 +1,8 @@
-import type { FC } from 'react';
-import {  useContext  } from 'react';
-import Image from "next/image";
+import { useContext } from "react";
 import { useTranslation } from "react-i18next";
 import styles from "@/styles/modules/About.module.css";
 import { ColorContext } from "@/components/Layout";
 import { AboutIcons } from "@/components/sections/about/AboutIcons";
-import memoji from "/public/memojis/image4.png";
 import { SectionCard } from "@/components/sections/SectionCard";
 import Link from "next/link";
 import {
@@ -13,17 +10,22 @@ import {
   FRONTEND_ICONS,
   TOOLS_ICONS,
 } from "../../../constants/icons.constants";
+import { ICON_SIZES } from "@/constants/design.constants";
 
 export function AboutSection() {
   const { t } = useTranslation();
 
   const { color } = useContext(ColorContext);
 
-  const mapIcons = (icons) => {
+  const mapIcons = (icons: typeof FRONTEND_ICONS) => {
     return icons.map((icon) => {
       return (
         <div key={icon.id} title={icon.name}>
-          <icon.icon stroke={1.25} size={48} className={styles.aboutIcon} />
+          <icon.icon
+            stroke={1.25}
+            size={ICON_SIZES.lg}
+            className={styles.aboutIcon}
+          />
         </div>
       );
     });
@@ -34,7 +36,7 @@ export function AboutSection() {
   const iconsToolsMapped = mapIcons(TOOLS_ICONS);
 
   return (
-    <SectionCard title={t("about.title")} memoji={memoji}>
+    <SectionCard title={t("about.title")} memoji="/memojis/image4.png">
       <div className={styles.aboutContainer}>
         <div className={styles.aboutTextContainer}>
           <p>

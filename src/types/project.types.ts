@@ -1,5 +1,3 @@
-import { StaticImageData } from 'next/image';
-
 export interface TechStack {
   frontend: string[];
   backend: string[];
@@ -18,7 +16,7 @@ export interface Project {
   desc: string;
   techStack: TechStack;
   urlPreview: string;
-  src: StaticImageData;
+  src: string;
   githubUrl: GitHubUrls;
 }
 

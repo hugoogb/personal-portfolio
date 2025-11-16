@@ -3,10 +3,11 @@
 	flex-direction: column;
 	align-items: center;
 	justify-content: space-between;
+	min-height: 100vh;
 }
 
 .layoutContent {
-	min-height: calc(100vh - 152px - 128px);
+	flex: 1;
 	width: 100%;
 
 	display: flex;

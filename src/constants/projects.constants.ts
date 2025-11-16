@@ -1,26 +1,23 @@
 import type { Project } from "@/types/project.types";
-import Img_f1showcase from "/public/images/f1-showcase.png";
-import Img_autodetailingEs from "/public/images/autodetailing-es.png";
-import Img_avatarGenerator from "/public/images/avatar-generator.png";
 
 export const PROJECTS: Project[] = [
-  // {
-  //   id: 0,
-  //   name: "Formula 1 Showcase",
-  //   desc: "projects.formula1Showcase.description",
-  //   techStack: {
-  //     frontend: ["Vue"],
-  //     backend: ["Nodejs", "Expressjs"],
-  //     tools: [],
-  //   },
-  //   urlPreview: "https://f1-showcase.vercel.app",
-  //   src: Img_f1showcase,
-  //   githubUrl: {
-  //     all: "",
-  //     frontend: "https://github.com/hugoogb/f1-showcase",
-  //     backend: "https://github.com/hugoogb/f1-api",
-  //   },
-  // },
+  {
+    id: 0,
+    name: "Formula 1 Showcase",
+    desc: "projects.formula1Showcase.description",
+    techStack: {
+      frontend: ["Vue"],
+      backend: ["Nodejs", "Expressjs"],
+      tools: [],
+    },
+    urlPreview: "https://f1-showcase.vercel.app",
+    src: "/images/f1-showcase.png",
+    githubUrl: {
+      all: "",
+      frontend: "https://github.com/hugoogb/f1-showcase",
+      backend: "https://github.com/hugoogb/f1-api",
+    },
+  },
   {
     id: 1,
     name: "autodetailing.es",
@@ -31,7 +28,7 @@ export const PROJECTS: Project[] = [
       tools: [],
     },
     urlPreview: "https://autodetailing-es.vercel.app/",
-    src: Img_autodetailingEs,
+    src: "/images/autodetailing-es.png",
     githubUrl: {
       all: "",
       frontend: "",
@@ -48,9 +45,26 @@ export const PROJECTS: Project[] = [
       tools: ["npm", "pnpm"],
     },
     urlPreview: "https://avatar-generator-two.vercel.app/",
-    src: Img_avatarGenerator,
+    src: "/images/avatar-generator.png",
     githubUrl: {
       all: "https://github.com/hugoogb/avatar-generator",
+      frontend: "",
+      backend: "",
+    },
+  },
+  {
+    id: 3,
+    name: "Socials Impact",
+    desc: "projects.socialsImpact.description",
+    techStack: {
+      frontend: ["React"],
+      backend: ["Nextjs"],
+      tools: [],
+    },
+    urlPreview: "https://socials-impact.vercel.app/",
+    src: "/images/socials-impact.png",
+    githubUrl: {
+      all: "",
       frontend: "",
       backend: "",
     },
