@@ -1,4 +1,3 @@
-import type { FC } from "react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { createContext, useState, useCallback, useMemo } from "react";
 import { I18nextProvider } from "react-i18next";
@@ -8,7 +7,7 @@ import { Footer } from "@/components/footer/Footer";
 import styles from "@/styles/modules/Layout.module.css";
 import { useRouter } from "next/router";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
-import type { ColorContextValue, LayoutProps } from "@/types/common.types";
+import type { ColorContextValue } from "@/types/common.types";
 import { STORAGE_KEYS, DEFAULTS } from "@/constants/strings.constants";
 
 export const ColorContext = createContext<ColorContextValue>({
@@ -16,7 +15,7 @@ export const ColorContext = createContext<ColorContextValue>({
   setColor: () => {},
 });
 
-export const Layout: FC<LayoutProps> = ({ children }) => {
+export const Layout = ({ children }: { children: React.ReactNode }) => {
   const router = useRouter();
   const [color, setColor] = useState<string>(() => {
     // Use function to initialize state from localStorage only on client

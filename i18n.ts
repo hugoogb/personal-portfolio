@@ -1,7 +1,6 @@
+import { SupportedLocale } from "@/types/i18n.types";
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
-import type { SupportedLocale, I18nConfig } from "@/types/i18n.types";
-import enTranslations from "./i18n/en.json";
 
 // Get saved language with proper typing
 const getSavedLanguage = (): SupportedLocale => {
@@ -27,7 +26,7 @@ export const loadLocale = async (locale: SupportedLocale): Promise<boolean> => {
 
 // Initialize i18n with typed configuration
 // Always start with 'en' to ensure server/client match, then update on client
-const config: I18nConfig = {
+const config = {
   lng: 'en', // Always start with English for SSR consistency
   fallbackLng: 'en',
   ns: ['common'],
@@ -37,11 +36,6 @@ const config: I18nConfig = {
   },
   react: {
     useSuspense: false,
-  },
-  resources: {
-    en: {
-      common: enTranslations,
-    },
   },
 };
 
