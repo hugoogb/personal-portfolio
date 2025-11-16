@@ -37,6 +37,9 @@
     "avatar-generator": {
       "description": "Proporciona una biblioteca de generació d'avatars personalitzables que és agnòstica als frameworks. Integració fàcil amb opcions personalitzables."
     },
+    "socialsImpact": {
+      "description": "Plataforma de tauler d'anàlisi de xarxes socials per rastrejar el creixement a YouTube, Twitch, TikTok i Instagram. Visualitza mètriques de rendiment, analitza tendències i pren decisions basades en dades."
+    },
     "alt": "imatge de vista prèvia",
     "techStack": {
       "frontend": "Frontend",
