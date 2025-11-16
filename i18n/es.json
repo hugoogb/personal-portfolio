@@ -7,16 +7,16 @@
     "downloadButton": "Descargar CV"
   },
   "home": {
-    "subtitle": "Desarrollador Web Fullstack"
+    "subtitle": "Desarrollador Full Stack"
   },
   "about": {
     "title": "Acerca",
     "text": {
       "intro": "¡Hola! Mi nombre es ",
       "name": "Hugo",
-      "introSection": ". Soy desarrollador web fullstack con experiencia profesional en backends de Node.js y .NET (C#), y frontends de Angular.",
-      "learningSection": "Me considero muy resolutivo y disfruto abordando problemas complejos con soluciones creativas. Trabajo con React, Next.js y Astro para aplicaciones web modernas, siempre encontrando formas eficientes de entregar resultados.",
-      "finalSection": "Si estás buscando a alguien que pueda construir aplicaciones de principio a fin, me encantaría trabajar contigo y ayudar a llevar tu proyecto al siguiente nivel.",
+      "introSection": ". Soy desarrollador full stack con experiencia profesional construyendo aplicaciones web de extremo a extremo. Me especializo en backends de Node.js y frameworks frontend modernos como React, Next.js y Angular.",
+      "learningSection": "Me considero muy resolutivo y disfruto abordando problemas complejos con soluciones creativas. Trabajo en toda la pila, desde el diseño de bases de datos hasta las interfaces de usuario, siempre encontrando formas eficientes de entregar resultados.",
+      "finalSection": "Si estás buscando a alguien que pueda construir aplicaciones completas de principio a fin, me encantaría trabajar contigo y ayudar a llevar tu proyecto al siguiente nivel.",
       "letsTalk": "¡Hablemos!"
     },
     "categories": {
@@ -87,8 +87,8 @@
   },
   "head": {
     "home": {
-      "title": "Hugo GB | Desarrollador Web",
-      "description": "Página principal del portafolio personal de Hugo."
+      "title": "Hugo GB | Desarrollador Full Stack",
+      "description": "Desarrollador Full Stack - Portafolio personal de Hugo García Benjumea."
     },
     "about": {
       "title": "Hugo GB | Acerca",
