@@ -1,7 +1,4 @@
 import type { Project } from "@/types/project.types";
-import Img_f1showcase from "/public/images/f1-showcase.png";
-import Img_autodetailingEs from "/public/images/autodetailing-es.png";
-import Img_avatarGenerator from "/public/images/avatar-generator.png";
 
 export const PROJECTS: Project[] = [
   // {
@@ -14,7 +11,7 @@ export const PROJECTS: Project[] = [
   //     tools: [],
   //   },
   //   urlPreview: "https://f1-showcase.vercel.app",
-  //   src: Img_f1showcase,
+  //   src: "/images/f1-showcase.png",
   //   githubUrl: {
   //     all: "",
   //     frontend: "https://github.com/hugoogb/f1-showcase",
@@ -31,7 +28,7 @@ export const PROJECTS: Project[] = [
       tools: [],
     },
     urlPreview: "https://autodetailing-es.vercel.app/",
-    src: Img_autodetailingEs,
+    src: "/images/autodetailing-es.png",
     githubUrl: {
       all: "",
       frontend: "",
@@ -48,7 +45,7 @@ export const PROJECTS: Project[] = [
       tools: ["npm", "pnpm"],
     },
     urlPreview: "https://avatar-generator-two.vercel.app/",
-    src: Img_avatarGenerator,
+    src: "/images/avatar-generator.png",
     githubUrl: {
       all: "https://github.com/hugoogb/avatar-generator",
       frontend: "",

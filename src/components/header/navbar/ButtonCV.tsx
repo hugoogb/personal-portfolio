@@ -56,7 +56,7 @@ export const ButtonCV: FC = () => {
       className={`button ${styles.buttonCV}`}
     >
       {t("nav.downloadButton")}
-      <IconDownload size={24} className={styles.iconDownload} />
+      <IconDownload size={18} className={styles.iconDownload} />
     </button>
   );
 };
