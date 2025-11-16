@@ -15,7 +15,6 @@ export const EMAIL_REGEX = /\S+@\S+\.\S+/;
 // LocalStorage keys
 export const STORAGE_KEYS = {
     COLOR: 'color',
-    THEME: 'theme',
 } as const;
 
 // Default values

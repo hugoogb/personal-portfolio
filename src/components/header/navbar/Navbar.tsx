@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import styles from "@/styles/modules/Header.module.css";
 import { SettingsMenu } from "@/components/header/navbar/SettingsMenu";
 import { NavBarItem } from "@/components/header/navbar/NavBarItem";
-import { ButtonCV } from "@/components/header/navbar/ButtonCV";
 import { DarkModeToggle } from "@/components/header/navbar/DarkModeToggle";
 import { IconMenu2 } from "@tabler/icons-react";
 import { useRouter } from "next/router";
@@ -104,9 +103,6 @@ export const Navbar: FC = () => {
         </div>
       </nav>
       <div className={styles.buttonColorPickerContainer}>
-        <div className={styles.buttonCVnav}>
-          <ButtonCV></ButtonCV>
-        </div>
         <DarkModeToggle></DarkModeToggle>
         <SettingsMenu></SettingsMenu>
       </div>

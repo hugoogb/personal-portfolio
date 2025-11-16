@@ -1,214 +1,189 @@
 .header {
-	width: 100%;
+  width: 100%;
 
-	z-index: 999;
+  z-index: 999;
 }
 
 .headerAbsolute {
-	margin: 1rem 2rem;
+  margin: 1rem 2rem;
 
-	background: var(--card-background-color);
-	border-radius: var(--border-radius-l);
+  background: var(--card-background-color);
+  border-radius: var(--border-radius-l);
 }
 
 .headerWrapper {
-	padding: 0.5rem 1rem;
+  padding: 0.5rem 1rem;
 }
 
 .headerContainer {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 
-	gap: 0.75rem;
+  gap: 0.75rem;
 }
 
 .navbar {
-	position: relative;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 1rem;
-	padding: 0.5rem 0.75rem;
-	border-radius: var(--border-radius-m);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--border-radius-m);
 
-	background: var(--background-nav);
-	border: var(--border-nav);
+  background: var(--background-nav);
+  border: var(--border-nav);
 }
 
 .ulNavbar {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .ulNavbarMobile {
-	display: none;
+  display: none;
 }
 
 .navItem {
-	font-size: var(--text-size-s);
+  font-size: var(--text-size-s);
 }
 
 .navItem a {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	justify-content: center;
-	padding: 0.25rem 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.5rem;
 
-	transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 
 .navItemBar {
-	display: inline-block;
-	margin-top: 0.15rem;
-	height: 2px;
+  display: inline-block;
+  margin-top: 0.15rem;
+  height: 2px;
 
-	transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
 }
 
 .buttonColorPickerContainer {
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 0.5rem;
-}
-
-.buttonCVnav {
-	margin-right: 0.75rem;
-}
-
-.buttonCV {
-	white-space: nowrap;
-
-	padding: 0.375rem 0.5rem;
-	margin: 0;
-
-	cursor: pointer;
-
-	transition: all 0.3s ease-in-out;
-
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	
-	font-size: 12px;
-}
-
-.iconDownload {
-	margin-left: 0.375rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .menuIconContainer {
-	display: none;
+  display: none;
 }
 
 .menuIcon {
-	display: none;
+  display: none;
 }
 
 @media (max-width: 920px) {
-	/* styles to apply when width is less than 920px */
-	.headerWrapper {
-		margin: 0 0.5rem;
-	}
+  /* styles to apply when width is less than 920px */
+  .headerWrapper {
+    margin: 0 0.5rem;
+  }
 
-	.header {
-		padding: 0.5rem 0.75rem;
-	}
+  .header {
+    padding: 0.5rem 0.75rem;
+  }
 
-	.navbarContainer {
-		border-radius: 0;
-		box-shadow: none;
-		background-color: transparent;
-	}
+  .navbarContainer {
+    border-radius: 0;
+    box-shadow: none;
+    background-color: transparent;
+  }
 
-	.navbar {
-		border-radius: 0;
-		background: none;
-		border: none;
-		padding: 0;
-	}
+  .navbar {
+    border-radius: 0;
+    background: none;
+    border: none;
+    padding: 0;
+  }
 
-	.ulNavbar {
-		display: none;
-	}
+  .ulNavbar {
+    display: none;
+  }
 
-	.ulNavbarMobile {
-		display: flex;
-		flex-direction: column;
-		justify-content: space-around;
-		gap: 0;
+  .ulNavbarMobile {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    gap: 0;
 
-		position: absolute;
-		top: 3rem;
-		left: 0.05rem;
+    position: absolute;
+    top: 3rem;
+    left: 0.05rem;
 
-		transition: all 0.3s ease-in-out;
+    transition: all 0.3s ease-in-out;
 
-		/* hide scrollbar for Firefox and Edge */
-		scrollbar-width: none;
+    /* hide scrollbar for Firefox and Edge */
+    scrollbar-width: none;
 
-		border-radius: var(--border-radius-m);
+    border-radius: var(--border-radius-m);
 
-		background: var(--background-nav);
-	}
+    background: var(--background-nav);
+  }
 
-	/* Hide scrollbar for Chrome and Safari */
-	.ulNavbar::-webkit-scrollbar {
-		display: none;
-	}
+  /* Hide scrollbar for Chrome and Safari */
+  .ulNavbar::-webkit-scrollbar {
+    display: none;
+  }
 
-	.menuIconContainer {
-		display: flex;
-		align-items: center;
-		justify-content: center;
-	}
+  .menuIconContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-	.menuIcon {
-		display: inline-block;
+  .menuIcon {
+    display: inline-block;
 
-		cursor: pointer;
+    cursor: pointer;
 
-		transition: all 0.3s ease-in-out;
-	}
+    transition: all 0.3s ease-in-out;
+  }
 
-	.menuIcon:hover {
-		rotate: 90deg;
-	}
+  .menuIcon:hover {
+    rotate: 90deg;
+  }
 
-	.navItem a {
-		padding: 0.25rem 0.75rem;
-	}
+  .navItem a {
+    padding: 0.25rem 0.75rem;
+  }
 }
 
 @media (max-width: 720px) {
-	/* styles to apply when width is less than 720px */
-	.headerWrapper {
-		margin: 0 0.25rem;
-	}
+  /* styles to apply when width is less than 720px */
+  .headerWrapper {
+    margin: 0 0.25rem;
+  }
 
-	.header {
-		padding: 0.5rem;
-	}
+  .header {
+    padding: 0.5rem;
+  }
 
-	.ulNavbar {
-		left: -1rem;
+  .ulNavbar {
+    left: -1rem;
 
-		margin-top: 0.5rem;
-	}
+    margin-top: 0.5rem;
+  }
 
-	.navbarContainer {
-		padding-left: 0.25rem;
-	}
+  .navbarContainer {
+    padding-left: 0.25rem;
+  }
 
-	.menuIcon {
-		width: 30px;
-	}
+  .menuIcon {
+    width: 30px;
+  }
 
-	.buttonCVnav {
-		display: none;
-	}
+  .buttonCVnav {
+    display: none;
+  }
 }
