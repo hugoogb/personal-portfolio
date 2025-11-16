@@ -37,6 +37,9 @@
     "avatar-generator": {
       "description": "Proporciona una biblioteca de generación de avatares personalizables que es agnóstica a los frameworks. Integración fácil con opciones personalizables."
     },
+    "socialsImpact": {
+      "description": "Plataforma de panel de análisis de redes sociales para rastrear el crecimiento en YouTube, Twitch, TikTok e Instagram. Visualiza métricas de rendimiento, analiza tendencias y toma decisiones basadas en datos."
+    },
     "alt": "imagen de vista previa",
     "techStack": {
       "frontend": "Frontend",

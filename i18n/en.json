@@ -37,6 +37,9 @@
     "avatar-generator": {
       "description": "Provides a customizable avatar generation library that is framework-agnostic. Easy integration with customizable options."
     },
+    "socialsImpact": {
+      "description": "Social media analytics dashboard platform to track growth across YouTube, Twitch, TikTok, and Instagram. Visualize performance metrics, analyze trends, and make data-driven decisions."
+    },
     "alt": "preview image",
     "techStack": {
       "frontend": "Frontend",
