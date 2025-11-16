@@ -21,7 +21,6 @@ import {
   IconBrandHtml5,
   IconBrandJavascript,
   IconBrandTypescript,
-  IconBrandCSharp,
 } from "@tabler/icons-react";
 
 export interface TechIcon {
@@ -53,18 +52,18 @@ export const FRONTEND_ICONS: TechIcon[] = [
   },
   {
     id: 4,
-    icon: IconBrandAstro,
-    name: "Astro",
-  },
-  {
-    id: 5,
     icon: IconBrandReact,
     name: "React",
   },
   {
-    id: 6,
+    id: 5,
     icon: IconBrandAngular,
     name: "Angular",
+  },
+  {
+    id: 6,
+    icon: IconBrandAstro,
+    name: "Astro",
   },
 ];
 
@@ -88,11 +87,6 @@ export const BACKEND_ICONS: TechIcon[] = [
     id: 3,
     icon: IconDatabase,
     name: "Database",
-  },
-  {
-    id: 4,
-    icon: IconBrandCSharp,
-    name: ".NET (C#)",
   },
 ];
 

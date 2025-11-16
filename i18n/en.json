@@ -7,16 +7,16 @@
     "downloadButton": "Download CV"
   },
   "home": {
-    "subtitle": "Fullstack Web Developer"
+    "subtitle": "Full Stack Developer"
   },
   "about": {
     "title": "About",
     "text": {
       "intro": "Hi! My name is ",
       "name": "Hugo",
-      "introSection": ". I'm fullstack web developer with professional experience in Node.js and .NET (C#) backends, and Angular frontends.",
-      "learningSection": "I consider myself highly resolutive and enjoy tackling complex problems with creative solutions. I work with React, Next.js, and Astro for modern web applications, always finding efficient ways to deliver results.",
-      "finalSection": "If you're looking for someone who can build applications from start to finish, I’d love to work with you and help take your project to the next level.",
+      "introSection": ". I'm a full stack developer with professional experience building end-to-end web applications. I specialize in Node.js backends and modern frontend frameworks like React, Next.js, and Angular.",
+      "learningSection": "I consider myself highly resolutive and enjoy tackling complex problems with creative solutions. I work across the entire stack, from database design to user interfaces, always finding efficient ways to deliver results.",
+      "finalSection": "If you're looking for someone who can build complete applications from start to finish, I'd love to work with you and help take your project to the next level.",
       "letsTalk": "Let’s talk!"
     },
     "categories": {
@@ -87,8 +87,8 @@
   },
   "head": {
     "home": {
-      "title": "Hugo GB | Web Developer",
-      "description": "Home page of Hugo's personal portfolio."
+      "title": "Hugo GB | Full Stack Developer",
+      "description": "Full Stack Developer - Personal portfolio of Hugo García Benjumea."
     },
     "about": {
       "title": "Hugo GB | About",
