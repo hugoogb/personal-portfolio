@@ -3,8 +3,7 @@
     "home": "Inicio",
     "about": "Acerca",
     "projects": "Proyectos",
-    "contact": "Contacto",
-    "downloadButton": "Descargar CV"
+    "contact": "Contacto"
   },
   "home": {
     "subtitle": "Desarrollador Full Stack"

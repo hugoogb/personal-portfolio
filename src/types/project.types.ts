@@ -19,6 +19,3 @@ export interface Project {
   src: string;
   githubUrl: GitHubUrls;
 }
-
-export type ProjectId = Project['id'];
-export type ProjectName = Project['name'];

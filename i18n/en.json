@@ -3,8 +3,7 @@
     "home": "Home",
     "about": "About",
     "projects": "Projects",
-    "contact": "Contact",
-    "downloadButton": "Download CV"
+    "contact": "Contact"
   },
   "home": {
     "subtitle": "Full Stack Developer"

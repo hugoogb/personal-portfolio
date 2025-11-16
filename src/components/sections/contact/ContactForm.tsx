@@ -9,7 +9,6 @@ import type { ContactFormData, ContactApiResponse } from "@/types/api.types";
 import {
   FORM_STATUS,
   EMAIL_REGEX,
-  AUTOCOMPLETE,
 } from "@/constants/strings.constants";
 
 interface FormErrors {
