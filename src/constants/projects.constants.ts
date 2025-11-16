@@ -3,23 +3,6 @@ import type { Project } from "@/types/project.types";
 export const PROJECTS: Project[] = [
   {
     id: 0,
-    name: "Formula 1 Showcase",
-    desc: "projects.formula1Showcase.description",
-    techStack: {
-      frontend: ["Vue"],
-      backend: ["Nodejs", "Expressjs"],
-      tools: [],
-    },
-    urlPreview: "https://f1-showcase.vercel.app",
-    src: "/images/f1-showcase.png",
-    githubUrl: {
-      all: "",
-      frontend: "https://github.com/hugoogb/f1-showcase",
-      backend: "https://github.com/hugoogb/f1-api",
-    },
-  },
-  {
-    id: 1,
     name: "autodetailing.es",
     desc: "projects.autodetailinges.description",
     techStack: {
@@ -36,7 +19,7 @@ export const PROJECTS: Project[] = [
     },
   },
   {
-    id: 2,
+    id: 1,
     name: "@avatar-generator",
     desc: "projects.avatar-generator.description",
     techStack: {
@@ -53,7 +36,7 @@ export const PROJECTS: Project[] = [
     },
   },
   {
-    id: 3,
+    id: 2,
     name: "Socials Impact",
     desc: "projects.socialsImpact.description",
     techStack: {
