@@ -1,19 +1,13 @@
-import { useTranslation } from "react-i18next";
-import Image from "next/image";
-import styles from "@/styles/modules/Projects.module.css";
 import { mapTechStackToIcons } from "@/utils/iconsTechStackMapper";
-import {
-  BACKEND_ICONS,
-  FRONTEND_ICONS,
-  TOOLS_ICONS,
-} from "@/constants/icons.constants";
+import { BACKEND_ICONS, FRONTEND_ICONS, TOOLS_ICONS } from "@/constants/icons.constants";
 import { ProjectTechStack } from "./ProjectTechStack";
 import { ExternalLinkButton } from "@/components/shared/ExternalLinkButton";
-import { IconBrandGithub } from "@tabler/icons-react";
+import { IconBrandGithub, IconExternalLink } from "@tabler/icons-react";
 import type { FC } from "react";
 import { memo } from "react";
 import type { Project as ProjectType } from "@/types/project.types";
-import { ALT_TEXT, ARIA_LABELS } from "@/constants/strings.constants";
+import { ALT_TEXT } from "@/constants/strings.constants";
+import { motion } from "motion/react";
 
 interface ProjectProps extends ProjectType {
   workInProgress?: boolean;
@@ -25,87 +19,82 @@ export const Project: FC<ProjectProps> = memo(function Project({
   urlPreview,
   src,
   techStack,
-  workInProgress,
   githubUrl,
 }) {
-  const { t } = useTranslation();
-
   const frontendIcons = mapTechStackToIcons(techStack.frontend, FRONTEND_ICONS);
   const backendIcons = mapTechStackToIcons(techStack.backend, BACKEND_ICONS);
   const toolsIcons = mapTechStackToIcons(techStack.tools, TOOLS_ICONS);
 
   return (
-    <a
-      href={urlPreview}
-      target="_blank"
-      rel="noopener noreferrer"
-      className={styles.projectLink}
-      aria-label={ARIA_LABELS.VIEW_PROJECT(name)}
+    <motion.div
+      className="flex flex-col bg-card border border-border rounded-3xl overflow-hidden hover:border-primary/50 transition-colors duration-500"
+      transition={{ type: "spring", stiffness: 300, damping: 20 }}
     >
-      <div className={styles.projectContainer}>
-        <h3 className={styles.projectTitle}>{name}</h3>
+      <a
+        href={urlPreview}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group relative aspect-video overflow-hidden"
+      >
         {src && (
-          <div className={`imageContainer ${styles.projectImageContainer}`}>
-            <Image
+          <>
+            <motion.img
               src={src}
               alt={ALT_TEXT.PROJECT(name)}
-              fill={true}
-              className={`image ${styles.projectImage}`}
-              sizes="(max-width: 500px) 100vw, 500px"
-              priority={false}
+              className="w-full h-full object-cover"
               loading="lazy"
+              whileHover={{ scale: 1.1 }}
+              transition={{ duration: 0.6 }}
             />
-          </div>
+            <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center pointer-events-none">
+              <div className="p-3 bg-background/90 backdrop-blur-md rounded-full shadow-lg transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+                <IconExternalLink size={24} className="text-primary" />
+              </div>
+            </div>
+          </>
         )}
-        <p className={styles.projectDesc}>{desc}</p>
-        <hr className={styles.projectSeparator}></hr>
-        <div className={styles.projectTechStack}>
+      </a>
+
+      <div className="flex-1 p-6 sm:p-8 flex flex-col space-y-6 text-left">
+        <div className="space-y-3">
+          <h3 className="text-2xl font-bold tracking-tight text-text flex items-center justify-between">
+            {name}
+          </h3>
+          <p className="text-muted leading-relaxed text-sm sm:text-base">{desc}</p>
+        </div>
+
+        <div className="flex-1 space-y-6">
+          <div className="grid grid-cols-1 gap-4">
+            {techStack.frontend?.length > 0 && (
+              <ProjectTechStack title="Frontend" icons={frontendIcons} />
+            )}
+            {techStack.backend?.length > 0 && (
+              <ProjectTechStack title="Backend" icons={backendIcons} />
+            )}
+            {techStack.tools?.length > 0 && <ProjectTechStack title="Tools" icons={toolsIcons} />}
+          </div>
+        </div>
+
+        <div className="pt-4 flex flex-wrap gap-3">
           {githubUrl.all && (
-            <ExternalLinkButton
-              text={t("projects.github.all")}
-              link={githubUrl.all}
-              icon={IconBrandGithub}
-            />
+            <ExternalLinkButton text="View Source" link={githubUrl.all} icon={IconBrandGithub} />
           )}
-
-          {techStack.frontend?.length > 0 && (
-            <ProjectTechStack
-              title={t("projects.techStack.frontend")}
-              icons={frontendIcons}
-            />
-          )}
-
           {githubUrl.frontend && (
             <ExternalLinkButton
-              text={t("projects.github.frontend")}
+              text="Frontend Code"
               link={githubUrl.frontend}
               icon={IconBrandGithub}
             />
           )}
-
-          {techStack.backend?.length > 0 && (
-            <ProjectTechStack
-              title={t("projects.techStack.backend")}
-              icons={backendIcons}
-            />
-          )}
-
           {githubUrl.backend && (
             <ExternalLinkButton
-              text={t("projects.github.backend")}
+              text="Backend Code"
               link={githubUrl.backend}
               icon={IconBrandGithub}
             />
           )}
-
-          {techStack.tools?.length > 0 && (
-            <ProjectTechStack
-              title={t("projects.techStack.tools")}
-              icons={toolsIcons}
-            />
-          )}
         </div>
       </div>
-    </a>
+    </motion.div>
   );
 });
