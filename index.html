@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#f97316" />
+    <meta name="color-scheme" content="light dark" />
+    <title>Hugo GB | Full Stack Developer</title>
+    <meta
+      name="description"
+      content="Full Stack Developer - Personal portfolio of Hugo García Benjumea."
+    />
+    <meta property="og:title" content="Hugo GB | Full Stack Developer" />
+    <meta
+      property="og:description"
+      content="Full Stack Developer - Personal portfolio of Hugo García Benjumea."
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://hugoogb.dev" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="Hugo GB | Full Stack Developer" />
+    <meta
+      name="twitter:description"
+      content="Full Stack Developer - Personal portfolio of Hugo García Benjumea."
+    />
+    <link rel="preload" as="image" href="./src/assets/memojis/natural.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />
+    <link rel="manifest" href="/favicon/site.webmanifest" />
+    <link rel="canonical" href="https://hugoogb.dev" />
+    <script>
+      (function () {
+        try {
+          var isDarkMode =
+            localStorage.getItem("isDarkMode") === "true" ||
+            (!localStorage.getItem("isDarkMode") &&
+              window.matchMedia("(prefers-color-scheme: dark)").matches);
+          if (isDarkMode) {
+            document.documentElement.classList.add("dark");
+          } else {
+            document.documentElement.classList.remove("dark");
+          }
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body class="antialiased selection:bg-primary/30">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

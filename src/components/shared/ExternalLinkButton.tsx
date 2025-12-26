@@ -1,8 +1,6 @@
 import type { FC, ReactNode } from "react";
-import styles from "@/styles/modules/shared/ExternalLinkButton.module.css";
 import { IconExternalLink } from "@tabler/icons-react";
 import type { Icon } from "@tabler/icons-react";
-import { ICON_SIZES } from "@/constants/design.constants";
 
 interface ExternalLinkButtonProps {
   id?: string;
@@ -17,29 +15,26 @@ export const ExternalLinkButton: FC<ExternalLinkButtonProps> = ({
   text,
   link,
   icon,
-  children,
 }) => {
   const IconComponent = icon;
 
   return (
     <a
       key={id}
-      className={`button ${styles.anchor}`}
       href={link}
       target="_blank"
       rel="noopener noreferrer"
+      className="inline-flex items-center gap-2 px-4 py-2 bg-muted/10 hover:bg-muted/20 border border-border/50 rounded-xl text-sm font-medium transition-all duration-200 hover:shadow-sm"
     >
-      <div className={styles.iconButton}>
+      {IconComponent && (
         <IconComponent
-          stroke={1.25}
-          size={ICON_SIZES.md}
-          className={styles.icon}
+          stroke={1.5}
+          size={18}
+          className="text-text"
         />
-        <p>{text}</p>
-        <div className={styles.arrowLink}>
-          <IconExternalLink size={ICON_SIZES.sm} />
-        </div>
-      </div>
+      )}
+      <span>{text}</span>
+      <IconExternalLink size={14} className="text-muted" />
     </a>
   );
 };

@@ -1,13 +1,11 @@
 import type { FC } from "react";
-import { useState } from "react";
-import Image from "next/image";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { IconRefresh } from "@tabler/icons-react";
-import { ICON_SIZES, IMAGE_SIZES } from "@/constants/design.constants";
 import { ALT_TEXT } from "@/constants/strings.constants";
-import styles from "@/styles/modules/Home.module.css";
+import { motion, AnimatePresence } from "motion/react";
 
 interface ImageSwitcherProps {
-  images: string[];
+  images: readonly string[];
   backgroundColor: string;
   altText?: string;
 }
@@ -19,32 +17,55 @@ export const ImageSwitcher: FC<ImageSwitcherProps> = ({
 }) => {
   const [activeImage, setActiveImage] = useState<number>(0);
 
-  const toggleImage = () => {
+  const toggleImage = useCallback(() => {
     setActiveImage((prev) => (prev === 0 ? 1 : 0));
-  };
+  }, []);
+
+  // Warm the browser cache for faster switching / fewer janks.
+  const otherImage = useMemo(() => images[activeImage === 0 ? 1 : 0], [images, activeImage]);
+  useEffect(() => {
+    if (!otherImage) return;
+    const img = new Image();
+    img.src = otherImage;
+  }, [otherImage]);
 
   return (
     <div
-      style={{ background: backgroundColor }}
-      className={`imageContainer ${styles.profileImageBackground}`}
+      style={{ backgroundColor: backgroundColor }}
+      className="relative w-64 h-64 sm:w-80 sm:h-80 lg:w-96 lg:h-96 rounded-3xl overflow-hidden shadow-2xl transition-all duration-500"
     >
-      <Image
-        src={images[activeImage]}
-        alt={altText}
-        fill={true}
-        sizes={`(max-width: 720px) ${IMAGE_SIZES.profile.mobile}px, (max-width: 920px) ${IMAGE_SIZES.profile.tablet}px, ${IMAGE_SIZES.profile.desktop}px`}
-        priority={true}
-        className={`image ${styles.profileImage}`}
-      />
-      <div className={styles.iconChangeImage}>
-        <button
-          className="button"
-          onClick={toggleImage}
-          aria-label="Switch profile image"
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.img
+          key={activeImage}
+          src={images[activeImage]}
+          alt={altText}
+          className="absolute inset-0 w-full h-full object-cover"
+          decoding="async"
+          loading="eager"
+          initial={{ opacity: 0, scale: 1.1, filter: "blur(10px)" }}
+          animate={{ opacity: 1, scale: 1, filter: "blur(0px)" }}
+          exit={{ opacity: 0, scale: 0.9, filter: "blur(10px)" }}
+          transition={{ duration: 0.5, ease: [0.4, 0, 0.2, 1] }}
+        />
+      </AnimatePresence>
+
+      <motion.button
+        onClick={toggleImage}
+        className="absolute bottom-4 right-4 p-3 bg-background/80 backdrop-blur-md border border-border rounded-full shadow-lg z-10 text-text cursor-pointer"
+        aria-label="Switch profile image"
+        whileHover={{ scale: 1.1, rotate: 15 }}
+        whileTap={{ scale: 0.9, rotate: -15 }}
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.3 }}
+      >
+        <motion.div
+          animate={{ rotate: activeImage * 180 }}
+          transition={{ type: "spring", stiffness: 200, damping: 15 }}
         >
-          <IconRefresh size={ICON_SIZES.md} />
-        </button>
-      </div>
+          <IconRefresh size={20} stroke={2} className="text-primary" />
+        </motion.div>
+      </motion.button>
     </div>
   );
 };
