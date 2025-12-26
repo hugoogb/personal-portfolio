@@ -1,20 +1,16 @@
-import type { FC } from 'react';
-import styles from "@/styles/modules/About.module.css";
+import type { FC, ReactNode } from "react";
 
 interface AboutIconsProps {
   title: string;
-  iconsMapped: any[];
+  iconsMapped: ReactNode[];
   color: string;
 }
 
-export const AboutIcons: FC<AboutIconsProps> = ({ title, iconsMapped, color  }) => {
-	return (
-		<div className={styles.aboutIconsTitleWrapper}>
-			<span style={{ backgroundColor: color }}></span>
-			<div className={styles.aboutIconsTitleContainer}>
-				<h3 className={styles.aboutIconsTitle}>{title}</h3>
-				<div className={styles.aboutIconsContainer}>{iconsMapped}</div>
-			</div>
-		</div>
-	);
+export const AboutIcons: FC<AboutIconsProps> = ({ title, iconsMapped }) => {
+  return (
+    <div className="space-y-4">
+      <h3 className="text-sm font-bold uppercase tracking-widest text-muted">{title}</h3>
+      <div className="flex flex-wrap gap-3">{iconsMapped}</div>
+    </div>
+  );
 };
