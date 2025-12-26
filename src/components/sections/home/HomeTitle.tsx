@@ -8,9 +8,9 @@ export const HomeTitle = () => {
   const splittedName = name.split(" ").map((word, index) => {
     const isFirst = index === 0;
     return (
-      <span 
-        key={word} 
-        className={`inline-block ${isFirst ? 'text-primary' : ''}`}
+      <span
+        key={word}
+        className={`inline-block ${isFirst ? "text-primary" : ""}`}
         style={isFirst ? { color } : undefined}
       >
         {word}
@@ -25,14 +25,18 @@ export const HomeTitle = () => {
           {splittedName}
         </h1>
         <div className="flex items-center justify-center md:justify-start gap-4 text-muted">
-          <span className="hidden sm:block h-px w-8 sm:w-12 bg-primary shrink-0" style={{ backgroundColor: color }}></span>
+          <span
+            className="hidden sm:block h-px w-8 sm:w-12 bg-primary shrink-0"
+            style={{ backgroundColor: color }}
+          ></span>
           <h2 className="text-lg sm:text-xl md:text-2xl font-medium uppercase tracking-[0.2em] sm:tracking-[0.3em]">
             Full Stack Developer
           </h2>
         </div>
       </div>
       <p className="max-w-xl mx-auto md:mx-0 text-base sm:text-lg lg:text-xl text-muted leading-relaxed font-medium">
-        Building robust and beautiful digital experiences from front to back. Specialized in modern web technologies.
+        Building robust and beautiful digital experiences from front to back. Specialized in modern
+        web technologies.
       </p>
     </div>
   );

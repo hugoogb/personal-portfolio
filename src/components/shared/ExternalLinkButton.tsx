@@ -10,12 +10,7 @@ interface ExternalLinkButtonProps {
   children?: ReactNode;
 }
 
-export const ExternalLinkButton: FC<ExternalLinkButtonProps> = ({
-  id,
-  text,
-  link,
-  icon,
-}) => {
+export const ExternalLinkButton: FC<ExternalLinkButtonProps> = ({ id, text, link, icon }) => {
   const IconComponent = icon;
 
   return (
@@ -26,13 +21,7 @@ export const ExternalLinkButton: FC<ExternalLinkButtonProps> = ({
       rel="noopener noreferrer"
       className="inline-flex items-center gap-2 px-4 py-2 bg-muted/10 hover:bg-muted/20 border border-border/50 rounded-xl text-sm font-medium transition-all duration-200 hover:shadow-sm"
     >
-      {IconComponent && (
-        <IconComponent
-          stroke={1.5}
-          size={18}
-          className="text-text"
-        />
-      )}
+      {IconComponent && <IconComponent stroke={1.5} size={18} className="text-text" />}
       <span>{text}</span>
       <IconExternalLink size={14} className="text-muted" />
     </a>

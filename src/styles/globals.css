@@ -70,7 +70,7 @@
   h1 {
     @apply text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-display font-black leading-[1.1] tracking-tight;
   }
-  
+
   h2 {
     @apply text-2xl sm:text-3xl md:text-4xl font-display font-bold leading-tight tracking-tight;
   }

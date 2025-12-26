@@ -4,5 +4,5 @@ import { DEFAULT_COLOR } from "@/constants/colors.constants";
 
 export const ColorContext = createContext<ColorContextValue>({
   color: DEFAULT_COLOR,
-  setColor: () => { },
+  setColor: () => {},
 });
