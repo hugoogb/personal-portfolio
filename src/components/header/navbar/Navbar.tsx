@@ -1,52 +1,54 @@
 import type { FC, MouseEvent } from "react";
-import { useState, useEffect, useRef, useMemo } from "react";
-import { useTranslation } from "react-i18next";
-import styles from "@/styles/modules/Header.module.css";
+import { useState, useEffect, useRef, useMemo, useCallback } from "react";
 import { SettingsMenu } from "@/components/header/navbar/SettingsMenu";
 import { NavBarItem } from "@/components/header/navbar/NavBarItem";
 import { DarkModeToggle } from "@/components/header/navbar/DarkModeToggle";
-import { IconMenu2 } from "@tabler/icons-react";
-import { useRouter } from "next/router";
-import { ICON_SIZES } from "@/constants/design.constants";
+import { IconMenu2, IconX } from "@tabler/icons-react";
+import { useScrollSpy } from "@/hooks/useScrollSpy";
 
 export const Navbar: FC = () => {
-  const { t } = useTranslation();
-
-  const router = useRouter();
-
-  const [activeId, setActiveId] = useState<number | null>(null);
-  const [visibility, setVisibility] = useState<boolean>(false);
+  const [activeId, setActiveId] = useState<number | null>(0);
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const navbarRef = useRef<HTMLUListElement>(null);
   const iconMenuNavbarRef = useRef<HTMLDivElement>(null);
 
   const navItems = useMemo(
     () => [
-      { id: 0, name: t("nav.home"), href: "/" },
-      { id: 1, name: t("nav.about"), href: "/about" },
-      { id: 2, name: t("nav.projects"), href: "/projects" },
-      { id: 3, name: t("nav.contact"), href: "/contact" },
+      { id: 0, name: "Home", sectionId: "Home" },
+      { id: 1, name: "About", sectionId: "About" },
+      { id: 2, name: "Projects", sectionId: "Projects" },
+      { id: 3, name: "Contact", sectionId: "Contact" },
     ],
-    [t]
+    [],
   );
 
-  const navItemsMapped = navItems.map((item) => {
-    return (
-      <NavBarItem
-        key={item.id}
-        href={item.href}
-        id={item.id}
-        activeId={activeId}
-      >
-        {item.name}
-      </NavBarItem>
-    );
-  });
+  const sectionIds = useMemo(() => navItems.map((i) => i.sectionId), [navItems]);
+  const activeSectionId = useScrollSpy(sectionIds);
 
   useEffect(() => {
-    const currentPath = router.asPath;
-    const activeIndex = navItems.findIndex((item) => item.href === currentPath);
-    setActiveId(activeIndex !== -1 ? activeIndex : null);
-  }, [navItems, router.asPath]);
+    if (!activeSectionId) return;
+    const activeIndex = navItems.findIndex((item) => item.sectionId === activeSectionId);
+    if (activeIndex !== -1) setActiveId(activeIndex);
+  }, [activeSectionId, navItems]);
+
+  const handleNavClick = useCallback(
+    (item: (typeof navItems)[number]) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+      e.preventDefault(); // keep URL clean (no #hash)
+      setActiveId(item.id);
+      setIsMenuOpen(false);
+      document.getElementById(item.sectionId)?.scrollIntoView({
+        behavior: "smooth",
+        block: "start",
+      });
+    },
+    [],
+  );
+
+  const navItemsMapped = navItems.map((item) => (
+    <NavBarItem key={item.id} id={item.id} activeId={activeId} onClick={handleNavClick(item)}>
+      {item.name}
+    </NavBarItem>
+  ));
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent | Event) => {
@@ -57,54 +59,48 @@ export const Navbar: FC = () => {
         iconMenuNavbarRef.current &&
         !iconMenuNavbarRef.current.contains(target)
       ) {
-        setVisibility(false);
+        setIsMenuOpen(false);
       }
     };
 
     document.addEventListener("mousedown", handleClickOutside);
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const ulNavbarMobileStyles = Object.assign(
-    {},
-    {
-      height: visibility ? "180px" : "0",
-    },
-    {
-      overflow: visibility ? "auto" : "hidden",
-    },
-    {
-      border: visibility ? "var(--border-nav)" : "none",
-    }
-  );
-
   return (
-    <div className={styles.headerContainer}>
-      <nav className={styles.navbar}>
-        <ul ref={navbarRef} className={styles.ulNavbar}>
-          {navItemsMapped}
-        </ul>
-        <ul
-          ref={navbarRef}
-          style={ulNavbarMobileStyles}
-          className={styles.ulNavbarMobile}
-        >
-          {navItemsMapped}
-        </ul>
+    <div className="flex items-center gap-4 sm:gap-6">
+      <nav className="relative flex items-center">
+        {/* Desktop Navigation */}
+        <ul className="hidden md:flex items-center gap-1">{navItemsMapped}</ul>
+
+        {/* Mobile Menu Button */}
         <div
           ref={iconMenuNavbarRef}
-          className={styles.menuIconContainer}
-          onClick={() => setVisibility(!visibility)}
+          className="md:hidden flex items-center cursor-pointer p-2 hover:bg-muted/10 rounded-full transition-colors"
+          onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
-          <IconMenu2 size={ICON_SIZES.lg} className={styles.menuIcon} />
+          {isMenuOpen ? (
+            <IconX size={24} className="text-text" />
+          ) : (
+            <IconMenu2 size={24} className="text-text" />
+          )}
         </div>
+
+        {/* Mobile Navigation Dropdown */}
+        {isMenuOpen && (
+          <ul
+            ref={navbarRef}
+            className="absolute top-full left-1/2 -translate-x-1/2 md:translate-x-0 md:left-0 mt-4 p-2 bg-background/95 backdrop-blur-lg border border-border rounded-2xl flex flex-col gap-1 md:hidden shadow-xl animate-fade-in z-50"
+            style={{ width: "200px" }}
+          >
+            {navItemsMapped}
+          </ul>
+        )}
       </nav>
-      <div className={styles.buttonColorPickerContainer}>
-        <DarkModeToggle></DarkModeToggle>
-        <SettingsMenu></SettingsMenu>
+
+      <div className="flex items-center gap-1 pl-4 border-l border-border">
+        <DarkModeToggle />
+        <SettingsMenu />
       </div>
     </div>
   );

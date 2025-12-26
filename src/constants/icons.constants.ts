@@ -1,18 +1,14 @@
 import type { Icon } from "@tabler/icons-react";
 import {
   IconBrandNodejs,
-  IconBrandSupabase,
   IconBrandMongodb,
-  IconDatabase,
   IconBrandNpm,
   IconBrandGit,
-  IconBrandVercelFilled,
   IconBrandDocker,
   IconLayoutKanbanFilled,
   IconBrandBitbucketFilled,
   IconBrandPnpm,
   IconBrandGithub,
-  IconBrandFirebase,
   IconBrandAstro,
   IconBrandAngular,
   IconBrandNextjs,
@@ -21,11 +17,13 @@ import {
   IconBrandHtml5,
   IconBrandJavascript,
   IconBrandTypescript,
+  IconSql,
 } from "@tabler/icons-react";
+import { SiNestjs } from "react-icons/si";
 
 export interface TechIcon {
   id: number;
-  icon: Icon;
+  icon: Icon | React.FC;
   name: string;
 }
 
@@ -80,13 +78,18 @@ export const BACKEND_ICONS: TechIcon[] = [
   },
   {
     id: 2,
-    icon: IconBrandMongodb,
-    name: "Mongodb",
+    icon: SiNestjs as React.FC,
+    name: "Nestjs",
   },
   {
     id: 3,
-    icon: IconDatabase,
-    name: "Database",
+    icon: IconSql,
+    name: "SQL",
+  },
+  {
+    id: 4,
+    icon: IconBrandMongodb,
+    name: "Mongodb",
   },
 ];
 
@@ -126,5 +129,4 @@ export const TOOLS_ICONS: TechIcon[] = [
     icon: IconBrandDocker,
     name: "Docker",
   },
-
 ];

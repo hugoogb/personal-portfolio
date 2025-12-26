@@ -1,45 +1,39 @@
 import { useContext } from "react";
-import { Hanken_Grotesk } from "next/font/google";
-import { useTranslation } from "react-i18next";
-import styles from "@/styles/modules/Home.module.css";
-import { ColorContext } from "@/components/Layout";
-
-const hankenGrotesk = Hanken_Grotesk({
-  subsets: ["latin"],
-  weight: ["400", "500", "700", "900"],
-  display: "swap",
-  variable: "--font-hanken-grotesk",
-});
+import { ColorContext } from "@/contexts/color.context";
 
 export const HomeTitle = () => {
-  const { t } = useTranslation();
-
   const { color } = useContext(ColorContext);
 
   const name = "Hugo García Benjumea";
-  const splittedName = name.split(" ").map((word) => {
-    return word === name.split(" ")[0] ? (
-      <span className={styles.spanTitle} style={{ color: color }} key={word}>
+  const splittedName = name.split(" ").map((word, index) => {
+    const isFirst = index === 0;
+    return (
+      <span 
+        key={word} 
+        className={`inline-block ${isFirst ? 'text-primary' : ''}`}
+        style={isFirst ? { color } : undefined}
+      >
         {word}
-        <br></br>
-      </span>
-    ) : (
-      <span key={word}>
-        {word}
-        <br></br>
       </span>
     );
   });
 
   return (
-    <div className={hankenGrotesk.className}>
-      <div className={styles.nameSubtitleContainer}>
-        <h1 className={styles.nameHeader}>{splittedName}</h1>
-        <h2 className={styles.subtitleHeader}>
-          <span style={{ backgroundColor: color }}></span>
-          {t("home.subtitle")}
-        </h2>
+    <div className="space-y-6 sm:space-y-8">
+      <div className="space-y-3 sm:space-y-4">
+        <h1 className="flex flex-wrap justify-center md:justify-start gap-x-3 sm:gap-x-4">
+          {splittedName}
+        </h1>
+        <div className="flex items-center justify-center md:justify-start gap-4 text-muted">
+          <span className="hidden sm:block h-px w-8 sm:w-12 bg-primary shrink-0" style={{ backgroundColor: color }}></span>
+          <h2 className="text-lg sm:text-xl md:text-2xl font-medium uppercase tracking-[0.2em] sm:tracking-[0.3em]">
+            Full Stack Developer
+          </h2>
+        </div>
       </div>
+      <p className="max-w-xl mx-auto md:mx-0 text-base sm:text-lg lg:text-xl text-muted leading-relaxed font-medium">
+        Building robust and beautiful digital experiences from front to back. Specialized in modern web technologies.
+      </p>
     </div>
   );
 };
