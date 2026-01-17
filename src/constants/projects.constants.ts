@@ -3,6 +3,7 @@ import type { Project } from "@/types/project.types";
 import autodetailingImg from "@/assets/images/autodetailing-es.png";
 import avatarGeneratorImg from "@/assets/images/avatar-generator.png";
 import socialsImpactImg from "@/assets/images/socials-impact.png";
+import readledgerImg from "@/assets/images/readledger.png";
 
 export const PROJECTS: Project[] = [
   {
@@ -56,4 +57,21 @@ export const PROJECTS: Project[] = [
       backend: "",
     },
   },
+  {
+    id: 3,
+    name: "ReadLedger",
+    desc: "ReadLedger is a platform for managing your book series, track owning books and reading progress. Check how much you saved buying all the books you've read. Manga focused for now.",
+    techStack: {
+      frontend: ["React"],
+      backend: ["Nextjs"],
+      tools: [],
+    },
+    urlPreview: "https://readledger.vercel.app/",
+    src: readledgerImg,
+    githubUrl: {
+      all: "https://github.com/hugoogb/readledger",
+      frontend: "",
+      backend: "",
+    },
+  }
 ] as const;
