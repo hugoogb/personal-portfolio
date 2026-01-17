@@ -73,5 +73,5 @@ export const PROJECTS: Project[] = [
       frontend: "",
       backend: "",
     },
-  }
+  },
 ] as const;
