@@ -1,22 +1,23 @@
 import type { Icon } from "@tabler/icons-react";
 import {
-  IconBrandNodejs,
-  IconBrandMongodb,
-  IconBrandNpm,
-  IconBrandGit,
-  IconBrandDocker,
-  IconLayoutKanbanFilled,
-  IconBrandBitbucketFilled,
-  IconBrandPnpm,
-  IconBrandGithub,
-  IconBrandAstro,
   IconBrandAngular,
-  IconBrandNextjs,
-  IconBrandReact,
+  IconBrandAstro,
+  IconBrandBitbucketFilled,
   IconBrandCss3,
+  IconBrandDocker,
+  IconBrandGit,
+  IconBrandGithub,
   IconBrandHtml5,
   IconBrandJavascript,
+  IconBrandMongodb,
+  IconBrandNextjs,
+  IconBrandNodejs,
+  IconBrandNpm,
+  IconBrandPnpm,
+  IconBrandReact,
+  IconBrandSupabase,
   IconBrandTypescript,
+  IconLayoutKanbanFilled,
   IconSql,
 } from "@tabler/icons-react";
 import { SiNestjs } from "react-icons/si";
@@ -90,6 +91,11 @@ export const BACKEND_ICONS: TechIcon[] = [
     id: 4,
     icon: IconBrandMongodb,
     name: "Mongodb",
+  },
+  {
+    id: 5,
+    icon: IconBrandSupabase,
+    name: "Supabase",
   },
 ];
 
