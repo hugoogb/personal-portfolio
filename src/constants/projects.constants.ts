@@ -2,8 +2,9 @@ import type { Project } from "@/types/project.types";
 
 import autodetailingImg from "@/assets/images/autodetailing-es.png";
 import avatarGeneratorImg from "@/assets/images/avatar-generator.png";
-import socialsImpactImg from "@/assets/images/socials-impact.png";
+import profileKitMeImg from "@/assets/images/profilekit.me.png";
 import readledgerImg from "@/assets/images/readledger.png";
+import socialsImpactImg from "@/assets/images/socials-impact.png";
 
 export const PROJECTS: Project[] = [
   {
@@ -63,13 +64,30 @@ export const PROJECTS: Project[] = [
     desc: "ReadLedger is a platform for managing your book series, track owning books and reading progress. Check how much you saved buying all the books you've read. Manga focused for now.",
     techStack: {
       frontend: ["React"],
-      backend: ["Nextjs"],
+      backend: ["Nextjs", "Supabase"],
       tools: [],
     },
     urlPreview: "https://readledger.vercel.app/",
     src: readledgerImg,
     githubUrl: {
-      all: "https://github.com/hugoogb/readledger",
+      all: "",
+      frontend: "",
+      backend: "",
+    },
+  },
+  {
+    id: 4,
+    name: "ProfileKit.me",
+    desc: "ProfileKit.me allows a user to create and manage its customizable profile page. Providing a public accessible url to showcase information, images, links, and all sorts of information.",
+    techStack: {
+      frontend: ["React"],
+      backend: ["Nextjs", "Supabase"],
+      tools: [],
+    },
+    urlPreview: "https://profilekit-me.vercel.app/",
+    src: profileKitMeImg,
+    githubUrl: {
+      all: "",
       frontend: "",
       backend: "",
     },

@@ -7,7 +7,7 @@ export const ProjectsSection = () => {
   return (
     <SectionCard id="Projects" title="Projects">
       <motion.div
-        className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6 sm:gap-8 lg:gap-10"
+        className="columns-1 sm:columns-2 xl:columns-3 gap-6 sm:gap-8 lg:gap-10"
         initial="hidden"
         whileInView="show"
         viewport={{ once: true }}
@@ -24,6 +24,7 @@ export const ProjectsSection = () => {
         {PROJECTS.map((project) => (
           <motion.div
             key={project.id}
+            className="break-inside-avoid mb-6 sm:mb-8 lg:mb-10"
             variants={{
               hidden: { opacity: 0, y: 20 },
               show: { opacity: 1, y: 0 },
