@@ -61,13 +61,13 @@ export const PROJECTS: Project[] = [
   {
     id: 3,
     name: "ReadLedger",
-    desc: "ReadLedger is a platform for managing your book series, track owning books and reading progress. Check how much you saved buying all the books you've read. Manga focused for now.",
+    desc: "ReadLedger is a platform for managing your manga books series, track books owned and reading progress. Check how much you saved buying all the books you've read.",
     techStack: {
       frontend: ["React"],
       backend: ["Nextjs", "Supabase"],
       tools: [],
     },
-    urlPreview: "https://readledger.vercel.app/",
+    urlPreview: "https://readledger.app/",
     src: readledgerImg,
     githubUrl: {
       all: "",
@@ -84,7 +84,7 @@ export const PROJECTS: Project[] = [
       backend: ["Nextjs", "Supabase"],
       tools: [],
     },
-    urlPreview: "https://profilekit-me.vercel.app/",
+    urlPreview: "https://profilekit.me/",
     src: profileKitMeImg,
     githubUrl: {
       all: "",
