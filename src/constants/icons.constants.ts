@@ -14,11 +14,12 @@ import {
   IconBrandNodejs,
   IconBrandNpm,
   IconBrandPnpm,
+  IconBrandPrisma,
   IconBrandReact,
   IconBrandSupabase,
   IconBrandTypescript,
   IconLayoutKanbanFilled,
-  IconSql,
+  IconSql
 } from "@tabler/icons-react";
 import { SiNestjs } from "react-icons/si";
 
@@ -56,11 +57,16 @@ export const FRONTEND_ICONS: TechIcon[] = [
   },
   {
     id: 5,
+    icon: IconBrandNextjs,
+    name: "Nextjs",
+  },
+  {
+    id: 6,
     icon: IconBrandAngular,
     name: "Angular",
   },
   {
-    id: 6,
+    id: 7,
     icon: IconBrandAstro,
     name: "Astro",
   },
@@ -74,28 +80,28 @@ export const BACKEND_ICONS: TechIcon[] = [
   },
   {
     id: 1,
-    icon: IconBrandNextjs,
-    name: "Nextjs",
-  },
-  {
-    id: 2,
     icon: SiNestjs as React.FC,
     name: "Nestjs",
   },
   {
-    id: 3,
+    id: 2,
     icon: IconSql,
     name: "SQL",
   },
   {
-    id: 4,
+    id: 3,
     icon: IconBrandMongodb,
     name: "Mongodb",
   },
   {
-    id: 5,
+    id: 4,
     icon: IconBrandSupabase,
     name: "Supabase",
+  },
+  {
+    id: 5,
+    icon: IconBrandPrisma,
+    name: "Prisma",
   },
 ];
 

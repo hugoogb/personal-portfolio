@@ -46,8 +46,8 @@ export const PROJECTS: Project[] = [
     name: "Socials Impact",
     desc: "Social media analytics dashboard platform to track growth across YouTube, Twitch, TikTok, and Instagram. Visualize performance metrics, analyze trends, and make data-driven decisions.",
     techStack: {
-      frontend: ["React"],
-      backend: ["Nextjs"],
+      frontend: ["React", "Nextjs"],
+      backend: [],
       tools: [],
     },
     urlPreview: "https://socials-impact.vercel.app/",
@@ -63,8 +63,8 @@ export const PROJECTS: Project[] = [
     name: "ReadLedger",
     desc: "ReadLedger is a platform for managing your manga books series, track books owned and reading progress. Check how much you saved buying all the books you've read.",
     techStack: {
-      frontend: ["React"],
-      backend: ["Nextjs", "Supabase"],
+      frontend: ["React", "Nextjs"],
+      backend: ["Supabase", "Prisma"],
       tools: [],
     },
     urlPreview: "https://readledger.app/",
@@ -80,8 +80,8 @@ export const PROJECTS: Project[] = [
     name: "ProfileKit.me",
     desc: "ProfileKit.me allows a user to create and manage its customizable profile page. Providing a public accessible url to showcase information, images, links, and all sorts of information.",
     techStack: {
-      frontend: ["React"],
-      backend: ["Nextjs", "Supabase"],
+      frontend: ["React", "Nextjs"],
+      backend: ["Supabase", "Prisma"],
       tools: [],
     },
     urlPreview: "https://profilekit.me/",
