@@ -70,7 +70,7 @@ export const PROJECTS: Project[] = [
     urlPreview: "https://readledger.app/",
     src: readledgerImg,
     githubUrl: {
-      all: "",
+      all: "https://github.com/hugoogb/readledger",
       frontend: "",
       backend: "",
     },
