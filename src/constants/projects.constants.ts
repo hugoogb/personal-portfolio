@@ -14,7 +14,7 @@ export const PROJECTS: Project[] = [
     name: "autodetailing.es",
     desc: "Informative page for a car detailing services company, optimized for SEO and performance",
     techStack: {
-      frontend: [],
+      frontend: [TechId.Tailwind],
       frameworks: [TechId.Astro],
       backend: [],
       tools: [],
@@ -50,7 +50,7 @@ export const PROJECTS: Project[] = [
     name: "Socials Impact",
     desc: "Social media analytics dashboard platform to track growth across YouTube, Twitch, TikTok, and Instagram. Visualize performance metrics, analyze trends, and make data-driven decisions.",
     techStack: {
-      frontend: [],
+      frontend: [TechId.Tailwind],
       frameworks: [TechId.React, TechId.Nextjs],
       backend: [TechId.Mongodb],
       tools: [TechId.Vercel],
@@ -68,7 +68,7 @@ export const PROJECTS: Project[] = [
     name: "ReadLedger",
     desc: "ReadLedger is a platform for managing your manga books series, track books owned and reading progress. Check how much you saved buying all the books you've read.",
     techStack: {
-      frontend: [],
+      frontend: [TechId.Tailwind],
       frameworks: [TechId.React, TechId.Nextjs],
       backend: [TechId.Supabase, TechId.Prisma],
       tools: [TechId.Vercel],
@@ -86,7 +86,7 @@ export const PROJECTS: Project[] = [
     name: "ProfileKit.me",
     desc: "ProfileKit.me allows a user to create and manage its customizable profile page. Providing a public accessible url to showcase information, images, links, and all sorts of information.",
     techStack: {
-      frontend: [],
+      frontend: [TechId.Tailwind],
       frameworks: [TechId.React, TechId.Nextjs],
       backend: [TechId.Supabase, TechId.Prisma],
       tools: [TechId.Vercel],
@@ -104,10 +104,10 @@ export const PROJECTS: Project[] = [
     name: "F1 Tracker",
     desc: "Complete Formula 1 history and analytics platform. Explore 77 seasons of racing data from 1950 to present with interactive charts, circuit maps, and detailed statistics.",
     techStack: {
-      frontend: [],
-      frameworks: [TechId.React, TechId.Nextjs, TechId.Tailwind],
+      frontend: [TechId.Tailwind],
+      frameworks: [TechId.React, TechId.Nextjs],
       backend: [TechId.SQL, TechId.Python],
-      tools: [TechId.Pnpm, TechId.Docker, TechId.Vercel],
+      tools: [TechId.Docker, TechId.Vercel],
     },
     urlPreview: "https://f1-tracker-web.vercel.app",
     src: f1TrackerImg,
