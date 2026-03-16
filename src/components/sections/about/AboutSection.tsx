@@ -2,7 +2,12 @@ import { useContext } from "react";
 import { ColorContext } from "@/contexts/color.context";
 import { AboutIcons } from "@/components/sections/about/AboutIcons";
 import { SectionCard } from "@/components/sections/SectionCard";
-import { BACKEND_ICONS, FRONTEND_ICONS, TOOLS_ICONS } from "../../../constants/icons.constants";
+import {
+  BACKEND_ICONS,
+  FRAMEWORKS_ICONS,
+  FRONTEND_ICONS,
+  TOOLS_ICONS,
+} from "../../../constants/icons.constants";
 import { motion } from "motion/react";
 
 export function AboutSection() {
@@ -25,6 +30,7 @@ export function AboutSection() {
   };
 
   const iconsFrontendMapped = mapIcons(FRONTEND_ICONS);
+  const iconsFrameworksMapped = mapIcons(FRAMEWORKS_ICONS);
   const iconsBackendMapped = mapIcons(BACKEND_ICONS);
   const iconsToolsMapped = mapIcons(TOOLS_ICONS);
 
@@ -65,6 +71,7 @@ export function AboutSection() {
           transition={{ duration: 0.6, delay: 0.2 }}
         >
           <AboutIcons title="Frontend" iconsMapped={iconsFrontendMapped} color={color} />
+          <AboutIcons title="Frameworks" iconsMapped={iconsFrameworksMapped} color={color} />
           <AboutIcons title="Backend" iconsMapped={iconsBackendMapped} color={color} />
           <AboutIcons title="Tools" iconsMapped={iconsToolsMapped} color={color} />
         </motion.div>

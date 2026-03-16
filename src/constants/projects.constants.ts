@@ -1,7 +1,9 @@
+import { TechId } from "@/constants/icons.constants";
 import type { Project } from "@/types/project.types";
 
 import autodetailingImg from "@/assets/images/autodetailing-es.png";
 import avatarGeneratorImg from "@/assets/images/avatar-generator.png";
+import f1TrackerImg from "@/assets/images/f1-tracker.png";
 import profileKitMeImg from "@/assets/images/profilekit.me.png";
 import readledgerImg from "@/assets/images/readledger.png";
 import socialsImpactImg from "@/assets/images/socials-impact.png";
@@ -12,7 +14,8 @@ export const PROJECTS: Project[] = [
     name: "autodetailing.es",
     desc: "Informative page for a car detailing services company, optimized for SEO and performance",
     techStack: {
-      frontend: ["Astro"],
+      frontend: [],
+      frameworks: [TechId.Astro],
       backend: [],
       tools: [],
     },
@@ -29,9 +32,10 @@ export const PROJECTS: Project[] = [
     name: "@avatar-generator",
     desc: "Provides a customizable avatar generation library that is framework-agnostic. Easy integration with customizable options.",
     techStack: {
-      frontend: ["Astro"],
+      frontend: [],
+      frameworks: [TechId.Astro],
       backend: [],
-      tools: ["npm", "pnpm"],
+      tools: [TechId.Npm, TechId.Pnpm],
     },
     urlPreview: "https://avatar-generator-two.vercel.app/",
     src: avatarGeneratorImg,
@@ -46,9 +50,10 @@ export const PROJECTS: Project[] = [
     name: "Socials Impact",
     desc: "Social media analytics dashboard platform to track growth across YouTube, Twitch, TikTok, and Instagram. Visualize performance metrics, analyze trends, and make data-driven decisions.",
     techStack: {
-      frontend: ["React", "Nextjs"],
-      backend: [],
-      tools: [],
+      frontend: [],
+      frameworks: [TechId.React, TechId.Nextjs],
+      backend: [TechId.Mongodb],
+      tools: [TechId.Vercel],
     },
     urlPreview: "https://socials-impact.vercel.app/",
     src: socialsImpactImg,
@@ -63,9 +68,10 @@ export const PROJECTS: Project[] = [
     name: "ReadLedger",
     desc: "ReadLedger is a platform for managing your manga books series, track books owned and reading progress. Check how much you saved buying all the books you've read.",
     techStack: {
-      frontend: ["React", "Nextjs"],
-      backend: ["Supabase", "Prisma"],
-      tools: [],
+      frontend: [],
+      frameworks: [TechId.React, TechId.Nextjs],
+      backend: [TechId.Supabase, TechId.Prisma],
+      tools: [TechId.Vercel],
     },
     urlPreview: "https://readledger.app/",
     src: readledgerImg,
@@ -80,14 +86,33 @@ export const PROJECTS: Project[] = [
     name: "ProfileKit.me",
     desc: "ProfileKit.me allows a user to create and manage its customizable profile page. Providing a public accessible url to showcase information, images, links, and all sorts of information.",
     techStack: {
-      frontend: ["React", "Nextjs"],
-      backend: ["Supabase", "Prisma"],
-      tools: [],
+      frontend: [],
+      frameworks: [TechId.React, TechId.Nextjs],
+      backend: [TechId.Supabase, TechId.Prisma],
+      tools: [TechId.Vercel],
     },
     urlPreview: "https://profilekit.me/",
     src: profileKitMeImg,
     githubUrl: {
       all: "",
+      frontend: "",
+      backend: "",
+    },
+  },
+  {
+    id: 5,
+    name: "F1 Tracker",
+    desc: "Complete Formula 1 history and analytics platform. Explore 77 seasons of racing data from 1950 to present with interactive charts, circuit maps, and detailed statistics.",
+    techStack: {
+      frontend: [],
+      frameworks: [TechId.React, TechId.Nextjs, TechId.Tailwind],
+      backend: [TechId.SQL, TechId.Python],
+      tools: [TechId.Pnpm, TechId.Docker, TechId.Vercel],
+    },
+    urlPreview: "https://f1-tracker-web.vercel.app",
+    src: f1TrackerImg,
+    githubUrl: {
+      all: "https://github.com/hugoogb/f1-tracker",
       frontend: "",
       backend: "",
     },

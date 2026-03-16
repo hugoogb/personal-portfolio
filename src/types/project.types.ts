@@ -1,7 +1,10 @@
+import type { TechId } from "@/constants/icons.constants";
+
 export interface TechStack {
-  frontend: string[];
-  backend: string[];
-  tools: string[];
+  frontend: TechId[];
+  frameworks: TechId[];
+  backend: TechId[];
+  tools: TechId[];
 }
 
 export interface GitHubUrls {
