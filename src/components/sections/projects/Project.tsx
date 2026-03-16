@@ -1,5 +1,10 @@
 import { mapTechStackToIcons } from "@/utils/iconsTechStackMapper";
-import { BACKEND_ICONS, FRONTEND_ICONS, TOOLS_ICONS } from "@/constants/icons.constants";
+import {
+  BACKEND_ICONS,
+  FRAMEWORKS_ICONS,
+  FRONTEND_ICONS,
+  TOOLS_ICONS,
+} from "@/constants/icons.constants";
 import { ProjectTechStack } from "./ProjectTechStack";
 import { ExternalLinkButton } from "@/components/shared/ExternalLinkButton";
 import { IconBrandGithub, IconExternalLink } from "@tabler/icons-react";
@@ -22,6 +27,7 @@ export const Project: FC<ProjectProps> = memo(function Project({
   githubUrl,
 }) {
   const frontendIcons = mapTechStackToIcons(techStack.frontend, FRONTEND_ICONS);
+  const frameworksIcons = mapTechStackToIcons(techStack.frameworks, FRAMEWORKS_ICONS);
   const backendIcons = mapTechStackToIcons(techStack.backend, BACKEND_ICONS);
   const toolsIcons = mapTechStackToIcons(techStack.tools, TOOLS_ICONS);
 
@@ -67,6 +73,9 @@ export const Project: FC<ProjectProps> = memo(function Project({
           <div className="grid grid-cols-1 gap-4">
             {techStack.frontend?.length > 0 && (
               <ProjectTechStack title="Frontend" icons={frontendIcons} />
+            )}
+            {techStack.frameworks?.length > 0 && (
+              <ProjectTechStack title="Frameworks" icons={frameworksIcons} />
             )}
             {techStack.backend?.length > 0 && (
               <ProjectTechStack title="Backend" icons={backendIcons} />
