@@ -12,7 +12,7 @@ export const PROJECTS: Project[] = [
   {
     id: 0,
     name: "autodetailing.es",
-    desc: "Informative page for a car detailing services company, optimized for SEO and performance",
+    desc: "Informational website for a car detailing company, optimized for SEO and performance.",
     techStack: {
       frontend: [TechId.Tailwind],
       frameworks: [TechId.Astro],
@@ -30,7 +30,7 @@ export const PROJECTS: Project[] = [
   {
     id: 1,
     name: "@avatar-generator",
-    desc: "Provides a customizable avatar generation library that is framework-agnostic. Easy integration with customizable options.",
+    desc: "A framework-agnostic avatar generation library with easy integration and fully customizable options.",
     techStack: {
       frontend: [],
       frameworks: [TechId.Astro],
@@ -66,7 +66,7 @@ export const PROJECTS: Project[] = [
   {
     id: 3,
     name: "ReadLedger",
-    desc: "ReadLedger is a platform for managing your manga books series, track books owned and reading progress. Check how much you saved buying all the books you've read.",
+    desc: "A platform to manage your manga book series, track the volumes you own and your reading progress, and see how much you've saved versus buying every book you've read.",
     techStack: {
       frontend: [TechId.Tailwind],
       frameworks: [TechId.React, TechId.Nextjs],
@@ -84,7 +84,7 @@ export const PROJECTS: Project[] = [
   {
     id: 4,
     name: "ProfileKit.me",
-    desc: "ProfileKit.me allows a user to create and manage its customizable profile page. Providing a public accessible url to showcase information, images, links, and all sorts of information.",
+    desc: "Create and manage a fully customizable profile page with a public, shareable URL to showcase your bio, images, and links — all in one place.",
     techStack: {
       frontend: [TechId.Tailwind],
       frameworks: [TechId.React, TechId.Nextjs],
@@ -102,7 +102,7 @@ export const PROJECTS: Project[] = [
   {
     id: 5,
     name: "F1 Tracker",
-    desc: "Complete Formula 1 history and analytics platform. Explore 77 seasons of racing data from 1950 to present with interactive charts, circuit maps, and detailed statistics.",
+    desc: "Complete Formula 1 history and analytics platform. Explore every season of racing data from 1950 to today with interactive charts, circuit maps, and detailed statistics.",
     techStack: {
       frontend: [TechId.Tailwind],
       frameworks: [TechId.React, TechId.Nextjs],

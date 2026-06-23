@@ -7,7 +7,7 @@ import {
 } from "@/constants/icons.constants";
 import { ProjectTechStack } from "./ProjectTechStack";
 import { ExternalLinkButton } from "@/components/shared/ExternalLinkButton";
-import { IconBrandGithub, IconExternalLink } from "@tabler/icons-react";
+import { IconBrandGithub, IconExternalLink, IconWorld } from "@tabler/icons-react";
 import type { FC } from "react";
 import { memo } from "react";
 import type { Project as ProjectType } from "@/types/project.types";
@@ -85,6 +85,9 @@ export const Project: FC<ProjectProps> = memo(function Project({
         </div>
 
         <div className="pt-4 flex flex-wrap gap-3">
+          {urlPreview && (
+            <ExternalLinkButton text="Live Demo" link={urlPreview} icon={IconWorld} />
+          )}
           {githubUrl.all && (
             <ExternalLinkButton text="View Source" link={githubUrl.all} icon={IconBrandGithub} />
           )}

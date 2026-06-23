@@ -26,7 +26,7 @@ export function App() {
       <HomeSection />
       <Suspense
         fallback={
-          <div className="section-container min-h-screen flex items-center justify-center py-24 sm:py-32">
+          <div className="section-container min-h-dvh flex items-center justify-center py-24 sm:py-32">
             <LoadingSpinner />
           </div>
         }
