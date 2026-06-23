@@ -54,9 +54,9 @@ export function AboutSection() {
             React, Next.js, and Angular.
           </p>
           <p>
-            I consider myself highly resolutive and enjoy tackling complex problems with creative
-            solutions. I work across the entire stack, from database design to user interfaces,
-            always finding efficient ways to deliver results.
+            I'm highly resourceful and enjoy tackling complex problems with creative solutions. I
+            work across the entire stack, from database design to user interfaces, always finding
+            efficient ways to ship and deliver results.
           </p>
           <p>
             If you're looking for someone who can build complete applications from start to finish,

@@ -45,8 +45,8 @@ export const ContactSection: FC = () => {
           viewport={{ once: true }}
         >
           <p className="text-lg sm:text-xl lg:text-2xl text-muted leading-relaxed font-medium">
-            I'm always looking for new opportunities and my inbox is always open. Whether you have a
-            question or just want to say hi, I'll try my best to get back to you!
+            I'm open to new opportunities and my inbox is always open. Whether you have a question, a
+            project in mind, or just want to say hi, I'll do my best to get back to you!
           </p>
         </motion.div>
 
