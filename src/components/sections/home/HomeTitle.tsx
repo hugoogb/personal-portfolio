@@ -30,13 +30,13 @@ export const HomeTitle = () => {
             style={{ backgroundColor: color }}
           ></span>
           <h2 className="text-lg sm:text-xl md:text-2xl font-medium uppercase tracking-[0.2em] sm:tracking-[0.3em]">
-            Full Stack Developer
+            Full-Stack Engineer
           </h2>
         </div>
       </div>
       <p className="max-w-xl mx-auto md:mx-0 text-base sm:text-lg lg:text-xl text-muted leading-relaxed font-medium">
-        Building robust and beautiful digital experiences from front to back. Specialized in modern
-        web technologies.
+        I build complete web and mobile products end to end — database, API, and interface — all in
+        TypeScript and Node.js. I like owning a feature from an empty repo to production.
       </p>
     </div>
   );

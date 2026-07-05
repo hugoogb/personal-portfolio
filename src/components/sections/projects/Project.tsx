@@ -31,35 +31,43 @@ export const Project: FC<ProjectProps> = memo(function Project({
   const backendIcons = mapTechStackToIcons(techStack.backend, BACKEND_ICONS);
   const toolsIcons = mapTechStackToIcons(techStack.tools, TOOLS_ICONS);
 
+  const media = src && (
+    <>
+      <motion.img
+        src={src}
+        alt={ALT_TEXT.PROJECT(name)}
+        className="w-full h-full object-cover"
+        loading="lazy"
+        whileHover={{ scale: 1.1 }}
+        transition={{ duration: 0.6 }}
+      />
+      {urlPreview && (
+        <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center pointer-events-none">
+          <div className="p-3 bg-background/90 backdrop-blur-md rounded-full shadow-lg transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
+            <IconExternalLink size={24} className="text-primary" />
+          </div>
+        </div>
+      )}
+    </>
+  );
+
   return (
     <motion.div
       className="flex flex-col bg-card border border-border rounded-3xl overflow-hidden hover:border-primary/50 transition-colors duration-500"
       transition={{ type: "spring", stiffness: 300, damping: 20 }}
     >
-      <a
-        href={urlPreview}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="group relative aspect-video overflow-hidden"
-      >
-        {src && (
-          <>
-            <motion.img
-              src={src}
-              alt={ALT_TEXT.PROJECT(name)}
-              className="w-full h-full object-cover"
-              loading="lazy"
-              whileHover={{ scale: 1.1 }}
-              transition={{ duration: 0.6 }}
-            />
-            <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center pointer-events-none">
-              <div className="p-3 bg-background/90 backdrop-blur-md rounded-full shadow-lg transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
-                <IconExternalLink size={24} className="text-primary" />
-              </div>
-            </div>
-          </>
-        )}
-      </a>
+      {urlPreview ? (
+        <a
+          href={urlPreview}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group relative aspect-video overflow-hidden block"
+        >
+          {media}
+        </a>
+      ) : (
+        <div className="relative aspect-video overflow-hidden">{media}</div>
+      )}
 
       <div className="flex-1 p-6 sm:p-8 flex flex-col space-y-6 text-left">
         <div className="space-y-3">
