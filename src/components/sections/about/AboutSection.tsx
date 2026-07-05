@@ -45,22 +45,19 @@ export function AboutSection() {
           transition={{ duration: 0.6 }}
         >
           <p>
-            Hi! My name is{" "}
+            Hi, I'm{" "}
             <span style={{ color: color }} className="font-bold text-text">
               Hugo
             </span>
-            . I'm a full stack developer with professional experience building end-to-end web
-            applications. I specialize in Node.js backends and modern frontend frameworks like
-            React, Next.js, and Angular.
+            , a full-stack engineer based in Barcelona. I build web and mobile applications the whole
+            way through — the data model, the API, and the interface people actually use — mostly in
+            TypeScript and Node.js, with React, Next.js, NestJS, and React Native.
           </p>
           <p>
-            I'm highly resourceful and enjoy tackling complex problems with creative solutions. I
-            work across the entire stack, from database design to user interfaces, always finding
-            efficient ways to ship and deliver results.
-          </p>
-          <p>
-            If you're looking for someone who can build complete applications from start to finish,
-            I'd love to work with you and help take your project to the next level.
+            I've spent the last few years shipping features across SaaS platforms, and I like owning
+            a problem end to end rather than a single slice of it. I'm currently open to remote roles
+            and freelance work across EU and US time zones — if you need someone who can take an idea
+            to production, let's talk.
           </p>
         </motion.div>
         <motion.div

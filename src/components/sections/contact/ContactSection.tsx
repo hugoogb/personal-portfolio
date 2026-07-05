@@ -45,8 +45,9 @@ export const ContactSection: FC = () => {
           viewport={{ once: true }}
         >
           <p className="text-lg sm:text-xl lg:text-2xl text-muted leading-relaxed font-medium">
-            I'm open to new opportunities and my inbox is always open. Whether you have a question, a
-            project in mind, or just want to say hi, I'll do my best to get back to you!
+            I'm open to remote roles and freelance projects, and I work comfortably across EU and US
+            time zones. Whether it's a role, a project, or just a question — my inbox is open, and
+            I'll get back to you.
           </p>
         </motion.div>
 
@@ -116,7 +117,7 @@ export const ContactSection: FC = () => {
           viewport={{ once: true }}
           transition={{ delay: 0.4 }}
         >
-          © {new Date().getFullYear()} Hugo García Benjumea • Designed for impact
+          © {new Date().getFullYear()} Hugo García Benjumea • Built from Barcelona, working remotely
         </motion.div>
       </div>
     </SectionCard>
