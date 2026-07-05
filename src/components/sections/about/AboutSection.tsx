@@ -1,14 +1,14 @@
-import { useContext } from "react";
-import { ColorContext } from "@/contexts/color.context";
 import { AboutIcons } from "@/components/sections/about/AboutIcons";
 import { SectionCard } from "@/components/sections/SectionCard";
+import { ColorContext } from "@/contexts/color.context";
+import { motion } from "motion/react";
+import { useContext } from "react";
 import {
   BACKEND_ICONS,
   FRAMEWORKS_ICONS,
   FRONTEND_ICONS,
   TOOLS_ICONS,
 } from "../../../constants/icons.constants";
-import { motion } from "motion/react";
 
 export function AboutSection() {
   const { color } = useContext(ColorContext);
@@ -49,15 +49,15 @@ export function AboutSection() {
             <span style={{ color: color }} className="font-bold text-text">
               Hugo
             </span>
-            , a full-stack engineer based in Barcelona. I build web and mobile applications the whole
-            way through — the data model, the API, and the interface people actually use — mostly in
-            TypeScript and Node.js, with React, Next.js, NestJS, and React Native.
+            , a full-stack engineer based in Barcelona. I build web and mobile applications the
+            whole way through - the data model, the API, and the interface people actually use -
+            mostly in TypeScript and Node.js, with React, Next.js, NestJS, and React Native.
           </p>
           <p>
             I've spent the last few years shipping features across SaaS platforms, and I like owning
-            a problem end to end rather than a single slice of it. I'm currently open to remote roles
-            and freelance work across EU and US time zones — if you need someone who can take an idea
-            to production, let's talk.
+            a problem end to end rather than a single slice of it. I'm currently open to remote
+            roles and freelance work across EU and US time zones - if you need someone who can take
+            an idea to production, let's talk.
           </p>
         </motion.div>
         <motion.div

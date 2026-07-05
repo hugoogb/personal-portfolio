@@ -1,5 +1,5 @@
-import { useContext } from "react";
 import { ColorContext } from "@/contexts/color.context";
+import { useContext } from "react";
 
 export const HomeTitle = () => {
   const { color } = useContext(ColorContext);
@@ -35,7 +35,7 @@ export const HomeTitle = () => {
         </div>
       </div>
       <p className="max-w-xl mx-auto md:mx-0 text-base sm:text-lg lg:text-xl text-muted leading-relaxed font-medium">
-        I build complete web and mobile products end to end — database, API, and interface — all in
+        I build complete web and mobile products end to end - database, API, and interface - all in
         TypeScript and Node.js. I like owning a feature from an empty repo to production.
       </p>
     </div>

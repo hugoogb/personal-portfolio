@@ -11,7 +11,7 @@ export const PROJECTS: Project[] = [
   {
     id: 0,
     name: "F1 Tracker",
-    desc: "The complete history of Formula 1 — every season since 1950 — as an interactive analytics dashboard. Next.js and Tailwind on top of a FastAPI service and PostgreSQL, fed by a Python pipeline that ingests decades of race and telemetry data.",
+    desc: "The complete history of Formula 1 - every season since 1950 - as an interactive analytics dashboard. Next.js and Tailwind on top of a FastAPI service and PostgreSQL, fed by a Python pipeline that ingests decades of race and telemetry data.",
     techStack: {
       frontend: [TechId.Typescript, TechId.Tailwind],
       frameworks: [TechId.React, TechId.Nextjs],
@@ -46,8 +46,8 @@ export const PROJECTS: Project[] = [
   },
   {
     id: 2,
-    name: "Wattwin — 3D PV Designer",
-    desc: "A 3D photovoltaic designer I built as my software-engineering degree project at Wattwin. It computes how surrounding obstacles shade each solar panel across a full year with a ray-tracing engine, recalculates in real time over WebSockets as panels are moved, and renders everything in a Babylon.js 3D viewer — plus a Google Solar API integration for terrain and building exposure.",
+    name: "Wattwin - 3D PV Designer",
+    desc: "A 3D photovoltaic designer I built as my software-engineering degree project at Wattwin. It computes how surrounding obstacles shade each solar panel across a full year with a ray-tracing engine, recalculates in real time over WebSockets as panels are moved, and renders everything in a Babylon.js 3D viewer - plus a Google Solar API integration for terrain and building exposure.",
     techStack: {
       frontend: [TechId.Typescript],
       frameworks: [TechId.Angular],

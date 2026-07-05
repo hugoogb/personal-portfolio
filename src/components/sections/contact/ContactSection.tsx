@@ -1,14 +1,14 @@
-import { FC, useState } from "react";
 import { SectionCard } from "@/components/sections/SectionCard";
-import { motion } from "motion/react";
+import { ExternalLinkButton } from "@/components/shared/ExternalLinkButton";
 import {
   IconBrandGithub,
   IconBrandLinkedin,
-  IconMail,
-  IconCopy,
   IconCheck,
+  IconCopy,
+  IconMail,
 } from "@tabler/icons-react";
-import { ExternalLinkButton } from "@/components/shared/ExternalLinkButton";
+import { motion } from "motion/react";
+import { FC, useState } from "react";
 
 export const ContactSection: FC = () => {
   const [copied, setCopied] = useState(false);
@@ -46,7 +46,7 @@ export const ContactSection: FC = () => {
         >
           <p className="text-lg sm:text-xl lg:text-2xl text-muted leading-relaxed font-medium">
             I'm open to remote roles and freelance projects, and I work comfortably across EU and US
-            time zones. Whether it's a role, a project, or just a question — my inbox is open, and
+            time zones. Whether it's a role, a project, or just a question - my inbox is open, and
             I'll get back to you.
           </p>
         </motion.div>
