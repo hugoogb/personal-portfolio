@@ -7,7 +7,7 @@ import {
 } from "@/constants/icons.constants";
 import { ProjectTechStack } from "./ProjectTechStack";
 import { ExternalLinkButton } from "@/components/shared/ExternalLinkButton";
-import { IconBrandGithub, IconExternalLink, IconWorld } from "@tabler/icons-react";
+import { IconBrandGithub, IconExternalLink, IconLock, IconWorld } from "@tabler/icons-react";
 import type { FC } from "react";
 import { memo } from "react";
 import type { Project as ProjectType } from "@/types/project.types";
@@ -25,6 +25,8 @@ export const Project: FC<ProjectProps> = memo(function Project({
   src,
   techStack,
   githubUrl,
+  stats,
+  closedSource,
 }) {
   const frontendIcons = mapTechStackToIcons(techStack.frontend, FRONTEND_ICONS);
   const frameworksIcons = mapTechStackToIcons(techStack.frameworks, FRAMEWORKS_ICONS);
@@ -38,6 +40,9 @@ export const Project: FC<ProjectProps> = memo(function Project({
         alt={ALT_TEXT.PROJECT(name)}
         className="w-full h-full object-cover"
         loading="lazy"
+        decoding="async"
+        width={1600}
+        height={900}
         whileHover={{ scale: 1.1 }}
         transition={{ duration: 0.6 }}
       />
@@ -75,6 +80,18 @@ export const Project: FC<ProjectProps> = memo(function Project({
             {name}
           </h3>
           <p className="text-muted leading-relaxed text-sm sm:text-base">{desc}</p>
+          {stats && stats.length > 0 && (
+            <ul className="flex flex-wrap gap-2 pt-1">
+              {stats.map((stat) => (
+                <li
+                  key={stat}
+                  className="inline-flex items-center rounded-full bg-primary/10 text-primary px-3 py-1 text-xs font-semibold tracking-tight"
+                >
+                  {stat}
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
 
         <div className="flex-1 space-y-6">
@@ -93,9 +110,7 @@ export const Project: FC<ProjectProps> = memo(function Project({
         </div>
 
         <div className="pt-4 flex flex-wrap gap-3">
-          {urlPreview && (
-            <ExternalLinkButton text="Live Demo" link={urlPreview} icon={IconWorld} />
-          )}
+          {urlPreview && <ExternalLinkButton text="Live Demo" link={urlPreview} icon={IconWorld} />}
           {githubUrl.all && (
             <ExternalLinkButton text="View Source" link={githubUrl.all} icon={IconBrandGithub} />
           )}
@@ -112,6 +127,12 @@ export const Project: FC<ProjectProps> = memo(function Project({
               link={githubUrl.backend}
               icon={IconBrandGithub}
             />
+          )}
+          {!githubUrl.all && !githubUrl.frontend && !githubUrl.backend && closedSource && (
+            <span className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-border/50 bg-muted/5 text-sm font-medium text-muted">
+              <IconLock stroke={1.5} size={18} className="text-muted" />
+              {closedSource}
+            </span>
           )}
         </div>
       </div>

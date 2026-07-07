@@ -20,6 +20,7 @@ export const PROJECTS: Project[] = [
     },
     urlPreview: "https://f1-tracker-web.vercel.app",
     src: f1TrackerImg,
+    stats: ["38 API endpoints", "44 tests", "15 routes", "CI on every push"],
     githubUrl: {
       all: "https://github.com/hugoogb/f1-tracker",
       frontend: "",
@@ -38,6 +39,7 @@ export const PROJECTS: Project[] = [
     },
     urlPreview: "https://readledger.app/",
     src: readledgerImg,
+    stats: ["Next.js 16", "Supabase + Prisma", "MangaDex API"],
     githubUrl: {
       all: "https://github.com/hugoogb/readledger",
       frontend: "",
@@ -56,6 +58,7 @@ export const PROJECTS: Project[] = [
     },
     urlPreview: "",
     src: wattwin3dImg,
+    closedSource: "Client work · closed source",
     githubUrl: {
       all: "",
       frontend: "",
@@ -74,6 +77,8 @@ export const PROJECTS: Project[] = [
     },
     urlPreview: "https://profilekit.me/",
     src: profileKitMeImg,
+    stats: ["14+ block types", "live-preview editor"],
+    closedSource: "Closed source",
     githubUrl: {
       all: "",
       frontend: "",
