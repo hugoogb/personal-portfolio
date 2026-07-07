@@ -21,4 +21,8 @@ export interface Project {
   urlPreview: string;
   src: string;
   githubUrl: GitHubUrls;
+  /** Short evidence chips surfaced on the card (endpoints, tests, stack highlights). */
+  stats?: string[];
+  /** Label shown in place of a source button when the code is intentionally private. */
+  closedSource?: string;
 }
