@@ -1,5 +1,4 @@
 import { SectionCard } from "@/components/sections/SectionCard";
-import { ExternalLinkButton } from "@/components/shared/ExternalLinkButton";
 import {
   IconBrandGithub,
   IconBrandLinkedin,
@@ -8,118 +7,126 @@ import {
   IconMail,
 } from "@tabler/icons-react";
 import { motion } from "motion/react";
-import { FC, useState } from "react";
+import type { FC } from "react";
+import { useState } from "react";
+
+const EMAIL = "hugogaben8.02@gmail.com";
+
+const LINKS = [
+  {
+    id: "github",
+    icon: IconBrandGithub,
+    handle: "github.com/hugoogb",
+    meta: "Code, including this site",
+    href: "https://github.com/hugoogb",
+  },
+  {
+    id: "linkedin",
+    icon: IconBrandLinkedin,
+    handle: "linkedin.com/in/hugoogb",
+    meta: "The longer version",
+    href: "https://www.linkedin.com/in/hugoogb/",
+  },
+] as const;
 
 export const ContactSection: FC = () => {
   const [copied, setCopied] = useState(false);
-  const email = "hugogaben8.02@gmail.com";
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(email);
+    navigator.clipboard.writeText(EMAIL);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const socials = [
-    {
-      id: 0,
-      name: "GitHub",
-      icon: IconBrandGithub,
-      link: "https://github.com/hugoogb",
-    },
-    {
-      id: 1,
-      name: "LinkedIn",
-      icon: IconBrandLinkedin,
-      link: "https://www.linkedin.com/in/hugoogb/",
-    },
-  ];
-
   return (
-    <SectionCard id="Contact" title="Get in Touch">
-      <div className="flex flex-col items-center justify-center space-y-10 sm:space-y-16 text-center max-w-4xl mx-auto">
+    <SectionCard id="Contact" title="Get in touch">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-14 lg:gap-16 items-center">
         <motion.div
-          className="space-y-4 px-4"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          className="space-y-7"
+          initial={{ opacity: 0, x: -20 }}
+          whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
         >
-          <p className="text-lg sm:text-xl lg:text-2xl text-muted leading-relaxed font-medium">
-            I'm open to remote roles and freelance projects, and I work comfortably across EU and US
-            time zones. Whether it's a role, a project, or just a question - my inbox is open, and
-            I'll get back to you.
+          <h3 className="font-display text-3xl sm:text-4xl lg:text-5xl font-black tracking-tight leading-[1.1] text-text">
+            Got something
+            <br />
+            that needs shipping?
+          </h3>
+          <p className="text-base sm:text-lg text-muted leading-relaxed max-w-prose">
+            I'm open to remote roles and freelance projects, and I work across EU and US hours.
+            Email is the fastest way to reach me - I read everything and I answer.
           </p>
+          <a
+            href={`mailto:${EMAIL}`}
+            className="inline-flex items-center gap-2.5 px-7 py-3.5 rounded-full bg-primary text-primary-fg text-sm sm:text-base font-bold hover:opacity-90 transition-opacity"
+          >
+            <IconMail size={20} stroke={1.8} />
+            Email me
+          </a>
         </motion.div>
 
         <motion.div
-          className="w-full max-w-2xl px-4 flex flex-col items-center space-y-6"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          className="w-full bg-card border border-border rounded-3xl overflow-hidden shadow-sm"
+          initial={{ opacity: 0, x: 20 }}
+          whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
-          transition={{ delay: 0.1 }}
+          transition={{ duration: 0.6, delay: 0.15 }}
         >
-          <div className="relative group w-full sm:w-auto">
-            <a
-              href={`mailto:${email}`}
-              className="flex items-center gap-4 sm:gap-6 px-6 sm:px-10 py-5 sm:py-8 bg-card border border-border rounded-4xl sm:rounded-[2.5rem] hover:border-primary/50 transition-all duration-500 shadow-sm hover:shadow-2xl group overflow-hidden"
-            >
-              <div className="p-3.5 sm:p-4 bg-primary/10 rounded-2xl text-primary group-hover:scale-110 transition-transform duration-500 shrink-0">
-                <IconMail size={28} className="sm:w-10 sm:h-10" stroke={1.5} />
-              </div>
-              <div className="text-left min-w-0">
-                <p className="text-[10px] sm:text-xs font-bold uppercase tracking-widest text-muted/60 mb-0.5">
-                  Email me at
-                </p>
-                <p className="text-base sm:text-2xl lg:text-3xl font-black text-text truncate">
-                  {email}
-                </p>
-              </div>
-            </a>
+          <h3 className="font-display text-[15px] font-extrabold tracking-tight text-text px-6 pt-5 pb-4">
+            Where to find me
+          </h3>
 
+          <div className="flex items-center gap-3.5 px-6 py-4 border-t border-border/60">
+            <IconMail size={19} stroke={1.7} className="text-text shrink-0" aria-hidden="true" />
+            <span className="flex flex-col gap-0.5 min-w-0 flex-grow">
+              <span className="font-mono text-xs sm:text-[13px] text-text truncate">{EMAIL}</span>
+              <span className="text-[11px] sm:text-xs font-medium text-muted/80">Email</span>
+            </span>
             <button
+              type="button"
               onClick={copyToClipboard}
-              className="absolute -right-2 -top-2 sm:-right-4 sm:-top-4 p-2.5 sm:p-3.5 bg-background border border-border rounded-2xl shadow-xl hover:border-primary transition-all duration-300 z-10 active:scale-90"
-              title="Copy email"
+              className="shrink-0 p-2 rounded-xl border border-border hover:border-primary/50 transition-colors cursor-pointer"
+              aria-label={copied ? "Email address copied" : "Copy email address"}
             >
               {copied ? (
-                <IconCheck size={18} className="sm:w-6 sm:h-6 text-green-500" />
+                <IconCheck size={16} className="text-green-500" />
               ) : (
-                <IconCopy
-                  size={18}
-                  className="sm:w-6 sm:h-6 text-muted group-hover:text-primary transition-colors"
-                />
+                <IconCopy size={16} className="text-muted" />
               )}
             </button>
           </div>
-        </motion.div>
 
-        <motion.div
-          className="flex flex-wrap justify-center gap-3 sm:gap-5"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.2 }}
-        >
-          {socials.map((social) => (
-            <ExternalLinkButton
-              key={social.id}
-              text={social.name}
-              link={social.link}
-              icon={social.icon}
-            />
+          {LINKS.map((link) => (
+            <a
+              key={link.id}
+              href={link.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-3.5 px-6 py-4 border-t border-border/60 hover:bg-muted/5 transition-colors"
+            >
+              <link.icon size={19} stroke={1.7} className="text-text shrink-0" aria-hidden="true" />
+              <span className="flex flex-col gap-0.5 min-w-0 flex-grow">
+                <span className="font-mono text-xs sm:text-[13px] text-text truncate">
+                  {link.handle}
+                </span>
+                <span className="text-[11px] sm:text-xs font-medium text-muted/80">
+                  {link.meta}
+                </span>
+              </span>
+            </a>
           ))}
         </motion.div>
-
-        <motion.div
-          className="pt-10 sm:pt-16 text-muted/30 text-[10px] sm:text-xs font-bold uppercase tracking-[0.3em]"
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true }}
-          transition={{ delay: 0.4 }}
-        >
-          © {new Date().getFullYear()} Hugo García Benjumea • Built from Barcelona, working remotely
-        </motion.div>
       </div>
+
+      <footer className="flex flex-wrap items-center justify-between gap-3 pt-12 sm:pt-16 mt-12 border-t border-border/60">
+        <span className="text-xs font-semibold text-muted/50">
+          © {new Date().getFullYear()} Hugo García Benjumea
+        </span>
+        <span className="font-mono text-[11px] text-muted/40">
+          built from barcelona, working remotely
+        </span>
+      </footer>
     </SectionCard>
   );
 };

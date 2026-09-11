@@ -1,11 +1,15 @@
-@import url("https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800;900&family=Raleway:wght@400;500;600;700&display=swap");
 @import "tailwindcss";
 
 @theme {
   --font-primary: "Raleway", system-ui, sans-serif;
   --font-display: "Hanken Grotesk", system-ui, sans-serif;
+  /* Reserved for genuine machine strings - hostnames, package names, endpoints.
+     Never for small labels, where a mono face is decoration rather than meaning. */
+  --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --color-primary: var(--primary-color);
+  --color-primary-fg: var(--primary-fg);
+  --color-primary-display: var(--primary-display);
   --color-background: var(--background-color);
   --color-card: var(--card-background-color);
   --color-text: var(--text-color);
@@ -41,6 +45,16 @@
 
 :root {
   --primary-color: #f97316;
+  /* Picking an accent is a feature of this page, so --primary-color is used
+     verbatim for every fill, tint, border and decoration: what you choose is
+     what you see. Only two derived roles exist, both about legibility:
+       --primary-fg      label colour ON a solid accent fill (black or white)
+       --primary-display the accent used AS large text, deepened only if needed
+     Small accent-coloured text on the page background is deliberately avoided
+     instead of being colour-corrected, because no warm hue can be both vivid
+     and 4.5:1 on a near-white page. Both fall back safely. */
+  --primary-fg: #ffffff;
+  --primary-display: var(--primary-color);
   --background-color: #fafafa;
   --card-background-color: #ffffff;
   --text-color: #171717;
@@ -58,6 +72,22 @@
   --text-color: #fafafa;
   --text-muted: #a3a3a3;
   --border-color: #1f1f1f;
+}
+
+@supports (color: oklch(from red l c h)) {
+  :root {
+    /* A luminance switch: (0.6 - l) * 1000 saturates past clamp()'s bounds, so
+       this resolves to lightness 0 (black) on a light accent and 1 (white) on a
+       dark one. Worst case across the presets and the custom picker is 4.96:1. */
+    --primary-fg: oklch(from var(--primary-color) clamp(0, (0.6 - l) * 1000, 1) 0 h);
+    /* Large text needs only 3:1, so the hue is left alone unless it is too light
+       to read, and never pushed past 0.62 - orange stays orange. */
+    --primary-display: oklch(from var(--primary-color) min(l, 0.62) c h);
+  }
+
+  .dark {
+    --primary-display: oklch(from var(--primary-color) max(l, 0.62) c h);
+  }
 }
 
 @layer base {
@@ -112,6 +142,27 @@
     height: 18px;
     border: 3px solid white;
     box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  }
+}
+
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--primary-display);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  /* The page leans on motion: spring-scrolling between sections, per-section
+     reveals, image zooms, a pulsing availability dot. Honour the OS setting. */
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
   }
 }
 

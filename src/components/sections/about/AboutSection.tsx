@@ -1,76 +1,62 @@
 import { AboutIcons } from "@/components/sections/about/AboutIcons";
 import { SectionCard } from "@/components/sections/SectionCard";
-import { ColorContext } from "@/contexts/color.context";
+import { TECH_GROUPS } from "@/constants/icons.constants";
 import { motion } from "motion/react";
-import { useContext } from "react";
-import {
-  BACKEND_ICONS,
-  FRAMEWORKS_ICONS,
-  FRONTEND_ICONS,
-  TOOLS_ICONS,
-} from "../../../constants/icons.constants";
 
 export function AboutSection() {
-  const { color } = useContext(ColorContext);
-
-  const mapIcons = (icons: typeof FRONTEND_ICONS) => {
-    return icons.map((icon) => (
-      <motion.div
-        key={icon.id}
-        title={icon.name}
-        className="p-2.5 sm:p-3 rounded-xl bg-muted/5 border border-border/50 hover:border-primary/50 hover:bg-primary/5 transition-all duration-200 group"
-      >
-        <icon.icon
-          stroke={1.5}
-          size={22}
-          className="text-text group-hover:text-primary transition-colors duration-200 sm:w-6 sm:h-6"
-        />
-      </motion.div>
-    ));
-  };
-
-  const iconsFrontendMapped = mapIcons(FRONTEND_ICONS);
-  const iconsFrameworksMapped = mapIcons(FRAMEWORKS_ICONS);
-  const iconsBackendMapped = mapIcons(BACKEND_ICONS);
-  const iconsToolsMapped = mapIcons(TOOLS_ICONS);
-
   return (
     <SectionCard title="About" id="About">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-16 lg:gap-20 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 sm:gap-14 lg:gap-16 items-start">
         <motion.div
-          className="space-y-6 sm:space-y-8 text-base sm:text-lg lg:text-xl text-muted leading-relaxed"
+          className="space-y-6 sm:space-y-7"
           initial={{ opacity: 0, x: -20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <p>
-            Hi, I'm{" "}
-            <span style={{ color: color }} className="font-bold text-text">
-              Hugo
-            </span>
-            , a full-stack engineer based in Barcelona. I build web and mobile applications the
-            whole way through - the data model, the API, and the interface people actually use -
-            mostly in TypeScript and Node.js, with React, Next.js, NestJS, and React Native.
+          <p className="text-base sm:text-lg text-muted leading-relaxed">
+            Hi, I'm <span className="font-display font-extrabold text-primary-display">Hugo</span>,
+            a full-stack engineer based in Barcelona. I build web applications the whole way through
+            - the data model, the API, and the interface people actually use - mostly in TypeScript
+            and Node.js, with React, Next.js and NestJS.
           </p>
-          <p>
-            I've spent the last few years shipping features across SaaS platforms, and I like owning
-            a problem end to end rather than a single slice of it. I'm currently open to remote
-            roles and freelance work across EU and US time zones - if you need someone who can take
-            an idea to production, let's talk.
+          <p className="text-base sm:text-lg text-muted leading-relaxed">
+            The last couple of years have been SaaS work - features across existing platforms, and a
+            greenfield internal control panel I'm on now. On my own time I run side projects on a
+            VPS I manage myself: Docker, Postgres, a reverse proxy, deploys from CI. Writing the
+            code and keeping it running are different skills and I wanted both.
           </p>
+
+          <div className="flex flex-wrap gap-6 sm:gap-8 pt-1">
+            <div className="flex flex-col">
+              <span className="font-display text-xl sm:text-2xl font-black tracking-tight text-text">
+                Barcelona
+              </span>
+              <span className="text-xs font-semibold text-muted/70">based, working remotely</span>
+            </div>
+            <div className="w-px bg-border" aria-hidden="true" />
+            <div className="flex flex-col">
+              <span className="font-display text-xl sm:text-2xl font-black tracking-tight text-text">
+                EU &amp; US hours
+              </span>
+              <span className="text-xs font-semibold text-muted/70">overlap I work across</span>
+            </div>
+          </div>
         </motion.div>
+
         <motion.div
-          className="space-y-10 sm:space-y-12"
+          className="w-full bg-card border border-border rounded-3xl p-6 sm:p-7 space-y-6 shadow-sm"
           initial={{ opacity: 0, x: 20 }}
           whileInView={{ opacity: 1, x: 0 }}
           viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
+          transition={{ duration: 0.6, delay: 0.15 }}
         >
-          <AboutIcons title="Frontend" iconsMapped={iconsFrontendMapped} color={color} />
-          <AboutIcons title="Frameworks" iconsMapped={iconsFrameworksMapped} color={color} />
-          <AboutIcons title="Backend" iconsMapped={iconsBackendMapped} color={color} />
-          <AboutIcons title="Tools" iconsMapped={iconsToolsMapped} color={color} />
+          <h3 className="font-display text-[15px] font-extrabold tracking-tight text-text">
+            Stack
+          </h3>
+          {TECH_GROUPS.map((group) => (
+            <AboutIcons key={group.label} title={group.label} icons={group.icons} />
+          ))}
         </motion.div>
       </div>
     </SectionCard>

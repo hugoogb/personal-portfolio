@@ -1,134 +1,146 @@
 import { mapTechStackToIcons } from "@/utils/iconsTechStackMapper";
 import {
   BACKEND_ICONS,
-  FRAMEWORKS_ICONS,
   FRONTEND_ICONS,
-  TOOLS_ICONS,
+  INFRA_ICONS,
+  LANGUAGE_ICONS,
 } from "@/constants/icons.constants";
 import { ProjectTechStack } from "./ProjectTechStack";
 import { ExternalLinkButton } from "@/components/shared/ExternalLinkButton";
-import { IconBrandGithub, IconExternalLink, IconLock, IconWorld } from "@tabler/icons-react";
+import { IconBrandGithub, IconBrandNpm, IconLock, IconWorld } from "@tabler/icons-react";
 import type { FC } from "react";
 import { memo } from "react";
 import type { Project as ProjectType } from "@/types/project.types";
 import { ALT_TEXT } from "@/constants/strings.constants";
 import { motion } from "motion/react";
 
-interface ProjectProps extends ProjectType {
-  workInProgress?: boolean;
-}
-
-export const Project: FC<ProjectProps> = memo(function Project({
+export const Project: FC<ProjectType> = memo(function Project({
   name,
   desc,
   urlPreview,
+  previewLabel,
   src,
+  srcSetWebp,
   techStack,
-  githubUrl,
+  runsOn,
+  repoUrl,
+  npmUrl,
   stats,
   closedSource,
 }) {
-  const frontendIcons = mapTechStackToIcons(techStack.frontend, FRONTEND_ICONS);
-  const frameworksIcons = mapTechStackToIcons(techStack.frameworks, FRAMEWORKS_ICONS);
-  const backendIcons = mapTechStackToIcons(techStack.backend, BACKEND_ICONS);
-  const toolsIcons = mapTechStackToIcons(techStack.tools, TOOLS_ICONS);
+  // Flattened in reading order rather than split into labelled groups.
+  const techIcons = [
+    ...mapTechStackToIcons(techStack.languages, LANGUAGE_ICONS),
+    ...mapTechStackToIcons(techStack.frontend, FRONTEND_ICONS),
+    ...mapTechStackToIcons(techStack.backend, BACKEND_ICONS),
+    ...mapTechStackToIcons(techStack.infra, INFRA_ICONS),
+  ];
 
-  const media = src && (
-    <>
-      <motion.img
+  const shot = src && (
+    <picture>
+      {srcSetWebp && (
+        <source type="image/webp" srcSet={srcSetWebp} sizes="(min-width: 768px) 340px, 100vw" />
+      )}
+      <img
         src={src}
         alt={ALT_TEXT.PROJECT(name)}
-        className="w-full h-full object-cover"
+        className="w-full h-full object-cover object-left-top"
         loading="lazy"
         decoding="async"
         width={1600}
         height={900}
-        whileHover={{ scale: 1.1 }}
-        transition={{ duration: 0.6 }}
       />
-      {urlPreview && (
-        <div className="absolute inset-0 bg-primary/20 opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-center justify-center pointer-events-none">
-          <div className="p-3 bg-background/90 backdrop-blur-md rounded-full shadow-lg transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
-            <IconExternalLink size={24} className="text-primary" />
-          </div>
-        </div>
-      )}
-    </>
+    </picture>
   );
 
   return (
-    <motion.div
-      className="flex flex-col bg-card border border-border rounded-3xl overflow-hidden hover:border-primary/50 transition-colors duration-500"
-      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+    <motion.article
+      className="grid grid-cols-1 md:grid-cols-[minmax(0,340px)_1fr] gap-6 md:gap-10 items-center py-7 sm:py-8 border-t border-border"
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.5, ease: "easeOut" }}
     >
       {urlPreview ? (
         <a
           href={urlPreview}
           target="_blank"
           rel="noopener noreferrer"
-          className="group relative aspect-video overflow-hidden block"
+          aria-hidden="true"
+          tabIndex={-1}
+          className="block aspect-video md:aspect-[340/186] rounded-2xl overflow-hidden border border-border bg-card hover:border-primary/50 transition-colors"
         >
-          {media}
+          {shot}
         </a>
       ) : (
-        <div className="relative aspect-video overflow-hidden">{media}</div>
+        <div className="aspect-video md:aspect-[340/186] rounded-2xl overflow-hidden border border-border bg-card">
+          {shot}
+        </div>
       )}
 
-      <div className="flex-1 p-6 sm:p-8 flex flex-col space-y-6 text-left">
-        <div className="space-y-3">
-          <h3 className="text-2xl font-bold tracking-tight text-text flex items-center justify-between">
+      <div className="flex flex-col gap-2.5 text-left">
+        <div className="flex items-center gap-3 flex-wrap">
+          <h3 className="font-display text-xl sm:text-2xl font-extrabold tracking-tight text-text">
             {name}
           </h3>
-          <p className="text-muted leading-relaxed text-sm sm:text-base">{desc}</p>
-          {stats && stats.length > 0 && (
-            <ul className="flex flex-wrap gap-2 pt-1">
-              {stats.map((stat) => (
-                <li
-                  key={stat}
-                  className="inline-flex items-center rounded-full bg-primary/10 text-primary px-3 py-1 text-xs font-semibold tracking-tight"
-                >
-                  {stat}
-                </li>
-              ))}
-            </ul>
+          {urlPreview && (
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-muted/70">
+              <span className="w-1.5 h-1.5 rounded-full bg-primary" aria-hidden="true" />
+              live
+            </span>
           )}
         </div>
 
-        <div className="flex-1 space-y-6">
-          <div className="grid grid-cols-1 gap-4">
-            {techStack.frontend?.length > 0 && (
-              <ProjectTechStack title="Frontend" icons={frontendIcons} />
-            )}
-            {techStack.frameworks?.length > 0 && (
-              <ProjectTechStack title="Frameworks" icons={frameworksIcons} />
-            )}
-            {techStack.backend?.length > 0 && (
-              <ProjectTechStack title="Backend" icons={backendIcons} />
-            )}
-            {techStack.tools?.length > 0 && <ProjectTechStack title="Tools" icons={toolsIcons} />}
-          </div>
-        </div>
+        <p className="text-muted leading-relaxed text-sm sm:text-base max-w-prose">{desc}</p>
 
-        <div className="pt-4 flex flex-wrap gap-3">
-          {urlPreview && <ExternalLinkButton text="Live Demo" link={urlPreview} icon={IconWorld} />}
-          {githubUrl.all && (
-            <ExternalLinkButton text="View Source" link={githubUrl.all} icon={IconBrandGithub} />
-          )}
-          {githubUrl.frontend && (
+        {stats && stats.length > 0 && (
+          <ul className="flex flex-wrap gap-2 pt-0.5">
+            {stats.map((stat) => (
+              <li
+                key={stat}
+                className="inline-flex items-center rounded-full bg-primary/15 text-text px-3 py-1 text-xs font-semibold tracking-tight"
+              >
+                {stat}
+              </li>
+            ))}
+          </ul>
+        )}
+
+        {techIcons.length > 0 && <ProjectTechStack icons={techIcons} />}
+
+        {runsOn && (
+          <p className="flex items-center gap-2 text-xs">
+            <span className="text-muted/60">{urlPreview ? "runs on" : "built with"}</span>
+            <span className="font-mono text-muted">{runsOn}</span>
+          </p>
+        )}
+
+        <div className="pt-2 flex flex-wrap gap-3">
+          {urlPreview && (
             <ExternalLinkButton
-              text="Frontend Code"
-              link={githubUrl.frontend}
+              text={previewLabel ?? "Live Demo"}
+              ariaLabel={`Open ${name}`}
+              link={urlPreview}
+              icon={IconWorld}
+            />
+          )}
+          {repoUrl && (
+            <ExternalLinkButton
+              text="View Source"
+              ariaLabel={`${name} source on GitHub`}
+              link={repoUrl}
               icon={IconBrandGithub}
             />
           )}
-          {githubUrl.backend && (
+          {npmUrl && (
             <ExternalLinkButton
-              text="Backend Code"
-              link={githubUrl.backend}
-              icon={IconBrandGithub}
+              text="npm"
+              ariaLabel={`${name} on npm`}
+              link={npmUrl}
+              icon={IconBrandNpm}
             />
           )}
-          {!githubUrl.all && !githubUrl.frontend && !githubUrl.backend && closedSource && (
+          {!repoUrl && !npmUrl && closedSource && (
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-border/50 bg-muted/5 text-sm font-medium text-muted">
               <IconLock stroke={1.5} size={18} className="text-muted" />
               {closedSource}
@@ -136,6 +148,6 @@ export const Project: FC<ProjectProps> = memo(function Project({
           )}
         </div>
       </div>
-    </motion.div>
+    </motion.article>
   );
 });
