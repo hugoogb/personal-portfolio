@@ -1,56 +1,35 @@
 import type { FC, MouseEvent } from "react";
-import { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import { useState, useEffect, useRef, useContext, useCallback } from "react";
 import { SettingsMenu } from "@/components/header/navbar/SettingsMenu";
 import { NavBarItem } from "@/components/header/navbar/NavBarItem";
 import { DarkModeToggle } from "@/components/header/navbar/DarkModeToggle";
 import { IconMenu2, IconX } from "@tabler/icons-react";
-import { useScrollSpy } from "@/hooks/useScrollSpy";
-import { scrollToSection } from "@/utils/scrollToSection";
+import { SectionNavContext } from "@/contexts/section-nav.context";
 
 export const Navbar: FC = () => {
-  const [activeId, setActiveId] = useState<number | null>(0);
+  const { sectionIds, activeIndex, goToSection } = useContext(SectionNavContext);
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const navbarRef = useRef<HTMLUListElement>(null);
   const iconMenuNavbarRef = useRef<HTMLButtonElement>(null);
 
-  const navItems = useMemo(
-    () => [
-      { id: 0, name: "Home", sectionId: "Home" },
-      { id: 1, name: "About", sectionId: "About" },
-      { id: 2, name: "Work", sectionId: "Work" },
-      { id: 3, name: "Contact", sectionId: "Contact" },
-    ],
-    [],
-  );
-
-  const sectionIds = useMemo(() => navItems.map((i) => i.sectionId), [navItems]);
-  const activeSectionId = useScrollSpy(sectionIds);
-
-  useEffect(() => {
-    if (!activeSectionId) return;
-    const activeIndex = navItems.findIndex((item) => item.sectionId === activeSectionId);
-    if (activeIndex !== -1) setActiveId(activeIndex);
-  }, [activeSectionId, navItems]);
-
   const handleNavClick = useCallback(
-    (item: (typeof navItems)[number]) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+    (sectionId: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
       e.preventDefault(); // keep URL clean (no #hash)
-      setActiveId(item.id);
       setIsMenuOpen(false);
-      scrollToSection(item.sectionId);
+      goToSection(sectionId);
     },
-    [],
+    [goToSection],
   );
 
-  const navItemsMapped = navItems.map((item) => (
+  const navItemsMapped = sectionIds.map((sectionId, index) => (
     <NavBarItem
-      key={item.id}
-      id={item.id}
-      href={`#${item.sectionId}`}
-      activeId={activeId}
-      onClick={handleNavClick(item)}
+      key={sectionId}
+      id={index}
+      href={`#${sectionId}`}
+      activeId={activeIndex}
+      onClick={handleNavClick(sectionId)}
     >
-      {item.name}
+      {sectionId}
     </NavBarItem>
   ));
 

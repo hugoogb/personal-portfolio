@@ -1,10 +1,11 @@
 import { ColorContext } from "@/contexts/color.context";
-import { scrollToSection } from "@/utils/scrollToSection";
+import { SectionNavContext } from "@/contexts/section-nav.context";
 import { IconArrowDown, IconMail } from "@tabler/icons-react";
 import { useContext } from "react";
 
 export const HomeTitle = () => {
   const { color } = useContext(ColorContext);
+  const { goToSection } = useContext(SectionNavContext);
 
   const name = "Hugo García Benjumea";
   const splittedName = name.split(" ").map((word, index) => {
@@ -56,7 +57,7 @@ export const HomeTitle = () => {
       <div className="flex flex-wrap items-center justify-center md:justify-start gap-3">
         <button
           type="button"
-          onClick={() => scrollToSection("Work")}
+          onClick={() => goToSection("Work")}
           className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-primary hover:opacity-90 text-sm font-semibold text-primary-fg transition-opacity duration-200 cursor-pointer"
         >
           See the work
@@ -64,7 +65,7 @@ export const HomeTitle = () => {
         </button>
         <button
           type="button"
-          onClick={() => scrollToSection("Contact")}
+          onClick={() => goToSection("Contact")}
           className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-card hover:border-primary/50 border border-border text-sm font-semibold text-text transition-colors duration-200 cursor-pointer"
         >
           Get in touch

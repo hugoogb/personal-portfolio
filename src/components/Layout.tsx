@@ -2,9 +2,10 @@ import { SpeedInsights } from "@vercel/speed-insights/react";
 import { useState, useCallback, useMemo, useEffect, useRef } from "react";
 import { Header } from "@/components/header/Header";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
-import type { ColorContextValue } from "@/types/common.types";
+import type { ColorContextValue, SectionNavValue } from "@/types/common.types";
 import { STORAGE_KEYS } from "@/constants/strings.constants";
 import { ColorContext } from "@/contexts/color.context";
+import { SectionNavContext } from "@/contexts/section-nav.context";
 import { MotionConfig, animate } from "motion/react";
 import { SideNav } from "@/components/shared/SideNav";
 import { DEFAULT_COLOR } from "@/constants/colors.constants";
@@ -93,6 +94,19 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
     [sectionIds],
   );
 
+  const goToSection = useCallback(
+    (sectionId: string) => {
+      const index = sectionIds.indexOf(sectionId);
+      if (index !== -1) scrollToSection(index);
+    },
+    [sectionIds, scrollToSection],
+  );
+
+  const sectionNavValue = useMemo<SectionNavValue>(
+    () => ({ sectionIds, activeIndex: activeSectionIndex, goToSection }),
+    [sectionIds, activeSectionIndex, goToSection],
+  );
+
   const handleScrollAction = useCallback(
     (direction: 1 | -1) => {
       const nextIndex = Math.max(
@@ -174,23 +188,25 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
       <SpeedInsights route="/" />
       <MotionConfig reducedMotion="user">
         <ColorContext.Provider value={colorContextValue}>
-          <div className="relative h-dvh overflow-hidden bg-background">
-            <Header />
+          <SectionNavContext.Provider value={sectionNavValue}>
+            <div className="relative h-dvh overflow-hidden bg-background">
+              <Header />
 
-            <SideNav
-              sectionIds={sectionIds}
-              activeSection={activeSectionIndex}
-              scrollToSection={scrollToSection}
-              activeColor={color}
-            />
+              <SideNav
+                sectionIds={sectionIds}
+                activeSection={activeSectionIndex}
+                scrollToSection={scrollToSection}
+                activeColor={color}
+              />
 
-            <main
-              ref={mainRef}
-              className="h-full overflow-y-auto no-scrollbar snap-y snap-mandatory md:snap-none md:scroll-auto scroll-smooth"
-            >
-              <ErrorBoundary>{children}</ErrorBoundary>
-            </main>
-          </div>
+              <main
+                ref={mainRef}
+                className="h-full overflow-y-auto no-scrollbar snap-y snap-mandatory md:snap-none md:scroll-auto scroll-smooth"
+              >
+                <ErrorBoundary>{children}</ErrorBoundary>
+              </main>
+            </div>
+          </SectionNavContext.Provider>
         </ColorContext.Provider>
       </MotionConfig>
     </>
