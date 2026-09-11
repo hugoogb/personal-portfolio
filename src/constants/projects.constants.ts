@@ -79,11 +79,12 @@ export const PROJECTS: Project[] = [
     desc: "A deterministic SVG avatar library: the same seed always produces the same avatar, in styles from initials to pixel art. Published as a scope rather than one package - a core, a package per style, and renderers for React, Vue, Svelte, Angular and plain HTML - so you install only what you actually render.",
     techStack: {
       languages: [TechId.Typescript],
-      frontend: [],
+      frontend: [TechId.Astro],
       backend: [],
       infra: [TechId.Npm, TechId.Pnpm],
     },
     urlPreview: "https://avatar-generator.hugoogb.dev",
+    previewLabel: "Read the docs",
     src: avatarGeneratorImg,
     srcSetWebp: srcSet(avatarGenerator640, avatarGenerator1280),
     stats: ["Zero runtime deps", "One package per style", "Framework renderers + web component"],

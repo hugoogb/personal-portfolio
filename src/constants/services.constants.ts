@@ -9,7 +9,8 @@ export interface Service {
 }
 
 /**
- * What is currently out in the world, one row per project.
+ * What is currently out in the world, one row per project - each one a live
+ * site a visitor can open, rather than a registry page about it.
  *
  * F1 Tracker is a single project whose frontend and API happen to live on
  * different hosts, so it gets one row - two would read as two projects.
@@ -37,10 +38,10 @@ export const SERVICES: Service[] = [
     running: true,
   },
   {
-    host: "@avatar-generator",
-    meta: "Core, styles and framework renderers",
-    state: "on npm",
-    url: "https://www.npmjs.com/org/avatar-generator",
-    running: false,
+    host: "avatar-generator.hugoogb.dev",
+    meta: "Docs and style gallery for the npm packages, built with Astro",
+    state: "live",
+    url: "https://avatar-generator.hugoogb.dev",
+    running: true,
   },
 ];

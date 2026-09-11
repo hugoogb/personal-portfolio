@@ -13,6 +13,8 @@ export interface Project {
   desc: string;
   techStack: TechStack;
   urlPreview: string;
+  /** Overrides the "Live Demo" button label - a docs site is not a demo. */
+  previewLabel?: string;
   /** Original PNG/JPG, used as the <picture> fallback. */
   src: string;
   /** Responsive WebP candidates ("<url> 640w, <url> 1280w") preferred over `src`. */

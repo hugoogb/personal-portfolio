@@ -18,6 +18,7 @@ export const Project: FC<ProjectType> = memo(function Project({
   name,
   desc,
   urlPreview,
+  previewLabel,
   src,
   srcSetWebp,
   techStack,
@@ -117,7 +118,7 @@ export const Project: FC<ProjectType> = memo(function Project({
         <div className="pt-2 flex flex-wrap gap-3">
           {urlPreview && (
             <ExternalLinkButton
-              text="Live Demo"
+              text={previewLabel ?? "Live Demo"}
               ariaLabel={`Open ${name}`}
               link={urlPreview}
               icon={IconWorld}
