@@ -83,7 +83,7 @@ export const PROJECTS: Project[] = [
       backend: [],
       infra: [TechId.Npm, TechId.Pnpm],
     },
-    urlPreview: "https://avatar-generator-two.vercel.app/",
+    urlPreview: "https://avatar-generator.hugoogb.dev",
     src: avatarGeneratorImg,
     srcSetWebp: srcSet(avatarGenerator640, avatarGenerator1280),
     stats: ["Zero runtime deps", "One package per style", "Framework renderers + web component"],
