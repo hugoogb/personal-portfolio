@@ -7,8 +7,13 @@ export function useScrollSpy(ids: string[]) {
   useEffect(() => {
     const observerOptions = {
       root: null, // use viewport
-      rootMargin: "0px",
-      threshold: 0.5, // trigger when 50% of section is visible
+      // `threshold` is a ratio of the section's own area, so a section taller
+      // than twice the viewport can never reach 0.5 and would never activate
+      // (Projects is ~2200px tall). Collapse the root to a thin band across the
+      // middle of the viewport instead: the section crossing it is the active
+      // one, whatever its height.
+      rootMargin: "-45% 0px -45% 0px",
+      threshold: 0,
     };
 
     const handleIntersect = (entries: IntersectionObserverEntry[]) => {

@@ -1,39 +1,17 @@
 import { Project } from "@/components/sections/projects/Project";
 import { SectionCard } from "@/components/sections/SectionCard";
-import { PROJECTS } from "../../../constants/projects.constants";
-import { motion } from "motion/react";
+import { PROJECTS } from "@/constants/projects.constants";
 
 export const ProjectsSection = () => {
   return (
-    <SectionCard id="Projects" title="Projects">
-      <motion.div
-        className="columns-1 sm:columns-2 xl:columns-3 gap-6 sm:gap-8 lg:gap-10"
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true }}
-        variants={{
-          hidden: { opacity: 0 },
-          show: {
-            opacity: 1,
-            transition: {
-              staggerChildren: 0.1,
-            },
-          },
-        }}
-      >
+    <SectionCard id="Work" title="Work">
+      {/* Rows rather than a card grid: four full-width entries read in priority
+          order and keep the section close to one viewport instead of 2.5. */}
+      <div className="flex flex-col">
         {PROJECTS.map((project) => (
-          <motion.div
-            key={project.id}
-            className="break-inside-avoid mb-6 sm:mb-8 lg:mb-10"
-            variants={{
-              hidden: { opacity: 0, y: 20 },
-              show: { opacity: 1, y: 0 },
-            }}
-          >
-            <Project {...project} />
-          </motion.div>
+          <Project key={project.id} {...project} />
         ))}
-      </motion.div>
+      </div>
     </SectionCard>
   );
 };

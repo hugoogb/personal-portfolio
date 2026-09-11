@@ -5,7 +5,7 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import type { ColorContextValue } from "@/types/common.types";
 import { STORAGE_KEYS } from "@/constants/strings.constants";
 import { ColorContext } from "@/contexts/color.context";
-import { animate } from "motion/react";
+import { MotionConfig, animate } from "motion/react";
 import { SideNav } from "@/components/shared/SideNav";
 import { DEFAULT_COLOR } from "@/constants/colors.constants";
 import { useScrollSpy } from "@/hooks/useScrollSpy";
@@ -21,7 +21,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
   const [activeSectionIndex, setActiveSectionIndex] = useState(0);
   const mainRef = useRef<HTMLElement>(null);
   const isScrollingManually = useRef(false);
-  const sectionIds = useMemo(() => ["Home", "About", "Projects", "Contact"], []);
+  const sectionIds = useMemo(() => ["Home", "About", "Work", "Contact"], []);
 
   const activeId = useScrollSpy(sectionIds);
 
@@ -63,6 +63,14 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
       if (element) {
         isScrollingManually.current = true;
         setActiveSectionIndex(index);
+
+        // Spring-scrolling a full viewport is exactly the vestibular trigger the
+        // OS setting is for: jump straight there instead.
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+          main.scrollTop = element.offsetTop;
+          isScrollingManually.current = false;
+          return;
+        }
 
         // Use motion's animate for a spring-based scroll
         animate(main.scrollTop, element.offsetTop, {
@@ -164,25 +172,27 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <SpeedInsights route="/" />
-      <ColorContext.Provider value={colorContextValue}>
-        <div className="relative h-dvh overflow-hidden bg-background">
-          <Header />
+      <MotionConfig reducedMotion="user">
+        <ColorContext.Provider value={colorContextValue}>
+          <div className="relative h-dvh overflow-hidden bg-background">
+            <Header />
 
-          <SideNav
-            sectionIds={sectionIds}
-            activeSection={activeSectionIndex}
-            scrollToSection={scrollToSection}
-            activeColor={color}
-          />
+            <SideNav
+              sectionIds={sectionIds}
+              activeSection={activeSectionIndex}
+              scrollToSection={scrollToSection}
+              activeColor={color}
+            />
 
-          <main
-            ref={mainRef}
-            className="h-full overflow-y-auto no-scrollbar snap-y snap-mandatory md:snap-none md:scroll-auto scroll-smooth"
-          >
-            <ErrorBoundary>{children}</ErrorBoundary>
-          </main>
-        </div>
-      </ColorContext.Provider>
+            <main
+              ref={mainRef}
+              className="h-full overflow-y-auto no-scrollbar snap-y snap-mandatory md:snap-none md:scroll-auto scroll-smooth"
+            >
+              <ErrorBoundary>{children}</ErrorBoundary>
+            </main>
+          </div>
+        </ColorContext.Provider>
+      </MotionConfig>
     </>
   );
 };
