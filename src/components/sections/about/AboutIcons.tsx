@@ -17,7 +17,7 @@ interface AboutIconsProps {
 export const AboutIcons: FC<AboutIconsProps> = ({ title, icons }) => {
   return (
     <div className="space-y-3">
-      <h3 className="text-xs font-bold text-muted/70">{title}</h3>
+      <h4 className="text-xs font-bold text-muted/70">{title}</h4>
       <ul className="flex flex-wrap gap-2">
         {icons.map((icon) => (
           <li

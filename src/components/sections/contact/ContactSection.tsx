@@ -119,14 +119,14 @@ export const ContactSection: FC = () => {
         </motion.div>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 pt-12 sm:pt-16 mt-12 border-t border-border/60">
+      <footer className="flex flex-wrap items-center justify-between gap-3 pt-12 sm:pt-16 mt-12 border-t border-border/60">
         <span className="text-xs font-semibold text-muted/50">
           © {new Date().getFullYear()} Hugo García Benjumea
         </span>
         <span className="font-mono text-[11px] text-muted/40">
           built from barcelona, working remotely
         </span>
-      </div>
+      </footer>
     </SectionCard>
   );
 };

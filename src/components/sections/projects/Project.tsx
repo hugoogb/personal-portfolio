@@ -65,6 +65,8 @@ export const Project: FC<ProjectType> = memo(function Project({
           href={urlPreview}
           target="_blank"
           rel="noopener noreferrer"
+          aria-hidden="true"
+          tabIndex={-1}
           className="block aspect-video md:aspect-[340/186] rounded-2xl overflow-hidden border border-border bg-card hover:border-primary/50 transition-colors"
         >
           {shot}
@@ -113,11 +115,30 @@ export const Project: FC<ProjectType> = memo(function Project({
         )}
 
         <div className="pt-2 flex flex-wrap gap-3">
-          {urlPreview && <ExternalLinkButton text="Live Demo" link={urlPreview} icon={IconWorld} />}
-          {repoUrl && (
-            <ExternalLinkButton text="View Source" link={repoUrl} icon={IconBrandGithub} />
+          {urlPreview && (
+            <ExternalLinkButton
+              text="Live Demo"
+              ariaLabel={`Open ${name}`}
+              link={urlPreview}
+              icon={IconWorld}
+            />
           )}
-          {npmUrl && <ExternalLinkButton text="npm" link={npmUrl} icon={IconBrandNpm} />}
+          {repoUrl && (
+            <ExternalLinkButton
+              text="View Source"
+              ariaLabel={`${name} source on GitHub`}
+              link={repoUrl}
+              icon={IconBrandGithub}
+            />
+          )}
+          {npmUrl && (
+            <ExternalLinkButton
+              text="npm"
+              ariaLabel={`${name} on npm`}
+              link={npmUrl}
+              icon={IconBrandNpm}
+            />
+          )}
           {!repoUrl && !npmUrl && closedSource && (
             <span className="inline-flex items-center gap-2 px-4 py-2 rounded-xl border border-border/50 bg-muted/5 text-sm font-medium text-muted">
               <IconLock stroke={1.5} size={18} className="text-muted" />

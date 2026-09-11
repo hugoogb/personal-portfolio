@@ -7,10 +7,18 @@ interface ExternalLinkButtonProps {
   text: string;
   link: string;
   icon?: Icon;
+  /** Distinguishes otherwise identical labels - "Live Demo" appears on every card. */
+  ariaLabel?: string;
   children?: ReactNode;
 }
 
-export const ExternalLinkButton: FC<ExternalLinkButtonProps> = ({ id, text, link, icon }) => {
+export const ExternalLinkButton: FC<ExternalLinkButtonProps> = ({
+  id,
+  text,
+  link,
+  icon,
+  ariaLabel,
+}) => {
   const IconComponent = icon;
 
   return (
@@ -19,6 +27,7 @@ export const ExternalLinkButton: FC<ExternalLinkButtonProps> = ({ id, text, link
       href={link}
       target="_blank"
       rel="noopener noreferrer"
+      aria-label={ariaLabel}
       className="inline-flex items-center gap-2 px-4 py-2 bg-muted/10 hover:bg-muted/20 border border-border/50 rounded-xl text-sm font-medium transition-all duration-200 hover:shadow-sm"
     >
       {IconComponent && <IconComponent stroke={1.5} size={18} className="text-text" />}
