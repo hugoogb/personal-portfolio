@@ -18,9 +18,11 @@ export interface Service {
  * No version numbers here on purpose: they go stale the moment something is
  * released, and a stale version on a portfolio is worse than no version.
  *
- * States are static. Reading them live would mean a cross-origin fetch, and the
- * F1 API currently allows no browser origin at all - a preflight from this site
- * returns 400.
+ * The `state` strings here are the fallback, not the answer: /api/status probes
+ * these hosts from the server and the panel shows real round trips instead. A
+ * browser cannot do that check itself - the F1 API allows no origin at all, and
+ * a preflight from this site returns 400 - which is exactly why it is a server
+ * function and not a fetch from the page.
  */
 export const SERVICES: Service[] = [
   {

@@ -43,6 +43,21 @@
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png" />
     <link rel="manifest" href="/favicon/site.webmanifest" />
     <link rel="canonical" href="https://hugoogb.dev" />
+    <script>
+      /* Applied before first paint so the page never flashes light on its way
+         to dark. React reads the class back rather than deciding again. */
+      (function () {
+        try {
+          var stored = localStorage.getItem("isDarkMode");
+          var dark =
+            stored === "true" ||
+            (stored === null && window.matchMedia("(prefers-color-scheme: dark)").matches);
+          if (dark) document.documentElement.classList.add("dark");
+        } catch (e) {
+          /* private mode - fall through to the light default */
+        }
+      })();
+    </script>
     <script type="application/ld+json">
       {
         "@context": "https://schema.org",

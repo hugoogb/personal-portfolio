@@ -6,7 +6,7 @@ export function HomeSection() {
   return (
     <section
       id="Home"
-      className="section-container min-h-dvh flex flex-col justify-center py-20 sm:py-28 snap-start snap-always"
+      className="section-container min-h-dvh flex flex-col justify-center py-20 sm:py-28"
     >
       <div className="flex flex-col md:flex-row items-center justify-between gap-12 sm:gap-16 lg:gap-20">
         <motion.div

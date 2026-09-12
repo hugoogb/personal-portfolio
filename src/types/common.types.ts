@@ -4,6 +4,13 @@ export interface ColorContextValue {
   setColor: (color: string) => void;
 }
 
+// Theme
+export interface ThemeContextValue {
+  isDark: boolean;
+  /** Flips the `dark` class on <html> and persists the choice. */
+  toggleDark: () => void;
+}
+
 // Section navigation
 export interface SectionNavValue {
   sectionIds: readonly string[];
