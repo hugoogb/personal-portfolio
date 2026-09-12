@@ -1,4 +1,5 @@
 import { AboutIcons } from "@/components/sections/about/AboutIcons";
+import { OverlapClock } from "@/components/sections/about/OverlapClock";
 import { SectionCard } from "@/components/sections/SectionCard";
 import { TECH_GROUPS } from "@/constants/icons.constants";
 import { motion } from "motion/react";
@@ -42,6 +43,8 @@ export function AboutSection() {
               <span className="text-xs font-semibold text-muted/70">overlap I work across</span>
             </div>
           </div>
+
+          <OverlapClock />
         </motion.div>
 
         <motion.div

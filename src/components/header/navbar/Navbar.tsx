@@ -1,10 +1,13 @@
 import type { FC, MouseEvent } from "react";
-import { useState, useEffect, useRef, useContext, useCallback } from "react";
+import { useState, useEffect, useRef, useContext, useCallback, useMemo } from "react";
 import { SettingsMenu } from "@/components/header/navbar/SettingsMenu";
 import { NavBarItem } from "@/components/header/navbar/NavBarItem";
 import { DarkModeToggle } from "@/components/header/navbar/DarkModeToggle";
-import { IconMenu2, IconX } from "@tabler/icons-react";
+import { AccentDots } from "@/components/header/navbar/AccentDots";
+import { IconMenu2, IconSearch, IconX } from "@tabler/icons-react";
 import { SectionNavContext } from "@/contexts/section-nav.context";
+import { hashOf } from "@/utils/sectionHash";
+import { toggleCommandPalette } from "@/utils/commandPalette";
 
 export const Navbar: FC = () => {
   const { sectionIds, activeIndex, goToSection } = useContext(SectionNavContext);
@@ -12,9 +15,16 @@ export const Navbar: FC = () => {
   const navbarRef = useRef<HTMLUListElement>(null);
   const iconMenuNavbarRef = useRef<HTMLButtonElement>(null);
 
+  const shortcutLabel = useMemo(
+    () => (/Mac|iPhone|iPad/.test(navigator.userAgent) ? "⌘K" : "Ctrl K"),
+    [],
+  );
+
   const handleNavClick = useCallback(
     (sectionId: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
-      e.preventDefault(); // keep URL clean (no #hash)
+      // The href is a real fragment so the link works without JS and can be
+      // copied, but we scroll it ourselves to keep the active pill in step.
+      e.preventDefault();
       setIsMenuOpen(false);
       goToSection(sectionId);
     },
@@ -25,7 +35,7 @@ export const Navbar: FC = () => {
     <NavBarItem
       key={sectionId}
       id={index}
-      href={`#${sectionId}`}
+      href={hashOf(sectionId)}
       activeId={activeIndex}
       onClick={handleNavClick(sectionId)}
     >
@@ -87,6 +97,20 @@ export const Navbar: FC = () => {
       </nav>
 
       <div className="flex items-center gap-1 pl-4 border-l border-border">
+        <AccentDots />
+
+        <button
+          type="button"
+          onClick={toggleCommandPalette}
+          aria-label={`Open command palette (${shortcutLabel})`}
+          className="flex items-center gap-1.5 p-2 xl:pl-2.5 xl:pr-2 rounded-full hover:bg-muted/10 transition-colors text-text cursor-pointer"
+        >
+          <IconSearch size={20} stroke={1.5} />
+          <kbd className="hidden xl:block font-mono text-[10px] text-muted/70 border border-border rounded-md px-1.5 py-0.5 leading-none">
+            {shortcutLabel}
+          </kbd>
+        </button>
+
         <DarkModeToggle />
         <SettingsMenu />
       </div>

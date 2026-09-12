@@ -13,6 +13,7 @@ import { memo } from "react";
 import type { Project as ProjectType } from "@/types/project.types";
 import { ALT_TEXT } from "@/constants/strings.constants";
 import { motion } from "motion/react";
+import { trackOutbound } from "@/utils/track";
 
 export const Project: FC<ProjectType> = memo(function Project({
   name,
@@ -44,7 +45,7 @@ export const Project: FC<ProjectType> = memo(function Project({
       <img
         src={src}
         alt={ALT_TEXT.PROJECT(name)}
-        className="w-full h-full object-cover object-left-top"
+        className="w-full h-full object-cover object-left-top transition-transform duration-500 ease-out group-hover:scale-[1.04]"
         loading="lazy"
         decoding="async"
         width={1600}
@@ -55,7 +56,7 @@ export const Project: FC<ProjectType> = memo(function Project({
 
   return (
     <motion.article
-      className="grid grid-cols-1 md:grid-cols-[minmax(0,340px)_1fr] gap-6 md:gap-10 items-center py-7 sm:py-8 border-t border-border"
+      className="group grid grid-cols-1 md:grid-cols-[minmax(0,340px)_1fr] gap-6 md:gap-10 items-center py-7 sm:py-8 border-t border-border"
       initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-80px" }}
@@ -68,6 +69,7 @@ export const Project: FC<ProjectType> = memo(function Project({
           rel="noopener noreferrer"
           aria-hidden="true"
           tabIndex={-1}
+          onClick={() => trackOutbound(urlPreview, `${name} preview`)}
           className="block aspect-video md:aspect-[340/186] rounded-2xl overflow-hidden border border-border bg-card hover:border-primary/50 transition-colors"
         >
           {shot}

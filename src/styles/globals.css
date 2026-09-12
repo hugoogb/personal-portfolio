@@ -91,8 +91,14 @@
 }
 
 @layer base {
+  html {
+    scroll-behavior: smooth;
+    /* The header is fixed, so a section scrolled to must stop clear of it. */
+    scroll-padding-top: 5rem;
+  }
+
   body {
-    @apply bg-background text-text font-primary transition-colors duration-300 antialiased selection:bg-primary/30 overflow-hidden;
+    @apply bg-background text-text font-primary transition-colors duration-300 antialiased selection:bg-primary/30;
     /* Prevent pull-to-refresh on mobile but allow scrolling */
     overscroll-behavior-y: contain;
   }
@@ -152,8 +158,10 @@
     border-radius: 4px;
   }
 
-  /* The page leans on motion: spring-scrolling between sections, per-section
-     reveals, image zooms, a pulsing availability dot. Honour the OS setting. */
+  /* The page leans on motion: smooth scrolling to a section, per-section
+     reveals, image zooms, a pulsing availability dot. Honour the OS setting.
+     The universal selector covers <html>, so smooth scrolling is off here too
+     and `scrollIntoView` jumps straight to the target. */
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,
@@ -163,15 +171,5 @@
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
     }
-  }
-}
-
-@layer utilities {
-  .no-scrollbar::-webkit-scrollbar {
-    display: none;
-  }
-  .no-scrollbar {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
   }
 }
