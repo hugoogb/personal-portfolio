@@ -12,11 +12,25 @@ interface Probe {
   ms: number | null;
 }
 
-const Row: FC<{ service: Service; probe?: Probe }> = ({ service, probe }) => {
+/**
+ * Past this, the number stops being worth showing. The probe runs from an edge
+ * region on the other side of the Atlantic, so a cold start there says nothing
+ * true about the site - and "1006 ms" on a portfolio reads as a confession
+ * rather than a measurement. Under it, the real figure is the better answer.
+ */
+const FAST_MS = 400;
+
+const describe = (service: Service, probe?: Probe) => {
   // Until the probe lands, the hand-written state is what the row says - so the
   // panel is never empty and never claims anything it has not been told.
+  if (!probe) return service.state;
+  if (!probe.ok || probe.ms === null) return "unreachable";
+  return probe.ms <= FAST_MS ? `${probe.ms} ms` : "live";
+};
+
+const Row: FC<{ service: Service; probe?: Probe }> = ({ service, probe }) => {
   const isUp = probe ? probe.ok : service.running;
-  const detail = probe ? (probe.ms === null ? "no answer" : `${probe.ms} ms`) : service.state;
+  const detail = describe(service, probe);
 
   return (
     <>
