@@ -22,16 +22,41 @@ interface Probe {
   ms: number | null;
 }
 
-const probe = async ({ host, url }: Target): Promise<Probe> => {
+const request = (url: string, method: "HEAD" | "GET") =>
+  fetch(url, {
+    method,
+    redirect: "follow",
+    signal: AbortSignal.timeout(TIMEOUT_MS),
+    headers: { "user-agent": "hugoogb.dev-status" },
+  });
+
+const timed = async (url: string, method: "HEAD" | "GET") => {
   const started = Date.now();
+  const response = await request(url, method);
+  return { response, ms: Date.now() - started };
+};
+
+/**
+ * HEAD rather than GET: the question is whether the host answers, and pulling a
+ * whole document down to find out measures page weight instead of reachability.
+ *
+ * Not every server answers HEAD, so a refusal - stated as 405/501, or shown by
+ * hanging up - falls back to GET. Each attempt is timed on its own, so a
+ * fallback never reports the failed attempt's time as well.
+ */
+const probe = async ({ host, url }: Target): Promise<Probe> => {
   try {
-    const response = await fetch(url, {
-      method: "GET",
-      redirect: "follow",
-      signal: AbortSignal.timeout(TIMEOUT_MS),
-      headers: { "user-agent": "hugoogb.dev-status" },
-    });
-    return { host, ok: response.ok, status: response.status, ms: Date.now() - started };
+    const head = await timed(url, "HEAD");
+    if (head.response.status !== 405 && head.response.status !== 501) {
+      return { host, ok: head.response.ok, status: head.response.status, ms: head.ms };
+    }
+  } catch {
+    // Fall through - a host that hangs up on HEAD still deserves a GET.
+  }
+
+  try {
+    const get = await timed(url, "GET");
+    return { host, ok: get.response.ok, status: get.response.status, ms: get.ms };
   } catch {
     return { host, ok: false, status: 0, ms: null };
   }
