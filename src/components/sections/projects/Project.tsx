@@ -87,7 +87,7 @@ export const Project: FC<ProjectType> = memo(function Project({
             {name}
           </h3>
           {urlPreview && (
-            <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-muted/70">
+            <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-muted">
               <span className="w-1.5 h-1.5 rounded-full bg-primary" aria-hidden="true" />
               {status ?? "live"}
             </span>
@@ -113,7 +113,7 @@ export const Project: FC<ProjectType> = memo(function Project({
 
         {runsOn && (
           <p className="flex items-center gap-2 text-xs">
-            <span className="text-muted/60">{urlPreview ? "runs on" : "built with"}</span>
+            <span className="text-muted">{urlPreview ? "runs on" : "built with"}</span>
             <span className="font-mono text-muted">{runsOn}</span>
           </p>
         )}

@@ -9,7 +9,7 @@ import tseslint from "typescript-eslint";
 export default [
   // Build artifacts / deps
   {
-    ignores: ["dist/**", "node_modules/**", "coverage/**"],
+    ignores: ["dist/**", "dist-ssr/**", "node_modules/**", "coverage/**"],
   },
 
   // Node/CommonJS config files (e.g. prettier.config.cjs)
@@ -18,6 +18,19 @@ export default [
     languageOptions: {
       ecmaVersion: 2022,
       sourceType: "script",
+      globals: {
+        ...globals.node,
+        ...globals.es2022,
+      },
+    },
+  },
+
+  // Node ESM build scripts (scripts/prerender.mjs)
+  {
+    files: ["scripts/**/*.mjs"],
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: "module",
       globals: {
         ...globals.node,
         ...globals.es2022,

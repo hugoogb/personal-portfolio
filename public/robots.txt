@@ -1,4 +1,4 @@
 User-agent: *
-Disallow:
+Disallow: /api/
 
 Sitemap: https://hugoogb.dev/sitemap.xml

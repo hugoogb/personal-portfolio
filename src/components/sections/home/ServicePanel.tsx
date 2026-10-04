@@ -2,7 +2,6 @@ import type { FC, ReactNode } from "react";
 import { useEffect, useState } from "react";
 import { SERVICES } from "@/constants/services.constants";
 import type { Service } from "@/constants/services.constants";
-import { motion } from "motion/react";
 
 interface Probe {
   host: string;
@@ -40,9 +39,9 @@ const Row: FC<{ service: Service; probe?: Probe }> = ({ service, probe }) => {
       />
       <span className="flex flex-col gap-0.5 min-w-0 flex-grow">
         <span className="font-mono text-xs sm:text-[13px] text-text truncate">{service.host}</span>
-        <span className="text-[11px] sm:text-xs font-medium text-muted/80">{service.meta}</span>
+        <span className="text-[11px] sm:text-xs font-medium text-muted">{service.meta}</span>
       </span>
-      <span className="font-mono text-[11px] font-medium text-muted/70 shrink-0 tabular-nums">
+      <span className="font-mono text-[11px] font-medium text-muted shrink-0 tabular-nums">
         {detail}
       </span>
     </>
@@ -70,12 +69,7 @@ export const ServicePanel: FC = () => {
   }, []);
 
   return (
-    <motion.div
-      className="w-full max-w-md bg-card border border-border rounded-3xl overflow-hidden shadow-sm"
-      initial={{ opacity: 0, y: 16 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6, ease: "easeOut", delay: 0.15 }}
-    >
+    <div className="w-full max-w-md bg-card border border-border rounded-3xl overflow-hidden shadow-sm animate-panel-in">
       <div className="px-6 pt-5 pb-4">
         <h2 className="font-display text-[15px] font-extrabold tracking-tight text-text">
           Out in the world
@@ -105,10 +99,10 @@ export const ServicePanel: FC = () => {
       </ul>
 
       {probes && (
-        <p className="px-6 py-2.5 border-t border-border/60 font-mono text-[10px] text-muted/60">
+        <p className="px-6 py-2.5 border-t border-border/60 font-mono text-[10px] text-muted">
           reachability checked from the edge · cached 60s
         </p>
       )}
-    </motion.div>
+    </div>
   );
 };

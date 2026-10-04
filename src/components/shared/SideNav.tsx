@@ -5,15 +5,9 @@ interface SideNavProps {
   sectionIds: string[];
   activeSection: number;
   scrollToSection: (index: number) => void;
-  activeColor: string;
 }
 
-export const SideNav: FC<SideNavProps> = ({
-  sectionIds,
-  activeSection,
-  scrollToSection,
-  activeColor,
-}) => {
+export const SideNav: FC<SideNavProps> = ({ sectionIds, activeSection, scrollToSection }) => {
   return (
     <div className="fixed right-6 sm:right-8 top-1/2 -translate-y-1/2 z-50 hidden md:flex flex-col gap-6 items-center">
       {sectionIds.map((id, index) => {
@@ -52,14 +46,8 @@ export const SideNav: FC<SideNavProps> = ({
                   damping: 30,
                 }}
               >
-                <div
-                  className="w-4 h-4 rounded-full border-2 flex items-center justify-center"
-                  style={{ borderColor: activeColor }}
-                >
-                  <div
-                    className="w-1.5 h-1.5 rounded-full"
-                    style={{ backgroundColor: activeColor }}
-                  />
+                <div className="w-4 h-4 rounded-full border-2 border-primary flex items-center justify-center">
+                  <div className="w-1.5 h-1.5 rounded-full bg-primary" />
                 </div>
               </motion.div>
             )}

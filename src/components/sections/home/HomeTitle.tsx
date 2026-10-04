@@ -1,10 +1,8 @@
-import { ColorContext } from "@/contexts/color.context";
 import { SectionNavContext } from "@/contexts/section-nav.context";
 import { IconArrowDown, IconMail } from "@tabler/icons-react";
 import { useContext } from "react";
 
 export const HomeTitle = () => {
-  const { color } = useContext(ColorContext);
   const { goToSection } = useContext(SectionNavContext);
 
   const name = "Hugo García Benjumea";
@@ -39,13 +37,10 @@ export const HomeTitle = () => {
         </h1>
 
         <div className="flex items-center justify-center md:justify-start gap-4 text-muted">
-          <span
-            className="hidden sm:block h-px w-8 sm:w-12 bg-primary shrink-0"
-            style={{ backgroundColor: color }}
-          ></span>
-          <h2 className="text-lg sm:text-xl md:text-2xl font-medium uppercase tracking-[0.2em] sm:tracking-[0.3em]">
+          <span className="hidden sm:block h-px w-8 sm:w-12 bg-primary shrink-0"></span>
+          <p className="text-lg sm:text-xl md:text-2xl font-medium uppercase tracking-[0.2em] sm:tracking-[0.3em]">
             Full-Stack Engineer
-          </h2>
+          </p>
         </div>
       </div>
 

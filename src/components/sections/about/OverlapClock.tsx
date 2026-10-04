@@ -25,14 +25,20 @@ const timeIn = (at: Date, timeZone?: string) =>
  * results, so DST on either side is the browser's problem rather than ours.
  */
 export const OverlapClock: FC = () => {
-  const [now, setNow] = useState(() => new Date());
+  // Null until mount: the page is prerendered, and the build has no visitor - no
+  // timezone and no "now" worth printing. The empty track and placeholder times
+  // hold the layout until the browser fills them in.
+  const [now, setNow] = useState<Date | null>(null);
 
   useEffect(() => {
+    setNow(new Date());
     const id = window.setInterval(() => setNow(new Date()), 30_000);
     return () => window.clearInterval(id);
   }, []);
 
-  const { segments, marker, isAtDesk, yourZone } = useMemo(() => {
+  const view = useMemo(() => {
+    if (!now) return null;
+
     const offsetHours =
       (new Date(now.toLocaleString("en-US", { timeZone: TZ })).getTime() -
         new Date(now.toLocaleString("en-US")).getTime()) /
@@ -62,6 +68,9 @@ export const OverlapClock: FC = () => {
     };
   }, [now]);
 
+  const segments = view?.segments ?? [];
+  const PLACEHOLDER = "--:--";
+
   return (
     <div className="bg-card border border-border rounded-2xl p-5 space-y-3.5">
       <div className="flex items-center justify-between gap-3 flex-wrap">
@@ -69,8 +78,8 @@ export const OverlapClock: FC = () => {
           <IconClock size={15} stroke={1.8} className="text-muted" aria-hidden="true" />
           When we overlap
         </h3>
-        <span className="text-[11px] font-semibold text-muted/70">
-          {isAtDesk ? "at my desk right now" : "outside my hours"}
+        <span className="text-[11px] font-semibold text-muted">
+          {view ? (view.isAtDesk ? "at my desk right now" : "outside my hours") : "\u00a0"}
         </span>
       </div>
 
@@ -87,14 +96,16 @@ export const OverlapClock: FC = () => {
               style={{ left: `${(from / 24) * 100}%`, width: `${((to - from) / 24) * 100}%` }}
             />
           ))}
-          <div
-            className="absolute inset-y-0 w-px bg-text"
-            style={{ left: `${(marker / 24) * 100}%` }}
-            aria-hidden="true"
-          />
+          {view && (
+            <div
+              className="absolute inset-y-0 w-px bg-text"
+              style={{ left: `${(view.marker / 24) * 100}%` }}
+              aria-hidden="true"
+            />
+          )}
         </div>
 
-        <div className="flex justify-between mt-1.5 font-mono text-[10px] text-muted/60 tabular-nums">
+        <div className="flex justify-between mt-1.5 font-mono text-[10px] text-muted tabular-nums">
           <span>00</span>
           <span>06</span>
           <span>12</span>
@@ -105,11 +116,17 @@ export const OverlapClock: FC = () => {
 
       <div className="flex flex-wrap items-baseline gap-x-5 gap-y-1 text-xs">
         <span className="text-muted">
-          Barcelona <span className="font-mono text-text tabular-nums">{timeIn(now, TZ)}</span>
+          Barcelona{" "}
+          <span className="font-mono text-text tabular-nums">
+            {now ? timeIn(now, TZ) : PLACEHOLDER}
+          </span>
         </span>
         <span className="text-muted">
-          You <span className="font-mono text-text tabular-nums">{timeIn(now)}</span>
-          <span className="text-muted/60"> · {yourZone}</span>
+          You{" "}
+          <span className="font-mono text-text tabular-nums">
+            {now ? timeIn(now) : PLACEHOLDER}
+          </span>
+          {view && <span className="text-muted"> · {view.yourZone}</span>}
         </span>
       </div>
     </div>
