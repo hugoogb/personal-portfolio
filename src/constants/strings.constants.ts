@@ -19,6 +19,6 @@ export const CONTACT = {
 // Image alt text patterns
 export const ALT_TEXT = {
   PROFILE: "Hugo García Benjumea",
-  PROJECT: (name: string) => `${name} project preview`,
+  PROJECT: (name: string) => `Screenshot of ${name}`,
   SECTION: (title: string) => `${title} section`,
 } as const;

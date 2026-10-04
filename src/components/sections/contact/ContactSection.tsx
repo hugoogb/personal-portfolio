@@ -81,7 +81,7 @@ export const ContactSection: FC = () => {
             <IconMail size={19} stroke={1.7} className="text-text shrink-0" aria-hidden="true" />
             <span className="flex flex-col gap-0.5 min-w-0 flex-grow">
               <span className="font-mono text-xs sm:text-[13px] text-text truncate">{EMAIL}</span>
-              <span className="text-[11px] sm:text-xs font-medium text-muted/80">Email</span>
+              <span className="text-[11px] sm:text-xs font-medium text-muted">Email</span>
             </span>
             <button
               type="button"
@@ -110,9 +110,7 @@ export const ContactSection: FC = () => {
                 <span className="font-mono text-xs sm:text-[13px] text-text truncate">
                   {link.handle}
                 </span>
-                <span className="text-[11px] sm:text-xs font-medium text-muted/80">
-                  {link.meta}
-                </span>
+                <span className="text-[11px] sm:text-xs font-medium text-muted">{link.meta}</span>
               </span>
             </a>
           ))}
@@ -120,10 +118,11 @@ export const ContactSection: FC = () => {
       </div>
 
       <footer className="flex flex-wrap items-center justify-between gap-3 pt-12 sm:pt-16 mt-12 border-t border-border/60">
-        <span className="text-xs font-semibold text-muted/50">
+        {/* The year is baked in at build time; a visit after New Year would differ. */}
+        <span className="text-xs font-semibold text-muted" suppressHydrationWarning>
           © {new Date().getFullYear()} Hugo García Benjumea
         </span>
-        <span className="font-mono text-[11px] text-muted/40">
+        <span className="font-mono text-[11px] text-muted">
           built from barcelona, working remotely
         </span>
       </footer>

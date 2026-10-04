@@ -255,7 +255,7 @@ export const CommandPalette: FC = () => {
         rows.push(
           <div
             key={`group-${group}`}
-            className="px-4 pt-4 pb-1.5 text-[10px] font-bold uppercase tracking-widest text-muted/60"
+            className="px-4 pt-4 pb-1.5 text-[10px] font-bold uppercase tracking-widest text-muted"
           >
             {group}
           </div>,
@@ -291,13 +291,11 @@ export const CommandPalette: FC = () => {
             {command.label}
           </span>
           {command.hint && (
-            <span className="font-mono text-[11px] text-muted/70 shrink-0 truncate max-w-[45%]">
+            <span className="font-mono text-[11px] text-muted shrink-0 truncate max-w-[45%]">
               {command.hint}
             </span>
           )}
-          {isActive && (
-            <IconCornerDownLeft size={14} className="text-muted/60 shrink-0" aria-hidden />
-          )}
+          {isActive && <IconCornerDownLeft size={14} className="text-muted shrink-0" aria-hidden />}
         </button>,
       );
     });
@@ -344,9 +342,9 @@ export const CommandPalette: FC = () => {
                 aria-label="Search commands"
                 autoComplete="off"
                 spellCheck={false}
-                className="flex-grow bg-transparent text-sm text-text placeholder:text-muted/60 focus:outline-none"
+                className="flex-grow bg-transparent text-sm text-text placeholder:text-muted focus:outline-none"
               />
-              <kbd className="hidden sm:block font-mono text-[10px] text-muted/60 border border-border rounded-md px-1.5 py-0.5 shrink-0">
+              <kbd className="hidden sm:block font-mono text-[10px] text-muted border border-border rounded-md px-1.5 py-0.5 shrink-0">
                 esc
               </kbd>
             </div>
@@ -361,7 +359,7 @@ export const CommandPalette: FC = () => {
               )}
             </div>
 
-            <div className="flex items-center justify-between gap-3 px-4 py-2.5 border-t border-border bg-muted/5 text-[11px] text-muted/70">
+            <div className="flex items-center justify-between gap-3 px-4 py-2.5 border-t border-border bg-muted/5 text-[11px] text-muted">
               <span className="font-mono truncate">↑↓ move · ↵ select · esc close</span>
               <span className="font-mono shrink-0">{results.length} commands</span>
             </div>

@@ -16,18 +16,23 @@ import { useAccentFavicon } from "@/hooks/useAccentFavicon";
 import { hashOf, sectionIdFromHash } from "@/utils/sectionHash";
 
 export const Layout = ({ children }: { children: React.ReactNode }) => {
-  const [color, setColor] = useState<string>(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem(STORAGE_KEYS.COLOR) || DEFAULT_COLOR;
-    }
-    return DEFAULT_COLOR;
-  });
+  // The page is prerendered, so the first render has to match the HTML built
+  // without a visitor: defaults here, the visitor's choices read back on mount.
+  // The inline script in index.html has already applied both to <html> before
+  // first paint, so reading them late changes no pixels - only the controls
+  // that show which accent and theme are selected.
+  const [color, setColor] = useState<string>(DEFAULT_COLOR);
+  const [isDark, setIsDark] = useState<boolean>(false);
 
-  // The inline script in index.html has already put the class on <html> before
-  // first paint, so read it back rather than deciding again and flashing.
-  const [isDark, setIsDark] = useState<boolean>(
-    () => typeof document !== "undefined" && document.documentElement.classList.contains("dark"),
-  );
+  useEffect(() => {
+    setIsDark(document.documentElement.classList.contains("dark"));
+    try {
+      const stored = localStorage.getItem(STORAGE_KEYS.COLOR);
+      if (stored) setColor(stored);
+    } catch {
+      // Storage blocked - the default accent stands.
+    }
+  }, []);
 
   const [activeSectionIndex, setActiveSectionIndex] = useState(0);
   const sectionIds = useMemo(() => ["Home", "About", "Work", "Contact"], []);
@@ -57,8 +62,11 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
     });
   }, []);
 
+  // Written here rather than in an effect on `color`: on mount that effect would
+  // stamp the default over the accent the inline script just restored.
   const handleColorChange = useCallback((newColor: string) => {
     setColor(newColor);
+    document.documentElement.style.setProperty("--primary-color", newColor);
     localStorage.setItem(STORAGE_KEYS.COLOR, newColor);
   }, []);
 
@@ -72,12 +80,7 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
     [isDark, toggleDark],
   );
 
-  // Sync primary color with CSS variable
-  useEffect(() => {
-    document.documentElement.style.setProperty("--primary-color", color);
-  }, [color]);
-
-  // ...and into the tab icon and the mobile browser chrome.
+  // The accent also goes into the tab icon and the mobile browser chrome.
   useAccentFavicon(color);
 
   /** Keeps the address bar honest without pushing history entries. */
@@ -239,7 +242,6 @@ export const Layout = ({ children }: { children: React.ReactNode }) => {
                   sectionIds={sectionIds}
                   activeSection={activeSectionIndex}
                   scrollToSection={scrollToSection}
-                  activeColor={color}
                 />
 
                 <main>

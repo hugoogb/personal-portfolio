@@ -21,7 +21,7 @@ export const ProjectTechStack: FC<ProjectTechStackProps> = ({ icons }) => {
             stroke={1.5}
             size={15}
             aria-hidden="true"
-            className="text-muted/70 transition-colors duration-200 group-hover:text-primary-display"
+            className="text-muted transition-colors duration-200 group-hover:text-primary-display"
           />
           <span className="text-xs font-medium text-muted transition-colors duration-200 group-hover:text-text">
             {icon.name}

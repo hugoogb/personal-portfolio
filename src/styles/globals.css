@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  --font-primary: "Raleway", system-ui, sans-serif;
-  --font-display: "Hanken Grotesk", system-ui, sans-serif;
+  --font-primary: "Raleway Variable", "Raleway", system-ui, sans-serif;
+  --font-display: "Hanken Grotesk Variable", "Hanken Grotesk", system-ui, sans-serif;
   /* Reserved for genuine machine strings - hostnames, package names, endpoints.
      Never for small labels, where a mono face is decoration rather than meaning. */
   --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -22,12 +22,37 @@
 
   --animate-fade-in: fadeIn 0.5s ease-out;
   --animate-slide-up: slideUp 0.5s ease-out;
+  /* Above the fold, entrances are CSS so they start at first paint of the
+     prerendered HTML instead of waiting on JS. The hero moves but never fades:
+     it holds the largest text on the page, and text at opacity 0 does not count
+     as painted, which would push Largest Contentful Paint back by the whole
+     animation. */
+  --animate-hero-in: heroIn 0.8s ease-out;
+  --animate-panel-in: panelIn 0.6s ease-out 0.15s both;
 
   @keyframes fadeIn {
     0% {
       opacity: 0;
     }
     100% {
+      opacity: 1;
+    }
+  }
+  @keyframes heroIn {
+    0% {
+      transform: translateX(-30px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  @keyframes panelIn {
+    0% {
+      transform: translateY(16px);
+      opacity: 0;
+    }
+    100% {
+      transform: translateY(0);
       opacity: 1;
     }
   }

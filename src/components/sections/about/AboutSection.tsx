@@ -17,9 +17,8 @@ export function AboutSection() {
         >
           <p className="text-base sm:text-lg text-muted leading-relaxed">
             Hi, I'm <span className="font-display font-extrabold text-primary-display">Hugo</span>,
-            a full-stack engineer based in Barcelona. I build web applications the whole way through
-            - the data model, the API, and the interface people actually use - mostly in TypeScript
-            and Node.js, with React, Next.js and NestJS.
+            a full-stack engineer based in Barcelona. Most of what I write is TypeScript - React and
+            Next.js in the browser, Node.js and NestJS on the server, with PostgreSQL behind them.
           </p>
           <p className="text-base sm:text-lg text-muted leading-relaxed">
             The last couple of years have been SaaS work - features across existing platforms, and a
@@ -33,14 +32,14 @@ export function AboutSection() {
               <span className="font-display text-xl sm:text-2xl font-black tracking-tight text-text">
                 Barcelona
               </span>
-              <span className="text-xs font-semibold text-muted/70">based, working remotely</span>
+              <span className="text-xs font-semibold text-muted">based, working remotely</span>
             </div>
             <div className="w-px bg-border" aria-hidden="true" />
             <div className="flex flex-col">
               <span className="font-display text-xl sm:text-2xl font-black tracking-tight text-text">
                 EU &amp; US hours
               </span>
-              <span className="text-xs font-semibold text-muted/70">overlap I work across</span>
+              <span className="text-xs font-semibold text-muted">overlap I work across</span>
             </div>
           </div>
 

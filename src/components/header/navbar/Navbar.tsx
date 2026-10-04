@@ -1,5 +1,5 @@
 import type { FC, MouseEvent } from "react";
-import { useState, useEffect, useRef, useContext, useCallback, useMemo } from "react";
+import { useState, useEffect, useRef, useContext, useCallback } from "react";
 import { SettingsMenu } from "@/components/header/navbar/SettingsMenu";
 import { NavBarItem } from "@/components/header/navbar/NavBarItem";
 import { DarkModeToggle } from "@/components/header/navbar/DarkModeToggle";
@@ -15,10 +15,11 @@ export const Navbar: FC = () => {
   const navbarRef = useRef<HTMLUListElement>(null);
   const iconMenuNavbarRef = useRef<HTMLButtonElement>(null);
 
-  const shortcutLabel = useMemo(
-    () => (/Mac|iPhone|iPad/.test(navigator.userAgent) ? "⌘K" : "Ctrl K"),
-    [],
-  );
+  // Read on mount: the prerendered HTML is built without a browser to ask.
+  const [shortcutLabel, setShortcutLabel] = useState("Ctrl K");
+  useEffect(() => {
+    if (/Mac|iPhone|iPad/.test(navigator.userAgent)) setShortcutLabel("⌘K");
+  }, []);
 
   const handleNavClick = useCallback(
     (sectionId: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
@@ -106,7 +107,7 @@ export const Navbar: FC = () => {
           className="flex items-center gap-1.5 p-2 xl:pl-2.5 xl:pr-2 rounded-full hover:bg-muted/10 transition-colors text-text cursor-pointer"
         >
           <IconSearch size={20} stroke={1.5} />
-          <kbd className="hidden xl:block font-mono text-[10px] text-muted/70 border border-border rounded-md px-1.5 py-0.5 leading-none">
+          <kbd className="hidden xl:block font-mono text-[10px] text-muted border border-border rounded-md px-1.5 py-0.5 leading-none">
             {shortcutLabel}
           </kbd>
         </button>
