@@ -34,9 +34,16 @@ export const SERVICES: Service[] = [
   },
   {
     host: "readledger.app",
-    meta: "Next.js, Supabase, Prisma",
+    meta: "Next.js and Postgres in Docker on my VPS",
     state: "live",
     url: "https://readledger.app",
+    running: true,
+  },
+  {
+    host: "estonoesunrestaurante.com",
+    meta: "React PWA and NestJS API in Docker on my VPS",
+    state: "live",
+    url: "https://estonoesunrestaurante.com",
     running: true,
   },
   {

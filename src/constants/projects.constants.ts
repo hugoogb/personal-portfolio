@@ -2,18 +2,18 @@ import { TechId } from "@/constants/icons.constants";
 import type { Project } from "@/types/project.types";
 
 import avatarGeneratorImg from "@/assets/images/avatar-generator.png";
+import estonoesunrestauranteImg from "@/assets/images/estonoesunrestaurante.png";
 import f1TrackerImg from "@/assets/images/f1-tracker.png";
 import readledgerImg from "@/assets/images/readledger.png";
-import wattwin3dImg from "@/assets/images/wattwin-3d-designer.jpg";
 
 import avatarGenerator640 from "@/assets/images/avatar-generator-640.webp";
 import avatarGenerator1280 from "@/assets/images/avatar-generator-1280.webp";
+import estonoesunrestaurante640 from "@/assets/images/estonoesunrestaurante-640.webp";
+import estonoesunrestaurante1280 from "@/assets/images/estonoesunrestaurante-1280.webp";
 import f1Tracker640 from "@/assets/images/f1-tracker-640.webp";
 import f1Tracker1280 from "@/assets/images/f1-tracker-1280.webp";
 import readledger640 from "@/assets/images/readledger-640.webp";
 import readledger1280 from "@/assets/images/readledger-1280.webp";
-import wattwin3d640 from "@/assets/images/wattwin-3d-designer-640.webp";
-import wattwin3d1280 from "@/assets/images/wattwin-3d-designer-1280.webp";
 
 const srcSet = (small: string, large: string) => `${small} 640w, ${large} 1280w`;
 
@@ -38,45 +38,50 @@ export const PROJECTS: Project[] = [
   {
     id: 1,
     name: "ReadLedger",
-    desc: "A manga collection tracker that goes past a checklist - it follows reading progress, what you've spent, and how much you've saved buying second-hand. Series metadata and cover art come from MangaDex.",
+    desc: "A manga collection tracker that goes past a checklist - it follows reading progress and yearly goals, what you've spent, and how much you've saved buying second-hand, with series metadata and covers from MangaDex. It started on Vercel and Supabase; I moved it onto my own VPS as a Docker container on Postgres behind PgBouncer, and replaced Supabase Auth with passwordless email codes.",
     techStack: {
       languages: [TechId.Typescript],
       frontend: [TechId.React, TechId.Nextjs, TechId.Tailwind],
-      backend: [TechId.Supabase, TechId.Prisma],
-      infra: [TechId.Vercel],
+      backend: [TechId.Postgres, TechId.Prisma],
+      infra: [TechId.Docker],
     },
     urlPreview: "https://readledger.app",
-    runsOn: "vercel · supabase",
+    runsOn: "docker + postgres on my vps",
     src: readledgerImg,
     srcSetWebp: srcSet(readledger640, readledger1280),
-    stats: ["MangaDex import", "Spend & savings analytics", "Wishlist + stats dashboard"],
+    stats: [
+      "Migrated off Vercel + Supabase",
+      "Passwordless email-code auth",
+      "Spend & second-hand savings analytics",
+    ],
     repoUrl: "https://github.com/hugoogb/readledger",
   },
   {
     id: 2,
-    name: "Wattwin - 3D PV Designer",
-    desc: "My software-engineering degree project, built at Wattwin: a 3D photovoltaic designer that works out how surrounding obstacles shade each solar panel across a full year. A ray-tracing engine recalculates in real time over WebSockets as panels are moved, and everything renders in a Babylon.js viewer, with Google Solar API data for terrain and building exposure.",
+    name: "Esto no es un restaurante",
+    desc: 'A meal planner for one household that takes "what do I cook today?" off the table: it suggests dishes the family already cooks, weighing what was eaten lately, what\'s in the pantry and the day of the week, and says why for each. Built for a home cook with one hand free and patchy wifi, so it works offline. A React PWA and a NestJS API in one pnpm monorepo, sharing Zod schemas, on my VPS. Invite-only, in Spanish.',
     techStack: {
       languages: [TechId.Typescript],
-      frontend: [TechId.Angular],
-      backend: [TechId.Nodejs, TechId.Postgres],
-      infra: [],
+      frontend: [TechId.React, TechId.Tailwind],
+      backend: [TechId.Nestjs, TechId.Postgres, TechId.Prisma],
+      infra: [TechId.Docker, TechId.Vite, TechId.Pnpm],
     },
-    urlPreview: "",
-    runsOn: "angular · babylon.js · websockets",
-    src: wattwin3dImg,
-    srcSetWebp: srcSet(wattwin3d640, wattwin3d1280),
+    urlPreview: "https://estonoesunrestaurante.com",
+    previewLabel: "Open the app",
+    runsOn: "docker on my vps · caddy, nestjs, postgres",
+    src: estonoesunrestauranteImg,
+    srcSetWebp: srcSet(estonoesunrestaurante640, estonoesunrestaurante1280),
     stats: [
-      "Year-long shading simulation",
-      "Real-time recompute over WebSockets",
-      "Babylon.js 3D viewer",
+      "Offline-first PWA with idempotent replay",
+      "Explainable suggestion engine",
+      "Zod schemas shared web ↔ API",
     ],
-    closedSource: "Client work · closed source",
+    closedSource: "Private household app · closed source",
   },
   {
     id: 3,
     name: "@avatar-generator",
-    desc: "A deterministic SVG avatar library: the same seed always produces the same avatar, in styles from initials to pixel art. Published as a scope rather than one package - a core, a package per style, and renderers for React, Vue, Svelte, Angular and plain HTML - so you install only what you actually render.",
+    desc: "A deterministic SVG avatar library: the same seed always produces the same avatar, in eleven styles from initials to pixel art and anime. Published as a scope rather than one package - a core, a package per style, and renderers for React, Vue, Svelte, Angular and plain HTML - so you install only what you actually render.",
     techStack: {
       languages: [TechId.Typescript],
       frontend: [TechId.Astro],
@@ -87,7 +92,7 @@ export const PROJECTS: Project[] = [
     previewLabel: "Read the docs",
     src: avatarGeneratorImg,
     srcSetWebp: srcSet(avatarGenerator640, avatarGenerator1280),
-    stats: ["Zero runtime deps", "One package per style", "Framework renderers + web component"],
+    stats: ["Zero-dependency core", "One package per style", "Framework renderers + web component"],
     repoUrl: "https://github.com/hugoogb/avatar-generator",
     npmUrl: "https://www.npmjs.com/org/avatar-generator",
   },
