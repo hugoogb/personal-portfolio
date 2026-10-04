@@ -18,7 +18,7 @@ import {
   IconBrandVercel,
   IconBrandVite,
 } from "@tabler/icons-react";
-import { SiNestjs, SiPostgresql } from "react-icons/si";
+import { SiExpo, SiNestjs, SiPostgresql } from "react-icons/si";
 
 export enum TechId {
   Typescript = "TypeScript",
@@ -27,6 +27,7 @@ export enum TechId {
   Nextjs = "Next.js",
   Angular = "Angular",
   Astro = "Astro",
+  Expo = "Expo",
   Tailwind = "Tailwind",
   Nodejs = "Node.js",
   Nestjs = "NestJS",
@@ -59,6 +60,7 @@ export const FRONTEND_ICONS: TechIcon[] = [
   { id: 2, icon: IconBrandAngular, name: TechId.Angular },
   { id: 3, icon: IconBrandAstro, name: TechId.Astro },
   { id: 4, icon: IconBrandTailwind, name: TechId.Tailwind },
+  { id: 5, icon: SiExpo as React.FC, name: TechId.Expo },
 ];
 
 export const BACKEND_ICONS: TechIcon[] = [

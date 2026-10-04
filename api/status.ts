@@ -9,6 +9,8 @@ interface Target {
 const TARGETS: Target[] = [
   { host: "f1-tracker.hugoogb.dev", url: "https://f1-tracker.hugoogb.dev" },
   { host: "readledger.app", url: "https://readledger.app" },
+  { host: "wrappedthings.app", url: "https://wrappedthings.app" },
+  { host: "estonoesunrestaurante.com", url: "https://estonoesunrestaurante.com" },
   { host: "avatar-generator.hugoogb.dev", url: "https://avatar-generator.hugoogb.dev" },
 ];
 
