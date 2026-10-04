@@ -20,6 +20,7 @@ export const Project: FC<ProjectType> = memo(function Project({
   desc,
   urlPreview,
   previewLabel,
+  status,
   src,
   srcSetWebp,
   techStack,
@@ -88,7 +89,7 @@ export const Project: FC<ProjectType> = memo(function Project({
           {urlPreview && (
             <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold text-muted/70">
               <span className="w-1.5 h-1.5 rounded-full bg-primary" aria-hidden="true" />
-              live
+              {status ?? "live"}
             </span>
           )}
         </div>

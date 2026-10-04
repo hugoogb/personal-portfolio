@@ -27,21 +27,28 @@ export interface Service {
 export const SERVICES: Service[] = [
   {
     host: "f1-tracker.hugoogb.dev",
-    meta: "Next.js on Vercel, API and Postgres on my VPS",
+    meta: "Next.js frontend over a FastAPI service and Postgres",
     state: "live",
     url: "https://f1-tracker.hugoogb.dev",
     running: true,
   },
   {
     host: "readledger.app",
-    meta: "Next.js and Postgres in Docker on my VPS",
+    meta: "Next.js, Postgres, Prisma",
     state: "live",
     url: "https://readledger.app",
     running: true,
   },
   {
+    host: "wrappedthings.app",
+    meta: "Landing page and waitlist for the iOS app",
+    state: "live",
+    url: "https://wrappedthings.app",
+    running: true,
+  },
+  {
     host: "estonoesunrestaurante.com",
-    meta: "React PWA and NestJS API in Docker on my VPS",
+    meta: "Offline-first React PWA with a NestJS API",
     state: "live",
     url: "https://estonoesunrestaurante.com",
     running: true,

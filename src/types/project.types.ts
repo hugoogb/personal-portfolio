@@ -15,6 +15,8 @@ export interface Project {
   urlPreview: string;
   /** Overrides the "Live Demo" button label - a docs site is not a demo. */
   previewLabel?: string;
+  /** Overrides the "live" badge - a waitlist site is up, but the product is not out yet. */
+  status?: string;
   /** Original PNG/JPG, used as the <picture> fallback. */
   src: string;
   /** Responsive WebP candidates ("<url> 640w, <url> 1280w") preferred over `src`. */
