@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { MINIMAP_SIZE, clientToMap, fromMap, toMap } from "@/hud/minimap";
+import { MINIMAP_SIZE, clientToMap, fromMap, toMap } from "@/hud/mapProjection";
 
 describe("minimap projection", () => {
   it("puts the camera's up at the top of the map", () => {

@@ -1,6 +1,6 @@
 import type { MouseEvent } from "react";
 import { PLACES } from "@/content/places";
-import { MINIMAP_SIZE, clientToMap, fromMap, toMap } from "@/hud/minimap";
+import { MINIMAP_SIZE, clientToMap, fromMap, toMap } from "@/hud/mapProjection";
 import { useBaseCamp } from "@/store/store";
 import { viewPolygon } from "@/world/lib/camera";
 import { ISLAND, ROADS } from "@/world/lib/map";

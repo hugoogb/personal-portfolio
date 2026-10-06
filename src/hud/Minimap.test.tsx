@@ -2,7 +2,7 @@
 import { fireEvent, render } from "@testing-library/react";
 import { beforeEach, describe, expect, it } from "vitest";
 import { Minimap } from "@/hud/Minimap";
-import { toMap } from "@/hud/minimap";
+import { toMap } from "@/hud/mapProjection";
 import { useBaseCamp } from "@/store/store";
 
 beforeEach(() => useBaseCamp.setState(useBaseCamp.getInitialState()));
