@@ -3,7 +3,7 @@ import { expect, test, type Page } from "@playwright/test";
 // detect-gpu blocklists SwiftShader, so pin a manual quality: the town then
 // loads on any WebGL context, exactly as "Enter the town anyway" does.
 const LOW = JSON.stringify({
-  state: { discovered: [], achievements: [], hudMode: "light", qualityMode: "Low", seen: false },
+  state: { discovered: [], achievements: [], hudMode: "auto", qualityMode: "Low", seen: false },
   version: 1,
 });
 
@@ -178,4 +178,18 @@ test("a device without WebGL2 lands on the Brief, not a stuck title card", async
     timeout: 20_000,
   });
   await expect(page.locator("html")).not.toHaveClass(/world/);
+});
+
+test("the preview night command darkens the town and the HUD", async ({ page }) => {
+  await page.goto("/");
+  await ready(page);
+  await expect(page.locator(".stage")).toHaveAttribute("data-hud", /light|dark/);
+  await page.keyboard.press("Control+k");
+  await page.keyboard.type("night");
+  await page.keyboard.press("Enter");
+  await expect(page.locator(".stage")).toHaveAttribute("data-hud", "dark");
+  await page.keyboard.press("Control+k");
+  await page.keyboard.type("day");
+  await page.keyboard.press("Enter");
+  await expect(page.locator(".stage")).toHaveAttribute("data-hud", "light");
 });

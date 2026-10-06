@@ -1,10 +1,13 @@
 // @vitest-environment jsdom
 import * as THREE from "three";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ORDER, PLACE_BY_ID } from "@/content/places";
 import { stubCanvas } from "@/test/canvas";
 import { buildWorld } from "@/world/build";
 import { PROP_RINGS } from "@/world/lib/buildIn";
+
+// These tests bake the whole town in jsdom, which is slow under load.
+vi.setConfig({ testTimeout: 20_000 });
 
 beforeEach(() => {
   stubCanvas();
@@ -19,8 +22,11 @@ describe("buildWorld", () => {
     const w = buildWorld();
     expect(Object.keys(w.places).sort()).toEqual([...ORDER].sort());
     expect(w.rings).toHaveLength(PROP_RINGS);
-    const inRings = w.rings.reduce((n, r) => n + r.children.length, 0);
-    expect(inRings).toBe(w.town.props.length);
+    // Baking merges each ring's static props into a few meshes per material.
+    let meshes = 0;
+    for (const ring of w.rings) ring.traverse((o) => void ((o as THREE.Mesh).isMesh && meshes++));
+    expect(meshes).toBeGreaterThan(0);
+    expect(meshes).toBeLessThan(w.town.props.length);
     w.kit.dispose();
   });
 

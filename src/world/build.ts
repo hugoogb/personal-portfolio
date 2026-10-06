@@ -1,6 +1,7 @@
 import * as THREE from "three";
 import { ORDER, PLACE_BY_ID } from "@/content/places";
 import type { PlaceId } from "@/content/types";
+import { bakeStatic } from "@/world/kit/bake";
 import { createKit, type FrameEnv, type Kit } from "@/world/kit/kit";
 import { PROP_RINGS, ringOf } from "@/world/lib/buildIn";
 import { PLACE_BUILDERS } from "@/world/places/index";
@@ -37,6 +38,26 @@ export function buildWorld(): BuiltWorld {
       local.clone().add(new THREE.Vector3(PLACE_BY_ID[id].map.x, 0, PLACE_BY_ID[id].map.z)),
     ),
   );
+
+  // Merge static meshes to fit the draw-call budget: per material, and plain
+  // colours into one vertex-coloured material. Roads, animated parts and smoke
+  // are userData.dynamic, so they stay separate. What gets repainted or lit
+  // at runtime keeps its own material.
+  const keep = new Set<THREE.Material>([
+    ...kit.accent.map((a) => a.material),
+    kit.materials.win,
+    kit.materials.winDim,
+    kit.materials.winOff,
+    kit.materials.lamp,
+    kit.materials.pool,
+    ...kit.signMats,
+  ]);
+  const board = kit.life.boardFace as THREE.Material | undefined;
+  if (board) keep.add(board);
+  const opts = { keep, own: kit.own };
+  for (const g of Object.values(places)) bakeStatic(g, opts);
+  for (const ring of rings) bakeStatic(ring, opts);
+  if (kit.buildIn.ground) bakeStatic(kit.buildIn.ground, opts);
 
   return { kit, town, places, rings, env: { night: 0, lit: 0, tier: 3 } };
 }

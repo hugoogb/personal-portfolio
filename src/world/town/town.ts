@@ -167,7 +167,8 @@ export function buildTown(kit: Kit) {
     props.push(g);
     return g;
   };
-  const sphG = new THREE.SphereGeometry(1, 14, 10),
+  // Reduced from the sketch (14, 10) to fit spec 10's triangle budget.
+  const sphG = new THREE.SphereGeometry(1, 12, 8),
     coneG = new THREE.ConeGeometry(1, 1, 14),
     trunkG = new THREE.CylinderGeometry(0.06, 0.09, 0.55, 8);
   for (let i = 0; i < 500 && props.length < 60; i++) {
