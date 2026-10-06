@@ -10,6 +10,7 @@ export default mergeConfig(
       environment: "node",
       include: ["src/**/*.test.{ts,tsx}"],
       restoreMocks: true,
+      setupFiles: ["src/test/setup.ts"],
     },
   }),
 );
