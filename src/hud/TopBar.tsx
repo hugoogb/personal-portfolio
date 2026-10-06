@@ -21,7 +21,8 @@ export function TopBar() {
   const briefOpen = useBaseCamp((s) => s.briefOpen);
   const hour = useBarcelonaHour();
   const live = liveCount(status);
-  const night = nightAmount(hour) > 0.5;
+  const override = useBaseCamp((s) => s.timeOverride);
+  const night = nightAmount(override ?? hour) > 0.5;
   const toggle = (p: Exclude<Panel, null>) => setPanel(panel === p ? null : p);
 
   return (

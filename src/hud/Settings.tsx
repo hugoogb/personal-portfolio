@@ -26,7 +26,8 @@ export function Settings() {
   const setPanel = useBaseCamp((s) => s.setPanel);
   const setConsoleOpen = useBaseCamp((s) => s.setConsoleOpen);
   const hour = useBarcelonaHour();
-  const night = nightAmount(hour) > 0.5;
+  const override = useBaseCamp((s) => s.timeOverride);
+  const night = nightAmount(override ?? hour) > 0.5;
 
   return (
     <div

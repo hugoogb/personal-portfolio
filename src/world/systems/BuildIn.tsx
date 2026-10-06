@@ -13,12 +13,9 @@ import {
   placeScale,
   ringRise,
   roadScale,
+  shouldPlayBuildIn,
+  skipBuildIn,
 } from "@/world/lib/buildIn";
-
-// The decision is a pure function so it can be tested without a canvas.
-// eslint-disable-next-line react-refresh/only-export-components
-export const shouldPlayBuildIn = (s: { firstVisit: boolean; reducedMotion: boolean }) =>
-  s.firstVisit && !s.reducedMotion;
 
 const reducedMotion = () =>
   typeof window.matchMedia === "function" &&
@@ -57,13 +54,15 @@ export function BuildIn({ world }: { world: BuiltWorld }) {
     const s = useBaseCamp.getState();
     if (!shouldPlayBuildIn({ firstVisit: s.firstVisit, reducedMotion: reducedMotion() })) {
       apply(world, BUILD_IN_S);
-      s.markIntroDone();
+      skipBuildIn(s);
       return;
     }
     s.setIntroRunning(true);
     s.focus(0, -1, OVERVIEW_VIEW, true);
     apply(world, 0);
     t.current = 0;
+    // A world dropped mid-build must not leave the camera held for the next one.
+    return () => useBaseCamp.getState().setIntroRunning(false);
   }, [world]);
 
   useFrame((_, delta) => {

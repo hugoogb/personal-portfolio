@@ -33,3 +33,15 @@ export const ringRise = (t: number, ring: number) => {
   const delay = 0.8 + ring * 4 * 0.025;
   return (easeBack(clamp01((t - delay) / 0.35)) - 1) * 2.4;
 };
+
+export const shouldPlayBuildIn = (s: { firstVisit: boolean; reducedMotion: boolean }) =>
+  s.firstVisit && !s.reducedMotion;
+
+/** Settles the town at once: the camera is released and the HUD goes live. */
+export const skipBuildIn = (s: {
+  setIntroRunning: (on: boolean) => void;
+  markIntroDone: () => void;
+}) => {
+  s.setIntroRunning(false);
+  s.markIntroDone();
+};
