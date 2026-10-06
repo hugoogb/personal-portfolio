@@ -88,5 +88,7 @@ export const runCommand = (command: Command) => {
       return openBrief();
     case "copyEmail":
       return void copyEmail();
+    case "time":
+      return s.setTimeOverride(command.run.hour);
   }
 };

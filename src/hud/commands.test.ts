@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { PLACES } from "@/content/places";
-import { COMMANDS, filterCommands } from "@/hud/commands";
+import { COMMANDS, commandsFor, filterCommands } from "@/hud/commands";
 
 describe("commands", () => {
   it("has a go command for every place, plus drive, brief and copy email", () => {
@@ -19,5 +19,15 @@ describe("commands", () => {
     expect(filterCommands("contact").map((c) => c.label)).toEqual(["go post office"]);
     expect(filterCommands("COPY")).toHaveLength(1);
     expect(filterCommands("nothing here")).toEqual([]);
+  });
+});
+
+describe("time commands", () => {
+  it("are only offered in development and previews", () => {
+    expect(commandsFor(false).some((c) => c.run.type === "time")).toBe(false);
+    const times = commandsFor(true)
+      .filter((c) => c.run.type === "time")
+      .map((c) => c.label);
+    expect(times).toEqual(["night", "day", "live"]);
   });
 });

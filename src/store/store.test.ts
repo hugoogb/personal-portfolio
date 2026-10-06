@@ -247,3 +247,26 @@ describe("store, phase 2", () => {
     ]);
   });
 });
+
+describe("store, phase 3", () => {
+  it("overrides the town's hour without persisting it", () => {
+    const storage = memory();
+    const store = createBaseCampStore(storage);
+    store.getState().setTimeOverride(23);
+    expect(store.getState().timeOverride).toBe(23);
+    store.getState().select("rl");
+    const saved = JSON.parse(storage.getItem(STORE_KEY) ?? "{}");
+    expect(saved.state.timeOverride).toBeUndefined();
+  });
+
+  it("asks the camera to jump or to re-frame", () => {
+    const store = createBaseCampStore(memory());
+    store.getState().focus(0, -1, 52, true);
+    expect(store.getState().goal).toMatchObject({ x: 0, z: -1, view: 52, instant: true });
+    const seq = store.getState().reframeSeq;
+    store.getState().reframe();
+    expect(store.getState().reframeSeq).toBe(seq + 1);
+    store.getState().setIntroRunning(true);
+    expect(store.getState().introRunning).toBe(true);
+  });
+});

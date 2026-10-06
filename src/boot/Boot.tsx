@@ -83,6 +83,7 @@ export function Boot() {
       const chosen = bootTier(signals, store.qualityMode);
       store.setAutoTier(chosen.auto);
       store.setTier(chosen.tier);
+      store.setFirstVisit(!store.seen);
       if (chosen.tier === 0) return exit();
       setProgress(0.4);
       const [hud, world] = await Promise.all([import("@/hud/Hud"), import("@/world/World")]);
@@ -119,10 +120,7 @@ export function Boot() {
     window.clearTimeout(timer.current);
     setProgress(1);
     html().classList.add("world-ready");
-    const s = useBaseCamp.getState();
-    s.setFirstVisit(!s.seen);
-    s.markSeen();
-    s.markIntroDone();
+    useBaseCamp.getState().markSeen();
   }, []);
 
   const enter = () => {

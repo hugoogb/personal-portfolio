@@ -18,8 +18,10 @@ test.beforeEach(async ({ page }) => {
   }, LOW);
 });
 
-const ready = (page: Page) =>
-  expect(page.locator("html")).toHaveClass(/world-ready/, { timeout: 20_000 });
+const ready = async (page: Page) => {
+  await expect(page.locator("html")).toHaveClass(/world-ready/, { timeout: 20_000 });
+  await expect(page.locator(".stage")).not.toHaveAttribute("inert", { timeout: 10_000 });
+};
 const card = (page: Page, name: string) => page.getByRole("heading", { level: 2, name });
 
 test("the town mounts without console errors", async ({ page }) => {
@@ -110,7 +112,8 @@ test("B opens the Brief over the town and Esc returns", async ({ page }) => {
 
 test("/#work opens the Brief at Work", async ({ page }) => {
   await page.goto("/#work");
-  await ready(page);
+  // The Brief covers the town, so the stage stays inert: wait for the world, not for the HUD.
+  await expect(page.locator("html")).toHaveClass(/world-ready/, { timeout: 20_000 });
   await expect(page.locator("#work")).toBeInViewport();
 });
 

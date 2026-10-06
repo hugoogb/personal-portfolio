@@ -8,6 +8,7 @@ export const hudTheme = (mode: HudMode, night: number): "light" | "dark" =>
 
 export const useHudTheme = () => {
   const mode = useBaseCamp((s) => s.hudMode);
-  const hour = useBarcelonaHour();
-  return hudTheme(mode, nightAmount(hour));
+  const override = useBaseCamp((s) => s.timeOverride);
+  const realHour = useBarcelonaHour();
+  return hudTheme(mode, nightAmount(override ?? realHour));
 };

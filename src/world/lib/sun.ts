@@ -32,3 +32,6 @@ export const clockText = (h: number) => {
   const minutes = Math.floor((h - hours) * 60 + 1e-6);
   return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(2, "0")}`;
 };
+
+/** The hour the town shows: a preview override, else the real hour in Barcelona. */
+export const effectiveHour = (override: number | null, now: Date) => override ?? barcelonaHour(now);

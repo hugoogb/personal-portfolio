@@ -1,13 +1,13 @@
 import { useState, type KeyboardEvent } from "react";
 import { runCommand } from "@/hud/actions";
-import { filterCommands } from "@/hud/commands";
+import { commandsFor, filterCommands, isPreview } from "@/hud/commands";
 import { useDialog } from "@/hud/useDialog";
 
 export function Console() {
   const ref = useDialog<HTMLDivElement>();
   const [query, setQuery] = useState("");
   const [active, setActive] = useState(0);
-  const results = filterCommands(query);
+  const results = filterCommands(query, commandsFor(isPreview()));
   const current = results[Math.min(active, results.length - 1)];
 
   const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {

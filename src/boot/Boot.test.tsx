@@ -64,7 +64,6 @@ describe("Boot", () => {
     await waitFor(() => expect(html.classList.contains("world-ready")).toBe(true));
     const s = useBaseCamp.getState();
     expect(s.tier).toBe(2);
-    expect(s.introDone).toBe(true);
     expect(s.seen).toBe(true);
     expect(s.firstVisit).toBe(true);
     expect(document.getElementById("brief")?.hasAttribute("inert")).toBe(true);

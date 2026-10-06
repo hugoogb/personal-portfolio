@@ -31,5 +31,5 @@ export const ringOf = (x: number, z: number) =>
 /** A prop ring's y offset: below ground, then up with a small overshoot. */
 export const ringRise = (t: number, ring: number) => {
   const delay = 0.8 + ring * 4 * 0.025;
-  return (easeBack(clamp01((t - delay) / 0.35)) - 1) * 1.6;
+  return (easeBack(clamp01((t - delay) / 0.35)) - 1) * 2.4;
 };

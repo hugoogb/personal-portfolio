@@ -5,7 +5,7 @@ import type { Tier } from "@/boot/tiers";
 import { useBaseCamp } from "@/store/store";
 import type { BuiltWorld } from "@/world/build";
 import { lighting } from "@/world/lib/lighting";
-import { barcelonaHour } from "@/world/lib/sun";
+import { effectiveHour } from "@/world/lib/sun";
 
 const SHADOW_MAP: Record<Tier, number> = { 0: 0, 1: 0, 2: 1024, 3: 2048 };
 const RECOMPUTE_S = 0.25;
@@ -32,7 +32,7 @@ export function DayNight({ world }: { world: BuiltWorld }) {
     if (since.current < RECOMPUTE_S) return;
     since.current = 0;
     const s = useBaseCamp.getState();
-    const L = lighting(barcelonaHour(new Date()));
+    const L = lighting(effectiveHour(s.timeOverride, new Date()));
     const { kit, town, env } = world;
     env.night = L.night;
     env.lit = L.lit;

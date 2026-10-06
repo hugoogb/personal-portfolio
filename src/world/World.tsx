@@ -6,6 +6,7 @@ import { buildWorld, type BuiltWorld } from "@/world/build";
 import { CAMERA_OFFSET } from "@/world/lib/camera";
 import { wasDrag } from "@/world/lib/drag";
 import { Places } from "@/world/scene/Places";
+import { BuildIn } from "@/world/systems/BuildIn";
 import { CameraRig } from "@/world/systems/CameraRig";
 import { DayNight } from "@/world/systems/DayNight";
 import { Governor } from "@/world/systems/Governor";
@@ -93,6 +94,7 @@ export default function World({ onReady }: WorldProps) {
       {frameloop === "demand" && <ThirtyFps />}
       {world && (
         <>
+          <BuildIn world={world} />
           <DayNight world={world} />
           <primitive object={world.town.root} />
           <Places places={world.places} />

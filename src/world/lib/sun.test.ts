@@ -1,5 +1,12 @@
 import { describe, expect, it } from "vitest";
-import { SUNRISE, barcelonaHour, clockText, dayAmount, nightAmount } from "@/world/lib/sun";
+import {
+  SUNRISE,
+  barcelonaHour,
+  clockText,
+  dayAmount,
+  effectiveHour,
+  nightAmount,
+} from "@/world/lib/sun";
 
 describe("sun", () => {
   it("reads the hour in Barcelona, across daylight saving", () => {
@@ -24,5 +31,13 @@ describe("sun", () => {
     expect(clockText(9.5)).toBe("09:30");
     expect(clockText(0)).toBe("00:00");
     expect(clockText(23 + 59.6 / 60)).toBe("23:59");
+  });
+});
+
+describe("effectiveHour", () => {
+  it("prefers the override, else the real Barcelona hour", () => {
+    const now = new Date("2026-10-06T10:00:00Z");
+    expect(effectiveHour(23, now)).toBe(23);
+    expect(effectiveHour(null, now)).toBe(12);
   });
 });

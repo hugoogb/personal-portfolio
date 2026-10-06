@@ -35,6 +35,7 @@ describe("build-in timeline (spec 5.4)", () => {
     expect(ringOf(0, 0)).toBe(0);
     expect(ringOf(17, 13)).toBe(PROP_RINGS - 1);
     expect(ringRise(0.8, 0)).toBeLessThan(0);
+    expect(ringRise(0.8, 0)).toBeLessThanOrEqual(-2.3);
     for (let r = 0; r < PROP_RINGS; r++) expect(ringRise(BUILD_IN_S, r)).toBeCloseTo(0, 6);
   });
 });

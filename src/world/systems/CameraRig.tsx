@@ -56,11 +56,22 @@ export function CameraRig() {
       const f = frameFor(PLACE_BY_ID[id].map, narrow.current);
       aim(f.x, f.z, f.view);
     };
-    const initial = useBaseCamp.getState().selected;
-    if (initial) frame(initial);
+    const jump = (x: number, z: number, view: number) => {
+      const t = clampTarget(x, z);
+      const v = clampView(view);
+      Object.assign(rig.current, { x: t.x, z: t.z, view: v, gx: t.x, gz: t.z, gview: v });
+      invalidate();
+    };
+    const s0 = useBaseCamp.getState();
+    if (s0.introRunning && s0.goal) jump(s0.goal.x, s0.goal.z, s0.goal.view);
+    else if (s0.selected) frame(s0.selected);
     return useBaseCamp.subscribe((s, prev) => {
-      if (s.selected && s.selected !== prev.selected) frame(s.selected);
-      if (s.goal && s.goal !== prev.goal) aim(s.goal.x, s.goal.z, s.goal.view);
+      if (!s.introRunning && s.selected && s.selected !== prev.selected) frame(s.selected);
+      if (s.goal && s.goal !== prev.goal) {
+        if (s.goal.instant) jump(s.goal.x, s.goal.z, s.goal.view);
+        else aim(s.goal.x, s.goal.z, s.goal.view);
+      }
+      if (s.reframeSeq !== prev.reframeSeq && s.selected) frame(s.selected);
     });
   }, [invalidate]);
 

@@ -5,7 +5,8 @@ export type CommandRun =
   | { type: "go"; id: PlaceId }
   | { type: "drive" }
   | { type: "brief" }
-  | { type: "copyEmail" };
+  | { type: "copyEmail" }
+  | { type: "time"; hour: number | null };
 
 export interface Command {
   id: string;
@@ -13,10 +14,7 @@ export interface Command {
   run: CommandRun;
 }
 
-/**
- * The console's commands (spec 4.3). "night" and "day" arrive with the
- * lighting in Phase 3.
- */
+/** The console's commands (spec 4.3). */
 export const COMMANDS: Command[] = [
   ...PLACES.map((p) => ({
     id: `go-${p.slug}`,
@@ -27,6 +25,19 @@ export const COMMANDS: Command[] = [
   { id: "brief", label: "brief", run: { type: "brief" } },
   { id: "copy-email", label: "copy email", run: { type: "copyEmail" } },
 ];
+
+const TIME_COMMANDS: Command[] = [
+  { id: "night", label: "night", run: { type: "time", hour: 23 } },
+  { id: "day", label: "day", run: { type: "time", hour: 13 } },
+  { id: "live", label: "live", run: { type: "time", hour: null } },
+];
+
+/** "night" and "day" exist to check the lighting; they are not offered on the live site (spec 4.3). */
+export const commandsFor = (preview: boolean): Command[] =>
+  preview ? [...COMMANDS, ...TIME_COMMANDS] : COMMANDS;
+
+export const isPreview = () =>
+  import.meta.env.DEV || !/(^|\.)hugoogb\.dev$/.test(window.location.hostname);
 
 /** Every word must appear in the label or, for a go command, in the place's slug. */
 export const filterCommands = (query: string, list: Command[] = COMMANDS) => {

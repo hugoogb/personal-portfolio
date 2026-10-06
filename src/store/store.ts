@@ -22,6 +22,8 @@ export interface CameraGoal {
   x: number;
   z: number;
   view: number;
+  /** Jump there at once instead of easing. */
+  instant?: boolean;
   seq: number;
 }
 
@@ -62,6 +64,12 @@ export interface BaseCampState {
   /** The selected card is showing its stack chips (E). */
   stackOpen: boolean;
   goal: CameraGoal | null;
+  /** The build-in is holding the camera at the overview. */
+  introRunning: boolean;
+  /** Bumped to ask the camera to re-frame the selection. */
+  reframeSeq: number;
+  /** A preview hour that replaces the real one; never persisted. */
+  timeOverride: number | null;
   view: CameraView;
   toasts: Toast[];
   /** When the last stadium wave started (ms since epoch), 0 for never. */
@@ -86,7 +94,10 @@ export interface BaseCampState {
   setConsoleOpen: (open: boolean) => void;
   setDriving: (on: boolean) => void;
   toggleStack: () => void;
-  focus: (x: number, z: number, view: number) => void;
+  focus: (x: number, z: number, view: number, instant?: boolean) => void;
+  setTimeOverride: (hour: number | null) => void;
+  setIntroRunning: (on: boolean) => void;
+  reframe: () => void;
   setView: (view: CameraView) => void;
   toast: (text: string) => void;
   dismissToast: (id: number) => void;
@@ -158,6 +169,9 @@ export const createBaseCampStore = (storage: KeyValueStorage = safeStorage()) =>
         firstVisit: false,
         stackOpen: false,
         goal: null,
+        introRunning: false,
+        reframeSeq: 0,
+        timeOverride: null,
         view: { x: 0, z: 0, view: 30, aspect: 16 / 9 },
         toasts: [],
         waveAt: 0,
@@ -207,7 +221,10 @@ export const createBaseCampStore = (storage: KeyValueStorage = safeStorage()) =>
         },
         setDriving: (driving) => set({ driving }),
         toggleStack: () => set((s) => ({ stackOpen: !s.stackOpen })),
-        focus: (x, z, view) => set({ goal: { x, z, view, seq: nextGoalSeq++ } }),
+        focus: (x, z, view, instant) => set({ goal: { x, z, view, instant, seq: nextGoalSeq++ } }),
+        setTimeOverride: (timeOverride) => set({ timeOverride }),
+        setIntroRunning: (introRunning) => set({ introRunning }),
+        reframe: () => set((s) => ({ reframeSeq: s.reframeSeq + 1 })),
         setView: (view) => set({ view }),
         toast: (text) => set((s) => ({ toasts: [...s.toasts, { id: nextToastId++, text }] })),
         dismissToast: (id) => set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) })),
