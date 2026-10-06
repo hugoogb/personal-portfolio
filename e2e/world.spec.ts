@@ -128,7 +128,8 @@ test("Lite returns to the Brief, and the town can be entered again", async ({ pa
   await page.goto("/");
   await ready(page);
   await page.getByRole("button", { name: "Settings" }).click();
-  await page.getByRole("radio", { name: "Lite" }).check();
+  // Picking Lite removes the radio itself, so check() cannot confirm its state; click it.
+  await page.getByRole("radio", { name: "Lite" }).click();
   await expect(page.locator("html")).not.toHaveClass(/(^|\s)world(\s|$)/);
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   await page.getByRole("button", { name: "Enter the town anyway" }).click();
