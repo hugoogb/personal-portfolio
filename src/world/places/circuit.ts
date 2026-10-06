@@ -171,6 +171,7 @@ export function buildCircuit(kit: Kit): THREE.Group {
     const body = new THREE.Mesh(bodyG, m);
     body.position.y = 0.08;
     body.castShadow = true;
+    body.userData.dynamic = true;
     c.add(body);
     rbox(0.08, 0.03, 0.28, col, 0.2, 0.02, 0, c, 0.01);
     rbox(0.06, 0.07, 0.24, "#1f2329", -0.17, 0.07, 0, c, 0.02);

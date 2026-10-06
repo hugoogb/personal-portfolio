@@ -101,3 +101,12 @@ describe("yard LEDs", () => {
     }
   });
 });
+
+describe("circuit cars for the lap flash", () => {
+  it("keep their bodies dynamic so baking leaves them swappable", () => {
+    const kit = createKit();
+    buildCircuit(kit);
+    const f1 = kit.life.f1 as { cars: { body: THREE.Mesh }[] };
+    for (const c of f1.cars) expect(c.body.userData.dynamic).toBe(true);
+  });
+});

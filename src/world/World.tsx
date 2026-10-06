@@ -10,6 +10,7 @@ import { ArenaDrive } from "@/world/systems/ArenaDrive";
 import { BuildIn } from "@/world/systems/BuildIn";
 import { CameraRig } from "@/world/systems/CameraRig";
 import { DayNight } from "@/world/systems/DayNight";
+import { Eggs } from "@/world/systems/Eggs";
 import { Governor } from "@/world/systems/Governor";
 import { Labels } from "@/world/systems/Labels";
 import { Life } from "@/world/systems/Life";
@@ -104,6 +105,7 @@ export default function World({ onReady }: WorldProps) {
           <Life world={world} />
           <Traffic world={world} />
           <ArenaDrive world={world} />
+          <Eggs world={world} />
           <YardLights world={world} />
           <FirstFrame onDrawn={() => setDrawn(true)} onReady={onReady} />
         </>

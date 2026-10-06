@@ -219,3 +219,10 @@ test("driving: keys move the car, Esc leaves and frames the arena", async ({ pag
   await expect(page.getByRole("region", { name: "Driving" })).toHaveCount(0);
   await expect(page.getByRole("heading", { level: 2, name: "The Arena" })).toBeVisible();
 });
+
+test("the stadium wave runs from its card", async ({ page }) => {
+  await page.goto("/#stadium");
+  await ready(page);
+  await page.getByRole("button", { name: /Start a wave/ }).click();
+  await expect(page.getByText("Wave started in the stands")).toBeVisible();
+});
