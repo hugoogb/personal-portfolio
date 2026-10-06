@@ -368,7 +368,9 @@ export function buildTown(kit: Kit) {
     cloudShadow.instanceMatrix.needsUpdate = true;
   };
   writeClouds();
-  kit.onFrame((dt) => {
+  kit.onFrame((dt, _t, env) => {
+    // A daytime effect: an invisible mesh is not drawn into the shadow map either.
+    cloudShadow.visible = env.night < 0.5;
     for (const c of clouds) {
       c.position.x += dt * 0.55;
       if (c.position.x > 38) c.position.x = -38;

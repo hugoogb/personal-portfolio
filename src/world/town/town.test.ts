@@ -69,6 +69,18 @@ describe("buildTown", () => {
     const before = clouds.instanceMatrix.array[12];
     kit.frame(1, 1, { night: 0, lit: 0, tier: 3 });
     expect(clouds.instanceMatrix.array[12]).not.toBe(before);
+    expect(clouds.visible).toBe(true);
+  });
+
+  it("casts cloud shadows by day only, and keeps drifting at night", () => {
+    const kit = createKit();
+    const clouds = buildTown(kit).clouds;
+    const before = clouds.instanceMatrix.array[12];
+    kit.frame(1, 1, { night: 1, lit: 1, tier: 3 });
+    expect(clouds.visible).toBe(false);
+    expect(clouds.instanceMatrix.array[12]).not.toBe(before);
+    kit.frame(1, 2, { night: 0, lit: 0, tier: 3 });
+    expect(clouds.visible).toBe(true);
   });
 
   describe("chimney smoke", () => {
