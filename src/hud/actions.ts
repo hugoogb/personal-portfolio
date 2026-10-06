@@ -8,19 +8,27 @@ import { OVERVIEW } from "@/world/lib/map";
 /** Opens the prerendered Brief over the town (Boot sets html.brief-open), optionally at a section. */
 export const openBrief = (anchor: string | null = null) => {
   useBaseCamp.getState().setBriefOpen(true);
-  requestAnimationFrame(() => {
+  // Boot applies html.brief-open in an effect; wait for it so we never scroll a hidden Brief.
+  let frames = 0;
+  const reveal = () => {
+    if (!document.documentElement.classList.contains("brief-open") && ++frames < 10) {
+      requestAnimationFrame(reveal);
+      return;
+    }
     const brief = document.getElementById("brief");
     if (!brief) return;
     brief.setAttribute("tabindex", "-1");
     const target = anchor ? document.getElementById(anchor) : brief;
     target?.scrollIntoView?.({ block: "start" });
     brief.focus({ preventScroll: true });
-  });
+  };
+  requestAnimationFrame(reveal);
 };
 
 export const closeBrief = () => {
   useBaseCamp.getState().setBriefOpen(false);
-  document.querySelector<HTMLElement>("[data-brief-toggle]")?.focus();
+  // The stage is inert until the next render; focus once it is live again.
+  requestAnimationFrame(() => document.querySelector<HTMLElement>("[data-brief-toggle]")?.focus());
 };
 
 export const toggleBrief = () => (useBaseCamp.getState().briefOpen ? closeBrief() : openBrief());

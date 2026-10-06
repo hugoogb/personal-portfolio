@@ -6,9 +6,9 @@ import { useBaseCamp, type BaseCampState } from "@/store/store";
 
 /** Esc closes the innermost thing first, then deselects (spec 4.2). */
 const escape = (s: BaseCampState) => {
+  if (s.briefOpen) return closeBrief();
   if (s.consoleOpen) return s.setConsoleOpen(false);
   if (s.panel) return s.setPanel(null);
-  if (s.briefOpen) return closeBrief();
   if (s.driving) return s.setDriving(false);
   s.deselect();
 };

@@ -38,6 +38,14 @@ describe("useHudKeys", () => {
     expect(useBaseCamp.getState().selected).toBeNull();
   });
 
+  it("closes the Brief before anything hidden behind it on Escape", () => {
+    render(<Probe />);
+    useBaseCamp.setState({ briefOpen: true, panel: "settings" });
+    press("Escape");
+    expect(useBaseCamp.getState().briefOpen).toBe(false);
+    expect(useBaseCamp.getState().panel).toBe("settings");
+  });
+
   it("ignores shortcuts typed into a field", () => {
     const { getByLabelText } = render(<Probe />);
     fireEvent.keyDown(getByLabelText("field"), { key: "ArrowRight" });
