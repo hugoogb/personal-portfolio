@@ -19,9 +19,13 @@ export const useHudKeys = () => {
       const action = keyAction(e);
       if (!action) return;
       const s = useBaseCamp.getState();
+      // The title card is still up: the town is not interactive yet.
+      if (!s.introDone) return;
       // While driving or reading the Brief, the town's shortcuts stand down.
       if (s.driving && action !== "escape") return;
       if (s.briefOpen && action !== "escape" && action !== "brief") return;
+      // A dialog owns the keyboard: arrows, letters and links must not leak out of it.
+      if ((s.panel || s.consoleOpen) && action !== "escape" && action !== "console") return;
       e.preventDefault();
       const place = s.selected ? PLACE_BY_ID[s.selected] : null;
       switch (action) {

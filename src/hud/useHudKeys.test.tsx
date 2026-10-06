@@ -12,7 +12,8 @@ function Probe() {
 const press = (key: string, init: KeyboardEventInit = {}) =>
   fireEvent.keyDown(window, { key, ...init });
 
-beforeEach(() => useBaseCamp.setState(useBaseCamp.getInitialState()));
+// The town is live once the title card has gone; most tests start there.
+beforeEach(() => useBaseCamp.setState({ ...useBaseCamp.getInitialState(), introDone: true }));
 
 describe("useHudKeys", () => {
   it("cycles from HQ and deselects on Escape", () => {
@@ -73,5 +74,29 @@ describe("useHudKeys", () => {
     expect(useBaseCamp.getState().selected).toBe("arena");
     press("b");
     expect(useBaseCamp.getState().briefOpen).toBe(false);
+  });
+
+  it("keeps the town's shortcuts out of the settings and trophies dialogs", () => {
+    render(<Probe />);
+    useBaseCamp.setState({ panel: "settings", selected: "hq" });
+    press("ArrowRight");
+    press("b");
+    press("q");
+    expect(useBaseCamp.getState().selected).toBe("hq");
+    expect(useBaseCamp.getState().briefOpen).toBe(false);
+    press("Escape");
+    expect(useBaseCamp.getState().panel).toBeNull();
+    useBaseCamp.setState({ consoleOpen: true });
+    press("ArrowRight");
+    expect(useBaseCamp.getState().selected).toBe("hq");
+  });
+
+  it("ignores every key until the title card has gone", () => {
+    render(<Probe />);
+    useBaseCamp.setState({ introDone: false });
+    press("ArrowRight");
+    press("k", { ctrlKey: true });
+    expect(useBaseCamp.getState().selected).toBeNull();
+    expect(useBaseCamp.getState().consoleOpen).toBe(false);
   });
 });
