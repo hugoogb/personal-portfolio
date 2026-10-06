@@ -188,11 +188,13 @@ export function buildCircuit(kit: Kit): THREE.Group {
     return { g: c, body, mat: m, t: i / 3, sp };
   });
   kit.life.f1 = { curve, cars };
+  const p = new THREE.Vector3();
+  const tg = new THREE.Vector3();
   kit.onFrame((dt) => {
     for (const c of cars) {
       c.t = (c.t + dt * c.sp) % 1;
-      const p = curve.getPointAt(c.t),
-        tg = curve.getTangentAt(c.t);
+      curve.getPointAt(c.t, p);
+      curve.getTangentAt(c.t, tg);
       c.g.position.set(p.x, 0.06, p.z);
       c.g.rotation.y = Math.atan2(-tg.z, tg.x);
     }

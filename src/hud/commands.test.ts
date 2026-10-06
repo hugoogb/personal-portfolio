@@ -1,6 +1,7 @@
-import { describe, expect, it } from "vitest";
+// @vitest-environment jsdom
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { PLACES } from "@/content/places";
-import { COMMANDS, commandsFor, filterCommands } from "@/hud/commands";
+import { COMMANDS, commandsFor, filterCommands, isPreview } from "@/hud/commands";
 
 describe("commands", () => {
   it("has a go command for every place, plus drive, brief and copy email", () => {
@@ -29,5 +30,34 @@ describe("time commands", () => {
       .filter((c) => c.run.type === "time")
       .map((c) => c.label);
     expect(times).toEqual(["night", "day", "live"]);
+  });
+});
+
+describe("isPreview", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+    vi.unstubAllGlobals();
+  });
+  const on = (hostname: string) => {
+    vi.stubEnv("DEV", false);
+    vi.stubGlobal("location", { hostname });
+    return isPreview();
+  };
+
+  it("is false on the live site, with or without www", () => {
+    expect(on("hugoogb.dev")).toBe(false);
+    expect(on("www.hugoogb.dev")).toBe(false);
+  });
+
+  it("is true on previews, localhost and look-alike hosts", () => {
+    expect(on("foo.vercel.app")).toBe(true);
+    expect(on("localhost")).toBe(true);
+    expect(on("nothugoogb.dev")).toBe(true);
+  });
+
+  it("is always true in development", () => {
+    vi.stubEnv("DEV", true);
+    vi.stubGlobal("location", { hostname: "hugoogb.dev" });
+    expect(isPreview()).toBe(true);
   });
 });

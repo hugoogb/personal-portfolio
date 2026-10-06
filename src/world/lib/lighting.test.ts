@@ -37,6 +37,15 @@ describe("lighting", () => {
     expect(L.board).toBeCloseTo(1.05, 5);
   });
 
+  it("is fully lit at 23:00, the hour the night preview command shows", () => {
+    const L = lighting(23);
+    expect(L.windows.bright).toBeCloseTo(0.95, 5);
+    expect(L.lamps).toBeCloseTo(1.25, 5);
+    expect(L.pools).toBeCloseTo(0.32, 5);
+    expect(L.stadium).toBeCloseTo(8, 5);
+    expect(L.hemi.intensity).toBeCloseTo(1.15, 5);
+  });
+
   it("blends through dusk", () => {
     const L = lighting(SUNSET);
     expect(L.day).toBeGreaterThan(0);
