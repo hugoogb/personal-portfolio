@@ -6,6 +6,7 @@ import {
   PROJECT_IDS,
   PROJECT_PLACES,
   placeBySlug,
+  stepPlace,
 } from "@/content/places";
 import type { Place } from "@/content/types";
 
@@ -113,5 +114,18 @@ describe("places", () => {
     expect(PLACE_BY_ID.wt.secondary).toBeUndefined();
     expect(PLACE_BY_ID.wt.closedNote).toBe("Pre-launch · closed source");
     expect(PLACE_BY_ID.rl.secondary?.href).toBe("https://github.com/hugoogb/readledger");
+  });
+});
+
+describe("stepPlace", () => {
+  it("walks the cycle both ways and wraps", () => {
+    expect(stepPlace("hq", 1)).toBe("f1");
+    expect(stepPlace("post", 1)).toBe("hq");
+    expect(stepPlace("hq", -1)).toBe("post");
+  });
+
+  it("starts again from HQ when nothing is selected", () => {
+    expect(stepPlace(null, 1)).toBe("hq");
+    expect(stepPlace(null, -1)).toBe("hq");
   });
 });

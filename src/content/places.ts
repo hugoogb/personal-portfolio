@@ -197,3 +197,10 @@ export const placeBySlug = (slug: string): Place | undefined => {
   if (!wanted) return undefined;
   return PLACES.find((p) => p.slug === wanted);
 };
+
+/** The arrow keys and R walk the cycle; with nothing selected, both start at HQ (spec 4.1). */
+export const stepPlace = (current: PlaceId | null, dir: 1 | -1): PlaceId => {
+  if (!current) return "hq";
+  const i = ORDER.indexOf(current);
+  return ORDER[(i + dir + ORDER.length) % ORDER.length];
+};
