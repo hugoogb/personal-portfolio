@@ -59,7 +59,8 @@ describe("places", () => {
   });
 
   it("keeps copy free of em and en dashes", () => {
-    for (const p of PLACES) for (const text of copyOf(p)) expect(text).not.toMatch(/[–—]/);
+    for (const p of PLACES)
+      for (const text of copyOf(p)) expect(text).not.toMatch(/[\u2013\u2014]/);
   });
 
   it("shows a screenshot for every project and for nothing else", () => {
