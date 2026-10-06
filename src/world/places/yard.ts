@@ -47,6 +47,7 @@ export function buildYard(kit: Kit): THREE.Group {
       metalness: 0.1,
       side: THREE.DoubleSide,
       depthWrite: false,
+      forceSinglePass: true,
     }),
   );
   mk(new THREE.BoxGeometry(W, Hh, D), glassM, g, 0, y0 + Hh / 2, 0, false);

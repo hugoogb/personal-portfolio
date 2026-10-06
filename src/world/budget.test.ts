@@ -11,54 +11,55 @@ beforeEach(() => {
   stubCanvas();
 });
 
-/** Draw calls and triangles of everything a High frame renders (spec 10). */
+const triangles = (mesh: THREE.Mesh) => {
+  const g = mesh.geometry;
+  const tris = (g.index ? g.index.count : g.attributes.position.count) / 3;
+  const inst = (mesh as THREE.InstancedMesh).isInstancedMesh
+    ? (mesh as THREE.InstancedMesh).count
+    : 1;
+  return tris * inst;
+};
+
+/** Draw calls of one mesh in the main pass: one per material group, two for a
+ * transparent double-sided material that three renders back then front. */
+const mainCalls = (mesh: THREE.Mesh) => {
+  const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+  let n = 0;
+  for (const m of mats) {
+    n += m.transparent && m.side === THREE.DoubleSide && !m.forceSinglePass ? 2 : 1;
+  }
+  return n;
+};
+
+/** What a High frame renders: the main pass, then the sun's shadow pass (spec 10). */
 const measure = (roots: THREE.Object3D[]) => {
-  let calls = 0;
-  let triangles = 0;
+  const main = { calls: 0, triangles: 0 };
+  const shadow = { calls: 0, triangles: 0 };
   const visit = (o: THREE.Object3D) => {
-    if (!o.visible || o.layers.mask === 1 << 1) return;
+    // Smoke starts hidden but is on screen in steady state, so count it.
+    if (!o.visible && o.userData.kind !== "smoke") return;
     const mesh = o as THREE.Mesh;
     if (mesh.isMesh) {
-      calls++;
-      const g = mesh.geometry;
-      const tris = (g.index ? g.index.count : g.attributes.position.count) / 3;
-      const inst = (mesh as THREE.InstancedMesh).isInstancedMesh
-        ? (mesh as THREE.InstancedMesh).count
-        : 1;
-      triangles += tris * inst;
+      main.calls += mainCalls(mesh);
+      main.triangles += triangles(mesh);
+      if (mesh.castShadow) {
+        shadow.calls++;
+        shadow.triangles += triangles(mesh);
+      }
     }
     o.children.forEach(visit);
   };
   roots.forEach(visit);
-  return { calls, triangles };
+  return { main, shadow };
 };
 
 describe("render budget (spec 10)", () => {
-  it("fits High's draw calls and triangles", () => {
+  it("fits High's main pass and shadow pass", () => {
     const w = buildWorld();
-    const { calls, triangles } = measure([w.town.root, ...Object.values(w.places)]);
-    if (process.env.BUDGET_DEBUG) {
-      const groups: Record<string, THREE.Object3D[]> = {
-        places: Object.values(w.places),
-        rings: w.rings,
-        ground: w.kit.buildIn.ground ? [w.kit.buildIn.ground] : [],
-      };
-      const seen = new Set<THREE.Object3D>(Object.values(groups).flat());
-      // "other" = the rest of the town root (roads, smoke, lights, ...)
-      const other = measure(w.town.root.children.filter((c) => !seen.has(c)));
-      console.log(
-        "BUDGET",
-        JSON.stringify({
-          total: { calls, triangles },
-          places: measure(groups.places),
-          rings: measure(groups.rings),
-          ground: measure(groups.ground),
-          other,
-        }),
-      );
-    }
-    expect(calls).toBeLessThanOrEqual(250);
-    expect(triangles).toBeLessThanOrEqual(300_000);
+    const { main, shadow } = measure([w.town.root, ...Object.values(w.places)]);
+    expect(main.calls).toBeLessThanOrEqual(250);
+    expect(main.triangles).toBeLessThanOrEqual(300_000);
+    expect(shadow.calls).toBeLessThanOrEqual(60);
     w.kit.dispose();
   });
 });

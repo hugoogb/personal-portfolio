@@ -56,10 +56,19 @@ export function buildWorld(): BuiltWorld {
   ]);
   const board = kit.life.boardFace as THREE.Material | undefined;
   if (board) keep.add(board);
-  const opts = { keep, own: kit.own };
+  const opts = { keep, own: kit.own, shadowProxy: true };
   for (const g of Object.values(places)) bakeStatic(g, opts);
   for (const ring of rings) bakeStatic(ring, opts);
   if (kit.buildIn.ground) bakeStatic(kit.buildIn.ground, opts);
+  // Rigid moving parts (cars, ship, buoys, hat, lid) merge inside themselves
+  // and keep their own shadow: the group moves, its pieces do not.
+  const movers: THREE.Object3D[] = [];
+  for (const g of [town.root, ...Object.values(places)]) {
+    g.traverse((o) => {
+      if (o.userData.dynamic && !(o as THREE.Mesh).isMesh && o.children.length > 1) movers.push(o);
+    });
+  }
+  for (const m of movers) bakeStatic(m, { keep, own: kit.own });
 
   return { kit, town, places, rings, env: { night: 0, lit: 0, tier: 3 } };
 }

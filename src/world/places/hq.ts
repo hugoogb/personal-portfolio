@@ -19,6 +19,7 @@ export function buildHq(kit: Kit): THREE.Group {
       metalness: 0.1,
       side: THREE.DoubleSide,
       depthWrite: false,
+      forceSinglePass: true,
     }),
   );
   mk(new THREE.BoxGeometry(2.8, 1.3, 2.3), glassM, g, 0, 0.16 + 0.65, 0, false);
@@ -156,6 +157,7 @@ export function buildHq(kit: Kit): THREE.Group {
         roughness: 0.05,
         side: THREE.DoubleSide,
         depthWrite: false,
+        forceSinglePass: true,
       }),
     );
     mk(new THREE.BoxGeometry(1.6, 0.26, 0.02), rail, g, -0.4, 2.7, 0.13, false);

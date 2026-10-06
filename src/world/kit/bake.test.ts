@@ -1,6 +1,13 @@
+// @vitest-environment jsdom
 import * as THREE from "three";
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
+import { stubCanvas } from "@/test/canvas";
 import { bakeStatic } from "@/world/kit/bake";
+import { createKit } from "@/world/kit/kit";
+
+beforeEach(() => {
+  stubCanvas();
+});
 
 const meshes = (o: THREE.Object3D) => {
   let n = 0;
@@ -101,7 +108,9 @@ describe("bakeStatic", () => {
 
     it("shares one material across bake calls and registers it with own", () => {
       const owned: THREE.Material[] = [];
-      const own = (m: THREE.Material) => void owned.push(m);
+      const own = (x: THREE.Material | THREE.BufferGeometry) => {
+        if (x instanceof THREE.Material) owned.push(x);
+      };
       const make = () => {
         const r = new THREE.Group();
         r.add(
@@ -133,6 +142,70 @@ describe("bakeStatic", () => {
       expect(mats).toContain(glass);
       expect(mats.filter((m) => (m as THREE.MeshStandardMaterial).vertexColors)).toHaveLength(1);
       expect(root.children).toHaveLength(4);
+    });
+  });
+
+  it("hands merged geometry to its owner, which disposes it", () => {
+    const kit = createKit();
+    const root = new THREE.Group();
+    const m = kit.makeMat("#ff0000");
+    for (const x of [0, 2]) {
+      const mesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), m);
+      mesh.position.x = x;
+      root.add(mesh);
+    }
+    bakeStatic(root, { own: kit.own });
+    const merged = (root.children[0] as THREE.Mesh).geometry;
+    const spy = vi.spyOn(merged, "dispose");
+    kit.dispose();
+    expect(spy).toHaveBeenCalled();
+  });
+
+  describe("shadow proxy", () => {
+    const scene = () => {
+      const root = new THREE.Group();
+      const a = new THREE.MeshStandardMaterial({ color: "red", roughness: 0.3 });
+      const b = new THREE.MeshStandardMaterial({ color: "blue", roughness: 0.9 });
+      const glow = new THREE.MeshStandardMaterial({ color: "white", emissive: "#ffcc00" });
+      for (const [x, m] of [
+        [0, a],
+        [2, b],
+        [4, glow],
+      ] as const) {
+        const mesh = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), m);
+        mesh.position.x = x;
+        mesh.castShadow = true;
+        root.add(mesh);
+      }
+      return root;
+    };
+
+    it("casts every merged caster's shadow from one invisible mesh", () => {
+      const root = scene();
+      bakeStatic(root, { own: (m) => m, shadowProxy: true });
+      const casters = root.children.filter((c) => (c as THREE.Mesh).castShadow) as THREE.Mesh[];
+      expect(casters).toHaveLength(1);
+      const mat = casters[0].material as THREE.MeshBasicMaterial;
+      expect(mat.colorWrite).toBe(false);
+      expect(mat.depthWrite).toBe(false);
+      expect(casters[0].receiveShadow).toBe(false);
+      // all three boxes (24 vertices each) are in it, in root space
+      expect(casters[0].geometry.getAttribute("position").count).toBe(72);
+      expect(new THREE.Box3().setFromObject(casters[0]).max.x).toBeCloseTo(4.5, 5);
+    });
+
+    it("shares one proxy material per owner and is off by default", () => {
+      const own = (m: THREE.Material | THREE.BufferGeometry) => m;
+      const a = scene();
+      const b = scene();
+      bakeStatic(a, { own, shadowProxy: true });
+      bakeStatic(b, { own, shadowProxy: true });
+      const proxy = (r: THREE.Object3D) =>
+        (r.children.find((c) => (c as THREE.Mesh).castShadow) as THREE.Mesh).material;
+      expect(proxy(a)).toBe(proxy(b));
+      const c = scene();
+      bakeStatic(c);
+      expect(c.children.filter((x) => (x as THREE.Mesh).castShadow).length).toBeGreaterThan(1);
     });
   });
 });

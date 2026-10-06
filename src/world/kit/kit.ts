@@ -118,9 +118,11 @@ export function createKit(seed = 1337) {
       return g;
     }
     const R2 = Math.max(0.005, Math.min(rr, w / 2 - 0.002, h / 2 - 0.002, d / 2 - 0.002));
-    const key = [w, h, d, R2].map((v) => v.toFixed(3)).join("|");
+    // Trim, frames and sills have corners too small to see: one segment is enough.
+    const seg = R2 <= 0.04 ? 1 : 3;
+    const key = [w, h, d, R2, seg].map((v) => v.toFixed(3)).join("|");
     let g = geoCache.get(key);
-    if (!g) geoCache.set(key, (g = own(new RoundedBoxGeometry(w, h, d, 3, R2))));
+    if (!g) geoCache.set(key, (g = own(new RoundedBoxGeometry(w, h, d, seg, R2))));
     return g;
   };
 

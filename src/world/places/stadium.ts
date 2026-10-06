@@ -141,7 +141,8 @@ export function buildStadium(kit: Kit): THREE.Group {
   const players: Player[] = [];
   for (let i = 0; i < 8; i++) {
     const col = i < 4 ? (i % 2 ? "#ffffff" : "#00954c") : "#3b82c4";
-    const m = mk(pg, col, g, (rand() * 2 - 1) * 2, 0.25, (rand() * 2 - 1) * 1.2);
+    // 11 cm capsules: their shadows are specks, and each would cost a shadow-pass draw
+    const m = mk(pg, col, g, (rand() * 2 - 1) * 2, 0.25, (rand() * 2 - 1) * 1.2, false);
     m.userData.dynamic = true;
     players.push({ m, tx: (rand() * 2 - 1) * 2.2, tz: (rand() * 2 - 1) * 1.35 });
   }
