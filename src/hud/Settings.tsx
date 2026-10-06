@@ -24,6 +24,7 @@ export function Settings() {
   const tier = useBaseCamp((s) => s.tier);
   const fps = useBaseCamp((s) => s.fps);
   const setPanel = useBaseCamp((s) => s.setPanel);
+  const setConsoleOpen = useBaseCamp((s) => s.setConsoleOpen);
   const hour = useBarcelonaHour();
   const night = nightAmount(hour) > 0.5;
 
@@ -102,6 +103,24 @@ export function Settings() {
               <span>{label}</span>
             </label>
           ))}
+        </div>
+      </fieldset>
+      <fieldset className="panel__group">
+        <legend className="hud-label">More</legend>
+        <div className="segmented">
+          <button type="button" className="hud-btn" onClick={() => setPanel("trophies")}>
+            Trophies
+          </button>
+          <button
+            type="button"
+            className="hud-btn"
+            onClick={() => {
+              setPanel(null);
+              setConsoleOpen(true);
+            }}
+          >
+            Console
+          </button>
         </div>
       </fieldset>
       <section className="panel__group panel__time" aria-label="Time in Barcelona">

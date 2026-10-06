@@ -34,4 +34,15 @@ describe("Settings", () => {
     fireEvent.click(screen.getByRole("button", { name: "Close settings" }));
     expect(useBaseCamp.getState().panel).toBeNull();
   });
+
+  it("reaches Trophies and the console, which phones have no other control for", () => {
+    useBaseCamp.setState({ panel: "settings" });
+    render(<Settings />);
+    fireEvent.click(screen.getByRole("button", { name: "Trophies" }));
+    expect(useBaseCamp.getState().panel).toBe("trophies");
+    useBaseCamp.setState({ panel: "settings" });
+    fireEvent.click(screen.getByRole("button", { name: "Console" }));
+    expect(useBaseCamp.getState().panel).toBeNull();
+    expect(useBaseCamp.getState().consoleOpen).toBe(true);
+  });
 });
