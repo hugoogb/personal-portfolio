@@ -107,6 +107,31 @@ describe("Boot", () => {
     }
   });
 
+  it("does not time out a hidden tab, then times out once it is visible", () => {
+    vi.useFakeTimers();
+    const original = Object.getOwnPropertyDescriptor(document, "hidden");
+    let hidden = true;
+    Object.defineProperty(document, "hidden", { configurable: true, get: () => hidden });
+    try {
+      html.classList.add("world", "can-world");
+      vi.mocked(readSignals).mockReturnValue(new Promise(() => {}));
+      render(<Boot />);
+      act(() => {
+        vi.advanceTimersByTime(READY_TIMEOUT_MS);
+      });
+      expect(html.classList.contains("world")).toBe(true);
+      hidden = false;
+      act(() => {
+        vi.advanceTimersByTime(READY_TIMEOUT_MS);
+      });
+      expect(html.classList.contains("world")).toBe(false);
+    } finally {
+      if (original) Object.defineProperty(document, "hidden", original);
+      else Reflect.deleteProperty(document, "hidden");
+      vi.useRealTimers();
+    }
+  });
+
   it("offers the town from the Brief when WebGL works, and enters it on Low", async () => {
     html.classList.add("has-webgl");
     vi.mocked(bootTier).mockReturnValue({ auto: 1, tier: 1 });

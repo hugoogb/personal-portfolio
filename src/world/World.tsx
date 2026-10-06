@@ -27,11 +27,12 @@ const usePageHidden = () => {
 };
 
 /** Calls onReady once, after the first frame has been drawn. */
-function FirstFrame({ onReady }: { onReady: () => void }) {
+function FirstFrame({ onDrawn, onReady }: { onDrawn: () => void; onReady: () => void }) {
   const done = useRef(false);
   useFrame(() => {
     if (done.current) return;
     done.current = true;
+    onDrawn();
     requestAnimationFrame(() => onReady());
   });
   return null;
@@ -77,7 +78,15 @@ export default function World({ onReady }: WorldProps) {
   const tier = useBaseCamp((s) => s.tier);
   const briefOpen = useBaseCamp((s) => s.briefOpen);
   const hidden = usePageHidden();
-  const frameloop = hidden || briefOpen ? "never" : tier <= 1 ? "demand" : "always";
+  const [drawn, setDrawn] = useState(false);
+  // The first frame is drawn whatever the Brief or the tab are doing, so boot can finish.
+  const frameloop = !drawn
+    ? "always"
+    : hidden || briefOpen
+      ? "never"
+      : tier <= 1
+        ? "demand"
+        : "always";
 
   return (
     <Canvas
@@ -101,7 +110,7 @@ export default function World({ onReady }: WorldProps) {
       <Governor />
       <Labels />
       {frameloop === "demand" && <ThirtyFps />}
-      <FirstFrame onReady={onReady} />
+      <FirstFrame onDrawn={() => setDrawn(true)} onReady={onReady} />
     </Canvas>
   );
 }

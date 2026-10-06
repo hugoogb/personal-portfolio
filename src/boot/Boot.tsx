@@ -46,7 +46,14 @@ export function Boot() {
     let cancelled = false;
     const start = async () => {
       // Bounds the whole boot: GPU check, chunk loading and the first frame.
-      timer.current = window.setTimeout(exit, READY_TIMEOUT_MS);
+      // A hidden tab draws no frames, so only a visible one can time out.
+      const arm = () => {
+        timer.current = window.setTimeout(() => {
+          if (document.hidden) arm();
+          else exit();
+        }, READY_TIMEOUT_MS);
+      };
+      arm();
       setProgress(0.15);
       const store = useBaseCamp.getState();
       const signals = await readSignals();
