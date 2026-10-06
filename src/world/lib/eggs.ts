@@ -1,3 +1,9 @@
+import type * as THREE from "three";
+
+/** True when an egg hit target is among a ray's intersections: a place volume then lets the event through. */
+export const eggUnderPointer = (hits: { object: THREE.Object3D }[]) =>
+  hits.some((h) => h.object.userData.eggTarget === true);
+
 export const SAIL_S = 9;
 /** The caravel's offset from home at sail progress s (0..1): out and back (reference 1476). */
 export const sailOffset = (s: number) => ({

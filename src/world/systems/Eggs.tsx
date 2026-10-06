@@ -159,6 +159,7 @@ export function Eggs({ world }: { world: BuiltWorld }) {
         <mesh
           ref={hatHit}
           visible={false}
+          userData={{ eggTarget: true }}
           onClick={(e) => {
             e.stopPropagation();
             if (wasDrag()) return;
@@ -182,6 +183,7 @@ export function Eggs({ world }: { world: BuiltWorld }) {
             carHits.current[i] = m;
           }}
           visible={false}
+          userData={{ eggTarget: true }}
           onClick={(e) => {
             e.stopPropagation();
             if (wasDrag()) return;

@@ -3,15 +3,18 @@ import type * as THREE from "three";
 import { PLACES, PLACE_BY_ID } from "@/content/places";
 import type { Place, PlaceId } from "@/content/types";
 import { useBaseCamp } from "@/store/store";
+import { eggUnderPointer } from "@/world/lib/eggs";
 import { wasDrag } from "@/world/lib/drag";
 
 function PlaceNode({ place, object }: { place: Place; object: THREE.Group }) {
   const onClick = (e: ThreeEvent<MouseEvent>) => {
+    if (eggUnderPointer(e.intersections)) return;
     e.stopPropagation();
     if (wasDrag() || useBaseCamp.getState().driving) return;
     useBaseCamp.getState().select(place.id);
   };
   const onOver = (e: ThreeEvent<PointerEvent>) => {
+    if (eggUnderPointer(e.intersections)) return;
     e.stopPropagation();
     useBaseCamp.getState().setHover(place.id);
     document.body.style.cursor = "pointer";

@@ -1,5 +1,6 @@
+import * as THREE from "three";
 import { describe, expect, it } from "vitest";
-import { cheerLift, flashOn, sailOffset, waveLift } from "@/world/lib/eggs";
+import { cheerLift, eggUnderPointer, flashOn, sailOffset, waveLift } from "@/world/lib/eggs";
 
 describe("eggs", () => {
   it("sails out and back", () => {
@@ -29,5 +30,21 @@ describe("eggs", () => {
     expect(cheerLift(0, 1, 3)).toBe(0);
     expect(cheerLift(1, 1, 3)).toBeGreaterThanOrEqual(0);
     expect(cheerLift(1, 1, 3)).toBeLessThanOrEqual(0.13);
+  });
+});
+
+describe("egg targets inside a place's hit volume", () => {
+  it("are found in the ray's intersections even when the place volume is nearer", () => {
+    const place = new THREE.Mesh(new THREE.CylinderGeometry(5.3, 5.3, 1.6, 16));
+    place.position.set(-11, 0.8, -8.6);
+    const egg = new THREE.Mesh(new THREE.SphereGeometry(0.35, 8, 6));
+    egg.userData.eggTarget = true;
+    egg.position.set(-11, 0.2, -8.6);
+    for (const m of [place, egg]) m.updateMatrixWorld(true);
+    const ray = new THREE.Raycaster(new THREE.Vector3(-11, 5, -8.6), new THREE.Vector3(0, -1, 0));
+    const hits = ray.intersectObjects([place, egg]);
+    expect(hits[0].object).toBe(place);
+    expect(eggUnderPointer(hits)).toBe(true);
+    expect(eggUnderPointer(ray.intersectObjects([place]))).toBe(false);
   });
 });
