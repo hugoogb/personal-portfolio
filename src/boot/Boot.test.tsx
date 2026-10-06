@@ -2,6 +2,7 @@
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Boot } from "@/boot/Boot";
+import { READY_TIMEOUT_MS } from "@/boot/world";
 import { bootTier, readSignals } from "@/boot/detect";
 import { useBaseCamp } from "@/store/store";
 
@@ -89,6 +90,21 @@ describe("Boot", () => {
     window.location.hash = "#brief";
     window.dispatchEvent(new HashChangeEvent("hashchange"));
     await waitFor(() => expect(html.classList.contains("world")).toBe(false));
+  });
+
+  it("gives up on a stalled GPU check once the ready timeout passes", () => {
+    vi.useFakeTimers();
+    try {
+      html.classList.add("world", "can-world");
+      vi.mocked(readSignals).mockReturnValue(new Promise(() => {}));
+      render(<Boot />);
+      act(() => {
+        vi.advanceTimersByTime(READY_TIMEOUT_MS);
+      });
+      expect(html.classList.contains("world")).toBe(false);
+    } finally {
+      vi.useRealTimers();
+    }
   });
 
   it("offers the town from the Brief when WebGL works, and enters it on Low", async () => {
