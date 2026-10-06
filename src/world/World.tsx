@@ -1,20 +1,18 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { Tier } from "@/boot/tiers";
 import { useBaseCamp } from "@/store/store";
+import { buildWorld } from "@/world/build";
 import { CAMERA_OFFSET } from "@/world/lib/camera";
 import { wasDrag } from "@/world/lib/drag";
-import { PALETTE } from "@/world/lib/palette";
-import { Ground } from "@/world/scene/Ground";
-import { Homes } from "@/world/scene/Homes";
 import { Places } from "@/world/scene/Places";
-import { Roads } from "@/world/scene/Roads";
 import { CameraRig } from "@/world/systems/CameraRig";
+import { DayNight } from "@/world/systems/DayNight";
 import { Governor } from "@/world/systems/Governor";
 import { Labels } from "@/world/systems/Labels";
+import { Life } from "@/world/systems/Life";
 
 const MAX_DPR: Record<Tier, number> = { 0: 1, 1: 1, 2: 1.5, 3: 2 };
-const SHADOW_MAP: Record<Tier, number> = { 0: 0, 1: 0, 2: 1024, 3: 2048 };
 
 const usePageHidden = () => {
   const [hidden, setHidden] = useState(() => document.hidden);
@@ -48,27 +46,6 @@ function ThirtyFps() {
   return null;
 }
 
-/** Greybox daylight. Phase 3 replaces it with lighting() and the night. */
-function Lights({ tier }: { tier: Tier }) {
-  const size = SHADOW_MAP[tier];
-  return (
-    <>
-      <hemisphereLight args={["#ffffff", "#8a9a7b", 1.1]} />
-      <directionalLight
-        position={[14, 22, 10]}
-        intensity={2.2}
-        castShadow={size > 0}
-        shadow-mapSize={[size || 512, size || 512]}
-        shadow-camera-left={-26}
-        shadow-camera-right={26}
-        shadow-camera-top={26}
-        shadow-camera-bottom={-26}
-        shadow-camera-far={80}
-      />
-    </>
-  );
-}
-
 export interface WorldProps {
   onReady: () => void;
 }
@@ -77,6 +54,8 @@ export interface WorldProps {
 export default function World({ onReady }: WorldProps) {
   const tier = useBaseCamp((s) => s.tier);
   const briefOpen = useBaseCamp((s) => s.briefOpen);
+  const world = useMemo(() => buildWorld(), []);
+  useEffect(() => () => world.kit.dispose(), [world]);
   const hidden = usePageHidden();
   const [drawn, setDrawn] = useState(false);
   // The first frame is drawn whatever the Brief or the tab are doing, so boot can finish.
@@ -100,15 +79,13 @@ export default function World({ onReady }: WorldProps) {
         if (!wasDrag()) useBaseCamp.getState().deselect();
       }}
     >
-      <color attach="background" args={[PALETTE.sky]} />
-      <Lights tier={tier} />
-      <Ground />
-      <Roads />
-      <Homes />
-      <Places />
+      <DayNight world={world} />
+      <primitive object={world.town.root} />
+      <Places places={world.places} />
       <CameraRig />
       <Governor />
       <Labels />
+      <Life world={world} />
       {frameloop === "demand" && <ThirtyFps />}
       <FirstFrame onDrawn={() => setDrawn(true)} onReady={onReady} />
     </Canvas>
