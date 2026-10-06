@@ -66,26 +66,33 @@ test("clicking a place selects it, a drag that ends on it does not, and clicking
   const cx = box.x + box.width / 2;
   const cy = box.y + box.height / 2;
 
-  // The first pick can land before the camera and pointer have settled, so retry it.
-  await expect(async () => {
-    await page.mouse.move(cx, cy);
-    await page.mouse.down();
-    await page.mouse.up();
-    await expect(card(page, "Headquarters")).toBeVisible({ timeout: 1_000 });
-  }).toPass({ timeout: 10_000 });
+  // The title card fades out for 0.45s after world-ready and still covers the
+  // canvas until then, so an early click hits the card, not the town.
+  await expect(page.locator(".title-card")).toBeHidden();
 
+  await page.mouse.click(cx, cy);
+  await expect(card(page, "Headquarters")).toBeVisible();
+
+  // The ground follows the pointer in a pan, so a drag that starts over HQ ends
+  // over HQ. It must not count as a click: pressing Esc first, nothing is selected.
   await page.keyboard.press("Escape");
   await expect(hint).toBeVisible();
-  await page.mouse.move(cx - 200, cy + 150);
+  await page.mouse.move(cx, cy);
   await page.mouse.down();
-  await page.mouse.move(cx, cy, { steps: 10 });
+  await page.mouse.move(cx + 40, cy, { steps: 8 });
   await page.mouse.up();
   await expect(hint).toBeVisible();
+  // Control: a plain click on that same spot does select HQ, so the drag guard is what held it back.
+  await page.mouse.click(cx + 40, cy);
+  await expect(card(page, "Headquarters")).toBeVisible();
 
+  // Zoomed all the way out, only sky or sea is left in the corner.
   await page.mouse.move(cx, cy);
   for (let i = 0; i < 6; i++) await page.mouse.wheel(0, 2000);
-  await page.keyboard.press("ArrowRight");
-  await expect(hint).toBeHidden();
+  await page.keyboard.press("Control+k");
+  await page.keyboard.type("go hq");
+  await page.keyboard.press("Enter");
+  await expect(card(page, "Headquarters")).toBeVisible();
   await page.mouse.click(box.x + 10, box.y + 10);
   await expect(hint).toBeVisible();
 });
