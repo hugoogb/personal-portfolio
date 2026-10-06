@@ -1,0 +1,139 @@
+import { create } from "zustand";
+import { createJSONStorage, persist } from "zustand/middleware";
+import type { QualityMode, Tier } from "@/boot/tiers";
+import { ORDER } from "@/content/places";
+import type { PlaceId } from "@/content/types";
+import { isHexColor, readAccent, writeAccent } from "@/store/accent";
+import { safeStorage, type KeyValueStorage } from "@/store/storage";
+
+export type HudMode = "auto" | "light" | "dark";
+export type AchievementId = "explorer" | "goal" | "hat" | "lap" | "night" | "console";
+export type Panel = "trophies" | "settings" | null;
+export interface ServiceStatus {
+  ok: boolean;
+  /** Round trip in milliseconds, or null when the request never completed. */
+  ms: number | null;
+}
+export type StatusMap = Partial<Record<PlaceId, ServiceStatus>>;
+
+export interface BaseCampState {
+  selected: PlaceId | null;
+  hover: PlaceId | null;
+  discovered: PlaceId[];
+  achievements: AchievementId[];
+  accent: string;
+  hudMode: HudMode;
+  qualityMode: QualityMode;
+  tier: Tier;
+  fps: number;
+  briefOpen: boolean;
+  consoleOpen: boolean;
+  panel: Panel;
+  driving: boolean;
+  introDone: boolean;
+  /** The build-in has played once; returning visitors skip it. */
+  seen: boolean;
+  status: StatusMap | "unknown";
+
+  select: (id: PlaceId) => void;
+  deselect: () => void;
+  setHover: (id: PlaceId | null) => void;
+  /** True when this call unlocked it, false when it already was. */
+  unlock: (id: AchievementId) => boolean;
+  setAccent: (hex: string) => void;
+  setHudMode: (mode: HudMode) => void;
+  setQualityMode: (mode: QualityMode) => void;
+  setTier: (tier: Tier) => void;
+  setFps: (fps: number) => void;
+  setPanel: (panel: Panel) => void;
+  setBriefOpen: (open: boolean) => void;
+  setConsoleOpen: (open: boolean) => void;
+  setDriving: (on: boolean) => void;
+  markIntroDone: () => void;
+  markSeen: () => void;
+  setStatus: (status: StatusMap | "unknown") => void;
+  resetProgress: () => void;
+}
+
+/** One record for everything persisted except the accent, which keeps today's "color" key. */
+export const STORE_KEY = "bc";
+
+type Persisted = Pick<
+  BaseCampState,
+  "discovered" | "achievements" | "hudMode" | "qualityMode" | "seen"
+>;
+
+export const createBaseCampStore = (storage: KeyValueStorage = safeStorage()) =>
+  create<BaseCampState>()(
+    persist(
+      (set, get) => ({
+        selected: null,
+        hover: null,
+        discovered: [],
+        achievements: [],
+        accent: readAccent(storage),
+        hudMode: "auto",
+        qualityMode: "auto",
+        tier: 3,
+        fps: 60,
+        briefOpen: false,
+        consoleOpen: false,
+        panel: null,
+        driving: false,
+        introDone: false,
+        seen: false,
+        status: "unknown",
+
+        select: (id) => {
+          set((s) => ({
+            selected: id,
+            discovered: s.discovered.includes(id) ? s.discovered : [...s.discovered, id],
+          }));
+          if (ORDER.every((place) => get().discovered.includes(place))) get().unlock("explorer");
+        },
+        deselect: () => set({ selected: null }),
+        setHover: (hover) => set({ hover }),
+        unlock: (id) => {
+          if (get().achievements.includes(id)) return false;
+          set((s) => ({ achievements: [...s.achievements, id] }));
+          return true;
+        },
+        setAccent: (hex) => {
+          if (!isHexColor(hex)) return;
+          const accent = hex.toLowerCase();
+          writeAccent(accent, storage);
+          if (typeof document !== "undefined") {
+            document.documentElement.style.setProperty("--primary-color", accent);
+          }
+          set({ accent });
+        },
+        setHudMode: (hudMode) => set({ hudMode }),
+        setQualityMode: (qualityMode) => set({ qualityMode }),
+        setTier: (tier) => set({ tier }),
+        setFps: (fps) => set({ fps }),
+        setPanel: (panel) => set({ panel }),
+        setBriefOpen: (briefOpen) => set({ briefOpen }),
+        setConsoleOpen: (consoleOpen) => set({ consoleOpen }),
+        setDriving: (driving) => set({ driving }),
+        markIntroDone: () => set({ introDone: true }),
+        markSeen: () => set({ seen: true }),
+        setStatus: (status) => set({ status }),
+        resetProgress: () => set({ discovered: [], achievements: [], seen: false }),
+      }),
+      {
+        name: STORE_KEY,
+        version: 1,
+        storage: createJSONStorage(() => storage),
+        partialize: (s): Persisted => ({
+          discovered: s.discovered,
+          achievements: s.achievements,
+          hudMode: s.hudMode,
+          qualityMode: s.qualityMode,
+          seen: s.seen,
+        }),
+      },
+    ),
+  );
+
+/** The app's store. Tests build their own with createBaseCampStore. */
+export const useBaseCamp = createBaseCampStore();
