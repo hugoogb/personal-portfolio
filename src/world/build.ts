@@ -6,6 +6,7 @@ import { bakeStatic } from "@/world/kit/bake";
 import { createKit, type FrameEnv, type Kit } from "@/world/kit/kit";
 import { PROP_RINGS, ringOf } from "@/world/lib/buildIn";
 import { useBaseCamp } from "@/store/store";
+import { GLOW, type GiftLife } from "@/world/places/gift";
 import { PLACE_BUILDERS } from "@/world/places/index";
 import { buildRoutes } from "@/world/traffic/model";
 import { buildTraffic } from "@/world/traffic/build";
@@ -22,7 +23,15 @@ export interface BuiltWorld {
   /** Per-service window materials, so a down service can go dark alone. */
   traffic: ReturnType<typeof buildTraffic>;
   placeWindows: Partial<
-    Record<PlaceId, { win: THREE.MeshStandardMaterial; winDim: THREE.MeshStandardMaterial }>
+    Record<
+      PlaceId,
+      {
+        win: THREE.MeshStandardMaterial;
+        winDim: THREE.MeshStandardMaterial;
+        /** Other lights of the place that go dark with it, at their resting intensity. */
+        glows: { material: THREE.MeshStandardMaterial; base: number }[];
+      }
+    >
   >;
 }
 
@@ -75,9 +84,11 @@ export function buildWorld(): BuiltWorld {
       if (mesh.material === kit.materials.win) mesh.material = win;
       else if (mesh.material === kit.materials.winDim) mesh.material = winDim;
     });
-    placeWindows[id] = { win, winDim };
+    const glows = id === "wt" ? [{ material: (kit.life.gift as GiftLife).glow, base: GLOW }] : [];
+    placeWindows[id] = { win, winDim, glows };
     keep.add(win);
     keep.add(winDim);
+    for (const { material } of glows) keep.add(material);
   }
   const board = kit.life.boardFace as THREE.Material | undefined;
   if (board) keep.add(board);

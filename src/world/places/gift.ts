@@ -1,6 +1,14 @@
 import * as THREE from "three";
 import type { Kit } from "@/world/kit/kit";
 
+export interface GiftLife {
+  hinge: THREE.Group;
+  glow: THREE.MeshStandardMaterial;
+}
+
+/** The gift's inner glow at rest; DayNight scales it down when the service is down. */
+export const GLOW = 0.9;
+
 /** Wrapped Things, a giant gift mid-unwrap with a scaffold and a crane (reference 888-911; animation 1442, 1466). */
 export function buildGift(kit: Kit): THREE.Group {
   const { rbox, box, cyl, ball, mk, plaque, makeMat, own } = kit;
@@ -32,14 +40,14 @@ export function buildGift(kit: Kit): THREE.Group {
     rbox(0.32, H2 + 0.02, 0.02, RIB, 0, 0.09, s * (W2 / 2 + 0.012), g, 0.01, false);
     rbox(0.02, H2 + 0.02, 0.32, RIB, s * (W2 / 2 + 0.012), 0.09, 0, g, 0.01, false);
   }
+  const glow = own(
+    new THREE.MeshStandardMaterial({
+      color: "#fff3c4",
+      emissive: "#ffd98a",
+      emissiveIntensity: GLOW,
+    }),
+  );
   {
-    const glow = own(
-      new THREE.MeshStandardMaterial({
-        color: "#fff3c4",
-        emissive: "#ffd98a",
-        emissiveIntensity: 0.9,
-      }),
-    );
     mk(
       new THREE.BoxGeometry(W2 - T2 * 2 - 0.06, 0.02, W2 - T2 * 2 - 0.06),
       glow,
@@ -111,7 +119,7 @@ export function buildGift(kit: Kit): THREE.Group {
     rbox(0.24, 0.03, 0.24, "#ff7a1a", x, 0.1, z, g, 0.01);
   }
   plaque(g, "WRAPPED · SOON", "#7c5cff", -1.0, 1.85, 1.0);
-  kit.life.gift = { hinge };
+  kit.life.gift = { hinge, glow };
   const hook = new THREE.Group();
   hook.position.set(-0.6, 4.4, -1.35);
   hook.userData.dynamic = true;

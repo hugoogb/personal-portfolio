@@ -54,13 +54,17 @@ export function ArenaDrive({ world }: { world: BuiltWorld }) {
     p.ball.rotation.x += (a.bv.y * dt) / 0.3;
   };
 
+  // The world can unmount mid-drive (Settings to Lite): drive mode must not outlive it.
+  useEffect(() => () => useBaseCamp.getState().setDriving(false), []);
+
   useEffect(() => {
     if (!driving) return;
     state.current = createArena();
     since.current = FOCUS_EVERY_S;
     const held = keys.current;
     const onKeyDown = (e: KeyboardEvent) => {
-      if (isField(e.target)) return;
+      // A Cmd/Ctrl chord swallows the keyup on macOS, which would leave the key held.
+      if (isField(e.target) || e.metaKey || e.ctrlKey) return;
       const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
       if (k === " " || k.startsWith("Arrow")) e.preventDefault();
       held.add(k);

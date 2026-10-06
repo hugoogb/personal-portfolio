@@ -31,14 +31,16 @@ export function Traffic({ world }: { world: BuiltWorld }) {
     [],
   );
 
-  useEffect(
-    () =>
-      useBaseCamp.subscribe((s, prev) => {
-        if (s.status !== prev.status) sim.setPlans(planRoutes(routes, s.status));
-        if (s.tier !== prev.tier) sim.setCaps(CAPS[s.tier]);
-      }),
-    [routes, sim],
-  );
+  useEffect(() => {
+    // The sim was built before this subscription: catch up with any change in between.
+    const now = useBaseCamp.getState();
+    sim.setPlans(planRoutes(routes, now.status));
+    sim.setCaps(CAPS[now.tier]);
+    return useBaseCamp.subscribe((s, prev) => {
+      if (s.status !== prev.status) sim.setPlans(planRoutes(routes, s.status));
+      if (s.tier !== prev.tier) sim.setCaps(CAPS[s.tier]);
+    });
+  }, [routes, sim]);
 
   useFrame((_, delta) => {
     const t = world.traffic;

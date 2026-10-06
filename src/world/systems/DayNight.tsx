@@ -67,6 +67,7 @@ export function DayNight({ world }: { world: BuiltWorld }) {
       const f = windowFactor(s.status, id);
       set.win.emissiveIntensity = L.windows.bright * f;
       set.winDim.emissiveIntensity = L.windows.dim * f;
+      for (const g of set.glows) g.material.emissiveIntensity = g.base * f;
     }
     // The night owl counts the real Barcelona clock, not the preview override.
     if (s.introDone && nightAmount(barcelonaHour(new Date())) > 0.6) s.achieve("night");

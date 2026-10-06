@@ -77,6 +77,17 @@ describe("buildWorld", () => {
       const set = w.placeWindows[id];
       expect(set, id).toBeDefined();
       expect(set!.win).not.toBe(w.kit.materials.win);
+      const driven = new Set<THREE.Material>([
+        set!.win,
+        set!.winDim,
+        ...set!.glows.map((g) => g.material),
+      ]);
+      let lit = 0;
+      w.places[id].traverse((o) => {
+        const mesh = o as THREE.Mesh;
+        if (mesh.isMesh && driven.has(mesh.material as THREE.Material)) lit++;
+      });
+      expect(lit, `${id} has a status-driven light`).toBeGreaterThan(0);
     }
     w.kit.dispose();
   });

@@ -246,6 +246,8 @@ test("a down service shows Down on its card and the top bar counts only what is 
   );
   await page.goto("/#readledger");
   await ready(page);
-  await expect(page.getByText("Down")).toBeVisible();
+  await expect(
+    page.getByRole("region", { name: "ReadLedger, Service" }).getByText("Down", { exact: true }),
+  ).toBeVisible();
   await expect(page.getByTitle("Projects confirmed live")).toContainText("4/5");
 });
