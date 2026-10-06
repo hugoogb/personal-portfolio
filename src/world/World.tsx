@@ -1,8 +1,8 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { Tier } from "@/boot/tiers";
 import { useBaseCamp } from "@/store/store";
-import { buildWorld } from "@/world/build";
+import { buildWorld, type BuiltWorld } from "@/world/build";
 import { CAMERA_OFFSET } from "@/world/lib/camera";
 import { wasDrag } from "@/world/lib/drag";
 import { Places } from "@/world/scene/Places";
@@ -54,8 +54,16 @@ export interface WorldProps {
 export default function World({ onReady }: WorldProps) {
   const tier = useBaseCamp((s) => s.tier);
   const briefOpen = useBaseCamp((s) => s.briefOpen);
-  const world = useMemo(() => buildWorld(), []);
-  useEffect(() => () => world.kit.dispose(), [world]);
+  // Built in an effect so StrictMode's simulated unmount disposes a world that is then rebuilt.
+  const [world, setWorld] = useState<BuiltWorld | null>(null);
+  useEffect(() => {
+    const w = buildWorld();
+    setWorld(w);
+    return () => {
+      setWorld(null);
+      w.kit.dispose();
+    };
+  }, []);
   const hidden = usePageHidden();
   const [drawn, setDrawn] = useState(false);
   // The first frame is drawn whatever the Brief or the tab are doing, so boot can finish.
@@ -79,15 +87,19 @@ export default function World({ onReady }: WorldProps) {
         if (!wasDrag()) useBaseCamp.getState().deselect();
       }}
     >
-      <DayNight world={world} />
-      <primitive object={world.town.root} />
-      <Places places={world.places} />
       <CameraRig />
       <Governor />
       <Labels />
-      <Life world={world} />
       {frameloop === "demand" && <ThirtyFps />}
-      <FirstFrame onDrawn={() => setDrawn(true)} onReady={onReady} />
+      {world && (
+        <>
+          <DayNight world={world} />
+          <primitive object={world.town.root} />
+          <Places places={world.places} />
+          <Life world={world} />
+          <FirstFrame onDrawn={() => setDrawn(true)} onReady={onReady} />
+        </>
+      )}
     </Canvas>
   );
 }

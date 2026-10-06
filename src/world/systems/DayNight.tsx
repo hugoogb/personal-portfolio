@@ -24,6 +24,7 @@ export function DayNight({ world }: { world: BuiltWorld }) {
   useEffect(() => {
     scene.background = bg;
     sun.current?.shadow.camera.layers.enable(1);
+    since.current = RECOMPUTE_S;
   }, [scene, bg, size]);
 
   useFrame((_, dt) => {
