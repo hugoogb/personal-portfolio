@@ -28,6 +28,13 @@ describe("signalsFrom", () => {
   });
 });
 
+describe("signalsFrom without WebGL2", () => {
+  it("reports no WebGL even when detect-gpu is happy, since the town needs WebGL2", () => {
+    expect(signalsFrom({ tier: 3, type: "BENCHMARK" }, base, false).webgl).toBe(false);
+    expect(signalsFrom(null, base, false).webgl).toBe(false);
+  });
+});
+
 describe("bootTier", () => {
   const signals = signalsFrom({ tier: 3, type: "BENCHMARK" }, base);
 

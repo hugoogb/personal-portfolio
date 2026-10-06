@@ -29,8 +29,8 @@ export function bootHead(doc: Document, win: Window): void {
   let webgl = false;
   try {
     const canvas = doc.createElement("canvas");
-    const gl = (canvas.getContext("webgl2") ||
-      canvas.getContext("webgl")) as WebGLRenderingContext | null;
+    // The town needs WebGL2 (three r163+ dropped WebGL1), so only WebGL2 counts.
+    const gl = canvas.getContext("webgl2") as WebGL2RenderingContext | null;
     webgl = Boolean(gl);
     // Browsers cap live contexts; give this probe's back straight away.
     gl?.getExtension("WEBGL_lose_context")?.loseContext();
@@ -45,11 +45,19 @@ export function bootHead(doc: Document, win: Window): void {
     .connection;
   const saveData = Boolean(connection?.saveData);
 
+  // Boot sets this when the town failed to draw, so a broken device does not wait again.
+  let failed = false;
+  try {
+    failed = win.sessionStorage.getItem("bc-town-failed") === "1";
+  } catch {
+    failed = false;
+  }
+
   if (webgl) root.classList.add("has-webgl");
   // A saved manual quality (including "Enter the town anyway", which saves Low)
   // outranks reduced motion and Save-Data: the visitor asked for the town.
   const manual = quality === "High" || quality === "Medium" || quality === "Low";
-  if (webgl && quality !== "Lite" && (manual || (!reducedMotion && !saveData))) {
+  if (webgl && !failed && quality !== "Lite" && (manual || (!reducedMotion && !saveData))) {
     root.classList.add("can-world", "world");
   }
 }

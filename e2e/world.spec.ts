@@ -156,3 +156,22 @@ test.describe("on a phone", () => {
     await expect(page.locator(".card__desc")).toContainText("hello@hugoogb.dev");
   });
 });
+
+test("a device without WebGL2 lands on the Brief, not a stuck title card", async ({ page }) => {
+  await page.addInitScript(() => {
+    const original = HTMLCanvasElement.prototype.getContext;
+    HTMLCanvasElement.prototype.getContext = function (
+      this: HTMLCanvasElement,
+      type: string,
+      ...rest: unknown[]
+    ) {
+      if (type === "webgl2") return null;
+      return (original as (...a: unknown[]) => unknown).call(this, type, ...rest);
+    } as typeof original;
+  });
+  await page.goto("/");
+  await expect(page.getByRole("heading", { level: 1, name: "Hugo García Benjumea" })).toBeVisible({
+    timeout: 20_000,
+  });
+  await expect(page.locator("html")).not.toHaveClass(/world/);
+});

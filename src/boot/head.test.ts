@@ -5,6 +5,8 @@ interface Env {
   stored?: Record<string, string>;
   storageThrows?: boolean;
   webgl?: boolean;
+  webgl1Only?: boolean;
+  townFailed?: boolean;
   reducedMotion?: boolean;
   saveData?: boolean;
 }
@@ -19,14 +21,20 @@ const fake = (env: Env = {}) => {
       classList: { add: (...names: string[]) => names.forEach((c) => classes.add(c)) },
     },
     createElement: () => ({
-      getContext: () =>
-        env.webgl === false
+      getContext: (type: string) =>
+        env.webgl === false ||
+        (env.webgl1Only && type === "webgl2") ||
+        type === "experimental-webgl"
           ? null
           : { getExtension: () => ({ loseContext: () => void (state.lost = true) }) },
     }),
   };
   const storage = { getItem: (k: string) => env.stored?.[k] ?? null };
+  const session = {
+    getItem: (k: string) => (k === "bc-town-failed" && env.townFailed ? "1" : null),
+  };
   const win = {
+    sessionStorage: session,
     get localStorage() {
       if (env.storageThrows) throw new Error("SecurityError");
       return storage;
@@ -99,6 +107,17 @@ describe("bootHead", () => {
     const stored = { bc: JSON.stringify({ state: { qualityMode: "Low" } }) };
     expect(boot({ stored, reducedMotion: true }).classes.has("world")).toBe(true);
     expect(boot({ stored, saveData: true }).classes.has("world")).toBe(true);
+  });
+
+  it("treats a WebGL1-only device as having no WebGL, since the town needs WebGL2", () => {
+    expect([...boot({ webgl1Only: true }).classes]).toEqual([]);
+  });
+
+  it("keeps has-webgl but skips the town after a failed boot this session", () => {
+    const f = boot({ townFailed: true });
+    expect(f.classes.has("has-webgl")).toBe(true);
+    expect(f.classes.has("world")).toBe(false);
+    expect(f.classes.has("can-world")).toBe(false);
   });
 
   it("adds nothing without WebGL", () => {

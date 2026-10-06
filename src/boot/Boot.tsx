@@ -7,7 +7,8 @@ import {
   type ReactNode,
 } from "react";
 import { bootTier, readSignals } from "@/boot/detect";
-import { leaveWorld, READY_TIMEOUT_MS } from "@/boot/world";
+import { leaveWorld, READY_TIMEOUT_MS, TOWN_FAILED_KEY } from "@/boot/world";
+import { WorldBoundary } from "@/boot/WorldBoundary";
 import { useBaseCamp } from "@/store/store";
 
 interface Loaded {
@@ -34,12 +35,33 @@ export function Boot() {
   const briefOpen = useBaseCamp((s) => s.briefOpen);
   const timer = useRef<number | undefined>(undefined);
 
+  // "#brief" only leaves the town while it is still loading; after that the overlay handles it.
+  const loadedRef = useRef(false);
+
   const exit = useCallback(() => {
     window.clearTimeout(timer.current);
     leaveWorld();
+    useBaseCamp.setState({ briefOpen: false, consoleOpen: false, panel: null });
+    loadedRef.current = false;
     setLoaded(null);
     setInWorld(false);
+    // Picking Lite removes the button that had focus; the Brief is where the visitor lands.
+    requestAnimationFrame(() => {
+      const brief = document.getElementById("brief");
+      brief?.setAttribute("tabindex", "-1");
+      brief?.focus({ preventScroll: true });
+    });
   }, []);
+
+  // A device that cannot draw is remembered for the session, so a reload skips the wait.
+  const fail = useCallback(() => {
+    try {
+      sessionStorage.setItem(TOWN_FAILED_KEY, "1");
+    } catch {
+      // Storage blocked: the next load just tries again.
+    }
+    exit();
+  }, [exit]);
 
   useEffect(() => {
     if (!inWorld) return;
@@ -50,7 +72,7 @@ export function Boot() {
       const arm = () => {
         timer.current = window.setTimeout(() => {
           if (document.hidden) arm();
-          else exit();
+          else fail();
         }, READY_TIMEOUT_MS);
       };
       arm();
@@ -66,12 +88,13 @@ export function Boot() {
       const [hud, world] = await Promise.all([import("@/hud/Hud"), import("@/world/World")]);
       if (cancelled) return;
       setProgress(0.8);
+      loadedRef.current = true;
       setLoaded({ Hud: hud.Hud, World: world.default });
     };
-    start().catch(exit);
+    start().catch(fail);
     // The title card's "Read the brief" link is the way out while the town loads.
     const onHash = () => {
-      if (window.location.hash === "#brief") exit();
+      if (window.location.hash === "#brief" && !loadedRef.current) exit();
     };
     window.addEventListener("hashchange", onHash);
     return () => {
@@ -79,7 +102,7 @@ export function Boot() {
       window.clearTimeout(timer.current);
       window.removeEventListener("hashchange", onHash);
     };
-  }, [inWorld, exit]);
+  }, [inWorld, exit, fail]);
 
   // Picking Lite in Settings, or a governor that ran out of tiers, ends the town.
   useEffect(() => {
@@ -103,12 +126,23 @@ export function Boot() {
   }, []);
 
   const enter = () => {
+    try {
+      sessionStorage.removeItem(TOWN_FAILED_KEY);
+    } catch {
+      // Nothing to clear.
+    }
     useBaseCamp.getState().setQualityMode("Low");
     html().classList.add("world");
     setInWorld(true);
   };
 
-  if (inWorld && loaded) return <loaded.Hud world={<loaded.World onReady={onReady} />} />;
+  if (inWorld && loaded) {
+    return (
+      <WorldBoundary onError={fail}>
+        <loaded.Hud world={<loaded.World onReady={onReady} />} />
+      </WorldBoundary>
+    );
+  }
   if (!inWorld && html().classList.contains("has-webgl")) {
     return (
       <button type="button" className="enter-anyway" onClick={enter}>
