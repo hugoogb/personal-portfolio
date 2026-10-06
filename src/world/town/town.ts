@@ -88,7 +88,8 @@ export function buildTown(kit: Kit) {
     const w = new THREE.Mesh(own(new THREE.PlaneGeometry(260, 260)), water);
     w.rotation.x = -Math.PI / 2;
     w.position.y = -0.38;
-    w.receiveShadow = true;
+    // The sea stays clean: cloud shadows fall on the island only.
+    w.receiveShadow = false;
     root.add(w);
   }
   const roadSeg = (x1: number, z1: number, x2: number, z2: number) => {

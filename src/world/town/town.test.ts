@@ -26,6 +26,15 @@ describe("buildTown", () => {
       expect(r.walk.userData.dynamic && r.asph.userData.dynamic).toBe(true);
   });
 
+  it("keeps the sea out of the shadow map", () => {
+    const town = buildTown(createKit());
+    let sea: THREE.Mesh | undefined;
+    town.root.traverse((o) => {
+      if ((o as THREE.Mesh).material === town.water) sea = o as THREE.Mesh;
+    });
+    expect(sea!.receiveShadow).toBe(false);
+  });
+
   it("plants about sixty trees, six homes and the street furniture, never on a road or a place", () => {
     const kit = createKit();
     const town = buildTown(kit);
