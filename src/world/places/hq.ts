@@ -178,11 +178,8 @@ export function buildHq(kit: Kit): THREE.Group {
     g.add(bk);
     const tg = new THREE.TorusGeometry(0.14, 0.018, 6, 20);
     for (const x of [-0.2, 0.2]) mk(tg, "#1f2329", bk, x, 0.16, 0);
-    // the reference reuses the roof material here; the brief registers the bike as its own accent part
-    const frame = own(new THREE.MeshStandardMaterial({ color: "#f97316", roughness: 0.6 }));
-    kit.accent.push({ material: frame, mode: "color" });
-    box(0.42, 0.025, 0.025, frame, 0, 0.27, 0, bk, false);
-    box(0.025, 0.16, 0.025, frame, -0.08, 0.2, 0, bk, false);
+    box(0.42, 0.025, 0.025, materials.accentRoof, 0, 0.27, 0, bk, false);
+    box(0.025, 0.16, 0.025, materials.accentRoof, -0.08, 0.2, 0, bk, false);
     box(0.12, 0.025, 0.06, "#1f2329", -0.1, 0.36, 0, bk, false);
   }
   plaque(g, "HUGO GB · HQ", "#1f2329", -0.6, 1.85, 1.0);

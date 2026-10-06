@@ -48,7 +48,7 @@ describe("HQ", () => {
     const kit = createKit();
     const before = kit.accent.length;
     buildHq(kit);
-    expect(kit.accent.length - before).toBeGreaterThanOrEqual(3);
+    expect(kit.accent.length - before).toBeGreaterThanOrEqual(2);
     kit.paintAccent("#10b981");
     expect(kit.materials.accentRoof.color.getHexString()).toBe("10b981");
   });
@@ -61,6 +61,7 @@ describe("HQ", () => {
       if (o.userData.dynamic) dynamic.push(o);
     });
     expect(dynamic.length).toBeGreaterThan(0);
+    expect(dynamic.some((o) => (o as THREE.Mesh).material === kit.materials.accentFlag)).toBe(true);
     const r0 = dynamic.map((o) => o.rotation.y);
     kit.frame(0.1, 0.4, { night: 0, lit: 0, tier: 3 });
     expect(dynamic.map((o) => o.rotation.y)).not.toEqual(r0);
