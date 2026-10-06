@@ -287,6 +287,7 @@ html.world.brief-open #brief {
 html.world.world-ready .title-card {
   opacity: 0;
   visibility: hidden;
+  pointer-events: none;
   transition:
     opacity 0.45s ease,
     visibility 0s linear 0.45s;

@@ -70,6 +70,48 @@
   clip-path: inset(50%);
   white-space: nowrap;
 }
+/* Keyboard focus on the hidden list reveals it, so the focused button is visible (spec 9.7). */
+.hud-sr:focus-within {
+  position: fixed;
+  top: 64px;
+  left: 12px;
+  z-index: 5;
+  width: max-content;
+  max-width: calc(100% - 24px);
+  height: auto;
+  max-height: calc(100% - 140px);
+  padding: 8px;
+  overflow: auto;
+  clip-path: none;
+  white-space: normal;
+  background: var(--hud-bg-strong);
+  border: 1px solid var(--hud-line);
+  border-radius: 14px;
+  box-shadow: var(--hud-shadow);
+  pointer-events: auto;
+}
+.hud-sr:focus-within ul {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.hud-sr:focus-within button {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--hud-line);
+  border-radius: 10px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+.hud-sr:focus-within button[aria-current="true"] {
+  border-color: var(--acc);
+}
 .hud-btn {
   display: inline-flex;
   align-items: center;
@@ -185,7 +227,15 @@
   white-space: nowrap;
 }
 
-/* Card and hint */
+/* Card and hint. The slot is one steady live region; its children place themselves. */
+.card-slot {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.card-slot > * {
+  pointer-events: auto;
+}
 .card,
 .hint {
   position: absolute;

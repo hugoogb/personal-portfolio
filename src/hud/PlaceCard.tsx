@@ -21,7 +21,6 @@ export function PlaceCard({ place }: { place: Place }) {
   return (
     <section
       className="card glass"
-      aria-live="polite"
       aria-label={`${place.name}, ${place.kind}`}
       data-details={details}
     >

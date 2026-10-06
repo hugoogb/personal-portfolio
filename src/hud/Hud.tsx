@@ -27,12 +27,13 @@ export function Hud({ world }: { world: ReactNode }) {
   const panel = useBaseCamp((s) => s.panel);
   const consoleOpen = useBaseCamp((s) => s.consoleOpen);
   const driving = useBaseCamp((s) => s.driving);
+  const introDone = useBaseCamp((s) => s.introDone);
   useHudKeys();
   useDeepLinks();
 
   return (
     <>
-      <div className="stage" data-hud={theme} inert={briefOpen}>
+      <div className="stage" data-hud={theme} inert={briefOpen || !introDone}>
         <div className="stage__canvas" aria-hidden="true">
           {world}
         </div>
@@ -41,7 +42,9 @@ export function Hud({ world }: { world: ReactNode }) {
           <PlacesList />
           <Objective />
           <Toasts />
-          {selected ? <PlaceCard key={selected} place={PLACE_BY_ID[selected]} /> : <Hint />}
+          <div className="card-slot" aria-live="polite">
+            {selected ? <PlaceCard key={selected} place={PLACE_BY_ID[selected]} /> : <Hint />}
+          </div>
           <Minimap />
           {driving && <DriveBar />}
           {panel === "settings" && <Settings />}
