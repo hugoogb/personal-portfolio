@@ -4,6 +4,7 @@ import type { PlaceId } from "@/content/types";
 import { bakeStatic } from "@/world/kit/bake";
 import { createKit, type FrameEnv, type Kit } from "@/world/kit/kit";
 import { PROP_RINGS, ringOf } from "@/world/lib/buildIn";
+import { useBaseCamp } from "@/store/store";
 import { PLACE_BUILDERS } from "@/world/places/index";
 import { addSmoke, buildTown } from "@/world/town/town";
 
@@ -37,6 +38,7 @@ export function buildWorld(): BuiltWorld {
     chimneys.map(({ id, local }) =>
       local.clone().add(new THREE.Vector3(PLACE_BY_ID[id].map.x, 0, PLACE_BY_ID[id].map.z)),
     ),
+    () => useBaseCamp.getState().introDone,
   );
 
   // Merge static meshes to fit the draw-call budget: per material, and plain

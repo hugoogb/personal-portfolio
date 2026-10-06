@@ -304,8 +304,8 @@ export function buildTown(kit: Kit) {
     palm(18.5, 4, 2.4, 1.7);
     palm(18.5, -3, 2.0);
     palm(18.5, -12.6, 2.6, 1.6);
-    const ug = new THREE.Group();
-    root.add(ug);
+    // On the ground group, so they rise with the island during the build-in.
+    const ug = ground;
     kit.umbrella(ug, -4.2, 14.5, "#e5484d", "#ffffff");
     kit.umbrella(ug, 1.8, 14.5, "#3b82c4", "#ffffff");
     kit.umbrella(ug, 11.2, 14.5, "#f2b134", "#ffffff");
@@ -335,86 +335,127 @@ export function buildTown(kit: Kit) {
     });
   }
 
-  /* --- cloud shadows: layer 1 is only rendered by the sun's shadow camera --- */
+  /* --- cloud shadows: one invisible instanced mesh that only the sun's shadow map draws --- */
+  // It sits on layer 0: three's shadow pass tests objects against the MAIN camera's layers.
+  const puffs: { cloud: number; x: number; y: number; z: number; r: number }[] = [];
   const clouds: THREE.Object3D[] = [];
   for (let i = 0; i < 6; i++) {
-    const g = new THREE.Group();
+    const g = new THREE.Object3D();
     g.position.set(-34 + i * 12, 12 + rand() * 2, -18 + rand() * 36);
-    g.userData.dynamic = true;
-    root.add(g);
-    for (let k = 0; k < 4; k++) {
-      const m = new THREE.Mesh(
-        own(new THREE.SphereGeometry(1.3 + rand() * 0.9, 10, 8)),
-        own(new THREE.MeshBasicMaterial()),
-      );
-      m.position.set(k * 1.4 - 2.1, rand() * 0.5, rand() * 1.6 - 0.8);
-      m.castShadow = true;
-      m.layers.set(1);
-      g.add(m);
-    }
     clouds.push(g);
+    for (let k = 0; k < 4; k++) {
+      const r = 1.3 + rand() * 0.9;
+      puffs.push({ cloud: i, x: k * 1.4 - 2.1, y: rand() * 0.5, z: rand() * 1.6 - 0.8, r });
+    }
   }
+  const cloudShadow = new THREE.InstancedMesh(
+    own(new THREE.SphereGeometry(1, 10, 8)),
+    own(new THREE.MeshBasicMaterial({ colorWrite: false, depthWrite: false })),
+    puffs.length,
+  );
+  cloudShadow.castShadow = true;
+  cloudShadow.receiveShadow = false;
+  cloudShadow.frustumCulled = false;
+  cloudShadow.userData.dynamic = true;
+  root.add(cloudShadow);
+  const cloudM = new THREE.Matrix4();
+  const writeClouds = () => {
+    puffs.forEach((p, i) => {
+      const c = clouds[p.cloud].position;
+      cloudM.makeScale(p.r, p.r, p.r).setPosition(c.x + p.x, c.y + p.y, c.z + p.z);
+      cloudShadow.setMatrixAt(i, cloudM);
+    });
+    cloudShadow.instanceMatrix.needsUpdate = true;
+  };
+  writeClouds();
   kit.onFrame((dt) => {
     for (const c of clouds) {
       c.position.x += dt * 0.55;
       if (c.position.x > 38) c.position.x = -38;
     }
+    writeClouds();
   });
 
-  return { root, ground, water, props, clouds };
+  return { root, ground, water, props, clouds: cloudShadow };
 }
 
-/** Chimney smoke (reference 1160-1161, 1459-1461): a pool of puffs; none on Low (spec 8). */
-export function addSmoke(kit: Kit, root: THREE.Object3D, sources: THREE.Vector3[]) {
-  const smokeGeo = kit.own(new THREE.SphereGeometry(0.16, 10, 8));
-  const smoke: { m: THREE.Mesh; life: number }[] = [];
-  for (let i = 0; i < 36; i++) {
-    const m = new THREE.Mesh(
-      smokeGeo,
-      kit.own(
-        new THREE.MeshStandardMaterial({
-          color: "#f4f6f8",
-          transparent: true,
-          opacity: 0,
-          roughness: 1,
-        }),
-      ),
-    );
-    m.visible = false;
-    m.userData.kind = "smoke";
-    m.userData.dynamic = true;
-    root.add(m);
-    smoke.push({ m, life: 0 });
-  }
+/**
+ * Chimney smoke (reference 1160-1161, 1459-1461): a pool of puffs drawn as one
+ * instanced mesh; none on Low (spec 8), and none until `ready()` says the town
+ * has been built (the build-in is still raising it before that).
+ */
+export function addSmoke(
+  kit: Kit,
+  root: THREE.Object3D,
+  sources: THREE.Vector3[],
+  ready: () => boolean = () => true,
+) {
+  const N = 36;
+  const smoke = new THREE.InstancedMesh(
+    kit.own(new THREE.SphereGeometry(0.16, 10, 8)),
+    kit.own(
+      new THREE.MeshStandardMaterial({
+        color: "#f4f6f8",
+        transparent: true,
+        opacity: 0.55,
+        roughness: 1,
+        depthWrite: false,
+      }),
+    ),
+    N,
+  );
+  smoke.visible = false;
+  smoke.frustumCulled = false;
+  smoke.userData.kind = "smoke";
+  smoke.userData.dynamic = true;
+  root.add(smoke);
+  const puffs = Array.from({ length: N }, () => ({
+    life: 0,
+    pos: new THREE.Vector3(),
+    scale: 0,
+  }));
+  const m = new THREE.Matrix4();
+  const write = () => {
+    let alive = 0;
+    puffs.forEach((p, i) => {
+      // Puffs swell as they rise, then shrink away instead of fading.
+      const s = p.life > 0 ? p.scale * Math.min(1, p.life * 3) : 0;
+      if (s > 0) alive++;
+      m.makeScale(s, s, s).setPosition(p.pos);
+      smoke.setMatrixAt(i, m);
+    });
+    smoke.instanceMatrix.needsUpdate = true;
+    smoke.visible = alive > 0;
+  };
   let smokeT = 0;
   let smokeI = 0;
   kit.onFrame((dt, _t, env) => {
     if (env.tier < 2) {
-      for (const s of smoke) {
-        s.life = 0;
-        s.m.visible = false;
+      if (smoke.visible) {
+        for (const p of puffs) p.life = 0;
+        write();
       }
       return;
     }
-    smokeT += dt;
-    if (smokeT > 0.16) {
-      smokeT = 0;
-      for (const src of sources) {
-        const s = smoke[smokeI++ % smoke.length];
-        s.life = 1;
-        s.m.visible = true;
-        s.m.position.copy(src);
-        s.m.scale.setScalar(0.6);
+    if (ready()) {
+      smokeT += dt;
+      if (smokeT > 0.16) {
+        smokeT = 0;
+        for (const src of sources) {
+          const p = puffs[smokeI++ % N];
+          p.life = 1;
+          p.pos.copy(src);
+          p.scale = 0.6;
+        }
       }
     }
-    for (const s of smoke) {
-      if (s.life <= 0) continue;
-      s.life -= dt * 0.4;
-      s.m.position.y += dt * 0.7;
-      s.m.position.x += dt * 0.35;
-      s.m.scale.multiplyScalar(1 + dt * 0.7);
-      (s.m.material as THREE.MeshStandardMaterial).opacity = Math.max(0, s.life) * 0.7;
-      if (s.life <= 0) s.m.visible = false;
+    for (const p of puffs) {
+      if (p.life <= 0) continue;
+      p.life -= dt * 0.4;
+      p.pos.y += dt * 0.7;
+      p.pos.x += dt * 0.35;
+      p.scale *= 1 + dt * 0.7;
     }
+    write();
   });
 }

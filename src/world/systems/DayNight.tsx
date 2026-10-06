@@ -23,7 +23,6 @@ export function DayNight({ world }: { world: BuiltWorld }) {
 
   useEffect(() => {
     scene.background = bg;
-    sun.current?.shadow.camera.layers.enable(1);
     since.current = RECOMPUTE_S;
   }, [scene, bg, size]);
 
@@ -55,6 +54,8 @@ export function DayNight({ world }: { world: BuiltWorld }) {
     }
     bg.set(L.background);
     town.water.color.set(L.water);
+    // Duller at night, so the floodlights do not mirror on the sea as two blobs.
+    town.water.roughness = 0.18 + (0.6 - 0.18) * L.night;
     kit.materials.win.emissiveIntensity = L.windows.bright;
     kit.materials.winDim.emissiveIntensity = L.windows.dim;
     kit.materials.lamp.emissiveIntensity = L.lamps;

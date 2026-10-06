@@ -53,31 +53,63 @@ describe("buildTown", () => {
     expect(isBlocked(PLACES[0].map.x, PLACES[0].map.z)).toBe(true);
   });
 
-  it("drifts cloud shadows that only the shadow camera sees", () => {
+  it("casts drifting cloud shadows from one invisible instanced mesh on the main layer", () => {
     const kit = createKit();
     const town = buildTown(kit);
-    const before = town.clouds[0].position.x;
+    const clouds = town.clouds;
+    expect(clouds.isInstancedMesh).toBe(true);
+    // three's shadow pass tests the main camera's layers, so layer 0
+    expect(clouds.layers.mask).toBe(1);
+    expect(clouds.castShadow).toBe(true);
+    expect(clouds.receiveShadow).toBe(false);
+    expect(clouds.userData.dynamic).toBe(true);
+    const mat = clouds.material as THREE.MeshBasicMaterial;
+    expect(mat.colorWrite).toBe(false);
+    expect(mat.depthWrite).toBe(false);
+    const before = clouds.instanceMatrix.array[12];
     kit.frame(1, 1, { night: 0, lit: 0, tier: 3 });
-    expect(town.clouds[0].position.x).not.toBe(before);
-    town.clouds[0].traverse((o) => {
-      if ((o as THREE.Mesh).isMesh) expect(o.layers.mask).toBe(1 << 1);
-    });
+    expect(clouds.instanceMatrix.array[12]).not.toBe(before);
   });
 
-  it("smokes on Medium and High only", () => {
-    const kit = createKit();
-    const root = new THREE.Group();
-    addSmoke(kit, root, [new THREE.Vector3(0, 3, 0)]);
-    const visible = () => {
-      let n = 0;
-      root.traverse((o) => {
-        if ((o as THREE.Mesh).isMesh && o.visible) n++;
-      });
-      return n;
+  describe("chimney smoke", () => {
+    const setup = (ready: () => boolean) => {
+      const kit = createKit();
+      const root = new THREE.Group();
+      addSmoke(kit, root, [new THREE.Vector3(0, 3, 0)], ready);
+      const puffs = root.children[0] as THREE.InstancedMesh;
+      /** Puffs alive: instances that are not scaled to nothing. */
+      const alive = () => {
+        let n = 0;
+        const m = new THREE.Matrix4();
+        const s = new THREE.Vector3();
+        for (let i = 0; i < puffs.count; i++) {
+          puffs.getMatrixAt(i, m);
+          if (m.decompose(new THREE.Vector3(), new THREE.Quaternion(), s) && s.x > 0) n++;
+        }
+        return puffs.visible ? n : 0;
+      };
+      const run = (tier: 0 | 1 | 2 | 3) => {
+        for (let i = 0; i < 10; i++) kit.frame(0.2, i * 0.2, { night: 0, lit: 0, tier });
+      };
+      return { run, alive };
     };
-    for (let i = 0; i < 10; i++) kit.frame(0.2, i * 0.2, { night: 0, lit: 0, tier: 1 });
-    expect(visible()).toBe(0);
-    for (let i = 0; i < 10; i++) kit.frame(0.2, i * 0.2, { night: 0, lit: 0, tier: 3 });
-    expect(visible()).toBeGreaterThan(0);
+
+    it("smokes on Medium and High only", () => {
+      const { run, alive } = setup(() => true);
+      run(3);
+      expect(alive()).toBeGreaterThan(0);
+      run(1);
+      expect(alive()).toBe(0);
+    });
+
+    it("waits for the town to exist before it smokes", () => {
+      let ready = false;
+      const { run, alive } = setup(() => ready);
+      run(3);
+      expect(alive()).toBe(0);
+      ready = true;
+      run(3);
+      expect(alive()).toBeGreaterThan(0);
+    });
   });
 });
