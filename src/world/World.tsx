@@ -12,6 +12,7 @@ import { DayNight } from "@/world/systems/DayNight";
 import { Governor } from "@/world/systems/Governor";
 import { Labels } from "@/world/systems/Labels";
 import { Life } from "@/world/systems/Life";
+import { Traffic } from "@/world/systems/Traffic";
 import { YardLights } from "@/world/systems/YardLights";
 
 const MAX_DPR: Record<Tier, number> = { 0: 1, 1: 1, 2: 1.5, 3: 2 };
@@ -100,6 +101,7 @@ export default function World({ onReady }: WorldProps) {
           <primitive object={world.town.root} />
           <Places places={world.places} />
           <Life world={world} />
+          <Traffic world={world} />
           <YardLights world={world} />
           <FirstFrame onDrawn={() => setDrawn(true)} onReady={onReady} />
         </>

@@ -7,6 +7,8 @@ import { createKit, type FrameEnv, type Kit } from "@/world/kit/kit";
 import { PROP_RINGS, ringOf } from "@/world/lib/buildIn";
 import { useBaseCamp } from "@/store/store";
 import { PLACE_BUILDERS } from "@/world/places/index";
+import { buildRoutes } from "@/world/traffic/model";
+import { buildTraffic } from "@/world/traffic/build";
 import { addSmoke, buildTown } from "@/world/town/town";
 
 export interface BuiltWorld {
@@ -18,6 +20,7 @@ export interface BuiltWorld {
   /** Written by DayNight, read by Life. */
   env: FrameEnv;
   /** Per-service window materials, so a down service can go dark alone. */
+  traffic: ReturnType<typeof buildTraffic>;
   placeWindows: Partial<
     Record<PlaceId, { win: THREE.MeshStandardMaterial; winDim: THREE.MeshStandardMaterial }>
   >;
@@ -31,6 +34,9 @@ export function buildWorld(): BuiltWorld {
     PlaceId,
     THREE.Group
   >;
+
+  const traffic = buildTraffic(kit, buildRoutes());
+  town.root.add(traffic.group);
 
   const rings = Array.from({ length: PROP_RINGS }, () => new THREE.Group());
   for (const ring of rings) town.root.add(ring);
@@ -89,5 +95,5 @@ export function buildWorld(): BuiltWorld {
   }
   for (const m of movers) bakeStatic(m, { keep, own: kit.own });
 
-  return { kit, town, places, rings, env: { night: 0, lit: 0, tier: 3 }, placeWindows };
+  return { kit, town, places, rings, env: { night: 0, lit: 0, tier: 3 }, placeWindows, traffic };
 }
