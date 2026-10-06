@@ -117,6 +117,19 @@ test("/#work opens the Brief at Work", async ({ page }) => {
   await expect(page.locator("#work")).toBeInViewport();
 });
 
+test("a first visit to /#work can close the Brief while the build-in waits behind it", async ({
+  page,
+}) => {
+  // The seeded record above is a first visit (seen: false), so the build-in is due
+  // but frozen under the Brief. Esc must still close it, or the town never wakes.
+  await page.goto("/#work");
+  await expect(page.locator("html")).toHaveClass(/world-ready/, { timeout: 20_000 });
+  await expect(page.locator("html")).toHaveClass(/brief-open/);
+  await page.keyboard.press("Escape");
+  await expect(page.locator("html")).not.toHaveClass(/brief-open/);
+  await expect(page.locator(".stage")).not.toHaveAttribute("inert", { timeout: 10_000 });
+});
+
 test("the console runs commands and unlocks Operator", async ({ page }) => {
   await page.goto("/");
   await ready(page);

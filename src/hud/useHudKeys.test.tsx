@@ -47,6 +47,20 @@ describe("useHudKeys", () => {
     expect(useBaseCamp.getState().panel).toBe("settings");
   });
 
+  it("lets Esc and B close the Brief while the first-visit build-in has not finished", () => {
+    render(<Probe />);
+    // A deep link opens the Brief over the frozen town: the build-in cannot end behind it.
+    useBaseCamp.setState({ introDone: false, briefOpen: true });
+    press("b");
+    expect(useBaseCamp.getState().briefOpen).toBe(false);
+    useBaseCamp.setState({ briefOpen: true });
+    press("Escape");
+    expect(useBaseCamp.getState().briefOpen).toBe(false);
+    // everything else still waits for the town
+    press("ArrowRight");
+    expect(useBaseCamp.getState().selected).toBeNull();
+  });
+
   it("ignores shortcuts typed into a field", () => {
     const { getByLabelText } = render(<Probe />);
     fireEvent.keyDown(getByLabelText("field"), { key: "ArrowRight" });

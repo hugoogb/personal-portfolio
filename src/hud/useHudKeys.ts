@@ -19,8 +19,10 @@ export const useHudKeys = () => {
       const action = keyAction(e);
       if (!action) return;
       const s = useBaseCamp.getState();
-      // The title card is still up: the town is not interactive yet.
-      if (!s.introDone) return;
+      // The title card or the build-in is still up: the town is not interactive yet.
+      // The Brief can already be open over it (a first-visit deep link), and
+      // must stay closable or the build-in never resumes.
+      if (!s.introDone && !(s.briefOpen && (action === "escape" || action === "brief"))) return;
       // While driving or reading the Brief, the town's shortcuts stand down.
       if (s.driving && action !== "escape") return;
       if (s.briefOpen && action !== "escape" && action !== "brief") return;
