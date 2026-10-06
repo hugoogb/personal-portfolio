@@ -9,7 +9,7 @@ describe("achievements", () => {
   it("names each one and keeps copy free of em and en dashes", () => {
     for (const a of ACHIEVEMENTS) {
       expect(a.name.length).toBeGreaterThan(0);
-      expect(`${a.name} ${a.hint}`).not.toMatch(/[–—]/);
+      expect(`${a.name} ${a.hint}`).not.toMatch(/[\u2013\u2014]/);
     }
     expect(ACHIEVEMENT_BY_ID.goal.name).toBe("Top corner");
   });
