@@ -6,6 +6,7 @@ import { buildWorld, type BuiltWorld } from "@/world/build";
 import { CAMERA_OFFSET } from "@/world/lib/camera";
 import { wasDrag } from "@/world/lib/drag";
 import { Places } from "@/world/scene/Places";
+import { ArenaDrive } from "@/world/systems/ArenaDrive";
 import { BuildIn } from "@/world/systems/BuildIn";
 import { CameraRig } from "@/world/systems/CameraRig";
 import { DayNight } from "@/world/systems/DayNight";
@@ -87,7 +88,7 @@ export default function World({ onReady }: WorldProps) {
       camera={{ position: [...CAMERA_OFFSET], zoom: 30, near: 0.1, far: 300 }}
       gl={{ antialias: tier >= 2, powerPreference: "high-performance" }}
       onPointerMissed={() => {
-        if (!wasDrag()) useBaseCamp.getState().deselect();
+        if (!wasDrag() && !useBaseCamp.getState().driving) useBaseCamp.getState().deselect();
       }}
     >
       <CameraRig />
@@ -102,6 +103,7 @@ export default function World({ onReady }: WorldProps) {
           <Places places={world.places} />
           <Life world={world} />
           <Traffic world={world} />
+          <ArenaDrive world={world} />
           <YardLights world={world} />
           <FirstFrame onDrawn={() => setDrawn(true)} onReady={onReady} />
         </>

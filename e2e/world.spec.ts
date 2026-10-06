@@ -206,3 +206,16 @@ test("the preview night command darkens the town and the HUD", async ({ page }) 
   await page.keyboard.press("Enter");
   await expect(page.locator(".stage")).toHaveAttribute("data-hud", "light");
 });
+
+test("driving: keys move the car, Esc leaves and frames the arena", async ({ page }) => {
+  await page.goto("/#arena");
+  await ready(page);
+  await page.getByRole("button", { name: /Take the wheel/ }).click();
+  await expect(page.getByRole("region", { name: "Driving" })).toBeVisible();
+  await page.keyboard.down("w");
+  await page.waitForTimeout(600);
+  await page.keyboard.up("w");
+  await page.keyboard.press("Escape");
+  await expect(page.getByRole("region", { name: "Driving" })).toHaveCount(0);
+  await expect(page.getByRole("heading", { level: 2, name: "The Arena" })).toBeVisible();
+});

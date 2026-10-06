@@ -8,7 +8,7 @@ import { wasDrag } from "@/world/lib/drag";
 function PlaceNode({ place, object }: { place: Place; object: THREE.Group }) {
   const onClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
-    if (wasDrag()) return;
+    if (wasDrag() || useBaseCamp.getState().driving) return;
     useBaseCamp.getState().select(place.id);
   };
   const onOver = (e: ThreeEvent<PointerEvent>) => {

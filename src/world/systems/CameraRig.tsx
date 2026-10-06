@@ -85,6 +85,8 @@ export function CameraRig() {
       return Math.hypot(a.x - b.x, a.y - b.y);
     };
     const onDown = (e: PointerEvent) => {
+      // Driving: the drag steers the car, it does not pan.
+      if (useBaseCamp.getState().driving) return;
       pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
       if (pointers.size === 1) drag.distance = 0;
       if (pointers.size === 2) pinch = spread();
