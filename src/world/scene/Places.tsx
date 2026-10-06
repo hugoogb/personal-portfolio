@@ -22,15 +22,18 @@ function PlaceNode({ place, object }: { place: Place; object: THREE.Group }) {
     document.body.style.cursor = "";
   };
   return (
-    <group
-      position={[place.map.x, 0, place.map.z]}
-      onClick={onClick}
-      onPointerOver={onOver}
-      onPointerOut={onOut}
-    >
+    <group position={[place.map.x, 0, place.map.z]}>
       <primitive object={object} />
-      {/* One generous hit volume per place; three.js raycasts invisible meshes. */}
-      <mesh visible={false} position-y={Math.max(place.map.top, 1) / 2}>
+      {/* One generous hit volume per place; three.js raycasts invisible meshes. The
+          handlers live on it alone, so the place's own parts (the straw hat, the
+          caravel, the buoys) are not picked as the place. */}
+      <mesh
+        visible={false}
+        position-y={Math.max(place.map.top, 1) / 2}
+        onClick={onClick}
+        onPointerOver={onOver}
+        onPointerOut={onOut}
+      >
         <cylinderGeometry args={[place.map.r, place.map.r, Math.max(place.map.top, 1), 16]} />
       </mesh>
     </group>
