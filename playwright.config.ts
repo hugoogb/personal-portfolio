@@ -10,5 +10,20 @@ export default defineConfig({
     url: "http://localhost:4173",
     reuseExistingServer: !process.env.CI,
   },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  projects: [
+    {
+      name: "chromium",
+      use: {
+        ...devices["Desktop Chrome"],
+        // Headless Chromium has no GPU; SwiftShader gives the town a WebGL context.
+        launchOptions: {
+          args: [
+            "--enable-unsafe-swiftshader",
+            "--use-angle=swiftshader",
+            "--ignore-gpu-blocklist",
+          ],
+        },
+      },
+    },
+  ],
 });

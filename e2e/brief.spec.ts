@@ -1,5 +1,9 @@
 import { expect, test } from "@playwright/test";
 
+// These cover the Brief as the page. Reduced motion keeps every device on Lite,
+// so the town never covers it (e2e/world.spec.ts covers the town).
+test.use({ reducedMotion: "reduce" });
+
 const PROJECTS = [
   "F1 Tracker",
   "ReadLedger",
