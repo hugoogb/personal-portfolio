@@ -226,3 +226,26 @@ test("the stadium wave runs from its card", async ({ page }) => {
   await page.getByRole("button", { name: /Start a wave/ }).click();
   await expect(page.getByText("Wave started in the stands")).toBeVisible();
 });
+
+test("a down service shows Down on its card and the top bar counts only what is up", async ({
+  page,
+}) => {
+  await page.route("**/api/status", (route) =>
+    route.fulfill({
+      json: {
+        checkedAt: "x",
+        services: [
+          { id: "f1", host: "f1-tracker.hugoogb.dev", ok: true, status: 200, ms: 120 },
+          { id: "rl", host: "readledger.app", ok: false, status: 0, ms: null },
+          { id: "wt", host: "wrappedthings.app", ok: true, status: 200, ms: 90 },
+          { id: "es", host: "estonoesunrestaurante.com", ok: true, status: 200, ms: 80 },
+          { id: "av", host: "avatar-generator.hugoogb.dev", ok: true, status: 200, ms: 60 },
+        ],
+      },
+    }),
+  );
+  await page.goto("/#readledger");
+  await ready(page);
+  await expect(page.getByText("Down")).toBeVisible();
+  await expect(page.getByTitle("Projects confirmed live")).toContainText("4/5");
+});
