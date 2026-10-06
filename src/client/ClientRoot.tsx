@@ -1,6 +1,7 @@
 import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/react";
 import { useEffect } from "react";
+import { Boot } from "@/boot/Boot";
 import { useAccentFavicon } from "@/hooks/useAccentFavicon";
 import { useBaseCamp } from "@/store/store";
 import { trackOutbound } from "@/utils/track";
@@ -28,6 +29,7 @@ export function ClientRoot() {
     <>
       <Analytics />
       <SpeedInsights />
+      <Boot />
     </>
   );
 }

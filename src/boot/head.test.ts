@@ -16,7 +16,7 @@ const fake = (env: Env = {}) => {
   const doc = {
     documentElement: {
       style: { setProperty: (k: string, v: string) => void props.set(k, v) },
-      classList: { add: (c: string) => void classes.add(c) },
+      classList: { add: (...names: string[]) => names.forEach((c) => classes.add(c)) },
     },
     createElement: () => ({
       getContext: () =>
@@ -82,6 +82,27 @@ describe("bootHead", () => {
 
   it("releases the WebGL context it probed with", () => {
     expect(boot().state.lost).toBe(true);
+  });
+  it("marks WebGL support separately, and starts the town on a capable device", () => {
+    const f = boot();
+    expect(f.classes.has("has-webgl")).toBe(true);
+    expect(f.classes.has("world")).toBe(true);
+  });
+
+  it("keeps has-webgl but not the town when the visitor chose Lite", () => {
+    const f = boot({ stored: { bc: JSON.stringify({ state: { qualityMode: "Lite" } }) } });
+    expect(f.classes.has("has-webgl")).toBe(true);
+    expect(f.classes.has("world")).toBe(false);
+  });
+
+  it("lets a saved manual quality outrank reduced motion and Save-Data", () => {
+    const stored = { bc: JSON.stringify({ state: { qualityMode: "Low" } }) };
+    expect(boot({ stored, reducedMotion: true }).classes.has("world")).toBe(true);
+    expect(boot({ stored, saveData: true }).classes.has("world")).toBe(true);
+  });
+
+  it("adds nothing without WebGL", () => {
+    expect([...boot({ webgl: false }).classes]).toEqual([]);
   });
 });
 

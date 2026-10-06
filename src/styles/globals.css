@@ -254,3 +254,59 @@ html.world .title-card {
   color: var(--text-muted);
   text-decoration: underline;
 }
+
+/* World mode (spec 9.5). The head script sets html.world before first paint
+   when this device should get the town: the page stops scrolling, the Brief is
+   hidden visually but stays in the DOM for crawlers and the overlay, and the
+   title card shows until the first frame (html.world-ready). */
+html.world,
+html.world body {
+  height: 100%;
+  overflow: hidden;
+}
+html.world #brief {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+html.world.brief-open #brief {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  width: auto;
+  height: auto;
+  overflow: auto;
+  clip-path: none;
+  white-space: normal;
+  background: var(--background-color);
+  outline: none;
+}
+html.world.world-ready .title-card {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.45s ease,
+    visibility 0s linear 0.45s;
+}
+
+.enter-anyway {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 40;
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--primary-color);
+  color: var(--primary-fg);
+  font: 700 14px var(--font-display);
+  box-shadow: 0 6px 20px rgb(0 0 0 / 0.18);
+  cursor: pointer;
+}
+.enter-anyway:focus-visible {
+  outline: 2px solid var(--text-color);
+  outline-offset: 3px;
+}

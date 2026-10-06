@@ -2,9 +2,10 @@
  * Runs inline in <head>, before first paint (injected by vite.config.ts).
  *
  * It paints the visitor's saved accent so the prerendered page never flashes
- * orange first, and marks html.can-world when this device could run the 3D
- * town: WebGL works, motion is welcome, Save-Data is off and the visitor has
- * not chosen Lite. Phase 2 uses the class to swap the Brief for the title card.
+ * orange first. It marks html.has-webgl when WebGL works (the Brief then offers
+ * "Enter the town anyway"), and html.can-world plus html.world when this device
+ * should get the town: CSS swaps the Brief for the title card before first
+ * paint, and Boot removes html.world again if the GPU check says Lite.
  *
  * It is shipped as its own source text (headScript below), so it must stay
  * self-contained: no imports, no helpers from outside this function.
@@ -44,7 +45,13 @@ export function bootHead(doc: Document, win: Window): void {
     .connection;
   const saveData = Boolean(connection?.saveData);
 
-  if (webgl && !reducedMotion && !saveData && quality !== "Lite") root.classList.add("can-world");
+  if (webgl) root.classList.add("has-webgl");
+  // A saved manual quality (including "Enter the town anyway", which saves Low)
+  // outranks reduced motion and Save-Data: the visitor asked for the town.
+  const manual = quality === "High" || quality === "Medium" || quality === "Low";
+  if (webgl && quality !== "Lite" && (manual || (!reducedMotion && !saveData))) {
+    root.classList.add("can-world", "world");
+  }
 }
 
 export const headScript = `(${bootHead.toString()})(document, window);`;
