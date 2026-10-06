@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import type { Kit } from "@/world/kit/kit";
+import { LED_PALETTE } from "@/world/lib/status";
 
 /** Server yard, a glass data centre with the racks inside (reference 1056-1081; antenna blink 1481). */
 export function buildYard(kit: Kit): THREE.Group {
@@ -31,7 +32,7 @@ export function buildYard(kit: Kit): THREE.Group {
   pos.forEach((p, i) => {
     m4.makeTranslation(p[0], p[1], p[2]);
     im.setMatrixAt(i, m4);
-    im.setColorAt(i, new THREE.Color(i < 30 ? "#eef2f7" : "#4ade80"));
+    im.setColorAt(i, new THREE.Color(LED_PALETTE(kit.rand())));
   });
   g.add(im);
   kit.life.leds = im;

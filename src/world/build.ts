@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { STATUS_TARGETS } from "@/content/services";
 import { ORDER, PLACE_BY_ID } from "@/content/places";
 import type { PlaceId } from "@/content/types";
 import { bakeStatic } from "@/world/kit/bake";
@@ -16,6 +17,10 @@ export interface BuiltWorld {
   rings: THREE.Group[];
   /** Written by DayNight, read by Life. */
   env: FrameEnv;
+  /** Per-service window materials, so a down service can go dark alone. */
+  placeWindows: Partial<
+    Record<PlaceId, { win: THREE.MeshStandardMaterial; winDim: THREE.MeshStandardMaterial }>
+  >;
 }
 
 /** Builds the whole town once, outside React. World disposes it on unmount. */
@@ -54,6 +59,20 @@ export function buildWorld(): BuiltWorld {
     kit.materials.pool,
     ...kit.signMats,
   ]);
+  const placeWindows: BuiltWorld["placeWindows"] = {};
+  for (const { id } of STATUS_TARGETS) {
+    const win = kit.own(kit.materials.win.clone());
+    const winDim = kit.own(kit.materials.winDim.clone());
+    places[id].traverse((o) => {
+      const mesh = o as THREE.Mesh;
+      if (!mesh.isMesh) return;
+      if (mesh.material === kit.materials.win) mesh.material = win;
+      else if (mesh.material === kit.materials.winDim) mesh.material = winDim;
+    });
+    placeWindows[id] = { win, winDim };
+    keep.add(win);
+    keep.add(winDim);
+  }
   const board = kit.life.boardFace as THREE.Material | undefined;
   if (board) keep.add(board);
   const opts = { keep, own: kit.own, shadowProxy: true };
@@ -70,5 +89,5 @@ export function buildWorld(): BuiltWorld {
   }
   for (const m of movers) bakeStatic(m, { keep, own: kit.own });
 
-  return { kit, town, places, rings, env: { night: 0, lit: 0, tier: 3 } };
+  return { kit, town, places, rings, env: { night: 0, lit: 0, tier: 3 }, placeWindows };
 }

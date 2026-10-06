@@ -88,3 +88,16 @@ describe("server yard", () => {
     expect(antenna.emissiveIntensity).not.toBe(a);
   });
 });
+
+describe("yard LEDs", () => {
+  it("use one palette on both rows", () => {
+    const kit = createKit();
+    buildYard(kit);
+    const leds = kit.life.leds as THREE.InstancedMesh;
+    const c = new THREE.Color();
+    for (let i = 0; i < leds.count; i++) {
+      leds.getColorAt(i, c);
+      expect(["4ade80", "1a3a2a", "60a5fa"]).toContain(c.getHexString());
+    }
+  });
+});

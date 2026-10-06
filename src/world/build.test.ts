@@ -70,4 +70,14 @@ describe("buildWorld", () => {
     expect(puffs).toBeGreaterThan(0);
     w.kit.dispose();
   });
+
+  it("gives every probed service its own window materials, kept out of colour merging", () => {
+    const w = buildWorld();
+    for (const id of ["f1", "rl", "wt", "es", "av"] as const) {
+      const set = w.placeWindows[id];
+      expect(set, id).toBeDefined();
+      expect(set!.win).not.toBe(w.kit.materials.win);
+    }
+    w.kit.dispose();
+  });
 });

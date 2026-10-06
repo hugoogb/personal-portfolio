@@ -1,11 +1,13 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
+import type { PlaceId } from "@/content/types";
 import type { Tier } from "@/boot/tiers";
 import { useBaseCamp } from "@/store/store";
 import type { BuiltWorld } from "@/world/build";
 import { lighting } from "@/world/lib/lighting";
-import { effectiveHour } from "@/world/lib/sun";
+import { windowFactor } from "@/world/lib/status";
+import { barcelonaHour, effectiveHour, nightAmount } from "@/world/lib/sun";
 
 const SHADOW_MAP: Record<Tier, number> = { 0: 0, 1: 0, 2: 1024, 3: 2048 };
 const RECOMPUTE_S = 0.25;
@@ -58,6 +60,18 @@ export function DayNight({ world }: { world: BuiltWorld }) {
     town.water.roughness = 0.18 + (0.6 - 0.18) * L.night;
     kit.materials.win.emissiveIntensity = L.windows.bright;
     kit.materials.winDim.emissiveIntensity = L.windows.dim;
+    for (const [id, set] of Object.entries(world.placeWindows) as [
+      PlaceId,
+      NonNullable<BuiltWorld["placeWindows"][PlaceId]>,
+    ][]) {
+      const f = windowFactor(s.status, id);
+      set.win.emissiveIntensity = L.windows.bright * f;
+      set.winDim.emissiveIntensity = L.windows.dim * f;
+    }
+    // The night owl counts the real Barcelona clock, not the preview override.
+    if (s.introDone && nightAmount(barcelonaHour(new Date())) > 0.6) s.achieve("night");
+    const packets = kit.life.packetMat as THREE.MeshStandardMaterial | undefined;
+    if (packets) packets.emissiveIntensity = L.packets;
     kit.materials.lamp.emissiveIntensity = L.lamps;
     for (const m of kit.signMats) m.emissiveIntensity = L.signs;
     for (const light of kit.pointLights) light.intensity = L.stadium;
