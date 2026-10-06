@@ -89,10 +89,10 @@ test("clicking a place selects it, a drag that ends on it does not, and clicking
   // Zoomed all the way out, only sky or sea is left in the corner.
   await page.mouse.move(cx, cy);
   for (let i = 0; i < 6; i++) await page.mouse.wheel(0, 2000);
-  await page.keyboard.press("Control+k");
-  await page.keyboard.type("go hq");
-  await page.keyboard.press("Enter");
+  // Selection survives zooming. The camera eases over about 0.5s, so let it settle.
   await expect(card(page, "Headquarters")).toBeVisible();
+  await page.waitForTimeout(600);
+  await expect(page.getByRole("dialog")).toHaveCount(0);
   await page.mouse.click(box.x + 10, box.y + 10);
   await expect(hint).toBeVisible();
 });
