@@ -75,6 +75,8 @@ export interface BaseCampState {
   /** When the last stadium wave started (ms since epoch), 0 for never. */
   waveAt: number;
   status: StatusMap | "unknown";
+  /** Goals scored in the arena this visit; never saved. */
+  score: number;
 
   select: (id: PlaceId) => void;
   deselect: () => void;
@@ -106,6 +108,7 @@ export interface BaseCampState {
   markIntroDone: () => void;
   markSeen: () => void;
   setStatus: (status: StatusMap | "unknown") => void;
+  addGoal: (side: "Blue" | "Orange") => void;
   resetProgress: () => void;
 }
 
@@ -176,6 +179,7 @@ export const createBaseCampStore = (storage: KeyValueStorage = safeStorage()) =>
         toasts: [],
         waveAt: 0,
         status: "unknown",
+        score: 0,
 
         select: (id) => {
           set((s) => ({
@@ -233,6 +237,11 @@ export const createBaseCampStore = (storage: KeyValueStorage = safeStorage()) =>
         markIntroDone: () => set({ introDone: true }),
         markSeen: () => set({ seen: true }),
         setStatus: (status) => set({ status }),
+        addGoal: (side) => {
+          set((s) => ({ score: s.score + 1 }));
+          get().toast(`Goal! ${side} net`);
+          get().achieve("goal");
+        },
         resetProgress: () => set({ discovered: [], achievements: [], seen: false }),
       }),
       {

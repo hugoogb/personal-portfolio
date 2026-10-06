@@ -17,6 +17,7 @@ import { TopBar } from "@/hud/TopBar";
 import { Trophies } from "@/hud/Trophies";
 import { useDeepLinks } from "@/hud/useDeepLinks";
 import { useHudKeys } from "@/hud/useHudKeys";
+import { useStatus } from "@/hooks/useStatus";
 import { useBaseCamp } from "@/store/store";
 
 /** The stage: the canvas underneath, the DOM HUD on top (spec 4.3). */
@@ -29,6 +30,7 @@ export function Hud({ world }: { world: ReactNode }) {
   const driving = useBaseCamp((s) => s.driving);
   const introDone = useBaseCamp((s) => s.introDone);
   useHudKeys();
+  useStatus();
   useDeepLinks();
 
   return (

@@ -270,3 +270,23 @@ describe("store, phase 3", () => {
     expect(store.getState().introRunning).toBe(true);
   });
 });
+
+describe("store, phase 4", () => {
+  it("keeps the score out of the saved record", () => {
+    const storage = memory();
+    const store = createBaseCampStore(storage);
+    store.getState().addGoal("Blue");
+    store.getState().select("arena");
+    const saved = JSON.parse(storage.getItem(STORE_KEY) ?? "{}");
+    expect(saved.state.score).toBeUndefined();
+  });
+
+  it("counts goals and unlocks Top corner once", () => {
+    const store = createBaseCampStore(memory());
+    store.getState().addGoal("Blue");
+    store.getState().addGoal("Orange");
+    expect(store.getState().score).toBe(2);
+    expect(store.getState().achievements.filter((a) => a === "goal")).toHaveLength(1);
+    expect(store.getState().toasts.map((t) => t.text)).toContain("Goal! Blue net");
+  });
+});
