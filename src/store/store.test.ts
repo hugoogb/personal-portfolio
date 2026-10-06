@@ -119,3 +119,48 @@ describe("store", () => {
     expect(store.getState().hudMode).toBe("dark");
   });
 });
+
+describe("store restore", () => {
+  it("keeps only valid fields from a wrong-typed saved record", () => {
+    const storage = memory();
+    storage.setItem(
+      STORE_KEY,
+      JSON.stringify({
+        state: {
+          discovered: ["rl", "nowhere", 7],
+          achievements: null,
+          hudMode: "neon",
+          qualityMode: "Ultra",
+          seen: "yes",
+        },
+        version: 1,
+      }),
+    );
+    const store = createBaseCampStore(storage);
+    const state = store.getState();
+    expect(state.discovered).toEqual(["rl"]);
+    expect(state.achievements).toEqual([]);
+    expect(state.hudMode).toBe("auto");
+    expect(state.qualityMode).toBe("auto");
+    expect(state.seen).toBe(false);
+    expect(() => state.unlock("goal")).not.toThrow();
+  });
+
+  it("restores a record from another version without logging an error", () => {
+    const storage = memory();
+    storage.setItem(
+      STORE_KEY,
+      JSON.stringify({ state: { discovered: ["f1"], seen: true }, version: 99 }),
+    );
+    const errors: unknown[] = [];
+    const original = console.error;
+    console.error = (...args: unknown[]) => void errors.push(args);
+    try {
+      const store = createBaseCampStore(storage);
+      expect(store.getState().discovered).toEqual(["f1"]);
+    } finally {
+      console.error = original;
+    }
+    expect(errors).toEqual([]);
+  });
+});

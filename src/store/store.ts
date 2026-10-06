@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-import type { QualityMode, Tier } from "@/boot/tiers";
+import { TIER_NAMES, type QualityMode, type Tier } from "@/boot/tiers";
 import { ORDER } from "@/content/places";
 import type { PlaceId } from "@/content/types";
 import { isHexColor, readAccent, writeAccent } from "@/store/accent";
@@ -57,6 +57,40 @@ export interface BaseCampState {
 
 /** One record for everything persisted except the accent, which keeps today's "color" key. */
 export const STORE_KEY = "bc";
+
+const ACHIEVEMENTS: readonly AchievementId[] = [
+  "explorer",
+  "goal",
+  "hat",
+  "lap",
+  "night",
+  "console",
+];
+const HUD_MODES: readonly HudMode[] = ["auto", "light", "dark"];
+const QUALITY_MODES: readonly QualityMode[] = ["auto", ...TIER_NAMES];
+
+const isOneOf = <T>(allowed: readonly T[], value: unknown): value is T =>
+  allowed.includes(value as T);
+
+const listOf = <T>(allowed: readonly T[], value: unknown): T[] =>
+  Array.isArray(value) ? value.filter((item): item is T => isOneOf(allowed, item)) : [];
+
+/**
+ * The saved record is whatever a visitor's browser hands back: an older shape,
+ * a hand-edited value, another version. Each field is kept only when it is
+ * valid, so one bad field falls back to its default instead of breaking the HUD.
+ */
+const restore = (saved: unknown): Partial<Persisted> => {
+  if (!saved || typeof saved !== "object") return {};
+  const s = saved as Record<string, unknown>;
+  return {
+    discovered: listOf(ORDER, s.discovered),
+    achievements: listOf(ACHIEVEMENTS, s.achievements),
+    hudMode: isOneOf(HUD_MODES, s.hudMode) ? s.hudMode : "auto",
+    qualityMode: isOneOf(QUALITY_MODES, s.qualityMode) ? s.qualityMode : "auto",
+    seen: s.seen === true,
+  };
+};
 
 type Persisted = Pick<
   BaseCampState,
@@ -124,6 +158,9 @@ export const createBaseCampStore = (storage: KeyValueStorage = safeStorage()) =>
         name: STORE_KEY,
         version: 1,
         storage: createJSONStorage(() => storage),
+        // Every version goes through restore(), so no record needs migrating.
+        migrate: (saved) => saved as Persisted,
+        merge: (saved, current) => ({ ...current, ...restore(saved) }),
         partialize: (s): Persisted => ({
           discovered: s.discovered,
           achievements: s.achievements,
