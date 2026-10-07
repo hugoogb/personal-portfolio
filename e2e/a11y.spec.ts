@@ -27,6 +27,7 @@ test.describe("the Brief", () => {
   test.use({ reducedMotion: "reduce" });
   test("has no serious violations", async ({ page }) => {
     await page.goto("/");
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await scan(page, "brief");
   });
 });
@@ -53,9 +54,12 @@ test.describe("the town", () => {
     await scan(page, "settings");
     await page.keyboard.press("Escape");
     await page.getByRole("button", { name: "Trophies" }).click();
+    await expect(page.getByRole("dialog", { name: "Trophies" })).toBeVisible();
     await scan(page, "trophies");
     await page.keyboard.press("Escape");
     await page.keyboard.press("Control+k");
+    await expect(page.getByRole("dialog", { name: "Console" })).toBeVisible();
+    await expect(page.getByRole("combobox")).toBeVisible();
     await scan(page, "console");
     await page.keyboard.type("night");
     await page.keyboard.press("Enter");
@@ -63,12 +67,16 @@ test.describe("the town", () => {
     await expect(page.locator(".stage")).toHaveAttribute("data-hud", "dark");
     await scan(page, "hud-dark");
     await page.getByRole("button", { name: "Settings" }).click();
+    await expect(page.getByRole("dialog", { name: "Settings" })).toBeVisible();
     await scan(page, "settings-dark");
     await page.keyboard.press("Escape");
     await page.getByRole("button", { name: "Trophies" }).click();
+    await expect(page.getByRole("dialog", { name: "Trophies" })).toBeVisible();
     await scan(page, "trophies-dark");
     await page.keyboard.press("Escape");
     await page.keyboard.press("b");
+    await expect(page.locator("html")).toHaveClass(/brief-open/);
+    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     await scan(page, "brief-overlay");
   });
 
@@ -77,7 +85,13 @@ test.describe("the town", () => {
   }) => {
     await page.goto("/");
     await ready(page);
-    const seen: { inList: boolean; inTopBar: boolean; outline: string; shadow: string }[] = [];
+    const seen: {
+      inList: boolean;
+      inTopBar: boolean;
+      tag: string;
+      focusVisible: boolean;
+      outline: string;
+    }[] = [];
     for (let i = 0; i < 14; i++) {
       await page.keyboard.press("Tab");
       seen.push(
@@ -87,15 +101,20 @@ test.describe("the town", () => {
           return {
             inList: Boolean(el.closest('nav[aria-label="Places in town"]')),
             inTopBar: Boolean(el.closest("header.hud-top")),
+            tag: el.tagName + (el.getAttribute("type") ? `[${el.getAttribute("type")}]` : ""),
+            focusVisible: el.matches(":focus-visible"),
             outline: style.outlineStyle === "none" ? "" : style.outlineWidth,
-            shadow: style.boxShadow === "none" ? "" : style.boxShadow,
           };
         }),
       );
     }
     const firstNotTopBar = seen.findIndex((s) => !s.inTopBar);
+    expect(firstNotTopBar, "tabbing never left the top bar").toBeGreaterThanOrEqual(0);
     expect(seen[firstNotTopBar]?.inList).toBe(true);
-    for (const s of seen) expect(s.outline || s.shadow, JSON.stringify(s)).toBeTruthy();
+    for (const s of seen) {
+      expect(s.focusVisible, JSON.stringify(s)).toBe(true);
+      expect(parseFloat(s.outline), JSON.stringify(s)).toBeGreaterThan(0);
+    }
   });
 
   test("dialogs trap focus and give it back on Esc", async ({ page }) => {
