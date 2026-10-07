@@ -13,7 +13,10 @@ function Probe() {
 }
 
 beforeEach(() => useBaseCamp.setState(useBaseCamp.getInitialState()));
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => {
+  vi.unstubAllGlobals();
+  vi.restoreAllMocks();
+});
 
 describe("fetchStatus", () => {
   it("maps probes to a status map", async () => {
@@ -44,16 +47,22 @@ describe("fetchStatus", () => {
 });
 
 describe("fetchStatus timeout", () => {
-  it("passes the signal to fetch and answers unknown once aborted", async () => {
+  it("hands fetch the exact signal and stays pending until it aborts", async () => {
     const ac = new AbortController();
-    vi.stubGlobal(
-      "fetch",
-      (_u: string, init: RequestInit) =>
-        new Promise((_, reject) =>
-          init.signal?.addEventListener("abort", () => reject(new Error("aborted"))),
-        ),
-    );
+    let seen: AbortSignal | null | undefined;
+    vi.stubGlobal("fetch", (_u: string, init?: RequestInit) => {
+      seen = init?.signal;
+      return new Promise((_, reject) =>
+        init?.signal?.addEventListener("abort", () => reject(new Error("aborted"))),
+      );
+    });
     const p = fetchStatus(ac.signal);
+    let settled = false;
+    void p.then(() => (settled = true));
+    await Promise.resolve();
+    await Promise.resolve();
+    expect(seen).toBe(ac.signal);
+    expect(settled).toBe(false);
     ac.abort();
     expect(await p).toBe("unknown");
   });
@@ -89,5 +98,34 @@ describe("useStatus", () => {
     await waitFor(() =>
       expect(useBaseCamp.getState().status).toEqual({ rl: { ok: true, ms: 50 } }),
     );
+  });
+
+  it("gives each request a 10 s timeout signal and aborts it on unmount", async () => {
+    const timeout = new AbortController();
+    vi.spyOn(AbortSignal, "timeout").mockImplementation((ms) => {
+      expect(ms).toBe(10_000);
+      return timeout.signal;
+    });
+    const signals: (AbortSignal | null | undefined)[] = [];
+    vi.stubGlobal("fetch", (_u: string, init?: RequestInit) => {
+      signals.push(init?.signal);
+      return new Promise((_, reject) =>
+        init?.signal?.addEventListener("abort", () => reject(new Error("aborted"))),
+      );
+    });
+    useBaseCamp.setState({ status: { rl: { ok: true, ms: 1 } } });
+    const first = render(<Probe />);
+    expect(signals[0]).toBeInstanceOf(AbortSignal);
+    expect(signals[0]!.aborted).toBe(false);
+    timeout.abort();
+    expect(signals[0]!.aborted).toBe(true);
+    await waitFor(() => expect(useBaseCamp.getState().status).toBe("unknown"));
+    first.unmount();
+
+    vi.spyOn(AbortSignal, "timeout").mockImplementation(() => new AbortController().signal);
+    const second = render(<Probe />);
+    expect(signals[1]!.aborted).toBe(false);
+    second.unmount();
+    expect(signals[1]!.aborted).toBe(true);
   });
 });

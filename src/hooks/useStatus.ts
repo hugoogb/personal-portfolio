@@ -27,12 +27,16 @@ export const fetchStatus = async (signal?: AbortSignal): Promise<StatusMap | "un
 export const useStatus = () => {
   useEffect(() => {
     let alive = true;
+    // Aborts the request in flight when the hook unmounts.
+    const unmount = new AbortController();
     let seq = 0;
     let applied = 0;
     const tick = async () => {
       if (document.hidden) return;
       const mine = ++seq;
-      const status = await fetchStatus(AbortSignal.timeout(TIMEOUT_MS));
+      const status = await fetchStatus(
+        AbortSignal.any([AbortSignal.timeout(TIMEOUT_MS), unmount.signal]),
+      );
       // An older response never overwrites a newer one.
       if (!alive || mine < applied) return;
       applied = mine;
@@ -46,6 +50,7 @@ export const useStatus = () => {
     document.addEventListener("visibilitychange", onVisible);
     return () => {
       alive = false;
+      unmount.abort();
       window.clearInterval(id);
       document.removeEventListener("visibilitychange", onVisible);
     };

@@ -161,6 +161,8 @@ export function Eggs({ world }: { world: BuiltWorld }) {
           visible={false}
           userData={{ eggTarget: true }}
           onClick={(e) => {
+            // Until it is placed on the hat the target sits at the origin: not clickable.
+            if (!hatPlaced.current) return;
             e.stopPropagation();
             if (wasDrag()) return;
             const s = useBaseCamp.getState();
@@ -168,6 +170,7 @@ export function Eggs({ world }: { world: BuiltWorld }) {
             if (ship && ship.sail < 0) ship.sail = 0;
           }}
           onPointerOver={(e) => {
+            if (!hatPlaced.current) return;
             e.stopPropagation();
             cursor("pointer");
           }}
