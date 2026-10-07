@@ -4,6 +4,7 @@ import type { Tier } from "@/boot/tiers";
 import { useBaseCamp } from "@/store/store";
 import { buildWorld, type BuiltWorld } from "@/world/build";
 import { effectsEnabled } from "@/world/effects/effectsGate";
+import { FloatTargets } from "@/world/effects/FloatTargets";
 import { EffectsBoundary } from "@/world/effects/EffectsBoundary";
 import { CAMERA_OFFSET } from "@/world/lib/camera";
 import { wasDrag } from "@/world/lib/drag";
@@ -117,11 +118,13 @@ export default function World({ onReady }: WorldProps) {
         </>
       )}
       {world && effectsEnabled(tier) && (
-        <EffectsBoundary>
-          <Suspense fallback={null}>
-            <Effects />
-          </Suspense>
-        </EffectsBoundary>
+        <FloatTargets>
+          <EffectsBoundary>
+            <Suspense fallback={null}>
+              <Effects />
+            </Suspense>
+          </EffectsBoundary>
+        </FloatTargets>
       )}
     </Canvas>
   );

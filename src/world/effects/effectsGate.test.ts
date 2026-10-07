@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { BLOOM_MIN, bloomOn, effectsEnabled } from "@/world/effects/effectsGate";
+import {
+  BLOOM_MIN,
+  bloomOn,
+  canRenderHalfFloat,
+  effectsEnabled,
+} from "@/world/effects/effectsGate";
 import { lighting } from "@/world/lib/lighting";
 
 describe("effects (spec 5.5)", () => {
@@ -23,5 +28,12 @@ describe("effects (spec 5.5)", () => {
     expect(bloomOn(lighting(13).bloom)).toBe(false);
     expect(bloomOn(lighting(23).bloom)).toBe(true);
     expect(lighting(23).bloom).toBeCloseTo(0.42 * lighting(23).lit, 9);
+  });
+
+  it("needs a context that can render to half-float targets", () => {
+    const gl = (...names: string[]) => ({ extensions: { has: (n: string) => names.includes(n) } });
+    expect(canRenderHalfFloat(gl("EXT_color_buffer_float"))).toBe(true);
+    expect(canRenderHalfFloat(gl("EXT_color_buffer_half_float"))).toBe(true);
+    expect(canRenderHalfFloat(gl())).toBe(false);
   });
 });
