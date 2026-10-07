@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { pageMetrics } from "./pageMetrics";
 
 // detect-gpu blocklists SwiftShader, so pin a manual quality: the town then
 // loads on any WebGL context, exactly as "Enter the town anyway" does.
@@ -286,4 +287,14 @@ test.describe("on High", () => {
     await page.keyboard.press("ArrowRight");
     await expect(card(page, "F1 Tracker")).toBeVisible();
   });
+});
+
+test("the town's first paint is text, and nothing shifts", async ({ page }) => {
+  await page.goto("/");
+  const { lcpTag, lcpUrl, cls, shifts } = await pageMetrics(page);
+  expect(lcpTag).not.toBe("CANVAS");
+  expect(lcpTag).not.toBe("IMG");
+  expect(lcpUrl).toBe("");
+  expect(cls, `shifted: ${shifts.join(",")}`).toBe(0);
+  await ready(page);
 });

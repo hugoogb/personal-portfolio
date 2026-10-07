@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { pageMetrics } from "./pageMetrics";
 
 // These cover the Brief as the page. Reduced motion keeps every device on Lite,
 // so the town never covers it (e2e/world.spec.ts covers the town).
@@ -103,4 +104,13 @@ test("a saved accent is painted before the page renders", async ({ page }) => {
     document.documentElement.style.getPropertyValue("--primary-color"),
   );
   expect(accent).toBe("#10b981");
+});
+
+test("the largest paint is text, and nothing shifts", async ({ page }) => {
+  await page.goto("/");
+  await page.waitForLoadState("networkidle");
+  const { lcpTag, lcpUrl, cls, shifts } = await pageMetrics(page);
+  expect(["H1", "H2", "P", "DIV", "SPAN"]).toContain(lcpTag);
+  expect(lcpUrl).toBe("");
+  expect(cls, `shifted: ${shifts.join(",")}`).toBe(0);
 });
