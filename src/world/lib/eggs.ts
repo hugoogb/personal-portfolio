@@ -5,11 +5,13 @@ export const eggUnderPointer = (hits: { object: THREE.Object3D }[]) =>
   hits.some((h) => h.object.userData.eggTarget === true);
 
 export const SAIL_S = 9;
-/** The caravel's offset from home at sail progress s (0..1): out and back (reference 1476). */
-export const sailOffset = (s: number) => ({
-  dx: Math.sin(s * Math.PI) * 9,
-  dz: -Math.sin(s * Math.PI) * 5,
-});
+/** Writes the caravel's offset from home at sail progress s (0..1) into `out`: out and back (reference 1476). */
+export const sailOffset = (s: number, out: { dx: number; dz: number }) => {
+  const k = Math.sin(s * Math.PI);
+  out.dx = k * 9;
+  out.dz = -k * 5;
+  return out;
+};
 
 export const FLASH_S = 1.2;
 /** The F1 cars blink purple at 10 Hz while a lap flash runs (reference 1445). */

@@ -45,8 +45,8 @@ export const trackTier = (initial: Tier, final: Tier, reason: TierReason) =>
 
 /** Why boot picked its tier, in the same order chooseTier checks (spec 8). */
 export const bootReason = (s: TierSignals, mode: QualityMode): TierReason => {
-  if (mode !== "auto") return "saved";
   if (!s.webgl) return "no-webgl";
+  if (mode !== "auto") return "saved";
   if (s.reducedMotion) return "reduced-motion";
   if (s.saveData) return "save-data";
   if (s.gpuTier === 0) return "gpu";

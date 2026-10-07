@@ -59,6 +59,7 @@ describe("analytics events (spec 9.8)", () => {
     expect(bootReason(signals, "auto")).toBe("auto");
     expect(bootReason(signals, "Low")).toBe("saved");
     expect(bootReason({ ...signals, webgl: false }, "auto")).toBe("no-webgl");
+    expect(bootReason({ ...signals, webgl: false }, "High")).toBe("no-webgl");
     expect(bootReason({ ...signals, reducedMotion: true }, "auto")).toBe("reduced-motion");
     expect(bootReason({ ...signals, saveData: true }, "auto")).toBe("save-data");
     expect(bootReason({ ...signals, gpuTier: 0 }, "auto")).toBe("gpu");

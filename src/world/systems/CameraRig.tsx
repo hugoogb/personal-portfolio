@@ -41,7 +41,6 @@ export function CameraRig() {
   });
   const narrow = useRef(size.width < NARROW_WIDTH);
   narrow.current = size.width < NARROW_WIDTH;
-  const instant = useRef(prefersReducedMotion());
 
   useEffect(() => {
     const aim = (x: number, z: number, view: number) => {
@@ -139,7 +138,7 @@ export function CameraRig() {
   useFrame((_, delta) => {
     const dt = Math.max(0, delta);
     const r = rig.current;
-    const lambda = instant.current ? Infinity : EASE;
+    const lambda = prefersReducedMotion() ? Infinity : EASE;
     r.x = damp(r.x, r.gx, lambda, dt);
     r.z = damp(r.z, r.gz, lambda, dt);
     r.view = damp(r.view, r.gview, lambda, dt);

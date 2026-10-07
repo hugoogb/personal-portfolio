@@ -8,7 +8,8 @@ import { OVERVIEW } from "@/world/lib/map";
 
 /** Opens the prerendered Brief over the town (Boot sets html.brief-open), optionally at a section. */
 export const openBrief = (anchor: string | null = null, source: BriefSource = "button") => {
-  trackBrief(source);
+  // Already open (a deep link or card while reading): still scroll, but it is not a new open.
+  if (!useBaseCamp.getState().briefOpen) trackBrief(source);
   useBaseCamp.getState().setBriefOpen(true);
   // Boot applies html.brief-open in an effect; wait for it so we never scroll a hidden Brief.
   let frames = 0;
@@ -87,6 +88,11 @@ export const gpuRenderer = (): string => {
       | WebGLRenderingContext
       | null
       | undefined;
+    // The plain parameter first (no Firefox deprecation warning); browsers that mask it as a
+    // generic "WebKit WebGL" still name the GPU through the debug extension.
+    const plain = gl?.getParameter(gl.RENDERER);
+    if (typeof plain === "string" && plain && !/^(webkit webgl|mozilla)$/i.test(plain))
+      return plain;
     const info = gl?.getExtension("WEBGL_debug_renderer_info");
     const name = info ? gl?.getParameter(info.UNMASKED_RENDERER_WEBGL) : null;
     return typeof name === "string" && name ? name : "unknown GPU";

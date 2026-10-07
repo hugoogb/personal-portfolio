@@ -4,6 +4,7 @@ import * as THREE from "three";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { useBaseCamp } from "@/store/store";
 import type { BuiltWorld } from "@/world/build";
+import * as eggsLib from "@/world/lib/eggs";
 import { Eggs } from "@/world/systems/Eggs";
 
 let frame: (s: unknown, dt: number) => void = () => undefined;
@@ -37,5 +38,21 @@ describe("Eggs hat target", () => {
     fireEvent.click(hit);
     expect(useBaseCamp.getState().achievements).toContain("hat");
     expect(ship.sail).toBe(0);
+  });
+});
+
+describe("Eggs sail", () => {
+  it("moves the caravel with the tested sailOffset", () => {
+    const spy = vi.spyOn(eggsLib, "sailOffset");
+    const ship = { g: new THREE.Object3D(), home: new THREE.Vector3(2, 0, 3), sail: 0.5 };
+    const world = {
+      kit: { mat: () => new THREE.MeshBasicMaterial(), life: { ship } },
+    } as unknown as BuiltWorld;
+    vi.spyOn(console, "error").mockImplementation(() => undefined);
+    render(<Eggs world={world} />);
+    act(() => frame({}, 0));
+    expect(spy).toHaveBeenCalled();
+    expect(ship.g.position.x).toBeCloseTo(2 + 9, 6);
+    expect(ship.g.position.z).toBeCloseTo(3 - 5, 6);
   });
 });

@@ -4,12 +4,15 @@ import { cheerLift, eggUnderPointer, flashOn, sailOffset, waveLift } from "@/wor
 
 describe("eggs", () => {
   it("sails out and back", () => {
-    expect(sailOffset(0).dx).toBeCloseTo(0, 9);
-    expect(sailOffset(0).dz).toBeCloseTo(0, 9);
-    const mid = sailOffset(0.5);
-    expect(mid.dx).toBeCloseTo(9, 6);
-    expect(mid.dz).toBeCloseTo(-5, 6);
-    expect(sailOffset(1).dx).toBeCloseTo(0, 6);
+    const out = { dx: 1, dz: 1 };
+    expect(sailOffset(0, out)).toBe(out);
+    expect(out.dx).toBeCloseTo(0, 9);
+    expect(out.dz).toBeCloseTo(0, 9);
+    sailOffset(0.5, out);
+    expect(out.dx).toBeCloseTo(9, 6);
+    expect(out.dz).toBeCloseTo(-5, 6);
+    sailOffset(1, out);
+    expect(out.dx).toBeCloseTo(0, 6);
   });
 
   it("flashes the cars at 10 Hz for the flash's duration", () => {

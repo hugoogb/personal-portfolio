@@ -4,7 +4,15 @@ import * as THREE from "three";
 import { useBaseCamp } from "@/store/store";
 import type { BuiltWorld } from "@/world/build";
 import { wasDrag } from "@/world/lib/drag";
-import { FLASH_S, SAIL_S, WAVE_END, cheerLift, flashOn, waveLift } from "@/world/lib/eggs";
+import {
+  FLASH_S,
+  SAIL_S,
+  WAVE_END,
+  cheerLift,
+  flashOn,
+  sailOffset,
+  waveLift,
+} from "@/world/lib/eggs";
 
 interface Ship {
   g: THREE.Object3D;
@@ -48,6 +56,7 @@ export function Eggs({ world }: { world: BuiltWorld }) {
   const fans = kit.life.fans as Fans | undefined;
 
   const hatHit = useRef<THREE.Mesh>(null);
+  const sail = useRef({ dx: 0, dz: 0 }).current;
   const carHits = useRef<(THREE.Mesh | null)[]>([]);
   const hatPlaced = useRef(false);
   const flash = useRef(0);
@@ -113,9 +122,9 @@ export function Eggs({ world }: { world: BuiltWorld }) {
         ship.g.position.x = ship.home.x;
         ship.g.position.z = ship.home.z;
       } else {
-        const k = Math.sin(ship.sail * Math.PI);
-        ship.g.position.x = ship.home.x + k * 9;
-        ship.g.position.z = ship.home.z - k * 5;
+        sailOffset(ship.sail, sail);
+        ship.g.position.x = ship.home.x + sail.dx;
+        ship.g.position.z = ship.home.z + sail.dz;
       }
     }
 
