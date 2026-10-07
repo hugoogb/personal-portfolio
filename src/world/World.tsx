@@ -1,8 +1,10 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useRef, useState } from "react";
 import type { Tier } from "@/boot/tiers";
 import { useBaseCamp } from "@/store/store";
 import { buildWorld, type BuiltWorld } from "@/world/build";
+import { effectsEnabled } from "@/world/effects/effectsGate";
+import { EffectsBoundary } from "@/world/effects/EffectsBoundary";
 import { CAMERA_OFFSET } from "@/world/lib/camera";
 import { wasDrag } from "@/world/lib/drag";
 import { Places } from "@/world/scene/Places";
@@ -16,6 +18,8 @@ import { Labels } from "@/world/systems/Labels";
 import { Life } from "@/world/systems/Life";
 import { Traffic } from "@/world/systems/Traffic";
 import { YardLights } from "@/world/systems/YardLights";
+
+const Effects = lazy(() => import("@/world/effects/Effects"));
 
 const MAX_DPR: Record<Tier, number> = { 0: 1, 1: 1, 2: 1.5, 3: 2 };
 
@@ -109,6 +113,13 @@ export default function World({ onReady }: WorldProps) {
           <YardLights world={world} />
           <FirstFrame onDrawn={() => setDrawn(true)} onReady={onReady} />
         </>
+      )}
+      {world && effectsEnabled(tier) && (
+        <EffectsBoundary>
+          <Suspense fallback={null}>
+            <Effects />
+          </Suspense>
+        </EffectsBoundary>
       )}
     </Canvas>
   );
