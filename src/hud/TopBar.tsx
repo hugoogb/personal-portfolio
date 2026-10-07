@@ -69,7 +69,7 @@ export function TopBar() {
         className="hud-btn"
         data-brief-toggle
         aria-pressed={briefOpen}
-        onClick={toggleBrief}
+        onClick={() => toggleBrief("button")}
       >
         Brief
       </button>

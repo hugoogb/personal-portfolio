@@ -2,11 +2,12 @@ import { CONTACT } from "@/constants/strings.constants";
 import type { Place } from "@/content/types";
 import type { Command } from "@/hud/commands";
 import { useBaseCamp } from "@/store/store";
-import { trackOutbound } from "@/utils/track";
+import { trackBrief, trackOutbound, type BriefSource } from "@/utils/track";
 import { OVERVIEW } from "@/world/lib/map";
 
 /** Opens the prerendered Brief over the town (Boot sets html.brief-open), optionally at a section. */
-export const openBrief = (anchor: string | null = null) => {
+export const openBrief = (anchor: string | null = null, source: BriefSource = "button") => {
+  trackBrief(source);
   useBaseCamp.getState().setBriefOpen(true);
   // Boot applies html.brief-open in an effect; wait for it so we never scroll a hidden Brief.
   let frames = 0;
@@ -31,7 +32,8 @@ export const closeBrief = () => {
   requestAnimationFrame(() => document.querySelector<HTMLElement>("[data-brief-toggle]")?.focus());
 };
 
-export const toggleBrief = () => (useBaseCamp.getState().briefOpen ? closeBrief() : openBrief());
+export const toggleBrief = (source: BriefSource) =>
+  useBaseCamp.getState().briefOpen ? closeBrief() : openBrief(null, source);
 
 /** Keyboard shortcuts open links here; card clicks use real <a> tags tracked by ClientRoot. */
 export const openLink = (href: string, label: string) => {
@@ -53,7 +55,7 @@ export const runPrimary = (place: Place) => {
   if (place.primary.href) return openLink(place.primary.href, place.name);
   switch (place.primary.action) {
     case "brief":
-      return openBrief();
+      return openBrief(null, "card");
     case "overview":
       return s.focus(OVERVIEW.x, OVERVIEW.z, OVERVIEW.view);
     case "wave":
@@ -85,7 +87,7 @@ export const runCommand = (command: Command) => {
       s.select("arena");
       return s.setDriving(true);
     case "brief":
-      return openBrief();
+      return openBrief(null, "console");
     case "copyEmail":
       return void copyEmail();
     case "time":

@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { Boot } from "@/boot/Boot";
 import { useAccentFavicon } from "@/hooks/useAccentFavicon";
 import { useBaseCamp } from "@/store/store";
-import { trackOutbound } from "@/utils/track";
+import { trackAchievement, trackOutbound, trackPlace } from "@/utils/track";
 
 /**
  * What still needs JavaScript while the page itself is the static Brief:
@@ -23,6 +23,29 @@ export function ClientRoot() {
     };
     document.addEventListener("click", onClick);
     return () => document.removeEventListener("click", onClick);
+  }, []);
+
+  // Seeded from the store as it is now, so saved achievements and a rehydrated
+  // selection are not re-sent. The town's default HQ selection on a plain load
+  // is not a visit either, so the first selection is skipped when it is "hq".
+  useEffect(() => {
+    let { selected, achievements } = useBaseCamp.getState();
+    let firstSelection = selected === null;
+    return useBaseCamp.subscribe((s) => {
+      if (s.selected !== selected) {
+        const id = s.selected;
+        selected = id;
+        if (id !== null) {
+          if (!(firstSelection && id === "hq")) trackPlace(id);
+          firstSelection = false;
+        }
+      }
+      if (s.achievements !== achievements) {
+        const known = achievements;
+        achievements = s.achievements;
+        for (const id of s.achievements) if (!known.includes(id)) trackAchievement(id);
+      }
+    });
   }, []);
 
   return (

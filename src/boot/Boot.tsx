@@ -10,6 +10,7 @@ import { bootTier, readSignals } from "@/boot/detect";
 import { leaveWorld, READY_TIMEOUT_MS, TOWN_FAILED_KEY } from "@/boot/world";
 import { WorldBoundary } from "@/boot/WorldBoundary";
 import { useBaseCamp } from "@/store/store";
+import { bootReason, trackTier } from "@/utils/track";
 
 interface Loaded {
   Hud: ComponentType<{ world: ReactNode }>;
@@ -83,6 +84,8 @@ export function Boot() {
       const chosen = bootTier(signals, store.qualityMode);
       store.setAutoTier(chosen.auto);
       store.setTier(chosen.tier);
+      store.setBootTier(chosen.tier);
+      trackTier(chosen.tier, chosen.tier, bootReason(signals, store.qualityMode));
       store.setFirstVisit(!store.seen);
       if (chosen.tier === 0) return exit();
       setProgress(0.4);
@@ -130,6 +133,7 @@ export function Boot() {
       // Nothing to clear.
     }
     useBaseCamp.getState().setQualityMode("Low");
+    trackTier(0, 1, "manual");
     html().classList.add("world");
     setInWorld(true);
   };

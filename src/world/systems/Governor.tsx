@@ -2,6 +2,7 @@ import { useFrame } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import { TIER_NAMES, governorTick, initialGovernor, restartGrace, type Tier } from "@/boot/tiers";
 import { useBaseCamp } from "@/store/store";
+import { trackTier } from "@/utils/track";
 
 /**
  * The frame-rate governor (spec 8) wired to rendering. It restarts its grace
@@ -38,7 +39,9 @@ export function Governor() {
     if (windowEnded) s.setFps(Math.round(state.fps));
     if (stepDown) {
       const next = (s.tier - 1) as Tier;
+      const initial = s.bootTier ?? s.tier;
       s.setTier(next);
+      trackTier(initial, next, "governor");
       s.toast(`Running smoother: quality set to ${TIER_NAMES[next]}`);
     }
   });

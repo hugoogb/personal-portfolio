@@ -13,7 +13,7 @@ export const useDeepLinks = () => {
       const target = hashTarget(window.location.hash);
       const s = useBaseCamp.getState();
       if (target?.type === "place") s.select(target.id);
-      else if (target?.type === "brief") openBrief(target.anchor);
+      else if (target?.type === "brief") openBrief(target.anchor, "deeplink");
       else if (fallback) s.select("hq");
     };
     apply(true);
