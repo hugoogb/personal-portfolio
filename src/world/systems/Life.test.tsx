@@ -2,6 +2,7 @@
 import { act, render } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import type { BuiltWorld } from "@/world/build";
+import { resetMotionForTests } from "@/utils/motion";
 import { Life } from "@/world/systems/Life";
 
 const frames: ((s: unknown, dt: number) => void)[] = [];
@@ -31,7 +32,10 @@ const fake = () => {
 };
 const tick = (dt: number) => act(() => frames[0]({}, dt));
 
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => {
+  vi.unstubAllGlobals();
+  resetMotionForTests();
+});
 
 describe("Life", () => {
   it("runs the frame hooks once per frame with a clamped dt", () => {
@@ -54,5 +58,26 @@ describe("Life", () => {
     expect(kit.frame).not.toHaveBeenCalled();
     expect(kit.settle).toHaveBeenCalledTimes(1);
     expect(kit.light).toHaveBeenCalledTimes(3);
+  });
+
+  it("freezes the pose at the current time when reduced motion turns on mid-visit, and resumes without a jump", () => {
+    reduce(false);
+    const { kit, world } = fake();
+    render(<Life world={world} />);
+    tick(0.05);
+    tick(0.05);
+    expect(kit.frame.mock.calls[1][1]).toBeCloseTo(0.1, 9);
+    reduce(true);
+    tick(0.05);
+    tick(0.05);
+    expect(kit.settle).toHaveBeenCalledTimes(1);
+    expect(kit.settle.mock.calls[0][1]).toBeCloseTo(0.1, 9);
+    reduce(false);
+    tick(0.05);
+    expect(kit.frame.mock.calls[2][1]).toBeCloseTo(0.15, 9);
+    reduce(true);
+    tick(0.05);
+    expect(kit.settle).toHaveBeenCalledTimes(2);
+    expect(kit.settle.mock.calls[1][1]).toBeCloseTo(0.15, 9);
   });
 });

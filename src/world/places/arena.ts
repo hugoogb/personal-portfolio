@@ -1,8 +1,6 @@
 import * as THREE from "three";
 import type { Kit } from "@/world/kit/kit";
-
-const AX = 2.3,
-  AZ = 1.6;
+import { AX, AZ } from "@/world/lib/arena";
 
 /** Rocket League arena with egg-shaped fans (reference 975-1006; pad glow 1480). */
 export function buildArena(kit: Kit): THREE.Group {
@@ -193,11 +191,6 @@ export function buildArena(kit: Kit): THREE.Group {
     car,
     flame,
     lights,
-    bv: new THREE.Vector2(),
-    cp: new THREE.Vector2(-1.3, 0),
-    th: 0,
-    v: 0,
-    score: 0,
     lock: 0,
   };
   kit.onFrame((_dt, t) => {

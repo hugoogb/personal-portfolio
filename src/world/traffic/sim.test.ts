@@ -73,4 +73,19 @@ describe("TrafficSim", () => {
     run(quiet, 1);
     expect(quiet.pulses.length).toBe(0);
   });
+
+  it("compacts the packet lists in place when packets finish", () => {
+    const sim = new TrafficSim([plan({ rate: 2, speed: 3 })], { req: 20, res: 10 }, () => 0.5);
+    run(sim, 3);
+    const { reqs, ress, pulses } = sim;
+    let finished = 0;
+    sim.onPulse = (pu) => {
+      if (pu.life === 1 && pu.x !== route.path[0][0]) finished++;
+    };
+    run(sim, 30);
+    expect(sim.reqs).toBe(reqs);
+    expect(sim.ress).toBe(ress);
+    expect(sim.pulses).toBe(pulses);
+    expect(finished).toBeGreaterThan(0);
+  });
 });

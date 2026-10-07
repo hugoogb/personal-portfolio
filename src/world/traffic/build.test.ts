@@ -29,4 +29,11 @@ describe("buildTraffic", () => {
     expect((t.res.material as THREE.MeshBasicMaterial).color.getHexString()).toBe("4ade80");
     kit.dispose();
   });
+
+  it("carries the routes it was built from", () => {
+    const kit = createKit();
+    const t = buildTraffic(kit, buildRoutes());
+    expect(t.routes).toEqual(buildRoutes());
+    kit.dispose();
+  });
 });

@@ -18,12 +18,12 @@ export function YardLights({ world }: { world: BuiltWorld }) {
   useFrame((_, dt) => {
     const leds = world.kit.life.leds as THREE.InstancedMesh | undefined;
     if (!leds) return;
-    const state = yardState(useBaseCamp.getState().status);
-    if (!ambientOn(prefersReducedMotion())) {
+    if (ambientOn(prefersReducedMotion())) {
       settled.current = null;
       since.current += dt;
       if (since.current < EVERY_S) return;
       since.current = 0;
+      const state = yardState(useBaseCamp.getState().status);
       for (let i = 0; i < PER_TICK; i++) {
         leds.setColorAt(
           Math.floor(Math.random() * leds.count),
@@ -34,7 +34,14 @@ export function YardLights({ world }: { world: BuiltWorld }) {
       return;
     }
     // Still: colour every LED once per status change, and do nothing in between.
-    if (settled.current && JSON.stringify(settled.current) === JSON.stringify(state)) return;
+    const state = yardState(useBaseCamp.getState().status);
+    const was = settled.current;
+    if (
+      was &&
+      was.kind === state.kind &&
+      (was.kind === "unknown" || (state.kind === "known" && was.downShare === state.downShare))
+    )
+      return;
     settled.current = state;
     for (let i = 0; i < leds.count; i++)
       leds.setColorAt(i, color.set(ledColor(state, i / leds.count)));

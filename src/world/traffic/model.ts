@@ -81,7 +81,11 @@ export const laneEdges = (routes: Route[]) => {
 export const LANE = 0.22;
 
 /** A point `s` cells along a path, on the right-hand lane, with its heading (reference `at`). */
-export const pointAt = (path: Cell[], sIn: number) => {
+export const pointAt = (
+  path: Cell[],
+  sIn: number,
+  out: { x: number; z: number; ry: number } = { x: 0, z: 0, ry: 0 },
+) => {
   const n = path.length - 1;
   const s = Math.min(Math.max(sIn, 0), n - 1e-4);
   const i = Math.floor(s);
@@ -90,11 +94,10 @@ export const pointAt = (path: Cell[], sIn: number) => {
   const dx = b[0] - a[0];
   const dz = b[1] - a[1];
   const len = Math.hypot(dx, dz) || 1;
-  return {
-    x: a[0] + dx * t - (dz / len) * LANE,
-    z: a[1] + dz * t + (dx / len) * LANE,
-    ry: Math.atan2(-dz, dx),
-  };
+  out.x = a[0] + dx * t - (dz / len) * LANE;
+  out.z = a[1] + dz * t + (dx / len) * LANE;
+  out.ry = Math.atan2(-dz, dx);
+  return out;
 };
 
 /**

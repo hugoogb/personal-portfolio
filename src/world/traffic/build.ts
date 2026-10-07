@@ -12,6 +12,8 @@ export interface TrafficMeshes {
   res: THREE.InstancedMesh;
   resTrail: THREE.InstancedMesh;
   rings: THREE.InstancedMesh;
+  /** The roads the packets follow, shared with the system that moves them. */
+  routes: Route[];
   /** Trail dots per packet. */
   TRAIL: number;
 }
@@ -72,8 +74,8 @@ export function buildTraffic(kit: Kit, routes: Route[]): TrafficMeshes {
   );
   kit.life.packetMat = packetMat;
   kit.accent.push(
-    { material: laneM as unknown as THREE.MeshStandardMaterial, mode: "color" },
-    { material: trailM as unknown as THREE.MeshStandardMaterial, mode: "color" },
+    { material: laneM, mode: "color" },
+    { material: trailM, mode: "color" },
     { material: packetMat, mode: "both" },
   );
   const green = new THREE.MeshBasicMaterial({ color: "#4ade80" });
@@ -141,5 +143,5 @@ export function buildTraffic(kit: Kit, routes: Route[]): TrafficMeshes {
     group.add(mesh);
   }
 
-  return { group, lanes, chev, req, reqTrail, res, resTrail, rings, TRAIL };
+  return { group, lanes, chev, req, reqTrail, res, resTrail, rings, routes, TRAIL };
 }

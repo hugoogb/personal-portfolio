@@ -36,6 +36,14 @@ describe("routes", () => {
     expect(edges.length).toBeGreaterThan(10);
   });
 
+  it("writes into a given object instead of allocating", () => {
+    const path = buildRoutes()[0].path;
+    const o = { x: 0, z: 0, ry: 0 };
+    const r = pointAt(path, 0.5, o);
+    expect(r).toBe(o);
+    expect(o).toEqual(pointAt(path, 0.5));
+  });
+
   it("offsets a packet onto the right-hand lane", () => {
     const p = pointAt(
       [

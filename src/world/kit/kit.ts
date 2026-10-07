@@ -40,6 +40,10 @@ export type FrameFn = (dt: number, t: number, env: FrameEnv) => void;
 /** Lighting-dependent work that is not motion: it keeps running when the town is still. */
 export type LightFn = (env: FrameEnv, still: boolean) => void;
 export type AccentMode = "color" | "emissive" | "both";
+/** A material the accent colour paints: basic ones take the colour only. */
+export type AccentEntry =
+  | { material: THREE.MeshBasicMaterial; mode: "color" }
+  | { material: THREE.MeshStandardMaterial; mode: AccentMode };
 export interface RoadPiece {
   walk: THREE.Mesh;
   asph: THREE.Mesh;
@@ -494,14 +498,14 @@ export function createKit(seed = 1337) {
     return mesh;
   };
 
-  const accent: { material: THREE.MeshStandardMaterial; mode: AccentMode }[] = [
+  const accent: AccentEntry[] = [
     { material: materials.accentRoof, mode: "color" },
     { material: materials.accentFlag, mode: "color" },
   ];
   const paintAccent = (hex: string) => {
     for (const { material, mode } of accent) {
       if (mode !== "emissive") material.color.set(hex);
-      if (mode !== "color") material.emissive.set(hex);
+      if (mode !== "color" && "emissive" in material) material.emissive.set(hex);
     }
   };
 
@@ -554,9 +558,9 @@ export function createKit(seed = 1337) {
       for (const fn of lights) fn(env, false);
       for (const fn of frames) fn(dt, t, env);
     },
-    /** Reduced motion: pose everything at t = 0 without advancing time. */
-    settle: (env: FrameEnv) => {
-      for (const fn of frames) fn(0, 0, env);
+    /** Reduced motion: pose everything at time `t` (default 0) without advancing it. */
+    settle: (env: FrameEnv, t = 0) => {
+      for (const fn of frames) fn(0, t, env);
     },
     onLight: (fn: LightFn) => {
       lights.push(fn);

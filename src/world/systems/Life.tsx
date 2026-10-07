@@ -28,10 +28,11 @@ export function Life({ world }: { world: BuiltWorld }) {
     if (still) {
       // Not motion: the sea, cloud shadows and smoke still follow the time of day.
       world.kit.light(world.env, true);
-      // Pose the town once (the cars and the press line start at the origin until a frame runs).
+      // Pose the town once per stillness, at the time it reached (the cars and the press line
+      // start at the origin until a frame runs; a mid-visit switch must not snap to t = 0).
       if (!posed.current) {
         posed.current = true;
-        world.kit.settle(world.env);
+        world.kit.settle(world.env, t.current);
       }
       return;
     }

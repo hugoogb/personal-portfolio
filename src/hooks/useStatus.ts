@@ -4,9 +4,11 @@ import { useBaseCamp, type StatusMap } from "@/store/store";
 
 const POLL_MS = 60_000;
 
-export const fetchStatus = async (): Promise<StatusMap | "unknown"> => {
+const TIMEOUT_MS = 10_000;
+
+export const fetchStatus = async (signal?: AbortSignal): Promise<StatusMap | "unknown"> => {
   try {
-    const res = await fetch("/api/status");
+    const res = await fetch("/api/status", { signal });
     if (!res.ok) return "unknown";
     const body = (await res.json()) as { services?: unknown };
     if (!Array.isArray(body?.services)) return "unknown";
@@ -25,10 +27,16 @@ export const fetchStatus = async (): Promise<StatusMap | "unknown"> => {
 export const useStatus = () => {
   useEffect(() => {
     let alive = true;
+    let seq = 0;
+    let applied = 0;
     const tick = async () => {
       if (document.hidden) return;
-      const status = await fetchStatus();
-      if (alive) useBaseCamp.getState().setStatus(status);
+      const mine = ++seq;
+      const status = await fetchStatus(AbortSignal.timeout(TIMEOUT_MS));
+      // An older response never overwrites a newer one.
+      if (!alive || mine < applied) return;
+      applied = mine;
+      useBaseCamp.getState().setStatus(status);
     };
     void tick();
     const id = window.setInterval(tick, POLL_MS);

@@ -43,7 +43,46 @@ describe("fetchStatus", () => {
   });
 });
 
+describe("fetchStatus timeout", () => {
+  it("passes the signal to fetch and answers unknown once aborted", async () => {
+    const ac = new AbortController();
+    vi.stubGlobal(
+      "fetch",
+      (_u: string, init: RequestInit) =>
+        new Promise((_, reject) =>
+          init.signal?.addEventListener("abort", () => reject(new Error("aborted"))),
+        ),
+    );
+    const p = fetchStatus(ac.signal);
+    ac.abort();
+    expect(await p).toBe("unknown");
+  });
+});
+
 describe("useStatus", () => {
+  it("never lets an older response overwrite a newer one", async () => {
+    vi.useFakeTimers();
+    try {
+      const resolvers: ((r: Response) => void)[] = [];
+      vi.stubGlobal("fetch", () => new Promise<Response>((res) => resolvers.push(res)));
+      render(<Probe />);
+      expect(resolvers).toHaveLength(1);
+      await vi.advanceTimersByTimeAsync(60_000);
+      expect(resolvers).toHaveLength(2);
+      const reply = (id: string) => ({
+        ok: true,
+        json: () => Promise.resolve({ services: [{ id, ok: true, ms: 1 }] }),
+      });
+      resolvers[1](reply("es") as unknown as Response);
+      await vi.advanceTimersByTimeAsync(0);
+      resolvers[0](reply("rl") as unknown as Response);
+      await vi.advanceTimersByTimeAsync(0);
+      expect(useBaseCamp.getState().status).toEqual({ es: { ok: true, ms: 1 } });
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
   it("fills the store on mount", async () => {
     vi.stubGlobal("fetch", () => json({ services: [{ id: "rl", ok: true, ms: 50 }] }));
     render(<Probe />);

@@ -3,6 +3,7 @@ import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useBaseCamp } from "@/store/store";
 import type { BuiltWorld } from "@/world/build";
+import { CHEER_S } from "@/world/lib/eggs";
 import { createArena, stepArena, type ArenaState } from "@/world/lib/arena";
 
 interface ArenaParts {
@@ -143,7 +144,7 @@ export function ArenaDrive({ world }: { world: BuiltWorld }) {
     if (goal) {
       useBaseCamp.getState().addGoal(goal);
       const fans = world.kit.life.fans as { cheer: number } | undefined;
-      if (fans) fans.cheer = 1.8;
+      if (fans) fans.cheer = CHEER_S;
     }
     // With a pointer held the throttle is the pointer's; the flame follows the keys only.
     writeMeshes(boost, thr, dt);

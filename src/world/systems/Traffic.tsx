@@ -1,10 +1,10 @@
 import { useFrame } from "@react-three/fiber";
 import { useEffect, useMemo } from "react";
 import * as THREE from "three";
-import { prefersReducedMotion } from "@/utils/motion";
+import { onMotionPreferenceChange, prefersReducedMotion } from "@/utils/motion";
 import { useBaseCamp } from "@/store/store";
 import type { BuiltWorld } from "@/world/build";
-import { buildRoutes, planRoutes, pointAt } from "@/world/traffic/model";
+import { planRoutes, pointAt } from "@/world/traffic/model";
 import { ambientOn, trafficCaps } from "@/world/lib/ambient";
 import { TrafficSim, type Packet } from "@/world/traffic/sim";
 
@@ -14,7 +14,7 @@ const HIDDEN = new THREE.Matrix4().makeScale(0, 0, 0);
 
 /** Moves the simulated packets (spec 6b). Packets appear once the build-in has finished. */
 export function Traffic({ world }: { world: BuiltWorld }) {
-  const routes = useMemo(() => buildRoutes(), []);
+  const routes = world.traffic.routes;
   /** Responses travel the same roads back, so they use each route reversed. */
   const reversed = useMemo(() => routes.map((r) => [...r.path].reverse()), [routes]);
   const sim = useMemo(() => {
@@ -32,6 +32,10 @@ export function Traffic({ world }: { world: BuiltWorld }) {
       sc: new THREE.Vector3(),
       up: new THREE.Vector3(0, 1, 0),
       c: new THREE.Color(),
+      at: { x: 0, z: 0, ry: 0 },
+      ta: { x: 0, z: 0, ry: 0 },
+      accent: new THREE.Color(),
+      accentHex: "",
     }),
     [],
   );
@@ -46,16 +50,12 @@ export function Traffic({ world }: { world: BuiltWorld }) {
       if (s.tier !== prev.tier) sim.setCaps(trafficCaps(s.tier, prefersReducedMotion()));
     });
     // The preference can flip mid-visit: empty the roads (or refill them) at once.
-    const mq =
-      typeof window.matchMedia === "function"
-        ? window.matchMedia("(prefers-reduced-motion: reduce)")
-        : null;
     const onPref = () =>
       sim.setCaps(trafficCaps(useBaseCamp.getState().tier, prefersReducedMotion()));
-    mq?.addEventListener?.("change", onPref);
+    const offPref = onMotionPreferenceChange(onPref);
     return () => {
       unsub();
-      mq?.removeEventListener?.("change", onPref);
+      offPref();
     };
   }, [routes, sim]);
 
@@ -67,7 +67,12 @@ export function Traffic({ world }: { world: BuiltWorld }) {
     const dt = Math.min(0.05, Math.max(0, delta));
     sim.step(dt);
     if (ambientOn(prefersReducedMotion())) t.chev.offset.x -= dt * 0.9;
-    const { m, q, p, sc, up, c } = tmp;
+    const { m, q, p, sc, up, c, at, ta } = tmp;
+    // Parse the accent hex only when it changes, not for every ring every frame.
+    if (tmp.accentHex !== s.accent) {
+      tmp.accentHex = s.accent;
+      tmp.accent.set(s.accent);
+    }
 
     const write = (
       list: Packet[],
@@ -83,7 +88,7 @@ export function Traffic({ world }: { world: BuiltWorld }) {
           continue;
         }
         const path = back ? reversed[pk.plan] : routes[pk.plan].path;
-        const at = pointAt(path, pk.s);
+        pointAt(path, pk.s, at);
         q.setFromAxisAngle(up, at.ry);
         m.compose(
           p.set(at.x, 0.2 + Math.sin(pk.s * Math.PI * 2) * 0.015, at.z),
@@ -93,7 +98,7 @@ export function Traffic({ world }: { world: BuiltWorld }) {
         mesh.setMatrixAt(k, m);
         for (let j = 1; j <= t.TRAIL; j++) {
           const sj = pk.s - j * 0.17;
-          const ta = pointAt(path, sj);
+          pointAt(path, sj, ta);
           m.compose(p.set(ta.x, 0.2, ta.z), q, sc.setScalar(sj > 0 ? 1 - j * 0.22 : 0));
           trail.setMatrixAt(k * t.TRAIL + j - 1, m);
         }
@@ -115,7 +120,7 @@ export function Traffic({ world }: { world: BuiltWorld }) {
       t.rings.setMatrixAt(k, m);
       t.rings.setColorAt(
         k,
-        (pu.down ? c.copy(RED) : c.set(s.accent)).multiplyScalar(pu.life * 0.85),
+        (pu.down ? c.copy(RED) : c.copy(tmp.accent)).multiplyScalar(pu.life * 0.85),
       );
     }
     t.rings.instanceMatrix.needsUpdate = true;

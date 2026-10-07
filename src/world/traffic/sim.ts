@@ -55,7 +55,8 @@ export class TrafficSim {
   }
 
   step(dt: number) {
-    this.plans.forEach((plan, i) => {
+    for (let i = 0; i < this.plans.length; i++) {
+      const plan = this.plans[i];
       this.acc[i] += dt * plan.rate;
       while (this.acc[i] >= 1) {
         this.acc[i] -= 1;
@@ -66,26 +67,40 @@ export class TrafficSim {
         const [x, z] = plan.route.path[0];
         this.pulse(x, z, false);
       }
-    });
+    }
 
-    this.reqs = this.reqs.filter((p) => {
+    // In-place compaction: keep survivors in order, no new arrays.
+    let w = 0;
+    for (let r = 0; r < this.reqs.length; r++) {
+      const p = this.reqs[r];
       p.s += dt * p.speed;
       const plan = this.plans[p.plan];
       const end = plan.route.path.length - 1;
-      if (p.s < end) return true;
+      if (p.s < end) {
+        this.reqs[w++] = p;
+        continue;
+      }
       const [x, z] = plan.route.path[end];
       this.pulse(x, z, plan.down);
       if (!plan.down && this.ress.length < this.caps.res) {
         this.ress.push({ plan: p.plan, s: 0, speed: plan.speed });
       }
-      return false;
-    });
+    }
+    this.reqs.length = w;
 
-    this.ress = this.ress.filter((p) => {
+    w = 0;
+    for (let r = 0; r < this.ress.length; r++) {
+      const p = this.ress[r];
       p.s += dt * p.speed;
-      return p.s < this.plans[p.plan].route.path.length - 1;
-    });
+      if (p.s < this.plans[p.plan].route.path.length - 1) this.ress[w++] = p;
+    }
+    this.ress.length = w;
 
-    this.pulses = this.pulses.filter((p) => (p.life -= dt * 1.5) > 0);
+    w = 0;
+    for (let r = 0; r < this.pulses.length; r++) {
+      const p = this.pulses[r];
+      if ((p.life -= dt * 1.5) > 0) this.pulses[w++] = p;
+    }
+    this.pulses.length = w;
   }
 }
