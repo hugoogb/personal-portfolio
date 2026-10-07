@@ -1,3 +1,4 @@
+import { TIER_NAMES } from "@/boot/tiers";
 import { CONTACT } from "@/constants/strings.constants";
 import type { Place } from "@/content/types";
 import type { Command } from "@/hud/commands";
@@ -77,6 +78,23 @@ export const runTertiary = (place: Place) => {
   if (place.tertiary) openLink(place.tertiary.href, `${place.name} ${place.tertiary.label}`);
 };
 
+/** The GPU's name from the canvas's existing WebGL context; never throws. */
+export const gpuRenderer = (): string => {
+  try {
+    const canvas = document.querySelector<HTMLCanvasElement>(".stage canvas");
+    const gl = (canvas?.getContext("webgl2") ?? canvas?.getContext("webgl")) as
+      | WebGL2RenderingContext
+      | WebGLRenderingContext
+      | null
+      | undefined;
+    const info = gl?.getExtension("WEBGL_debug_renderer_info");
+    const name = info ? gl?.getParameter(info.UNMASKED_RENDERER_WEBGL) : null;
+    return typeof name === "string" && name ? name : "unknown GPU";
+  } catch {
+    return "unknown GPU";
+  }
+};
+
 export const runCommand = (command: Command) => {
   const s = useBaseCamp.getState();
   s.setConsoleOpen(false);
@@ -92,5 +110,7 @@ export const runCommand = (command: Command) => {
       return void copyEmail();
     case "time":
       return s.setTimeOverride(command.run.hour);
+    case "stats":
+      return s.toast(`${TIER_NAMES[s.tier]} · ${s.fps || "-"} fps · ${gpuRenderer()}`);
   }
 };

@@ -16,6 +16,7 @@ import { Eggs } from "@/world/systems/Eggs";
 import { Governor } from "@/world/systems/Governor";
 import { Labels } from "@/world/systems/Labels";
 import { Life } from "@/world/systems/Life";
+import { TestHooks } from "@/world/systems/TestHooks";
 import { Traffic } from "@/world/systems/Traffic";
 import { YardLights } from "@/world/systems/YardLights";
 
@@ -110,6 +111,7 @@ export default function World({ onReady }: WorldProps) {
           <Traffic world={world} />
           <ArenaDrive world={world} />
           <Eggs world={world} />
+          <TestHooks world={world} />
           <YardLights world={world} />
           <FirstFrame onDrawn={() => setDrawn(true)} onReady={onReady} />
         </>

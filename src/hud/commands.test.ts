@@ -61,3 +61,10 @@ describe("isPreview", () => {
     expect(isPreview()).toBe(true);
   });
 });
+
+describe("stats command", () => {
+  it("offers stats on every host", () => {
+    expect(commandsFor(false).some((c) => c.id === "stats")).toBe(true);
+    expect(filterCommands("stats", commandsFor(false)).map((c) => c.id)).toEqual(["stats"]);
+  });
+});

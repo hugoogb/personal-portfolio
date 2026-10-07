@@ -321,3 +321,45 @@ test.describe("with reduced motion, entering anyway", () => {
     await expect(card(page, "F1 Tracker")).toBeVisible();
   });
 });
+
+declare global {
+  interface Window {
+    __baseCamp?: { screenOf(t: string): { x: number; y: number } | null };
+  }
+}
+
+const screenOf = (page: Page, target: "hat" | "car0") =>
+  page.evaluate((t) => window.__baseCamp?.screenOf(t) ?? null, target);
+
+/** Waits for the target to be on screen, then clicks it; a moving target gets up to 3 tries. */
+const clickTarget = async (page: Page, target: "hat" | "car0", toast: string) => {
+  for (let attempt = 0; attempt < 3; attempt++) {
+    await expect
+      .poll(() => screenOf(page, target), { message: `${target} on screen` })
+      .not.toBeNull();
+    const at = await screenOf(page, target);
+    if (!at) continue;
+    await page.mouse.click(at.x, at.y);
+    try {
+      await expect(page.getByText(toast)).toBeVisible({ timeout: 1000 });
+      return;
+    } catch {
+      // Missed (the target moved or was not placed yet): read the position again.
+    }
+  }
+  await expect(page.getByText(toast)).toBeVisible();
+};
+
+test("the straw hat unlocks Straw hat", async ({ page }) => {
+  await page.goto("/#arena");
+  await ready(page);
+  await expect(page.locator(".title-card")).toBeHidden();
+  await clickTarget(page, "hat", "Achievement unlocked · Straw hat");
+});
+
+test("an F1 car unlocks Fastest lap", async ({ page }) => {
+  await page.goto("/#f1-tracker");
+  await ready(page);
+  await expect(page.locator(".title-card")).toBeHidden();
+  await clickTarget(page, "car0", "Achievement unlocked · Fastest lap");
+});

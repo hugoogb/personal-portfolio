@@ -6,7 +6,8 @@ export type CommandRun =
   | { type: "drive" }
   | { type: "brief" }
   | { type: "copyEmail" }
-  | { type: "time"; hour: number | null };
+  | { type: "time"; hour: number | null }
+  | { type: "stats" };
 
 export interface Command {
   id: string;
@@ -24,6 +25,7 @@ export const COMMANDS: Command[] = [
   { id: "drive", label: "drive", run: { type: "drive" } },
   { id: "brief", label: "brief", run: { type: "brief" } },
   { id: "copy-email", label: "copy email", run: { type: "copyEmail" } },
+  { id: "stats", label: "stats", run: { type: "stats" } },
 ];
 
 const TIME_COMMANDS: Command[] = [
