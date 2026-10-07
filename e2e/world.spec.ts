@@ -25,6 +25,20 @@ const ready = async (page: Page) => {
 };
 const card = (page: Page, name: string) => page.getByRole("heading", { level: 2, name });
 
+/** Counts the distinct colours in a PNG, so a blank or uniform canvas shows up as one. */
+const colours = (page: Page, png: Buffer) =>
+  page.evaluate(async (b64) => {
+    const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
+    const bmp = await createImageBitmap(new Blob([bytes], { type: "image/png" }));
+    const c = new OffscreenCanvas(bmp.width, bmp.height);
+    const ctx = c.getContext("2d")!;
+    ctx.drawImage(bmp, 0, 0);
+    const d = ctx.getImageData(0, 0, bmp.width, bmp.height).data;
+    const seen = new Set<number>();
+    for (let i = 0; i < d.length; i += 4 * 97) seen.add((d[i] << 16) | (d[i + 1] << 8) | d[i + 2]);
+    return seen.size;
+  }, png.toString("base64"));
+
 test("the town mounts without console errors", async ({ page }) => {
   const errors: string[] = [];
   page.on("console", (m) => {
@@ -277,13 +291,34 @@ test.describe("on High", () => {
     expect(errors[0]).toContain("dynamically imported module");
   });
 
-  test("dropping to Medium unmounts the effects without breaking the town", async ({ page }) => {
+  test("the effects mount and run clean, and dropping to Medium keeps the town drawing", async ({
+    page,
+  }) => {
     await page.addInitScript((record) => localStorage.setItem("bc", record), HIGH);
+    const errors: string[] = [];
+    page.on("console", (m) => {
+      if (m.type() === "error" && !isNoise(m.location().url)) errors.push(m.text());
+    });
+    page.on("pageerror", (e) => errors.push(e.message));
+    const chunk = page.waitForResponse(/\/assets\/Effects-.*\.js/);
     await page.goto("/");
     await ready(page);
+    // The chunk really loaded (a High town that never mounted the composer would not fetch it).
+    expect((await chunk).ok()).toBe(true);
+    await page.waitForTimeout(1_000);
+    expect(errors).toEqual([]);
+    expect(await colours(page, await page.locator(".stage canvas").screenshot())).toBeGreaterThan(
+      20,
+    );
+
     await page.getByRole("button", { name: "Settings" }).click();
     await page.getByRole("radio", { name: "Medium" }).check();
     await page.keyboard.press("Escape");
+    await page.waitForTimeout(1_000);
+    expect(errors).toEqual([]);
+    expect(await colours(page, await page.locator(".stage canvas").screenshot())).toBeGreaterThan(
+      20,
+    );
     await page.keyboard.press("ArrowRight");
     await expect(card(page, "F1 Tracker")).toBeVisible();
   });
