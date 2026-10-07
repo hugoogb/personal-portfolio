@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { useLayoutEffect } from "react";
-import { render } from "@testing-library/react";
+import { act, render } from "@testing-library/react";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { useBaseCamp } from "@/store/store";
 import type { BuiltWorld } from "@/world/build";
@@ -16,7 +16,27 @@ const InTheGap = () => {
   return null;
 };
 
+const media = (reduced: boolean) => {
+  let fire: () => void = () => undefined;
+  const mq = {
+    get matches() {
+      return reduced;
+    },
+    addEventListener: (_: string, f: () => void) => (fire = f),
+    removeEventListener: vi.fn(),
+  };
+  vi.stubGlobal("matchMedia", () => mq);
+  return {
+    flip: (v: boolean) => {
+      reduced = v;
+      fire();
+    },
+    mq,
+  };
+};
+
 afterEach(() => {
+  vi.unstubAllGlobals();
   vi.restoreAllMocks();
   useBaseCamp.setState({ tier: 3 });
 });
@@ -32,5 +52,19 @@ describe("Traffic", () => {
       </>,
     );
     expect(caps).toHaveBeenLastCalledWith(CAPS[1]);
+  });
+
+  it("sends no packets under reduced motion, and re-applies the caps when the preference flips", () => {
+    useBaseCamp.setState({ tier: 3 });
+    const m = media(true);
+    const caps = vi.spyOn(TrafficSim.prototype, "setCaps");
+    const { unmount } = render(<Traffic world={{} as BuiltWorld} />);
+    expect(caps).toHaveBeenLastCalledWith({ req: 0, res: 0 });
+    act(() => m.flip(false));
+    expect(caps).toHaveBeenLastCalledWith(CAPS[3]);
+    act(() => m.flip(true));
+    expect(caps).toHaveBeenLastCalledWith({ req: 0, res: 0 });
+    unmount();
+    expect(m.mq.removeEventListener).toHaveBeenCalled();
   });
 });

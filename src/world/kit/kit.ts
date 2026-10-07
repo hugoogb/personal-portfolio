@@ -37,6 +37,8 @@ export interface FrameEnv {
   tier: Tier;
 }
 export type FrameFn = (dt: number, t: number, env: FrameEnv) => void;
+/** Lighting-dependent work that is not motion: it keeps running when the town is still. */
+export type LightFn = (env: FrameEnv, still: boolean) => void;
 export type AccentMode = "color" | "emissive" | "both";
 export interface RoadPiece {
   walk: THREE.Mesh;
@@ -80,6 +82,7 @@ export function createKit(seed = 1337) {
   const geoCache = new Map<string, THREE.BufferGeometry>();
   const rand = mkRand(seed);
   const frames: FrameFn[] = [];
+  const lights: LightFn[] = [];
 
   const makeMat = (c: string, o: MatOpts = {}) => {
     const params: THREE.MeshStandardMaterialParameters = {
@@ -546,8 +549,21 @@ export function createKit(seed = 1337) {
     onFrame: (fn: FrameFn) => {
       frames.push(fn);
     },
+    /** One animated frame: the lighting work, then every motion hook. */
     frame: (dt: number, t: number, env: FrameEnv) => {
+      for (const fn of lights) fn(env, false);
       for (const fn of frames) fn(dt, t, env);
+    },
+    /** Reduced motion: pose everything at t = 0 without advancing time. */
+    settle: (env: FrameEnv) => {
+      for (const fn of frames) fn(0, 0, env);
+    },
+    onLight: (fn: LightFn) => {
+      lights.push(fn);
+    },
+    /** The lighting work alone, for a town that is not animating. */
+    light: (env: FrameEnv, still: boolean) => {
+      for (const fn of lights) fn(env, still);
     },
     dispose: () => {
       owned.geometries.forEach((g) => g.dispose());
@@ -557,6 +573,7 @@ export function createKit(seed = 1337) {
       owned.materials.clear();
       owned.textures.clear();
       frames.length = 0;
+      lights.length = 0;
     },
   };
 }

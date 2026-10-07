@@ -1,9 +1,11 @@
 import { useFrame } from "@react-three/fiber";
 import { useEffect, useMemo } from "react";
 import * as THREE from "three";
+import { prefersReducedMotion } from "@/utils/motion";
 import { useBaseCamp } from "@/store/store";
 import type { BuiltWorld } from "@/world/build";
-import { CAPS, buildRoutes, planRoutes, pointAt } from "@/world/traffic/model";
+import { buildRoutes, planRoutes, pointAt } from "@/world/traffic/model";
+import { ambientOn, trafficCaps } from "@/world/lib/ambient";
 import { TrafficSim, type Packet } from "@/world/traffic/sim";
 
 const RED = new THREE.Color("#ef4444");
@@ -17,7 +19,10 @@ export function Traffic({ world }: { world: BuiltWorld }) {
   const reversed = useMemo(() => routes.map((r) => [...r.path].reverse()), [routes]);
   const sim = useMemo(() => {
     const s = useBaseCamp.getState();
-    return new TrafficSim(planRoutes(routes, s.status), CAPS[s.tier]);
+    return new TrafficSim(
+      planRoutes(routes, s.status),
+      trafficCaps(s.tier, prefersReducedMotion()),
+    );
   }, [routes]);
   const tmp = useMemo(
     () => ({
@@ -35,11 +40,23 @@ export function Traffic({ world }: { world: BuiltWorld }) {
     // The sim was built before this subscription: catch up with any change in between.
     const now = useBaseCamp.getState();
     sim.setPlans(planRoutes(routes, now.status));
-    sim.setCaps(CAPS[now.tier]);
-    return useBaseCamp.subscribe((s, prev) => {
+    sim.setCaps(trafficCaps(now.tier, prefersReducedMotion()));
+    const unsub = useBaseCamp.subscribe((s, prev) => {
       if (s.status !== prev.status) sim.setPlans(planRoutes(routes, s.status));
-      if (s.tier !== prev.tier) sim.setCaps(CAPS[s.tier]);
+      if (s.tier !== prev.tier) sim.setCaps(trafficCaps(s.tier, prefersReducedMotion()));
     });
+    // The preference can flip mid-visit: empty the roads (or refill them) at once.
+    const mq =
+      typeof window.matchMedia === "function"
+        ? window.matchMedia("(prefers-reduced-motion: reduce)")
+        : null;
+    const onPref = () =>
+      sim.setCaps(trafficCaps(useBaseCamp.getState().tier, prefersReducedMotion()));
+    mq?.addEventListener?.("change", onPref);
+    return () => {
+      unsub();
+      mq?.removeEventListener?.("change", onPref);
+    };
   }, [routes, sim]);
 
   useFrame((_, delta) => {
@@ -49,7 +66,7 @@ export function Traffic({ world }: { world: BuiltWorld }) {
     if (!s.introDone) return;
     const dt = Math.min(0.05, Math.max(0, delta));
     sim.step(dt);
-    t.chev.offset.x -= dt * 0.9;
+    if (ambientOn(prefersReducedMotion())) t.chev.offset.x -= dt * 0.9;
     const { m, q, p, sc, up, c } = tmp;
 
     const write = (

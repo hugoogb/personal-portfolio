@@ -1,3 +1,4 @@
+import { prefersReducedMotion } from "@/utils/motion";
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import { PLACE_BY_ID } from "@/content/places";
@@ -17,10 +18,6 @@ import { drag } from "@/world/lib/drag";
 
 const EASE = 6;
 const PUBLISH_EVERY_S = 0.1;
-
-const reducedMotion = () =>
-  typeof window.matchMedia === "function" &&
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 /**
  * Fixed isometric orthographic camera (spec 4.1): eases to the selection or to
@@ -44,7 +41,7 @@ export function CameraRig() {
   });
   const narrow = useRef(size.width < NARROW_WIDTH);
   narrow.current = size.width < NARROW_WIDTH;
-  const instant = useRef(reducedMotion());
+  const instant = useRef(prefersReducedMotion());
 
   useEffect(() => {
     const aim = (x: number, z: number, view: number) => {

@@ -331,8 +331,14 @@ export function buildTown(kit: Kit) {
     );
     foam.position.y = -0.365;
     root.add(foam);
+    const foamOpacity = (night: number, swell: number) =>
+      Math.max(0.08, 0.24 - night * 0.12 + swell * 0.06);
     kit.onFrame((_dt, t, env) => {
-      fm.opacity = Math.max(0.08, 0.24 - env.night * 0.12 + Math.sin(t * 1.1) * 0.06);
+      fm.opacity = foamOpacity(env.night, Math.sin(t * 1.1));
+    });
+    // Still water keeps following the time of day, without the swell.
+    kit.onLight((env, still) => {
+      if (still) fm.opacity = foamOpacity(env.night, 0);
     });
   }
 
@@ -369,9 +375,11 @@ export function buildTown(kit: Kit) {
     cloudShadow.instanceMatrix.needsUpdate = true;
   };
   writeClouds();
-  kit.onFrame((dt, _t, env) => {
-    // A daytime effect: an invisible mesh is not drawn into the shadow map either.
+  // A daytime effect: an invisible mesh is not drawn into the shadow map either.
+  kit.onLight((env) => {
     cloudShadow.visible = env.night < 0.5;
+  });
+  kit.onFrame((dt) => {
     for (const c of clouds) {
       c.position.x += dt * 0.55;
       if (c.position.x > 38) c.position.x = -38;
@@ -432,14 +440,15 @@ export function addSmoke(
   };
   let smokeT = 0;
   let smokeI = 0;
-  kit.onFrame((dt, _t, env) => {
-    if (env.tier < 2) {
-      if (smoke.visible) {
-        for (const p of puffs) p.life = 0;
-        write();
-      }
-      return;
+  // None on Low, and none while the town is still: clearing is not motion.
+  kit.onLight((env, still) => {
+    if ((env.tier < 2 || still) && smoke.visible) {
+      for (const p of puffs) p.life = 0;
+      write();
     }
+  });
+  kit.onFrame((dt, _t, env) => {
+    if (env.tier < 2) return;
     if (ready()) {
       smokeT += dt;
       if (smokeT > 0.16) {

@@ -298,3 +298,26 @@ test("the town's first paint is text, and nothing shifts", async ({ page }) => {
   expect(cls, `shifted: ${shifts.join(",")}`).toBe(0);
   await ready(page);
 });
+
+test.describe("with reduced motion, entering anyway", () => {
+  test.use({ reducedMotion: "reduce" });
+
+  // The file-level seed pins Low, and a saved quality outranks reduced motion,
+  // which would skip the Brief. Drop it once per tab so the visitor starts there.
+  test.beforeEach(async ({ page }) => {
+    await page.addInitScript(() => {
+      if (sessionStorage.getItem("unseeded")) return;
+      localStorage.removeItem("bc");
+      sessionStorage.setItem("unseeded", "1");
+    });
+  });
+
+  test("the town opens on Low, still and responsive", async ({ page }) => {
+    await page.goto("/");
+    await page.getByRole("button", { name: "Enter the town anyway" }).click();
+    await ready(page);
+    await expect(card(page, "Headquarters")).toBeVisible();
+    await page.keyboard.press("ArrowRight");
+    await expect(card(page, "F1 Tracker")).toBeVisible();
+  });
+});

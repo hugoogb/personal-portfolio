@@ -1,3 +1,4 @@
+import { prefersReducedMotion } from "@/utils/motion";
 import { useFrame } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import type * as THREE from "three";
@@ -16,10 +17,6 @@ import {
   shouldPlayBuildIn,
   skipBuildIn,
 } from "@/world/lib/buildIn";
-
-const reducedMotion = () =>
-  typeof window.matchMedia === "function" &&
-  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
 const apply = (world: BuiltWorld, t: number) => {
   const { kit, places, rings } = world;
@@ -52,7 +49,7 @@ export function BuildIn({ world }: { world: BuiltWorld }) {
 
   useEffect(() => {
     const s = useBaseCamp.getState();
-    if (!shouldPlayBuildIn({ firstVisit: s.firstVisit, reducedMotion: reducedMotion() })) {
+    if (!shouldPlayBuildIn({ firstVisit: s.firstVisit, reducedMotion: prefersReducedMotion() })) {
       apply(world, BUILD_IN_S);
       skipBuildIn(s);
       return;
