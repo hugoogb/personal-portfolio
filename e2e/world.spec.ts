@@ -257,7 +257,11 @@ test.describe("on High", () => {
 
   test("a failed effects chunk leaves the town running", async ({ page }) => {
     await page.addInitScript((record) => localStorage.setItem("bc", record), HIGH);
-    await page.route("**/assets/Effects-*.js", (route) => route.abort());
+    let requested = 0;
+    await page.route("**/assets/Effects-*.js", (route) => {
+      requested += 1;
+      return route.abort();
+    });
     const errors: string[] = [];
     page.on("pageerror", (e) => errors.push(e.message));
     await page.goto("/");
@@ -265,8 +269,11 @@ test.describe("on High", () => {
     await expect(card(page, "Headquarters")).toBeVisible();
     await page.keyboard.press("ArrowRight");
     await expect(card(page, "F1 Tracker")).toBeVisible();
-    // The aborted chunk itself is reported once by the browser; nothing else may be.
-    expect(errors.filter((m) => !m.includes("dynamically imported module"))).toEqual([]);
+    // The chunk was really requested and blocked. The boundary caught the failure; R3F's
+    // onCaughtError reports caught errors through reportError, so exactly one pageerror shows.
+    expect(requested).toBeGreaterThan(0);
+    expect(errors).toHaveLength(1);
+    expect(errors[0]).toContain("dynamically imported module");
   });
 
   test("dropping to Medium unmounts the effects without breaking the town", async ({ page }) => {

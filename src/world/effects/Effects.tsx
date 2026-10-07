@@ -1,6 +1,6 @@
 import { useFrame } from "@react-three/fiber";
-import { Bloom, EffectComposer, N8AO } from "@react-three/postprocessing";
-import type { BloomEffect } from "postprocessing";
+import { Bloom, EffectComposer, N8AO, ToneMapping } from "@react-three/postprocessing";
+import { ToneMappingMode, type BloomEffect } from "postprocessing";
 import { useRef, useState } from "react";
 import { useBaseCamp } from "@/store/store";
 import { bloomOn } from "@/world/effects/effectsGate";
@@ -39,6 +39,8 @@ export default function Effects() {
     <EffectComposer multisampling={4}>
       <N8AO halfRes quality="medium" aoRadius={1.2} distanceFalloff={0.4} intensity={2.2} />
       {night ? <Bloom ref={bloom} mipmapBlur luminanceThreshold={0.6} intensity={0} /> : <></>}
+      {/* The composer turns the renderer's tone mapping off; this restores the Canvas's ACES, after bloom has seen the HDR values. */}
+      <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
     </EffectComposer>
   );
 }
