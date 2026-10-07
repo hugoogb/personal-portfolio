@@ -129,3 +129,55 @@ describe("useStatus", () => {
     expect(signals[1]!.aborted).toBe(true);
   });
 });
+
+describe("useStatus without AbortSignal.any", () => {
+  const any = AbortSignal.any;
+  beforeEach(() => {
+    // Safari < 17.4, Chrome < 116, Firefox < 124.
+    delete (AbortSignal as { any?: unknown }).any;
+  });
+  afterEach(() => {
+    AbortSignal.any = any;
+  });
+
+  it("still loads status, with no unhandled rejection", async () => {
+    const rejections: unknown[] = [];
+    const onRej = (e: unknown) => rejections.push(e);
+    process.on("unhandledRejection", onRej);
+    vi.stubGlobal("fetch", () => json({ services: [{ id: "rl", ok: true, ms: 50 }] }));
+    render(<Probe />);
+    await waitFor(() =>
+      expect(useBaseCamp.getState().status).toEqual({ rl: { ok: true, ms: 50 } }),
+    );
+    await new Promise((r) => setTimeout(r, 0));
+    process.off("unhandledRejection", onRej);
+    expect(rejections).toEqual([]);
+  });
+
+  it("still times out after 10 s and aborts on unmount", async () => {
+    vi.useFakeTimers();
+    try {
+      const signals: (AbortSignal | null | undefined)[] = [];
+      vi.stubGlobal("fetch", (_u: string, init?: RequestInit) => {
+        signals.push(init?.signal);
+        return new Promise((_, reject) =>
+          init?.signal?.addEventListener("abort", () => reject(new Error("aborted"))),
+        );
+      });
+      useBaseCamp.setState({ status: { rl: { ok: true, ms: 1 } } });
+      const first = render(<Probe />);
+      expect(signals[0]!.aborted).toBe(false);
+      await vi.advanceTimersByTimeAsync(10_000);
+      expect(signals[0]!.aborted).toBe(true);
+      expect(useBaseCamp.getState().status).toBe("unknown");
+      first.unmount();
+
+      const second = render(<Probe />);
+      expect(signals[1]!.aborted).toBe(false);
+      second.unmount();
+      expect(signals[1]!.aborted).toBe(true);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+});
