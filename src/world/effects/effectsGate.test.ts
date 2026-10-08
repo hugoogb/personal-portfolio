@@ -4,6 +4,7 @@ import {
   bloomOn,
   canRenderHalfFloat,
   effectsEnabled,
+  probeHalfFloat,
 } from "@/world/effects/effectsGate";
 import { lighting } from "@/world/lib/lighting";
 
@@ -35,5 +36,30 @@ describe("effects (spec 5.5)", () => {
     expect(canRenderHalfFloat(gl("EXT_color_buffer_float"))).toBe(true);
     expect(canRenderHalfFloat(gl("EXT_color_buffer_half_float"))).toBe(true);
     expect(canRenderHalfFloat(gl())).toBe(false);
+  });
+});
+
+describe("probeHalfFloat", () => {
+  const docWith = (gl: unknown) =>
+    ({ createElement: () => ({ getContext: () => gl }) }) as unknown as Document;
+  const ctx = (names: string[]) => ({
+    getExtension: (n: string) =>
+      names.includes(n) || n === "WEBGL_lose_context" ? { loseContext: () => {} } : null,
+  });
+
+  it("says yes only for a WebGL2 context with float or half-float colour targets", () => {
+    expect(probeHalfFloat(docWith(ctx(["EXT_color_buffer_float"])))).toBe(true);
+    expect(probeHalfFloat(docWith(ctx(["EXT_color_buffer_half_float"])))).toBe(true);
+    expect(probeHalfFloat(docWith(ctx([])))).toBe(false);
+    expect(probeHalfFloat(docWith(null))).toBe(false);
+  });
+
+  it("says no when the probe throws", () => {
+    const broken = {
+      createElement: () => {
+        throw new Error("blocked");
+      },
+    } as unknown as Document;
+    expect(probeHalfFloat(broken)).toBe(false);
   });
 });

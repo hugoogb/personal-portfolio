@@ -13,7 +13,6 @@ const three = {
   camera,
   size: { width: 1280, height: 800 },
   gl: { domElement: document.createElement("canvas") },
-  invalidate: () => undefined,
 };
 vi.mock("@react-three/fiber", () => ({
   useFrame: (cb: (s: unknown, dt: number) => void) => {

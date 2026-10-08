@@ -178,6 +178,24 @@ describe("store, phase 2", () => {
     expect(store.getState().tier).toBe(3);
   });
 
+  it("caps the pixel ratio at the tier's, lowers it on request, and resets it with the tier", () => {
+    const store = createBaseCampStore(memory());
+    store.getState().setTier(2);
+    expect(store.getState().dpr).toBe(1.5);
+    store.getState().setDpr(1.25);
+    expect(store.getState().dpr).toBe(1.25);
+    // Never above the tier's own cap.
+    store.getState().setDpr(3);
+    expect(store.getState().dpr).toBe(1.5);
+    store.getState().setDpr(1);
+    store.getState().setTier(3);
+    expect(store.getState().dpr).toBe(1.25);
+    store.getState().setQualityMode("Low");
+    expect(store.getState().dpr).toBe(1);
+    store.getState().setQualityMode("Medium");
+    expect(store.getState().dpr).toBe(1.5);
+  });
+
   it("toasts an achievement once, by name", () => {
     const store = createBaseCampStore(memory());
     expect(store.getState().achieve("goal")).toBe(true);

@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ORDER, PLACE_BY_ID } from "@/content/places";
 import { stubCanvas } from "@/test/canvas";
-import { buildWorld } from "@/world/build";
+import { buildWorld, buildWorldInSlices } from "@/world/build";
 import { PROP_RINGS } from "@/world/lib/buildIn";
 
 // These tests bake the whole town in jsdom, which is slow under load.
@@ -90,5 +90,36 @@ describe("buildWorld", () => {
       expect(lit, `${id} has a status-driven light`).toBeGreaterThan(0);
     }
     w.kit.dispose();
+  });
+});
+
+describe("buildWorldInSlices", () => {
+  it("builds the same town as buildWorld, over several tasks", async () => {
+    let tasks = 0;
+    const real = globalThis.setTimeout;
+    vi.stubGlobal("setTimeout", ((fn: () => void, ms?: number) => {
+      tasks++;
+      return real(fn, ms);
+    }) as typeof setTimeout);
+    // Each slice ends at once, so every step is its own task.
+    const now = vi.spyOn(performance, "now");
+    let t = 0;
+    now.mockImplementation(() => (t += 100));
+    try {
+      const w = await buildWorldInSlices(new AbortController().signal);
+      expect(w).not.toBeNull();
+      expect(Object.keys(w!.places).sort()).toEqual(Object.keys(buildWorld().places).sort());
+      expect(tasks).toBeGreaterThan(5);
+    } finally {
+      now.mockRestore();
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it("returns nothing when it is abandoned mid-build", async () => {
+    const abort = new AbortController();
+    const pending = buildWorldInSlices(abort.signal);
+    abort.abort();
+    expect(await pending).toBeNull();
   });
 });

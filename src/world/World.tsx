@@ -1,9 +1,9 @@
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
-import type { Tier } from "@/boot/tiers";
+import { TARGET_FPS } from "@/boot/tiers";
 import { useBaseCamp } from "@/store/store";
-import { buildWorld, type BuiltWorld } from "@/world/build";
-import { effectsEnabled } from "@/world/effects/effectsGate";
+import { buildWorldInSlices, type BuiltWorld } from "@/world/build";
+import { effectsEnabled, probeHalfFloat } from "@/world/effects/effectsGate";
 import { FloatTargets } from "@/world/effects/FloatTargets";
 import { EffectsBoundary } from "@/world/effects/EffectsBoundary";
 import { CAMERA_OFFSET } from "@/world/lib/camera";
@@ -17,13 +17,12 @@ import { Eggs } from "@/world/systems/Eggs";
 import { Governor } from "@/world/systems/Governor";
 import { Labels } from "@/world/systems/Labels";
 import { Life } from "@/world/systems/Life";
+import { Pacer } from "@/world/systems/Pacer";
 import { TestHooks } from "@/world/systems/TestHooks";
 import { Traffic } from "@/world/systems/Traffic";
 import { YardLights } from "@/world/systems/YardLights";
 
 const Effects = lazy(() => import("@/world/effects/Effects"));
-
-const MAX_DPR: Record<Tier, number> = { 0: 1, 1: 1, 2: 1.5, 3: 2 };
 
 const usePageHidden = () => {
   const [hidden, setHidden] = useState(() => document.hidden);
@@ -47,61 +46,70 @@ function FirstFrame({ onDrawn, onReady }: { onDrawn: () => void; onReady: () => 
   return null;
 }
 
-/** Low renders on demand at 30 fps (spec 8). */
-function ThirtyFps() {
-  const invalidate = useThree((s) => s.invalidate);
-  useEffect(() => {
-    const id = window.setInterval(() => invalidate(), 1000 / 30);
-    return () => window.clearInterval(id);
-  }, [invalidate]);
-  return null;
-}
-
 export interface WorldProps {
   onReady: () => void;
 }
 
-/** The town's canvas (spec 9.2). Rendering pauses while the tab is hidden or the Brief covers it. */
+/**
+ * The town's canvas (spec 9.2). The pacer draws it at the tier's frame rate and
+ * stops while the tab is hidden or the Brief covers it.
+ */
 export default function World({ onReady }: WorldProps) {
   const tier = useBaseCamp((s) => s.tier);
+  const dpr = useBaseCamp((s) => s.dpr);
   const briefOpen = useBaseCamp((s) => s.briefOpen);
-  // Built in an effect so StrictMode's simulated unmount disposes a world that is then rebuilt.
+  // Built in an effect so StrictMode's simulated unmount disposes a world that is then rebuilt,
+  // and in slices, so the title card keeps moving meanwhile. A failed build reaches the boundary.
   const [world, setWorld] = useState<BuiltWorld | null>(null);
+  const [failure, setFailure] = useState<unknown>(null);
+  if (failure) throw failure;
   useEffect(() => {
-    const w = buildWorld();
-    setWorld(w);
+    const abort = new AbortController();
+    let built: BuiltWorld | null = null;
+    buildWorldInSlices(abort.signal).then(
+      (w) => {
+        // Unmounted between the last slice and this callback: nobody else will dispose it.
+        if (abort.signal.aborted) return w?.kit.dispose();
+        built = w;
+        if (w) setWorld(w);
+      },
+      (error: unknown) => setFailure(error ?? new Error("The town failed to build")),
+    );
     return () => {
+      abort.abort();
       setWorld(null);
-      w.kit.dispose();
+      built?.kit.dispose();
     };
   }, []);
   const hidden = usePageHidden();
   const [drawn, setDrawn] = useState(false);
   // The first frame is drawn whatever the Brief or the tab are doing, so boot can finish.
-  const frameloop = !drawn
-    ? "always"
-    : hidden || briefOpen
-      ? "never"
-      : tier <= 1
-        ? "demand"
-        : "always";
+  const paused = drawn && (hidden || briefOpen);
+
+  // The context is made once. A town that starts on High draws through the composer, which
+  // antialiases with FXAA, so its canvas has no MSAA. The composer then stays through Medium
+  // (without AO and bloom): taking it away would recompile every shader in the scene at once.
+  const [composed] = useState(
+    () => effectsEnabled(useBaseCamp.getState().tier) && probeHalfFloat(),
+  );
+  const composer = composed ? tier >= 2 : effectsEnabled(tier);
 
   return (
     <Canvas
       orthographic
       shadows={tier >= 2}
-      dpr={[1, MAX_DPR[tier]]}
-      frameloop={frameloop}
+      dpr={[1, dpr]}
+      frameloop="never"
       camera={{ position: [...CAMERA_OFFSET], zoom: 30, near: 0.1, far: 300 }}
-      gl={{ antialias: tier >= 2, powerPreference: "high-performance" }}
+      gl={{ antialias: tier >= 2 && !composed, powerPreference: "high-performance" }}
       onPointerMissed={() => {
         if (!wasDrag() && !useBaseCamp.getState().driving) useBaseCamp.getState().deselect();
       }}
     >
+      {!paused && <Pacer fps={TARGET_FPS[tier]} />}
       <CameraRig />
       <Governor />
       <Labels />
-      {frameloop === "demand" && <ThirtyFps />}
       {world && (
         <>
           <BuildIn world={world} />
@@ -117,11 +125,11 @@ export default function World({ onReady }: WorldProps) {
           <FirstFrame onDrawn={() => setDrawn(true)} onReady={onReady} />
         </>
       )}
-      {world && effectsEnabled(tier) && (
+      {world && composer && (
         <FloatTargets>
           <EffectsBoundary>
             <Suspense fallback={null}>
-              <Effects />
+              <Effects full={effectsEnabled(tier)} />
             </Suspense>
           </EffectsBoundary>
         </FloatTargets>

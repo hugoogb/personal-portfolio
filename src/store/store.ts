@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-import { TIER_NAMES, resolveTier, type QualityMode, type Tier } from "@/boot/tiers";
+import { MAX_DPR, TIER_NAMES, resolveTier, type QualityMode, type Tier } from "@/boot/tiers";
 import { ACHIEVEMENT_BY_ID, ACHIEVEMENT_IDS, type AchievementId } from "@/content/achievements";
 import { ORDER } from "@/content/places";
 import type { PlaceId } from "@/content/types";
@@ -53,6 +53,8 @@ export interface BaseCampState {
   tier: Tier;
   /** The tier boot started on; analytics only, never persisted. */
   bootTier: Tier | null;
+  /** The canvas's pixel-ratio cap: the tier's, until the governor lowers it. Any tier change resets it. */
+  dpr: number;
   fps: number;
   briefOpen: boolean;
   consoleOpen: boolean;
@@ -93,6 +95,7 @@ export interface BaseCampState {
   setAutoTier: (tier: Tier) => void;
   setTier: (tier: Tier) => void;
   setBootTier: (tier: Tier) => void;
+  setDpr: (dpr: number) => void;
   setFps: (fps: number) => void;
   setPanel: (panel: Panel) => void;
   setBriefOpen: (open: boolean) => void;
@@ -166,6 +169,7 @@ export const createBaseCampStore = (storage: KeyValueStorage = safeStorage()) =>
         autoTier: 3,
         tier: 3,
         bootTier: null,
+        dpr: MAX_DPR[3],
         fps: 60,
         briefOpen: false,
         consoleOpen: false,
@@ -216,11 +220,18 @@ export const createBaseCampStore = (storage: KeyValueStorage = safeStorage()) =>
         },
         setHudMode: (hudMode) => set({ hudMode }),
         setQualityMode: (qualityMode) =>
-          set((s) => ({ qualityMode, tier: resolveTier(qualityMode, s.autoTier) })),
+          set((s) => {
+            const tier = resolveTier(qualityMode, s.autoTier);
+            return { qualityMode, tier, dpr: MAX_DPR[tier] };
+          }),
         setAutoTier: (autoTier) =>
-          set((s) => ({ autoTier, tier: resolveTier(s.qualityMode, autoTier) })),
-        setTier: (tier) => set({ tier }),
+          set((s) => {
+            const tier = resolveTier(s.qualityMode, autoTier);
+            return { autoTier, tier, dpr: MAX_DPR[tier] };
+          }),
+        setTier: (tier) => set({ tier, dpr: MAX_DPR[tier] }),
         setBootTier: (bootTier) => set({ bootTier }),
+        setDpr: (dpr) => set((s) => ({ dpr: Math.min(dpr, MAX_DPR[s.tier]) })),
         setFps: (fps) => set({ fps }),
         setPanel: (panel) => set({ panel }),
         setBriefOpen: (briefOpen) => set({ briefOpen }),
