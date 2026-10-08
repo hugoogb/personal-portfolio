@@ -28,7 +28,6 @@ export function CameraRig() {
   const camera = useThree((s) => s.camera);
   const size = useThree((s) => s.size);
   const gl = useThree((s) => s.gl);
-  const invalidate = useThree((s) => s.invalidate);
   const start = frameFor(PLACE_BY_ID.hq.map, false);
   const rig = useRef({
     x: start.x,
@@ -46,7 +45,6 @@ export function CameraRig() {
     const aim = (x: number, z: number, view: number) => {
       const t = clampTarget(x, z);
       Object.assign(rig.current, { gx: t.x, gz: t.z, gview: clampView(view) });
-      invalidate();
     };
     const frame = (id: keyof typeof PLACE_BY_ID) => {
       const f = frameFor(PLACE_BY_ID[id].map, narrow.current);
@@ -56,7 +54,6 @@ export function CameraRig() {
       const t = clampTarget(x, z);
       const v = clampView(view);
       Object.assign(rig.current, { x: t.x, z: t.z, view: v, gx: t.x, gz: t.z, gview: v });
-      invalidate();
     };
     const s0 = useBaseCamp.getState();
     if (s0.introRunning && s0.goal) jump(s0.goal.x, s0.goal.z, s0.goal.view);
@@ -69,7 +66,7 @@ export function CameraRig() {
       }
       if (s.reframeSeq !== prev.reframeSeq && s.selected) frame(s.selected);
     });
-  }, [invalidate]);
+  }, []);
 
   useEffect(() => {
     const el = gl.domElement;
@@ -108,7 +105,6 @@ export function CameraRig() {
         if (pinch > 0 && now > 0) r.gview = clampView(r.gview * (pinch / now));
         pinch = now;
       }
-      invalidate();
     };
     const onUp = (e: PointerEvent) => {
       pointers.delete(e.pointerId);
@@ -119,7 +115,6 @@ export function CameraRig() {
       // wheelZoom expects pixels: Firefox reports lines (1) or pages (2) on some devices.
       const px = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? el.clientHeight : 1;
       rig.current.gview = wheelZoom(rig.current.gview, e.deltaY * px);
-      invalidate();
     };
     el.addEventListener("pointerdown", onDown);
     window.addEventListener("pointermove", onMove);
@@ -133,7 +128,7 @@ export function CameraRig() {
       window.removeEventListener("pointercancel", onUp);
       el.removeEventListener("wheel", onWheel);
     };
-  }, [gl, invalidate]);
+  }, [gl]);
 
   useFrame((_, delta) => {
     const dt = Math.max(0, delta);
@@ -152,12 +147,16 @@ export function CameraRig() {
     r.since += dt;
     if (r.since >= PUBLISH_EVERY_S) {
       r.since = 0;
-      useBaseCamp
-        .getState()
-        .setView({ x: r.x, z: r.z, view: r.view, aspect: size.width / size.height });
+      // Only a change is published: each one re-renders the minimap.
+      const s = useBaseCamp.getState();
+      const aspect = size.width / size.height;
+      const v = s.view;
+      if (
+        Math.abs(v.x - r.x) + Math.abs(v.z - r.z) + Math.abs(v.view - r.view) > 1e-3 ||
+        v.aspect !== aspect
+      )
+        s.setView({ x: r.x, z: r.z, view: r.view, aspect });
     }
-    if (Math.abs(r.x - r.gx) + Math.abs(r.z - r.gz) + Math.abs(r.view - r.gview) > 1e-3)
-      invalidate();
   });
 
   return null;
