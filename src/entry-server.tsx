@@ -1,16 +1,16 @@
 import { StrictMode } from "react";
 import { renderToPipeableStream } from "react-dom/server";
 import { Writable } from "node:stream";
-import { App } from "@/App";
+import { Brief } from "@/brief/Brief";
+import { TitleCard } from "@/brief/TitleCard";
 
 export { structuredData } from "@/utils/structuredData";
 
 /**
  * Renders the whole page to HTML at build time (see scripts/prerender.mjs).
  *
- * renderToString would not do: About, Work and Contact are lazy, and it emits
- * the Suspense fallback for anything not loaded yet - the spinner, not the
- * sections. The stream waits for every boundary when `onAllReady` fires.
+ * The stream waits for every Suspense boundary when `onAllReady` fires, so the
+ * page stays complete if a later phase makes part of it lazy.
  */
 export const render = () =>
   new Promise<string>((resolve, reject) => {
@@ -28,7 +28,8 @@ export const render = () =>
 
     const stream = renderToPipeableStream(
       <StrictMode>
-        <App />
+        <TitleCard />
+        <Brief />
       </StrictMode>,
       {
         onAllReady: () => stream.pipe(sink),

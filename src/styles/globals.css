@@ -91,12 +91,15 @@
   --border-radius-l: 24px;
 }
 
-.dark {
-  --background-color: #050505;
-  --card-background-color: #0f0f0f;
-  --text-color: #fafafa;
-  --text-muted: #a3a3a3;
-  --border-color: #1f1f1f;
+/* The Brief follows the system theme. The town's HUD has its own light/dark mode. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-color: #050505;
+    --card-background-color: #0f0f0f;
+    --text-color: #fafafa;
+    --text-muted: #a3a3a3;
+    --border-color: #1f1f1f;
+  }
 }
 
 @supports (color: oklch(from red l c h)) {
@@ -110,8 +113,10 @@
     --primary-display: oklch(from var(--primary-color) min(l, 0.62) c h);
   }
 
-  .dark {
-    --primary-display: oklch(from var(--primary-color) max(l, 0.62) c h);
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --primary-display: oklch(from var(--primary-color) max(l, 0.62) c h);
+    }
   }
 }
 
@@ -197,4 +202,112 @@
       scroll-behavior: auto !important;
     }
   }
+}
+
+/* Title card: only while the 3D town loads (html.world is set from Phase 2). */
+.title-card {
+  display: none;
+}
+html.world .title-card {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: var(--background-color);
+  color: var(--text-color);
+}
+.title-card__inner {
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+  text-align: center;
+}
+.title-card__name {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(32px, 6vw, 56px);
+  letter-spacing: -0.02em;
+}
+.title-card__role {
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  color: var(--text-muted);
+}
+.title-card__bar {
+  width: min(260px, 70vw);
+  height: 4px;
+  border-radius: 2px;
+  background: var(--border-color);
+  overflow: hidden;
+}
+.title-card__bar span {
+  display: block;
+  width: 0;
+  height: 100%;
+  background: var(--primary-color);
+  transition: width 0.3s;
+}
+.title-card__brief {
+  font-size: 14px;
+  color: var(--text-muted);
+  text-decoration: underline;
+}
+
+/* World mode (spec 9.5). The head script sets html.world before first paint
+   when this device should get the town: the page stops scrolling, the Brief is
+   hidden visually but stays in the DOM for crawlers and the overlay, and the
+   title card shows until the first frame (html.world-ready). */
+html.world,
+html.world body {
+  height: 100%;
+  overflow: hidden;
+}
+html.world #brief {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+html.world.brief-open #brief {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  width: auto;
+  height: auto;
+  overflow: auto;
+  clip-path: none;
+  white-space: normal;
+  background: var(--background-color);
+  outline: none;
+}
+html.world.world-ready .title-card {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition:
+    opacity 0.45s ease,
+    visibility 0s linear 0.45s;
+}
+
+.enter-anyway {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 40;
+  padding: 10px 16px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--primary-color);
+  color: var(--primary-fg);
+  font: 700 14px var(--font-display);
+  box-shadow: 0 6px 20px rgb(0 0 0 / 0.18);
+  cursor: pointer;
+}
+.enter-anyway:focus-visible {
+  outline: 2px solid var(--text-color);
+  outline-offset: 3px;
 }

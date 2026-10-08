@@ -1,10 +1,143 @@
-import { defineConfig } from "vite";
+import { mkdirSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
+import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 import tailwindcss from "@tailwindcss/vite";
+import { headScript } from "./src/boot/head";
+
+const HEAD_SCRIPT_SLOT = "<!-- head-script -->";
+
+/**
+ * Puts src/boot/head.ts into index.html as an inline script, in dev and build
+ * alike, so the code that runs before first paint is the code the tests cover.
+ */
+const injectHeadScript = (): Plugin => ({
+  name: "base-camp-head-script",
+  transformIndexHtml(html) {
+    if (!html.includes(HEAD_SCRIPT_SLOT)) {
+      throw new Error(`index.html is missing ${HEAD_SCRIPT_SLOT}`);
+    }
+    return html.replace(HEAD_SCRIPT_SLOT, `<script>${headScript}</script>`);
+  },
+});
+
+const BENCHMARKS_DIR = path.resolve(__dirname, "node_modules/detect-gpu/dist/benchmarks");
+
+/**
+ * detect-gpu looks the visitor's GPU up in benchmark tables it would otherwise
+ * fetch from unpkg. Serving them from this site keeps a third party out of the
+ * boot path (spec section 8): from node_modules in dev, as emitted assets in
+ * the client build. The SSR build does not need them.
+ */
+const detectGpuBenchmarks = (): Plugin => {
+  let ssr = false;
+  return {
+    name: "base-camp-detect-gpu-benchmarks",
+    configResolved(config) {
+      ssr = Boolean(config.build.ssr);
+    },
+    configureServer(server) {
+      server.middlewares.use("/benchmarks", (req, res, next) => {
+        const file = path.basename((req.url ?? "").split("?")[0]);
+        if (!file.endsWith(".json")) return next();
+        try {
+          res.setHeader("content-type", "application/json");
+          res.end(readFileSync(path.join(BENCHMARKS_DIR, file)));
+        } catch {
+          next();
+        }
+      });
+    },
+    generateBundle() {
+      if (ssr) return;
+      for (const file of readdirSync(BENCHMARKS_DIR)) {
+        if (!file.endsWith(".json")) continue;
+        this.emitFile({
+          type: "asset",
+          fileName: `benchmarks/${file}`,
+          source: readFileSync(path.join(BENCHMARKS_DIR, file)),
+        });
+      }
+    },
+  };
+};
+
+/**
+ * Preloads the fonts the first paint is set in: the two variable fonts of the
+ * Brief and the HUD's label face. Without it
+ * the text paints in the fallback face and then jumps when the font arrives,
+ * which is a layout shift; with it the font is in flight from the first byte
+ * of HTML. Build only: in dev the fonts are served from node_modules.
+ */
+const preloadFonts = (): Plugin => ({
+  name: "base-camp-preload-fonts",
+  transformIndexHtml: {
+    order: "post",
+    handler(_html, ctx) {
+      if (!ctx.bundle) return;
+      return Object.keys(ctx.bundle)
+        .filter((file) =>
+          /(hanken-grotesk-latin-wght|raleway-latin-wght|barlow-condensed-latin-600)-normal-.*\.woff2$/.test(
+            file,
+          ),
+        )
+        .map((file) => ({
+          tag: "link",
+          attrs: {
+            rel: "preload",
+            as: "font",
+            type: "font/woff2",
+            crossorigin: "",
+            href: `/${file}`,
+          },
+          injectTo: "head" as const,
+        }));
+    },
+  },
+});
+
+/**
+ * Writes which chunks import which, for scripts/check-budgets.mjs (spec 10).
+ * Kept out of dist so it is never deployed.
+ */
+const bundleReport = (): Plugin => {
+  let ssr = false;
+  return {
+    name: "base-camp-bundle-report",
+    configResolved(config) {
+      ssr = Boolean(config.build.ssr);
+    },
+    writeBundle(_options, bundle) {
+      if (ssr) return;
+      const chunks: Record<
+        string,
+        { name: string; isEntry: boolean; imports: string[]; dynamicImports: string[] }
+      > = {};
+      for (const [file, out] of Object.entries(bundle)) {
+        if (out.type !== "chunk") continue;
+        chunks[file] = {
+          name: out.name,
+          isEntry: out.isEntry,
+          imports: out.imports,
+          dynamicImports: out.dynamicImports,
+        };
+      }
+      const dir = path.resolve(__dirname, "node_modules/.cache/base-camp");
+      mkdirSync(dir, { recursive: true });
+      writeFileSync(path.join(dir, "bundle-report.json"), JSON.stringify({ chunks }, null, 2));
+    },
+  };
+};
 
 export default defineConfig({
-  plugins: [react(), tailwindcss()],
+  plugins: [
+    react(),
+    tailwindcss(),
+    injectHeadScript(),
+    detectGpuBenchmarks(),
+    bundleReport(),
+    preloadFonts(),
+  ],
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

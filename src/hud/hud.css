@@ -1,0 +1,731 @@
+/* Base Camp HUD (spec 4.3, 4.4, 5.3). Frosted glass over the canvas; the
+   accent is the visitor's colour (--primary-color, set by the store). */
+.stage {
+  --hud-bg: rgb(255 255 255 / 0.72);
+  --hud-bg-strong: rgb(255 255 255 / 0.92);
+  --hud-fg: #1b1f24;
+  --hud-muted: #5b6370;
+  --hud-line: rgb(20 24 30 / 0.1);
+  --hud-shadow: 0 8px 24px rgb(20 30 50 / 0.14);
+  --acc: var(--primary-color);
+  --acc-fg: var(--primary-fg);
+  --ok: #15803d;
+  --down: #dc2626;
+  --pre: #fbbf24;
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  height: 100dvh;
+  overflow: hidden;
+  container: stage / inline-size;
+  color: var(--hud-fg);
+  font-family: var(--font-display);
+}
+.stage[data-hud="dark"] {
+  --hud-bg: rgb(18 24 38 / 0.72);
+  --hud-bg-strong: rgb(18 24 38 / 0.92);
+  --hud-fg: #eef2f7;
+  --hud-muted: #9aa6b8;
+  --hud-line: rgb(255 255 255 / 0.12);
+  --hud-shadow: 0 8px 24px rgb(0 0 0 / 0.4);
+}
+.stage__canvas {
+  position: absolute;
+  inset: 0;
+}
+.hud {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.hud > :not(.toasts) {
+  pointer-events: auto;
+}
+.hud :focus-visible,
+.brief-close:focus-visible {
+  outline: 2px solid var(--acc);
+  outline-offset: 2px;
+}
+
+.glass {
+  background: var(--hud-bg);
+  -webkit-backdrop-filter: blur(14px) saturate(1.3);
+  backdrop-filter: blur(14px) saturate(1.3);
+  border: 1px solid var(--hud-line);
+  border-radius: 14px;
+  box-shadow: var(--hud-shadow);
+}
+.hud-label {
+  font-family: "Barlow Condensed", var(--font-display);
+  font-weight: 600;
+  font-size: 12px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.hud-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+/* Keyboard focus on the hidden list reveals it, so the focused button is visible (spec 9.7). */
+.hud-sr:focus-within {
+  position: fixed;
+  top: 64px;
+  left: 12px;
+  z-index: 5;
+  width: max-content;
+  max-width: calc(100% - 24px);
+  height: auto;
+  max-height: calc(100% - 140px);
+  padding: 8px;
+  overflow: auto;
+  clip-path: none;
+  white-space: normal;
+  background: var(--hud-bg-strong);
+  border: 1px solid var(--hud-line);
+  border-radius: 14px;
+  box-shadow: var(--hud-shadow);
+  pointer-events: auto;
+}
+.hud-sr:focus-within ul {
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.hud-sr:focus-within button {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--hud-line);
+  border-radius: 10px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+.hud-sr:focus-within button[aria-current="true"] {
+  border-color: var(--acc);
+}
+.hud-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--hud-line);
+  border-radius: 10px;
+  background: var(--hud-bg-strong);
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  font-size: 14px;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.hud-btn:hover {
+  border-color: var(--acc);
+}
+.hud-btn--icon {
+  width: 34px;
+  padding: 0;
+  font-size: 16px;
+}
+
+/* Top bar */
+.hud-top {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding: 6px 8px 6px 6px;
+}
+.hud-crest {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  overflow: hidden;
+  border-radius: 50%;
+  background: var(--acc);
+}
+.hud-name {
+  font-weight: 800;
+  font-size: 16px;
+  white-space: nowrap;
+}
+.hud-stats {
+  display: flex;
+  gap: 6px;
+  min-width: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.hud-stat {
+  padding: 4px 8px;
+  border-radius: 8px;
+  background: var(--hud-bg-strong);
+  font-weight: 700;
+  font-size: 14px;
+  white-space: nowrap;
+}
+.hud-stat .hud-label {
+  color: var(--hud-muted);
+}
+.hud-top__spacer {
+  flex: 1;
+}
+
+/* Floating labels (rendered inside the canvas wrapper by drei's Html). */
+.place-label {
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 0.92);
+  color: #1b1f24;
+  font:
+    600 13px "Barlow Condensed",
+    system-ui,
+    sans-serif;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 0.15);
+}
+.place-label.is-selected {
+  background: var(--primary-color);
+  color: var(--primary-fg);
+}
+
+/* Toasts */
+.toasts {
+  position: absolute;
+  top: 70px;
+  left: 50%;
+  display: grid;
+  gap: 6px;
+  justify-items: center;
+  transform: translateX(-50%);
+}
+.toast {
+  margin: 0;
+  padding: 8px 14px;
+  border-left: 4px solid var(--acc);
+  font-weight: 700;
+  font-size: 14px;
+  white-space: nowrap;
+}
+
+/* Card and hint. The slot is one steady live region; its children place themselves. */
+.hud > .card-slot {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.card-slot > * {
+  pointer-events: auto;
+}
+.card,
+.hint {
+  position: absolute;
+  left: 12px;
+  bottom: 12px;
+}
+.card {
+  width: min(420px, calc(100% - 24px));
+  max-height: calc(100% - 96px);
+  overflow: auto;
+  padding-bottom: 12px;
+  container: card / inline-size;
+}
+.card__banner img {
+  display: block;
+  width: 100%;
+  height: 128px;
+  object-fit: cover;
+  object-position: top;
+  border-radius: 14px 14px 0 0;
+}
+.card__head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px 0;
+}
+.card__thumb {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+}
+.card__titles {
+  flex: 1;
+  min-width: 0;
+}
+.card__kind {
+  margin: 0;
+  color: var(--hud-muted);
+}
+.card__name {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.15;
+  overflow-wrap: anywhere;
+}
+.pill {
+  flex: none;
+  padding: 3px 8px;
+  border: 1px solid var(--hud-line);
+  border-radius: 999px;
+  background: var(--hud-bg-strong);
+  font-weight: 700;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.pill--ok {
+  border-color: transparent;
+  background: var(--ok);
+  color: #fff;
+}
+.pill--down {
+  border-color: transparent;
+  background: var(--down);
+  color: #fff;
+}
+.pill--pre {
+  border-color: transparent;
+  background: var(--pre);
+  color: #1f1300;
+}
+.pill--unknown {
+  color: var(--hud-muted);
+}
+.card__body {
+  padding: 8px 14px 0;
+}
+.card__desc {
+  margin: 0;
+  font-family: var(--font-primary);
+  font-size: 14px;
+  line-height: 1.45;
+}
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 8px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.chip {
+  padding: 3px 7px;
+  border: 1px solid var(--hud-line);
+  border-radius: 7px;
+  background: var(--hud-bg-strong);
+  font-size: 12px;
+}
+.chips--stack .chip {
+  border-color: var(--acc);
+}
+.card__details {
+  display: none;
+  margin: 8px 14px 0;
+}
+.card__cmds {
+  display: flex;
+  gap: 6px;
+  padding: 12px 14px 0;
+}
+.cmd {
+  display: inline-flex;
+  flex: 1 1 0;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-width: 0;
+  min-height: 38px;
+  padding: 0 10px;
+  border: 1px solid var(--hud-line);
+  border-radius: 10px;
+  background: var(--hud-bg-strong);
+  color: inherit;
+  font: inherit;
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+  cursor: pointer;
+}
+.cmd span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.cmd kbd {
+  flex: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  opacity: 0.7;
+}
+.cmd--primary {
+  flex: 0 1 auto;
+  max-width: 62%;
+  border-color: transparent;
+  background: var(--acc);
+  color: var(--acc-fg);
+}
+.cmd[aria-pressed="true"] {
+  border-color: var(--acc);
+}
+.cmd:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+@container card (max-width: 399px) {
+  .card__cmds {
+    flex-wrap: wrap;
+  }
+  .cmd--primary {
+    flex: 1 1 100%;
+    max-width: none;
+  }
+}
+.hint {
+  margin: 0;
+  padding: 10px 14px;
+  font-weight: 700;
+  font-size: 14px;
+}
+.hint__narrow {
+  display: none;
+}
+
+/* Panels: settings and trophies */
+.panel {
+  position: absolute;
+  top: 70px;
+  right: 12px;
+  width: min(340px, calc(100% - 24px));
+  max-height: calc(100% - 90px);
+  overflow: auto;
+  padding: 12px 14px 14px;
+}
+.panel__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.panel__head h2 {
+  margin: 0;
+}
+.panel__group {
+  margin: 12px 0 0;
+  padding: 0;
+  border: 0;
+}
+.panel__group legend,
+.panel__group h3 {
+  margin: 0 0 6px;
+  padding: 0;
+  color: var(--hud-muted);
+}
+.panel__note {
+  margin: 6px 0 0;
+  color: var(--hud-muted);
+  font-size: 13px;
+}
+.panel__time {
+  display: none;
+}
+.panel__time p {
+  margin: 0;
+  font-weight: 700;
+}
+.panel__custom summary {
+  margin-top: 8px;
+  font-size: 13px;
+  cursor: pointer;
+}
+.panel__custom .react-colorful {
+  width: 100%;
+  margin-top: 8px;
+}
+.swatches {
+  display: flex;
+  gap: 8px;
+}
+.swatch {
+  width: 28px;
+  height: 28px;
+  border: 2px solid transparent;
+  border-radius: 50%;
+  cursor: pointer;
+}
+.swatch[aria-pressed="true"] {
+  border-color: var(--hud-fg);
+}
+.segmented {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+.segmented label {
+  position: relative;
+}
+.segmented input {
+  position: absolute;
+  opacity: 0;
+  inset: 0;
+}
+.segmented span {
+  display: inline-block;
+  padding: 5px 10px;
+  border: 1px solid var(--hud-line);
+  border-radius: 8px;
+  background: var(--hud-bg-strong);
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+}
+.segmented input:checked + span {
+  border-color: transparent;
+  background: var(--acc);
+  color: var(--acc-fg);
+}
+.segmented input:focus-visible + span {
+  outline: 2px solid var(--acc);
+  outline-offset: 2px;
+}
+.trophies {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.trophy {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  opacity: 0.55;
+}
+.trophy.is-done {
+  opacity: 1;
+}
+.trophy__mark {
+  font-size: 18px;
+  line-height: 1;
+}
+.trophy.is-done .trophy__mark {
+  color: var(--acc);
+}
+.trophy__hint {
+  display: block;
+  color: var(--hud-muted);
+  font-size: 13px;
+}
+
+/* Console */
+.console {
+  position: absolute;
+  top: 18%;
+  left: 50%;
+  width: min(560px, calc(100% - 24px));
+  padding: 8px;
+  transform: translateX(-50%);
+}
+.console__input {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 10px 12px;
+  border: 1px solid var(--hud-line);
+  border-radius: 10px;
+  background: var(--hud-bg-strong);
+  color: inherit;
+  font: 600 16px var(--font-mono);
+}
+.console__list {
+  max-height: 300px;
+  overflow: auto;
+  margin: 6px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.console__item,
+.console__empty {
+  padding: 7px 10px;
+  border-radius: 8px;
+  font: 14px var(--font-mono);
+}
+.console__item {
+  cursor: pointer;
+}
+.console__item[aria-selected="true"] {
+  background: var(--acc);
+  color: var(--acc-fg);
+}
+.console__empty {
+  color: var(--hud-muted);
+}
+
+/* Minimap, objective, drive bar */
+.minimap {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  width: 180px;
+  aspect-ratio: 1;
+  padding: 6px;
+}
+.minimap svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+}
+.minimap__island {
+  fill: #8fbf73;
+  stroke: #e9d7a6;
+  stroke-width: 1.2;
+}
+.minimap__road {
+  stroke: #4b5058;
+  stroke-width: 0.8;
+}
+.minimap__place {
+  opacity: 0.35;
+}
+.minimap__place.is-found {
+  opacity: 1;
+}
+.minimap__place.is-selected {
+  stroke: var(--hud-fg);
+  stroke-width: 0.5;
+}
+.minimap__view {
+  fill: none;
+  stroke: var(--acc);
+  stroke-width: 0.7;
+}
+.objective {
+  position: absolute;
+  top: 70px;
+  left: 12px;
+  width: 240px;
+  padding: 10px 12px;
+}
+.objective .hud-label {
+  margin: 0;
+  color: var(--hud-muted);
+}
+.objective__text {
+  margin: 2px 0 8px;
+  font-weight: 700;
+  font-size: 14px;
+}
+.progress {
+  height: 6px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: var(--hud-line);
+}
+.progress span {
+  display: block;
+  height: 100%;
+  background: var(--acc);
+  transition: width 0.3s;
+}
+.drivebar {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 10px 8px 14px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+.drivebar__hint {
+  color: var(--hud-muted);
+  font-size: 13px;
+}
+
+/* Brief overlay close button, above html.brief-open #brief (z 60). */
+.brief-close {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  z-index: 70;
+  padding: 9px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--primary-color);
+  color: var(--primary-fg);
+  font: 700 14px var(--font-display);
+  box-shadow: 0 6px 20px rgb(0 0 0 / 0.18);
+  cursor: pointer;
+}
+
+/* Narrow layout (spec 4.4). */
+@container stage (max-width: 759px) {
+  .hud-name,
+  [data-wide-only],
+  .objective,
+  .minimap,
+  .hint__wide,
+  .cmd kbd {
+    display: none;
+  }
+  .hint__narrow {
+    display: inline;
+  }
+  .hud-top {
+    top: 8px;
+    left: 8px;
+    right: 8px;
+  }
+  .card {
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    width: auto;
+    max-height: 70%;
+    border-radius: 16px 16px 12px 12px;
+  }
+  .card:not([data-details="true"]) .card__banner,
+  .card:not([data-details="true"]) .card__body {
+    display: none;
+  }
+  .card__details {
+    display: inline-flex;
+  }
+  .hint {
+    left: 8px;
+    bottom: 8px;
+  }
+  .panel {
+    top: 64px;
+    left: 8px;
+    right: 8px;
+    width: auto;
+  }
+  .panel__time {
+    display: block;
+  }
+  .toasts {
+    top: 64px;
+  }
+}

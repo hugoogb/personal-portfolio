@@ -48,6 +48,7 @@ export const structuredData = (modified: Date) => ({
       url: SITE,
       image: `${SITE}favicon/android-chrome-512x512.png`,
       jobTitle: "Full-Stack Engineer",
+      email: `mailto:${CONTACT.EMAIL}`,
       description:
         "Full-stack engineer building web applications end to end with TypeScript, Node.js, React and Next.js.",
       address: {
