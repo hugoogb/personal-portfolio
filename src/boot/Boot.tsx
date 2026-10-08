@@ -10,6 +10,7 @@ import { bootTier, readSignals } from "@/boot/detect";
 import { leaveWorld, READY_TIMEOUT_MS, TOWN_FAILED_KEY } from "@/boot/world";
 import { WorldBoundary } from "@/boot/WorldBoundary";
 import { useBaseCamp } from "@/store/store";
+import { effectsEnabled } from "@/world/effects/effectsGate";
 import { bootReason, trackTier } from "@/utils/track";
 
 interface Loaded {
@@ -78,6 +79,10 @@ export function Boot() {
       };
       arm();
       setProgress(0.15);
+      // The town's code downloads while the GPU check runs, not after it. A Lite verdict
+      // leaves it unused, and the head script has already turned away most of those.
+      const chunks = Promise.all([import("@/hud/Hud"), import("@/world/World")]);
+      chunks.catch(() => {});
       const store = useBaseCamp.getState();
       const signals = await readSignals();
       if (cancelled) return;
@@ -88,8 +93,11 @@ export function Boot() {
       trackTier(chosen.tier, chosen.tier, bootReason(signals, store.qualityMode));
       store.setFirstVisit(!store.seen);
       if (chosen.tier === 0) return exit();
+      // High draws through the composer: fetch it alongside the world, so it is in by the first
+      // frame. A failure here is left to the world's own import, whose boundary drops the effects.
+      if (effectsEnabled(chosen.tier)) import("@/world/effects/Effects").catch(() => {});
       setProgress(0.4);
-      const [hud, world] = await Promise.all([import("@/hud/Hud"), import("@/world/World")]);
+      const [hud, world] = await chunks;
       if (cancelled) return;
       setProgress(0.8);
       loadedRef.current = true;

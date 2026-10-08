@@ -97,6 +97,50 @@ const preloadFonts = (): Plugin => ({
 });
 
 /**
+ * Starts the town's chunks downloading from the HTML itself, before the entry
+ * script has even run: Boot would otherwise ask for them only once React had
+ * rendered. An inline script after the head script preloads them only when
+ * that script chose the town (html.can-world), so Brief-only visitors (no
+ * WebGL, reduced motion, Save-Data) never fetch them. The effects chunk is
+ * left to Boot, which knows the tier.
+ */
+const preloadTown = (): Plugin => ({
+  name: "base-camp-preload-town",
+  transformIndexHtml: {
+    order: "post",
+    handler(html, ctx) {
+      if (!ctx.bundle) return;
+      const chunks = Object.values(ctx.bundle).filter((o) => o.type === "chunk");
+      const entry = chunks.find((c) => c.isEntry);
+      const byName = (name: string) => chunks.find((c) => c.name === name);
+      // What the entry imports statically is already preloaded by Vite.
+      const loaded = new Set<string>(entry ? [entry.fileName, ...entry.imports] : []);
+      const files: string[] = [];
+      const visit = (file: string) => {
+        if (loaded.has(file)) return;
+        loaded.add(file);
+        files.push(file);
+        const chunk = ctx.bundle![file];
+        if (chunk?.type === "chunk") chunk.imports.forEach(visit);
+      };
+      for (const name of ["World", "Hud"]) {
+        const chunk = byName(name);
+        if (chunk) visit(chunk.fileName);
+      }
+      if (!files.length) return;
+      const hrefs = JSON.stringify(files.map((f) => `/${f}`));
+      const script = `<script>if(document.documentElement.classList.contains("can-world"))for(const h of ${hrefs}){const l=document.createElement("link");l.rel="modulepreload";l.crossOrigin="";l.href=h;document.head.appendChild(l)}</script>`;
+      // Straight after the head script, which sets can-world: an inline script after the
+      // stylesheet would wait for it to load before it ran.
+      const head = html.indexOf(headScript.slice(0, 40));
+      if (head < 0) throw new Error("preloadTown: the head script is not in index.html");
+      const at = html.indexOf("</script>", head);
+      return html.slice(0, at + 9) + script + html.slice(at + 9);
+    },
+  },
+});
+
+/**
  * Writes which chunks import which, for scripts/check-budgets.mjs (spec 10).
  * Kept out of dist so it is never deployed.
  */
@@ -137,6 +181,7 @@ export default defineConfig({
     detectGpuBenchmarks(),
     bundleReport(),
     preloadFonts(),
+    preloadTown(),
   ],
   resolve: {
     alias: {
