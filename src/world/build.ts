@@ -35,14 +35,18 @@ export interface BuiltWorld {
   >;
 }
 
-/** Builds the whole town once, outside React. World disposes it on unmount. */
-export function buildWorld(): BuiltWorld {
-  const kit = createKit();
+/**
+ * The town's construction as steps: each `yield` is a point where the browser
+ * may run between two pieces of work (see buildWorldInSlices).
+ */
+export function* buildSteps(kit: Kit): Generator<void, BuiltWorld> {
   const town = buildTown(kit);
-  const places = Object.fromEntries(ORDER.map((id) => [id, PLACE_BUILDERS[id](kit)])) as Record<
-    PlaceId,
-    THREE.Group
-  >;
+  yield;
+  const places = {} as Record<PlaceId, THREE.Group>;
+  for (const id of ORDER) {
+    places[id] = PLACE_BUILDERS[id](kit);
+    yield;
+  }
 
   const traffic = buildTraffic(kit, buildRoutes());
   town.root.add(traffic.group);
@@ -93,9 +97,14 @@ export function buildWorld(): BuiltWorld {
   const board = kit.life.boardFace as THREE.Material | undefined;
   if (board) keep.add(board);
   const opts = { keep, own: kit.own, shadowProxy: true };
-  for (const g of Object.values(places)) bakeStatic(g, opts);
+  for (const g of Object.values(places)) {
+    bakeStatic(g, opts);
+    yield;
+  }
   for (const ring of rings) bakeStatic(ring, opts);
+  yield;
   if (kit.buildIn.ground) bakeStatic(kit.buildIn.ground, opts);
+  yield;
   // Rigid moving parts (cars, ship, buoys, hat, lid) merge inside themselves
   // and keep their own shadow: the group moves, its pieces do not.
   const movers: THREE.Object3D[] = [];
@@ -107,4 +116,50 @@ export function buildWorld(): BuiltWorld {
   for (const m of movers) bakeStatic(m, { keep, own: kit.own });
 
   return { kit, town, places, rings, env: { night: 0, lit: 0, tier: 3 }, placeWindows, traffic };
+}
+
+/** Builds the whole town in one go, outside React. */
+export function buildWorld(): BuiltWorld {
+  const steps = buildSteps(createKit());
+  for (;;) {
+    const step = steps.next();
+    if (step.done) return step.value;
+  }
+}
+
+/** Main-thread time one slice may take before the build yields to the browser. */
+const SLICE_MS = 12;
+const nextTask = () => new Promise<void>((resolve) => setTimeout(resolve, 0));
+
+/**
+ * Builds the town in slices of about 12 ms, so the title card keeps animating
+ * and stays clickable. Built at once it was one task of over 100 ms on a
+ * laptop, and nearly half a second on a phone. The kit is disposed if the
+ * build is abandoned (`signal` aborts) or throws.
+ */
+export async function buildWorldInSlices(signal: AbortSignal): Promise<BuiltWorld | null> {
+  const kit = createKit();
+  const steps = buildSteps(kit);
+  try {
+    for (;;) {
+      const end = performance.now() + SLICE_MS;
+      for (;;) {
+        const step = steps.next();
+        if (step.done) {
+          if (!signal.aborted) return step.value;
+          kit.dispose();
+          return null;
+        }
+        if (performance.now() >= end) break;
+      }
+      await nextTask();
+      if (signal.aborted) {
+        kit.dispose();
+        return null;
+      }
+    }
+  } catch (error) {
+    kit.dispose();
+    throw error;
+  }
 }

@@ -1,5 +1,5 @@
 import { useFrame, useThree } from "@react-three/fiber";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import type { PlaceId } from "@/content/types";
 import type { Tier } from "@/boot/tiers";
@@ -11,6 +11,17 @@ import { barcelonaHour, effectiveHour, nightAmount } from "@/world/lib/sun";
 
 const SHADOW_MAP: Record<Tier, number> = { 0: 0, 1: 0, 2: 1024, 3: 2048 };
 const RECOMPUTE_S = 0.25;
+
+const hourNow = () => effectiveHour(useBaseCamp.getState().timeOverride, new Date());
+
+/**
+ * The stadium's point lights are in the town's shaders only while they shine.
+ * Every lit pixel pays for each point light in the scene, dark or not, and by
+ * day they were a fifth of the frame.
+ */
+const floodlightsOn = (world: BuiltWorld, on: boolean) => {
+  for (const light of world.kit.pointLights) light.visible = on;
+};
 
 /** The town's light (spec 6), recomputed four times a second from the hour. */
 export function DayNight({ world }: { world: BuiltWorld }) {
@@ -28,12 +39,15 @@ export function DayNight({ world }: { world: BuiltWorld }) {
     since.current = RECOMPUTE_S;
   }, [scene, bg, size]);
 
+  // Before the first frame, so its shaders already match the hour.
+  useLayoutEffect(() => floodlightsOn(world, lighting(hourNow()).stadium > 0), [world]);
+
   useFrame((_, dt) => {
     since.current += dt;
     if (since.current < RECOMPUTE_S) return;
     since.current = 0;
     const s = useBaseCamp.getState();
-    const L = lighting(effectiveHour(s.timeOverride, new Date()));
+    const L = lighting(hourNow());
     const { kit, town, env } = world;
     env.night = L.night;
     env.lit = L.lit;
@@ -76,6 +90,10 @@ export function DayNight({ world }: { world: BuiltWorld }) {
     kit.materials.lamp.emissiveIntensity = L.lamps;
     for (const m of kit.signMats) m.emissiveIntensity = L.signs;
     for (const light of kit.pointLights) light.intensity = L.stadium;
+    // Twice a day the lit shaders recompile for the new light count: one short hitch at dusk.
+    if (kit.pointLights[0] && kit.pointLights[0].visible !== L.stadium > 0) {
+      floodlightsOn(world, L.stadium > 0);
+    }
     kit.materials.pool.opacity = L.pools;
     const board = kit.life.boardFace as THREE.MeshStandardMaterial | undefined;
     if (board) board.emissiveIntensity = L.board;
