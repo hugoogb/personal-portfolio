@@ -115,20 +115,6 @@ html.mode-story .story-landing,
 html.mode-story .story-finale {
   color: var(--st-ink);
 }
-/* The name fades in as the camera settles on HQ; over the still image (no town
-   yet) it shows at once (spec 4.1). */
-html.mode-story .story-landing {
-  opacity: 0;
-  transform: translateY(8px);
-  transition:
-    opacity 0.6s ease 0.2s,
-    transform 0.6s ease 0.2s;
-}
-html.mode-story.intro-done .story-landing,
-html.mode-story:not(.town-ready) .story-landing {
-  opacity: 1;
-  transform: none;
-}
 /* Reduced motion: a cut between stops dips the town for a moment, then the
    normal transition brings it back. */
 html.town-ready .backdrop__town.town-cut {

@@ -49,3 +49,31 @@ test("the camera travels to the project in view", async ({ page }) => {
     .poll(async () => page.evaluate(() => window.__baseCamp?.camera().az ?? 0), { timeout: 5000 })
     .toBeGreaterThan(8);
 });
+
+test("the landing name stays on screen while the town arrives on a first visit", async ({
+  page,
+}) => {
+  await page.goto("/");
+  const name = page.locator(".story-landing h1");
+  await expect(name).toBeVisible();
+  // Sample the name's opacity (with its card's) from first paint through the build-in.
+  await page.evaluate(() => {
+    const w = window as unknown as { __landingMin: number };
+    w.__landingMin = 1;
+    const el = document.querySelector(".story-landing h1")!;
+    const tick = () => {
+      let o = 1;
+      for (let n: Element | null = el; n; n = n.parentElement)
+        o *= Number(getComputedStyle(n).opacity);
+      w.__landingMin = Math.min(w.__landingMin, o);
+      requestAnimationFrame(tick);
+    };
+    tick();
+  });
+  await expect(page.locator("html")).toHaveClass(/town-ready/, { timeout: 20_000 });
+  // The build-in runs about 2 s after the first frame.
+  await page.waitForTimeout(2500);
+  expect(
+    await page.evaluate(() => (window as unknown as { __landingMin: number }).__landingMin),
+  ).toBe(1);
+});
