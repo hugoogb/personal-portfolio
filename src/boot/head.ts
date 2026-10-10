@@ -5,8 +5,7 @@
  * orange first, and picks the mode: exactly one html.mode-story, mode-explore
  * or mode-text, from the hash (#text, or an explore-only place), the saved mode
  * and what the device can do. It also marks html.has-webgl when WebGL2 works
- * and html.night when Barcelona is dark. Until the old Boot is removed it still
- * adds html.can-world and html.world for story and explore.
+ * and html.night when Barcelona is dark.
  *
  * It is shipped as its own source text (headScript below), so bootHead must
  * stay self-contained: only its parameters and globals, no module-level helpers.
@@ -82,7 +81,7 @@ export function bootHead(
     .connection;
   const saveData = Boolean(connection?.saveData);
 
-  // Boot sets this when the town failed to draw, so a broken device does not wait again.
+  // Town sets this when the town failed to draw, so a broken device does not wait again.
   let failed = false;
   try {
     failed = win.sessionStorage.getItem("bc-town-failed") === "1";
@@ -104,8 +103,6 @@ export function bootHead(
 
   if (webgl) root.classList.add("has-webgl");
   root.classList.add("mode-" + mode);
-  // Compatibility until the old Boot is removed: it still reads html.world.
-  if (mode !== "text" && town) root.classList.add("can-world", "world");
 
   try {
     const parts = new Intl.DateTimeFormat("en-GB", {

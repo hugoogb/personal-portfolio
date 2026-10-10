@@ -91,7 +91,7 @@
   --border-radius-l: 24px;
 }
 
-/* The Brief follows the system theme. The town's HUD has its own light/dark mode. */
+/* Text mode follows the system theme. The town's HUD has its own light/dark mode. */
 @media (prefers-color-scheme: dark) {
   :root {
     --background-color: #050505;

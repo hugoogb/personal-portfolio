@@ -2,14 +2,21 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 
 const LOW = JSON.stringify({
-  state: { discovered: [], achievements: [], hudMode: "auto", qualityMode: "Low", seen: true },
+  state: {
+    discovered: [],
+    achievements: [],
+    hudMode: "auto",
+    qualityMode: "Low",
+    seen: true,
+    mode: "explore",
+  },
   version: 1,
 });
+const TEXT = JSON.stringify({ state: { mode: "text" }, version: 1 });
 
 const ready = async (page: Page) => {
-  await expect(page.locator("html")).toHaveClass(/world-ready/, { timeout: 20_000 });
+  await expect(page.locator("html")).toHaveClass(/town-ready/, { timeout: 20_000 });
   await expect(page.locator(".stage")).not.toHaveAttribute("inert", { timeout: 10_000 });
-  await expect(page.locator(".title-card")).toBeHidden();
 };
 
 /** Serious and critical only: those block people; the rest are logged for the report. */
@@ -23,12 +30,14 @@ const scan = async (page: Page, name: string) => {
   ).toEqual([]);
 };
 
-test.describe("the Brief", () => {
-  test.use({ reducedMotion: "reduce" });
+test.describe("Text mode", () => {
   test("has no serious violations", async ({ page }) => {
+    await page.addInitScript((record) => localStorage.setItem("bc", record), TEXT);
     await page.goto("/");
+    await expect(page.locator("html")).toHaveClass(/mode-text/);
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-    await scan(page, "brief");
+    await expect(page.getByRole("radiogroup", { name: "View" })).toBeVisible();
+    await scan(page, "text");
   });
 });
 
@@ -37,9 +46,7 @@ test.describe("the town", () => {
     await page.addInitScript((record) => localStorage.setItem("bc", record), LOW);
   });
 
-  test("HUD, settings, trophies, console and Brief overlay have no serious violations", async ({
-    page,
-  }) => {
+  test("HUD, settings, trophies and console have no serious violations", async ({ page }) => {
     await page.goto("/");
     await ready(page);
     // Force each HUD theme: the preview console's day/night commands.
@@ -73,14 +80,9 @@ test.describe("the town", () => {
     await page.getByRole("button", { name: "Trophies" }).click();
     await expect(page.getByRole("dialog", { name: "Trophies" })).toBeVisible();
     await scan(page, "trophies-dark");
-    await page.keyboard.press("Escape");
-    await page.keyboard.press("b");
-    await expect(page.locator("html")).toHaveClass(/brief-open/);
-    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-    await scan(page, "brief-overlay");
   });
 
-  test("the places list comes first after the top bar, and focus is always visible", async ({
+  test("the places list comes first after the top bar, the mode switch after it, and focus is always visible", async ({
     page,
   }) => {
     await page.goto("/");
@@ -88,11 +90,12 @@ test.describe("the town", () => {
     const seen: {
       inList: boolean;
       inTopBar: boolean;
+      inSwitch: boolean;
       tag: string;
       focusVisible: boolean;
       outline: string;
     }[] = [];
-    for (let i = 0; i < 14; i++) {
+    for (let i = 0; i < 60 && !seen.at(-1)?.inSwitch; i++) {
       await page.keyboard.press("Tab");
       seen.push(
         await page.evaluate(() => {
@@ -101,6 +104,7 @@ test.describe("the town", () => {
           return {
             inList: Boolean(el.closest('nav[aria-label="Places in town"]')),
             inTopBar: Boolean(el.closest("header.hud-top")),
+            inSwitch: Boolean(el.closest('[role="radiogroup"][aria-label="View"]')),
             tag: el.tagName + (el.getAttribute("type") ? `[${el.getAttribute("type")}]` : ""),
             focusVisible: el.matches(":focus-visible"),
             outline: style.outlineStyle === "none" ? "" : style.outlineWidth,
@@ -111,6 +115,9 @@ test.describe("the town", () => {
     const firstNotTopBar = seen.findIndex((s) => !s.inTopBar);
     expect(firstNotTopBar, "tabbing never left the top bar").toBeGreaterThanOrEqual(0);
     expect(seen[firstNotTopBar]?.inList).toBe(true);
+    const lastInList = seen.map((s) => s.inList).lastIndexOf(true);
+    const firstInSwitch = seen.findIndex((s) => s.inSwitch);
+    expect(firstInSwitch, "tabbing never reached the mode switch").toBeGreaterThan(lastInList);
     for (const s of seen) {
       expect(s.focusVisible, JSON.stringify(s)).toBe(true);
       expect(parseFloat(s.outline), JSON.stringify(s)).toBeGreaterThan(0);

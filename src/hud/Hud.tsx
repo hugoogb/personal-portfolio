@@ -1,8 +1,7 @@
 import "@fontsource/barlow-condensed/600.css";
 import "@/hud/hud.css";
-import type { ReactNode } from "react";
-import { PLACE_BY_ID } from "@/content/places";
-import { closeBrief } from "@/hud/actions";
+import { useEffect } from "react";
+import { PLACE_BY_ID, placeBySlug } from "@/content/places";
 import { Console } from "@/hud/Console";
 import { DriveBar } from "@/hud/DriveBar";
 import { Hint } from "@/hud/Hint";
@@ -15,50 +14,49 @@ import { useHudTheme } from "@/hud/theme";
 import { Toasts } from "@/hud/Toasts";
 import { TopBar } from "@/hud/TopBar";
 import { Trophies } from "@/hud/Trophies";
-import { useDeepLinks } from "@/hud/useDeepLinks";
 import { useHudKeys } from "@/hud/useHudKeys";
 import { useStatus } from "@/hooks/useStatus";
 import { useBaseCamp } from "@/store/store";
 
-/** The stage: the canvas underneath, the DOM HUD on top (spec 4.3). */
-export function Hud({ world }: { world: ReactNode }) {
+/**
+ * The HUD over the town (spec 4.3, story spec 5.5). It mounts only in Explore;
+ * the canvas itself lives in #town-root, under this stage, which lets clicks
+ * through everywhere but on the HUD's own pieces.
+ */
+export function Hud() {
   const theme = useHudTheme();
   const selected = useBaseCamp((s) => s.selected);
-  const briefOpen = useBaseCamp((s) => s.briefOpen);
   const panel = useBaseCamp((s) => s.panel);
   const consoleOpen = useBaseCamp((s) => s.consoleOpen);
   const driving = useBaseCamp((s) => s.driving);
   const introDone = useBaseCamp((s) => s.introDone);
   useHudKeys();
   useStatus();
-  useDeepLinks();
+
+  // Entering Explore from a link selects that link's place; otherwise keep the selection, or HQ.
+  useEffect(() => {
+    const s = useBaseCamp.getState();
+    const place = placeBySlug(window.location.hash);
+    if (place) s.select(place.id);
+    else if (!s.selected) s.select("hq");
+  }, []);
 
   return (
-    <>
-      <div className="stage" data-hud={theme} inert={briefOpen || !introDone}>
-        <div className="stage__canvas" aria-hidden="true">
-          {world}
+    <div className="stage" data-hud={theme} inert={!introDone}>
+      <div className="hud">
+        <TopBar />
+        <PlacesList />
+        <Objective />
+        <Toasts />
+        <div className="card-slot" aria-live="polite">
+          {selected ? <PlaceCard key={selected} place={PLACE_BY_ID[selected]} /> : <Hint />}
         </div>
-        <div className="hud">
-          <TopBar />
-          <PlacesList />
-          <Objective />
-          <Toasts />
-          <div className="card-slot" aria-live="polite">
-            {selected ? <PlaceCard key={selected} place={PLACE_BY_ID[selected]} /> : <Hint />}
-          </div>
-          <Minimap />
-          {driving && <DriveBar />}
-          {panel === "settings" && <Settings />}
-          {panel === "trophies" && <Trophies />}
-          {consoleOpen && <Console />}
-        </div>
+        <Minimap />
+        {driving && <DriveBar />}
+        {panel === "settings" && <Settings />}
+        {panel === "trophies" && <Trophies />}
+        {consoleOpen && <Console />}
       </div>
-      {briefOpen && (
-        <button type="button" className="brief-close" onClick={closeBrief}>
-          Back to the town
-        </button>
-      )}
-    </>
+    </div>
   );
 }

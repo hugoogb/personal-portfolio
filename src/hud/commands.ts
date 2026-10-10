@@ -4,7 +4,7 @@ import type { PlaceId } from "@/content/types";
 export type CommandRun =
   | { type: "go"; id: PlaceId }
   | { type: "drive" }
-  | { type: "brief" }
+  | { type: "mode"; mode: "story" | "text" }
   | { type: "copyEmail" }
   | { type: "time"; hour: number | null }
   | { type: "stats" };
@@ -23,7 +23,8 @@ export const COMMANDS: Command[] = [
     run: { type: "go", id: p.id } as CommandRun,
   })),
   { id: "drive", label: "drive", run: { type: "drive" } },
-  { id: "brief", label: "brief", run: { type: "brief" } },
+  { id: "story", label: "story", run: { type: "mode", mode: "story" } },
+  { id: "text", label: "text", run: { type: "mode", mode: "text" } },
   { id: "copy-email", label: "copy email", run: { type: "copyEmail" } },
   { id: "stats", label: "stats", run: { type: "stats" } },
 ];

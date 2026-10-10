@@ -6,6 +6,9 @@ import "@fontsource-variable/hanken-grotesk";
 import "@fontsource-variable/raleway";
 import "@fontsource/ibm-plex-mono/400.css";
 import "@/styles/globals.css";
+// The story document is prerendered and never imported by the client, so its
+// layout (and the mode switch's) ships here, render-blocking like the page's.
+import "@/story/story.css";
 import { ClientRoot } from "@/client/ClientRoot";
 
 // Production HTML arrives with the story document already rendered

@@ -1,7 +1,6 @@
 import memoji from "@/assets/memojis/natural-128.png";
 import { ORDER } from "@/content/places";
 import { useBarcelonaHour } from "@/hooks/useBarcelonaHour";
-import { toggleBrief } from "@/hud/actions";
 import { liveCount } from "@/hud/pill";
 import { useBaseCamp, type Panel } from "@/store/store";
 import { clockText, nightAmount } from "@/world/lib/sun";
@@ -24,7 +23,6 @@ export function TopBar() {
   const setPanel = useBaseCamp((s) => s.setPanel);
   const consoleOpen = useBaseCamp((s) => s.consoleOpen);
   const setConsoleOpen = useBaseCamp((s) => s.setConsoleOpen);
-  const briefOpen = useBaseCamp((s) => s.briefOpen);
   const hour = useBarcelonaHour();
   const live = liveCount(status);
   const override = useBaseCamp((s) => s.timeOverride);
@@ -90,15 +88,6 @@ export function TopBar() {
         onClick={() => toggle("settings")}
       >
         ⚙
-      </button>
-      <button
-        type="button"
-        className="hud-btn"
-        data-brief-toggle
-        aria-pressed={briefOpen}
-        onClick={() => toggleBrief()}
-      >
-        Brief
       </button>
       {canFullscreen() && (
         <button

@@ -54,16 +54,16 @@ export interface WorldProps {
 /**
  * The town's canvas (spec 9.2). The pacer draws it at the tier's frame rate,
  * at 30 fps while nobody is using it (useIdle), and stops while the tab is
- * hidden or the Brief covers it.
+ * hidden (or, as a guard, in Text, where it is unmounted anyway).
  */
 export default function World({ onReady }: WorldProps) {
   const tier = useBaseCamp((s) => s.tier);
   const dpr = useBaseCamp((s) => s.dpr);
-  const briefOpen = useBaseCamp((s) => s.briefOpen);
+  const mode = useBaseCamp((s) => s.mode);
   const idle = useBaseCamp((s) => s.idle);
   useIdle();
   // Built in an effect so StrictMode's simulated unmount disposes a world that is then rebuilt,
-  // and in slices, so the title card keeps moving meanwhile. A failed build reaches the boundary.
+  // and in slices, so the page keeps moving meanwhile. A failed build reaches the boundary.
   const [world, setWorld] = useState<BuiltWorld | null>(null);
   const [failure, setFailure] = useState<unknown>(null);
   if (failure) throw failure;
@@ -87,8 +87,8 @@ export default function World({ onReady }: WorldProps) {
   }, []);
   const hidden = usePageHidden();
   const [drawn, setDrawn] = useState(false);
-  // The first frame is drawn whatever the Brief or the tab are doing, so boot can finish.
-  const paused = drawn && (hidden || briefOpen);
+  // The first frame is drawn whatever the tab is doing, so boot can finish.
+  const paused = drawn && (hidden || mode === "text");
 
   // The context is made once. A town that starts on High draws through the composer, which
   // antialiases with FXAA, so its canvas has no MSAA. The composer then stays through Medium

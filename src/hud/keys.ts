@@ -1,12 +1,4 @@
-export type HudKey =
-  | "next"
-  | "prev"
-  | "primary"
-  | "secondary"
-  | "tertiary"
-  | "brief"
-  | "console"
-  | "escape";
+export type HudKey = "next" | "prev" | "primary" | "secondary" | "tertiary" | "console" | "escape";
 
 export interface KeyLike {
   key: string;
@@ -47,9 +39,6 @@ export const keyAction = (e: KeyLike): HudKey | null => {
     case "e":
     case "E":
       return "tertiary";
-    case "b":
-    case "B":
-      return "brief";
     default:
       return null;
   }

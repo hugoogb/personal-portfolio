@@ -20,14 +20,13 @@ describe("TopBar", () => {
     expect(screen.getByTitle("Places discovered").textContent).toContain("1/11");
   });
 
-  it("toggles the settings panel and opens the Brief", () => {
+  it("toggles the settings panel, and has no Brief button", () => {
     render(<TopBar />);
     const settings = screen.getByRole("button", { name: "Settings" });
     fireEvent.click(settings);
     expect(useBaseCamp.getState().panel).toBe("settings");
     fireEvent.click(settings);
     expect(useBaseCamp.getState().panel).toBeNull();
-    fireEvent.click(screen.getByRole("button", { name: "Brief" }));
-    expect(useBaseCamp.getState().briefOpen).toBe(true);
+    expect(screen.queryByRole("button", { name: "Brief" })).toBeNull();
   });
 });

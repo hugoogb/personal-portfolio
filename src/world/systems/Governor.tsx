@@ -26,7 +26,8 @@ export function Governor() {
       if (
         s.tier !== prev.tier ||
         s.dpr !== prev.dpr ||
-        s.briefOpen !== prev.briefOpen ||
+        // A mode change can resize the canvas, so its frame times start over.
+        s.mode !== prev.mode ||
         s.idle !== prev.idle
       )
         restart();

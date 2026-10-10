@@ -10,7 +10,7 @@ describe("keyAction", () => {
     expect(keyAction({ key: "Q" })).toBe("primary");
     expect(keyAction({ key: "w" })).toBe("secondary");
     expect(keyAction({ key: "e" })).toBe("tertiary");
-    expect(keyAction({ key: "b" })).toBe("brief");
+    expect(keyAction({ key: "b" })).toBeNull();
     expect(keyAction({ key: "x" })).toBeNull();
   });
 

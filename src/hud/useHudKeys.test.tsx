@@ -12,7 +12,7 @@ function Probe() {
 const press = (key: string, init: KeyboardEventInit = {}) =>
   fireEvent.keyDown(window, { key, ...init });
 
-// The town is live once the title card has gone; most tests start there.
+// The town is live once the build-in has finished; most tests start there.
 beforeEach(() => useBaseCamp.setState({ ...useBaseCamp.getInitialState(), introDone: true }));
 
 describe("useHudKeys", () => {
@@ -39,28 +39,6 @@ describe("useHudKeys", () => {
     expect(useBaseCamp.getState().selected).toBeNull();
   });
 
-  it("closes the Brief before anything hidden behind it on Escape", () => {
-    render(<Probe />);
-    useBaseCamp.setState({ briefOpen: true, panel: "settings" });
-    press("Escape");
-    expect(useBaseCamp.getState().briefOpen).toBe(false);
-    expect(useBaseCamp.getState().panel).toBe("settings");
-  });
-
-  it("lets Esc and B close the Brief while the first-visit build-in has not finished", () => {
-    render(<Probe />);
-    // A deep link opens the Brief over the frozen town: the build-in cannot end behind it.
-    useBaseCamp.setState({ introDone: false, briefOpen: true });
-    press("b");
-    expect(useBaseCamp.getState().briefOpen).toBe(false);
-    useBaseCamp.setState({ briefOpen: true });
-    press("Escape");
-    expect(useBaseCamp.getState().briefOpen).toBe(false);
-    // everything else still waits for the town
-    press("ArrowRight");
-    expect(useBaseCamp.getState().selected).toBeNull();
-  });
-
   it("ignores shortcuts typed into a field", () => {
     const { getByLabelText } = render(<Probe />);
     fireEvent.keyDown(getByLabelText("field"), { key: "ArrowRight" });
@@ -76,28 +54,21 @@ describe("useHudKeys", () => {
     expect(useBaseCamp.getState().stackOpen).toBe(true);
   });
 
-  it("only lets Escape through while driving or reading the Brief", () => {
+  it("only lets Escape through while driving", () => {
     render(<Probe />);
     useBaseCamp.setState({ driving: true, selected: "arena" });
     press("ArrowRight");
     expect(useBaseCamp.getState().selected).toBe("arena");
     press("Escape");
     expect(useBaseCamp.getState().driving).toBe(false);
-    useBaseCamp.setState({ briefOpen: true });
-    press("ArrowRight");
-    expect(useBaseCamp.getState().selected).toBe("arena");
-    press("b");
-    expect(useBaseCamp.getState().briefOpen).toBe(false);
   });
 
   it("keeps the town's shortcuts out of the settings and trophies dialogs", () => {
     render(<Probe />);
     useBaseCamp.setState({ panel: "settings", selected: "hq" });
     press("ArrowRight");
-    press("b");
     press("q");
     expect(useBaseCamp.getState().selected).toBe("hq");
-    expect(useBaseCamp.getState().briefOpen).toBe(false);
     press("Escape");
     expect(useBaseCamp.getState().panel).toBeNull();
     useBaseCamp.setState({ consoleOpen: true });
@@ -105,7 +76,7 @@ describe("useHudKeys", () => {
     expect(useBaseCamp.getState().selected).toBe("hq");
   });
 
-  it("ignores every key until the title card has gone", () => {
+  it("ignores every key until the build-in has finished", () => {
     render(<Probe />);
     useBaseCamp.setState({ introDone: false });
     press("ArrowRight");

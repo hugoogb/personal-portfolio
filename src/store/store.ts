@@ -57,7 +57,6 @@ export interface BaseCampState {
   fps: number;
   /** No input for a while, or the window is in the background: the town drops to 30 fps. */
   idle: boolean;
-  briefOpen: boolean;
   consoleOpen: boolean;
   panel: Panel;
   driving: boolean;
@@ -106,7 +105,6 @@ export interface BaseCampState {
   setFps: (fps: number) => void;
   setIdle: (idle: boolean) => void;
   setPanel: (panel: Panel) => void;
-  setBriefOpen: (open: boolean) => void;
   setConsoleOpen: (open: boolean) => void;
   setDriving: (on: boolean) => void;
   toggleStack: () => void;
@@ -184,7 +182,6 @@ export const createBaseCampStore = (storage: KeyValueStorage = safeStorage()) =>
         dpr: MAX_DPR[3],
         fps: 60,
         idle: false,
-        briefOpen: false,
         consoleOpen: false,
         panel: null,
         driving: false,
@@ -251,7 +248,6 @@ export const createBaseCampStore = (storage: KeyValueStorage = safeStorage()) =>
         setFps: (fps) => set({ fps }),
         setIdle: (idle) => set({ idle }),
         setPanel: (panel) => set({ panel }),
-        setBriefOpen: (briefOpen) => set({ briefOpen }),
         setConsoleOpen: (consoleOpen) => {
           set({ consoleOpen });
           if (consoleOpen) get().achieve("console");

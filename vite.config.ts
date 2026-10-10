@@ -64,7 +64,7 @@ const detectGpuBenchmarks = (): Plugin => {
 
 /**
  * Preloads the fonts the first paint is set in: the two variable fonts of the
- * Brief and the HUD's label face. Without it
+ * story document and the HUD's label face. Without it
  * the text paints in the fallback face and then jumps when the font arrives,
  * which is a layout shift; with it the font is in flight from the first byte
  * of HTML. Build only: in dev the fonts are served from node_modules.
@@ -98,11 +98,11 @@ const preloadFonts = (): Plugin => ({
 
 /**
  * Starts the town's chunks downloading from the HTML itself, before the entry
- * script has even run: Boot would otherwise ask for them only once React had
- * rendered. An inline script after the head script preloads them only when
- * that script chose the town (html.can-world), so Brief-only visitors (no
- * WebGL, reduced motion, Save-Data) never fetch them. The effects chunk is
- * left to Boot, which knows the tier.
+ * script has even run: Town would otherwise ask for them only once React had
+ * rendered. An inline script after the head script preloads them unless that
+ * script chose Text (html.mode-text), so Text visitors (no WebGL, reduced
+ * motion, Save-Data, or by choice) never fetch them. The effects chunk is left
+ * to Town, which knows the tier.
  */
 const preloadTown = (): Plugin => ({
   name: "base-camp-preload-town",
@@ -129,8 +129,8 @@ const preloadTown = (): Plugin => ({
       }
       if (!files.length) return;
       const hrefs = JSON.stringify(files.map((f) => `/${f}`));
-      const script = `<script>if(document.documentElement.classList.contains("can-world"))for(const h of ${hrefs}){const l=document.createElement("link");l.rel="modulepreload";l.crossOrigin="";l.href=h;document.head.appendChild(l)}</script>`;
-      // Straight after the head script, which sets can-world: an inline script after the
+      const script = `<script>if(!document.documentElement.classList.contains("mode-text"))for(const h of ${hrefs}){const l=document.createElement("link");l.rel="modulepreload";l.crossOrigin="";l.href=h;document.head.appendChild(l)}</script>`;
+      // Straight after the head script, which sets the mode: an inline script after the
       // stylesheet would wait for it to load before it ran.
       const head = html.indexOf(headScript.slice(0, 40));
       if (head < 0) throw new Error("preloadTown: the head script is not in index.html");

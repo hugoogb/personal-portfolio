@@ -17,7 +17,7 @@ export type Zone = "centre" | "industrial" | "outskirts" | "seafront";
 export type Host = "vps" | "vercel";
 
 /** What a place's primary button does when it is not a plain link. */
-export type PlaceAction = "brief" | "overview" | "wave" | "drive" | "copyEmail";
+export type PlaceAction = "story" | "overview" | "wave" | "drive" | "copyEmail";
 
 export interface PlaceLink {
   label: string;

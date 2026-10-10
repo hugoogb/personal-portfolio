@@ -78,8 +78,11 @@ describe("bootHead", () => {
     expect(boot({ stored: { color: value } }).props.has("--primary-color")).toBe(false);
   });
 
-  it("marks a capable device", () => {
-    expect(boot().classes.has("can-world")).toBe(true);
+  it("starts a capable device in Story, with no legacy town classes", () => {
+    const f = boot();
+    expect(f.classes.has("mode-story")).toBe(true);
+    for (const legacy of ["can-world", "world", "world-ready", "brief-open"])
+      expect(f.classes.has(legacy)).toBe(false);
   });
 
   it.each([
@@ -90,20 +93,20 @@ describe("bootHead", () => {
       "when the visitor chose Lite",
       { stored: { bc: JSON.stringify({ state: { qualityMode: "Lite" }, version: 1 }) } },
     ],
-  ])("does not mark a device %s", (_label, env) => {
-    expect(boot(env).classes.has("can-world")).toBe(false);
+  ])("starts a device %s in Text", (_label, env) => {
+    expect(boot(env).classes.has("mode-text")).toBe(true);
   });
 
   it("survives a corrupt saved record and still paints the accent", () => {
     const f = boot({ stored: { color: "#10b981", bc: "{oops" } });
     expect(f.props.get("--primary-color")).toBe("#10b981");
-    expect(f.classes.has("can-world")).toBe(true);
+    expect(f.classes.has("mode-story")).toBe(true);
   });
 
   it("survives blocked storage", () => {
     const f = boot({ storageThrows: true });
     expect(f.props.size).toBe(0);
-    expect(f.classes.has("can-world")).toBe(true);
+    expect(f.classes.has("mode-story")).toBe(true);
   });
 
   it("releases the WebGL context it probed with", () => {
@@ -112,19 +115,19 @@ describe("bootHead", () => {
   it("marks WebGL support separately, and starts the town on a capable device", () => {
     const f = boot();
     expect(f.classes.has("has-webgl")).toBe(true);
-    expect(f.classes.has("world")).toBe(true);
+    expect(f.classes.has("mode-story")).toBe(true);
   });
 
   it("keeps has-webgl but not the town when the visitor chose Lite", () => {
     const f = boot({ stored: { bc: JSON.stringify({ state: { qualityMode: "Lite" } }) } });
     expect(f.classes.has("has-webgl")).toBe(true);
-    expect(f.classes.has("world")).toBe(false);
+    expect(f.classes.has("mode-text")).toBe(true);
   });
 
   it("no longer lets a saved manual quality outrank reduced motion or Save-Data: the mode rules decide", () => {
     const stored = { bc: JSON.stringify({ state: { qualityMode: "Low" } }) };
-    expect(boot({ stored, reducedMotion: true }).classes.has("world")).toBe(false);
-    expect(boot({ stored, saveData: true }).classes.has("world")).toBe(false);
+    expect(boot({ stored, reducedMotion: true }).classes.has("mode-text")).toBe(true);
+    expect(boot({ stored, saveData: true }).classes.has("mode-text")).toBe(true);
   });
 
   it("treats a WebGL1-only device as having no WebGL, since the town needs WebGL2", () => {
@@ -134,8 +137,7 @@ describe("bootHead", () => {
   it("keeps has-webgl but skips the town after a failed boot this session", () => {
     const f = boot({ townFailed: true });
     expect(f.classes.has("has-webgl")).toBe(true);
-    expect(f.classes.has("world")).toBe(false);
-    expect(f.classes.has("can-world")).toBe(false);
+    expect(f.classes.has("mode-text")).toBe(true);
   });
 
   it("adds nothing without WebGL", () => {
@@ -194,6 +196,6 @@ describe("headScript", () => {
     const f = fake({ stored: { color: "#3142db" } });
     new Function("document", "window", headScript)(f.doc, f.win);
     expect(f.props.get("--primary-color")).toBe("#3142db");
-    expect(f.classes.has("can-world")).toBe(true);
+    expect(f.classes.has("mode-story")).toBe(true);
   });
 });
