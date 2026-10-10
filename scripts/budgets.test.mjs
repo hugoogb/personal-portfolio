@@ -47,17 +47,12 @@ describe("budgets", () => {
     );
   });
 
-  it("splits initial, world and effects without double counting", () => {
+  it("splits initial, hud, world and effects without double counting", () => {
     const sets = budgetSets(report);
     expect([...sets.initial].sort()).toEqual(
-      [
-        "assets/Hud.js",
-        "assets/index.js",
-        "assets/react.js",
-        "assets/sun.js",
-        "assets/vercel.js",
-      ].sort(),
+      ["assets/index.js", "assets/react.js", "assets/vercel.js"].sort(),
     );
+    expect([...sets.hud].sort()).toEqual(["assets/Hud.js", "assets/sun.js"]);
     expect([...sets.world]).toEqual(["assets/World.js"]);
     expect([...sets.effects].sort()).toEqual(["assets/Effects.js", "assets/pp.js"]);
   });
@@ -70,7 +65,14 @@ describe("budgets", () => {
   });
 
   it("names every set over its ceiling", () => {
-    expect(BUDGETS).toEqual({ initial: 100 * KB, world: 350 * KB, effects: 105 * KB });
-    expect(overBudget({ initial: 99 * KB, world: 351 * KB, effects: 105 * KB })).toEqual(["world"]);
+    expect(BUDGETS).toEqual({
+      initial: 100 * KB,
+      hud: 30 * KB,
+      world: 350 * KB,
+      effects: 105 * KB,
+    });
+    expect(
+      overBudget({ initial: 99 * KB, hud: 31 * KB, world: 351 * KB, effects: 105 * KB }),
+    ).toEqual(["hud", "world"]);
   });
 });

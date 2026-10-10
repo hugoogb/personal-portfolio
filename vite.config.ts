@@ -106,10 +106,11 @@ const preloadFonts = (): Plugin => ({
 /**
  * Starts the town's chunks downloading from the HTML itself, before the entry
  * script has even run: Town would otherwise ask for them only once React had
- * rendered. An inline script after the head script preloads them unless that
- * script chose Text (html.mode-text), so Text visitors (no WebGL, reduced
- * motion, Save-Data, or by choice) never fetch them. The effects chunk is left
- * to Town, which knows the tier.
+ * rendered. An inline script after the head script preloads them only when
+ * that script chose Explore (html.mode-explore), where the town is the page.
+ * Story loads them when the browser is idle, and a preload would compete with
+ * the still image and the fonts on a slow connection; Text never fetches them.
+ * The effects chunk is left to Town, which knows the tier.
  */
 const preloadTown = (): Plugin => ({
   name: "base-camp-preload-town",
@@ -136,7 +137,7 @@ const preloadTown = (): Plugin => ({
       }
       if (!files.length) return;
       const hrefs = JSON.stringify(files.map((f) => `/${f}`));
-      const script = `<script>if(!document.documentElement.classList.contains("mode-text"))for(const h of ${hrefs}){const l=document.createElement("link");l.rel="modulepreload";l.crossOrigin="";l.href=h;document.head.appendChild(l)}</script>`;
+      const script = `<script>if(document.documentElement.classList.contains("mode-explore"))for(const h of ${hrefs}){const l=document.createElement("link");l.rel="modulepreload";l.crossOrigin="";l.href=h;document.head.appendChild(l)}</script>`;
       // Straight after the head script, which sets the mode: an inline script after the
       // stylesheet would wait for it to load before it ran.
       const head = html.indexOf(headScript.slice(0, 40));

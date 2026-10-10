@@ -92,13 +92,27 @@ export function Town() {
       settled = true;
       setLoaded({ Hud: hud.Hud, World: world.default });
     };
-    start().catch(() => {
+    const kick = () => {
       if (cancelled) return;
-      settled = true;
-      off(true);
-    });
+      start().catch(() => {
+        if (cancelled) return;
+        settled = true;
+        off(true);
+      });
+    };
+    // Explore starts at once. Story waits for first paint and an idle browser, so the text and
+    // the still image get the network and the main thread first (spec 6.1). The ready timer is
+    // armed in start(), so the wait does not count against it.
+    let idle: number | undefined;
+    let fallback: number | undefined;
+    if (useBaseCamp.getState().mode === "explore") kick();
+    else if (typeof requestIdleCallback === "function")
+      idle = requestIdleCallback(kick, { timeout: 1500 });
+    else fallback = window.setTimeout(kick, 200);
     return () => {
       cancelled = true;
+      if (idle !== undefined && typeof cancelIdleCallback === "function") cancelIdleCallback(idle);
+      window.clearTimeout(fallback);
       // Interrupted before it finished (StrictMode's rehearsal, or Text mid-load): start over next time.
       if (!settled) {
         started.current = false;

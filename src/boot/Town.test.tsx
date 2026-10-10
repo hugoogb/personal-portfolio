@@ -9,6 +9,7 @@ import { bootTier, readSignals } from "@/boot/detect";
 import { useBaseCamp } from "@/store/store";
 
 const stub = vi.hoisted(() => ({ worldThrows: false, holdReady: false }));
+const worldImport = vi.hoisted(() => vi.fn());
 
 vi.mock("@/boot/detect", () => ({ readSignals: vi.fn(), bootTier: vi.fn() }));
 vi.mock("@/hud/Hud", () => ({
@@ -26,7 +27,13 @@ vi.mock("@/world/World", () => {
       </button>
     );
   }
-  return { default: MockWorld };
+  // The getter runs when Town reads the module's default, so each load is counted.
+  return {
+    get default() {
+      worldImport();
+      return MockWorld;
+    },
+  };
 });
 
 const html = document.documentElement;
@@ -41,6 +48,7 @@ const signals = {
 };
 
 beforeEach(() => {
+  worldImport.mockClear();
   html.className = "has-webgl";
   stub.worldThrows = false;
   stub.holdReady = false;
@@ -52,6 +60,48 @@ beforeEach(() => {
 });
 
 describe("Town", () => {
+  it("waits for the browser to be idle before loading the town in Story", async () => {
+    const idle: (() => void)[] = [];
+    vi.stubGlobal("requestIdleCallback", (cb: () => void) => idle.push(cb));
+    try {
+      useBaseCamp.setState({ mode: "story", town: "loading" });
+      render(<Town />);
+      await act(async () => {
+        await new Promise((r) => setTimeout(r, 50));
+      });
+      expect(worldImport).not.toHaveBeenCalled();
+      act(() => idle.forEach((cb) => cb()));
+      await waitFor(() => expect(worldImport).toHaveBeenCalled());
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it("loads at once in Explore", async () => {
+    vi.stubGlobal("requestIdleCallback", () => 0);
+    try {
+      useBaseCamp.setState({ mode: "explore", town: "loading" });
+      render(<Town />);
+      await waitFor(() => expect(worldImport).toHaveBeenCalled());
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it("does nothing when the idle callback fires after the town was unmounted", async () => {
+    const idle: (() => void)[] = [];
+    vi.stubGlobal("requestIdleCallback", (cb: () => void) => idle.push(cb));
+    try {
+      const { unmount } = render(<Town />);
+      unmount();
+      act(() => idle.forEach((cb) => cb()));
+      await act(async () => {});
+      expect(readSignals).not.toHaveBeenCalled();
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
   it("loads nothing in Text", async () => {
     useBaseCamp.setState({ mode: "text" });
     render(<Town />);
@@ -176,6 +226,9 @@ describe("Town", () => {
       vi.mocked(readSignals).mockReturnValue(new Promise(() => {}));
       render(<Town />);
       act(() => {
+        vi.advanceTimersByTime(200);
+      });
+      act(() => {
         vi.advanceTimersByTime(READY_TIMEOUT_MS);
       });
       expect(useBaseCamp.getState().town).toBe("off");
@@ -194,6 +247,9 @@ describe("Town", () => {
     try {
       vi.mocked(readSignals).mockReturnValue(new Promise(() => {}));
       render(<Town />);
+      act(() => {
+        vi.advanceTimersByTime(200);
+      });
       act(() => {
         vi.advanceTimersByTime(READY_TIMEOUT_MS);
       });
