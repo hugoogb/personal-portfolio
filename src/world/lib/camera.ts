@@ -3,6 +3,10 @@ import { ISLAND } from "@/world/lib/map";
 /** The camera sits here relative to its target, always (spec 4.1). */
 export const CAMERA_OFFSET = [18, 15.5, 18] as const;
 export const VIEW_MIN = 7;
+
+/** Where the camera rig is, written by CameraRig every frame (read by the preview-only test hooks). */
+export const rigState = { x: 0, z: 0, view: 0, az: 0 };
+
 export const VIEW_MAX = 40;
 /** Below this stage width the HUD switches to the narrow layout (spec 4.4). */
 export const NARROW_WIDTH = 760;

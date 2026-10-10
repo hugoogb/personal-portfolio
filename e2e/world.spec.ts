@@ -401,6 +401,8 @@ declare global {
         geometries: number;
         textures: number;
       };
+      camera(): { x: number; z: number; view: number; az: number };
+      setHour(h: number | null): void;
     };
   }
 }

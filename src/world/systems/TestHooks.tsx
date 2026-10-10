@@ -2,6 +2,8 @@ import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { isPreview } from "@/hud/commands";
+import { useBaseCamp } from "@/store/store";
+import { rigState } from "@/world/lib/camera";
 import type { BuiltWorld } from "@/world/build";
 
 declare global {
@@ -16,11 +18,15 @@ declare global {
         geometries: number;
         textures: number;
       };
+      /** Where the camera rig is: ground target, view height and azimuth in degrees. */
+      camera(): { x: number; z: number; view: number; az: number };
+      /** Pins the town's clock to an hour (null follows Barcelona again). */
+      setHour(h: number | null): void;
     };
   }
 }
 
-/** Preview-only: where an egg is on the page (so e2e can click it) and renderer counters. Does nothing on the live host. */
+/** Preview-only: where an egg is on the page (so e2e can click it), renderer counters, the camera and the clock. Does nothing on the live host. */
 export function TestHooks({ world }: { world: BuiltWorld }) {
   const camera = useThree((s) => s.camera);
   const gl = useThree((s) => s.gl);
@@ -55,7 +61,9 @@ export function TestHooks({ world }: { world: BuiltWorld }) {
       geometries: gl.info.memory.geometries,
       textures: gl.info.memory.textures,
     });
-    window.__baseCamp = { screenOf, info };
+    const cameraPose = () => ({ ...rigState });
+    const setHour = (h: number | null) => useBaseCamp.getState().setTimeOverride(h);
+    window.__baseCamp = { screenOf, info, camera: cameraPose, setHour };
     return () => {
       delete window.__baseCamp;
     };

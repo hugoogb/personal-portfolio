@@ -263,7 +263,11 @@ export const createBaseCampStore = (storage: KeyValueStorage = safeStorage()) =>
         dismissToast: (id) => set((s) => ({ toasts: s.toasts.filter((t) => t.id !== id) })),
         startWave: () => set({ waveAt: Date.now() }),
         setFirstVisit: (firstVisit) => set({ firstVisit }),
-        markIntroDone: () => set({ introDone: true }),
+        markIntroDone: () => {
+          // The landing's name fades in once the build-in is over (story spec 4.1).
+          if (typeof document !== "undefined") document.documentElement.classList.add("intro-done");
+          set({ introDone: true });
+        },
         markSeen: () => set({ seen: true }),
         setStatus: (status) => set({ status }),
         addGoal: (side) => {

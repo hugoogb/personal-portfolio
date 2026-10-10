@@ -24,82 +24,20 @@ export interface Stop {
   /** Where the card sits; the building is framed in the other half. */
   side: "left" | "right" | "center";
   pose: Pose;
+  /** A phone's pose, where it differs: by default the desktop view times NARROW_ZOOM_OUT. */
+  narrow?: Partial<Pose>;
+  /** On a phone, how far (of the view) the building rides above the centre: NARROW_LIFT by default. */
+  narrowLift?: number;
 }
 
 /** Story only: the camera may swing this far around its target (spec 4.2). */
 export const MAX_AZ = 20;
-
-const at = (id: PlaceId, view: number, az: number): Pose => ({
-  x: PLACE_BY_ID[id].map.x,
-  z: PLACE_BY_ID[id].map.z,
-  view,
-  az,
-});
-
-const project = (
-  id: "f1" | "rl" | "wt" | "es" | "av",
-  side: "left" | "right",
-  az: number,
-): Stop => ({
-  id,
-  anchor: PLACE_BY_ID[id].slug,
-  place: id,
-  label: PLACE_BY_ID[id].name,
-  rail: true,
-  side,
-  pose: at(id, PLACE_BY_ID[id].map.zoom, az),
-});
-
-/** The tour, in document order (spec 3.1). Poses are tuned by eye in Task 6. */
-export const STOPS: Stop[] = [
-  {
-    id: "top",
-    anchor: "top",
-    place: "hq",
-    label: "Hugo García Benjumea",
-    rail: true,
-    side: "center",
-    pose: at("hq", 17, -10),
-  },
-  {
-    id: "about",
-    anchor: PLACE_BY_ID.hq.slug,
-    place: "hq",
-    label: "About",
-    rail: true,
-    side: "left",
-    pose: at("hq", 12, -6),
-  },
-  project("f1", "right", 12),
-  project("rl", "left", -12),
-  project("wt", "right", 10),
-  project("es", "left", -10),
-  project("av", "right", 14),
-  {
-    id: "contact",
-    anchor: PLACE_BY_ID.post.slug,
-    place: "post",
-    label: "Contact",
-    rail: true,
-    side: "left",
-    pose: at("post", 12, -6),
-  },
-  {
-    id: "overview",
-    anchor: "explore",
-    place: null,
-    label: "Explore the town",
-    rail: false,
-    side: "center",
-    pose: { ...OVERVIEW, view: OVERVIEW.view * 2.4, az: 0 },
-  },
-];
-
-export const RAIL_STOPS = STOPS.filter((s) => s.rail);
-export const TOUR_PLACES = [...new Set(STOPS.flatMap((s) => (s.place ? [s.place] : [])))];
-export const EXPLORE_ONLY_SLUGS = PLACES.filter((p) => !TOUR_PLACES.includes(p.id))
-  .map((p) => p.slug)
-  .sort();
+/** A phone is narrow: a card's building is framed this much wider than on desktop. */
+const NARROW_ZOOM_OUT = 1.6;
+/** On a phone the building rides this far (of the view) above the centre, over the card sheet. */
+const NARROW_LIFT = 0.25;
+/** On desktop the building sits this far (of the view's width) toward the free half. */
+const SIDE_SHIFT = 0.22;
 
 type V3 = [number, number, number];
 const norm = (v: V3): V3 => {
@@ -136,17 +74,108 @@ export const groundShift = (right: number, up: number, az: number) => {
   return { x: s[0] - f[0] * t, z: s[2] - f[2] * t };
 };
 
+/** A ground point moved so it shows `up` world units higher on screen (at azimuth 0). */
+const lift = (p: { x: number; z: number }, up: number) => {
+  const d = groundShift(0, -up, 0);
+  return { x: p.x + d.x, z: p.z + d.z };
+};
+
+const at = (id: PlaceId, view: number, az: number): Pose => ({
+  x: PLACE_BY_ID[id].map.x,
+  z: PLACE_BY_ID[id].map.z,
+  view,
+  az,
+});
+
+const project = (
+  id: "f1" | "rl" | "wt" | "es" | "av",
+  side: "left" | "right",
+  az: number,
+): Stop => ({
+  id,
+  anchor: PLACE_BY_ID[id].slug,
+  place: id,
+  label: PLACE_BY_ID[id].name,
+  rail: true,
+  side,
+  pose: at(id, PLACE_BY_ID[id].map.zoom, az),
+});
+
+/** The tour, in document order (spec 3.1). Poses are tuned by eye in Task 6. */
+export const STOPS: Stop[] = [
+  {
+    id: "top",
+    anchor: "top",
+    place: "hq",
+    label: "Hugo García Benjumea",
+    rail: true,
+    side: "center",
+    pose: at("hq", 17, -10),
+    narrow: { view: 17 },
+  },
+  {
+    id: "about",
+    anchor: PLACE_BY_ID.hq.slug,
+    place: "hq",
+    label: "About",
+    rail: true,
+    side: "left",
+    pose: at("hq", 12, -6),
+    // The bio is the longest card: a wider shot keeps HQ clear of it.
+    narrow: { view: 24 },
+  },
+  project("f1", "right", 12),
+  project("rl", "left", -12),
+  project("wt", "right", 10),
+  project("es", "left", -10),
+  project("av", "right", 14),
+  {
+    id: "contact",
+    anchor: PLACE_BY_ID.post.slug,
+    place: "post",
+    label: "Contact",
+    rail: true,
+    side: "left",
+    pose: at("post", 12, -6),
+    // The contact card is short and sits low: the tall Post Office rides lower, clear of the chip.
+    narrowLift: 0.15,
+  },
+  {
+    id: "overview",
+    anchor: "explore",
+    place: null,
+    label: "Explore the town",
+    rail: false,
+    side: "center",
+    // Lifted a little, so the island clears the closing line and button below it.
+    pose: { ...lift(OVERVIEW, 4.5), view: OVERVIEW.view * 2.4, az: 0 },
+    // Phones too: a wider view would let the near plane cut the sea at the bottom.
+    narrow: { view: OVERVIEW.view * 2.4 },
+  },
+];
+
+export const RAIL_STOPS = STOPS.filter((s) => s.rail);
+export const TOUR_PLACES = [...new Set(STOPS.flatMap((s) => (s.place ? [s.place] : [])))];
+export const EXPLORE_ONLY_SLUGS = PLACES.filter((p) => !TOUR_PLACES.includes(p.id))
+  .map((p) => p.slug)
+  .sort();
+
 /** A stop's pose for this screen: the building sits in the half the card leaves free. */
 export const poseFor = (stop: Stop, narrow: boolean, aspect: number): Pose => {
-  const { x, z, view, az } = stop.pose;
   if (narrow) {
     // Phones: the card is a sheet below, so the building rides in the top ~55%.
+    const { x, z, az, view } = {
+      ...stop.pose,
+      view: stop.pose.view * NARROW_ZOOM_OUT,
+      ...stop.narrow,
+    };
     if (stop.side === "center") return { x, z, view, az };
-    const d = groundShift(0, -view * 0.22, az);
+    const d = groundShift(0, -view * (stop.narrowLift ?? NARROW_LIFT), az);
     return { x: x + d.x, z: z + d.z, view, az };
   }
+  const { x, z, az, view } = stop.pose;
   if (stop.side === "center") return { x, z, view, az };
-  const half = view * aspect * 0.22;
+  const half = view * aspect * SIDE_SHIFT;
   const d = groundShift(stop.side === "left" ? -half : half, 0, az);
   return { x: x + d.x, z: z + d.z, view, az };
 };

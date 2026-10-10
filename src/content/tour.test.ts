@@ -76,6 +76,21 @@ describe("tour", () => {
     expect(d).toBeLessThan(0);
   });
 
+  it("frames a project wider on a phone, where the screen is narrow", () => {
+    const stop = STOPS.find((s) => s.id === "rl")!;
+    expect(poseFor(stop, true, 390 / 844).view).toBeGreaterThan(poseFor(stop, false, 1.6).view);
+  });
+
+  it("never zooms out so far that the near plane cuts the ground off the bottom", () => {
+    // The screen's bottom edge starts view/2 below the camera along the screen's up.
+    const upY = Math.hypot(CAMERA_OFFSET[0], CAMERA_OFFSET[2]) / Math.hypot(...CAMERA_OFFSET);
+    for (const s of STOPS)
+      for (const narrow of [false, true])
+        expect((poseFor(s, narrow, narrow ? 0.46 : 1.6).view / 2) * upY).toBeLessThan(
+          CAMERA_OFFSET[1],
+        );
+  });
+
   it("holds each stop's pose near its centre and blends between stops", () => {
     const a = poseFor(STOPS[2], false, 1.6);
     const b = poseFor(STOPS[3], false, 1.6);

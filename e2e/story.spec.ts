@@ -38,3 +38,14 @@ test("a resize keeps the current stop", async ({ page }) => {
   );
   await expect(page.locator("[data-rail-label]")).toHaveText("Wrapped Things");
 });
+
+test("the camera travels to the project in view", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator("html")).toHaveClass(/town-ready/, { timeout: 20_000 });
+  await page.evaluate(() =>
+    document.getElementById("avatar-generator")!.scrollIntoView({ block: "center" }),
+  );
+  await expect
+    .poll(async () => page.evaluate(() => window.__baseCamp?.camera().az ?? 0), { timeout: 5000 })
+    .toBeGreaterThan(8);
+});
