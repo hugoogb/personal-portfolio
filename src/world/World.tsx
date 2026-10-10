@@ -1,6 +1,7 @@
 import { Canvas, useFrame } from "@react-three/fiber";
 import { lazy, Suspense, useEffect, useRef, useState } from "react";
-import { TARGET_FPS } from "@/boot/tiers";
+import { IDLE_FPS, TARGET_FPS } from "@/boot/tiers";
+import { useIdle } from "@/hooks/useIdle";
 import { useBaseCamp } from "@/store/store";
 import { buildWorldInSlices, type BuiltWorld } from "@/world/build";
 import { effectsEnabled, probeHalfFloat } from "@/world/effects/effectsGate";
@@ -51,13 +52,16 @@ export interface WorldProps {
 }
 
 /**
- * The town's canvas (spec 9.2). The pacer draws it at the tier's frame rate and
- * stops while the tab is hidden or the Brief covers it.
+ * The town's canvas (spec 9.2). The pacer draws it at the tier's frame rate,
+ * at 30 fps while nobody is using it (useIdle), and stops while the tab is
+ * hidden or the Brief covers it.
  */
 export default function World({ onReady }: WorldProps) {
   const tier = useBaseCamp((s) => s.tier);
   const dpr = useBaseCamp((s) => s.dpr);
   const briefOpen = useBaseCamp((s) => s.briefOpen);
+  const idle = useBaseCamp((s) => s.idle);
+  useIdle();
   // Built in an effect so StrictMode's simulated unmount disposes a world that is then rebuilt,
   // and in slices, so the title card keeps moving meanwhile. A failed build reaches the boundary.
   const [world, setWorld] = useState<BuiltWorld | null>(null);
@@ -106,7 +110,7 @@ export default function World({ onReady }: WorldProps) {
         if (!wasDrag() && !useBaseCamp.getState().driving) useBaseCamp.getState().deselect();
       }}
     >
-      {!paused && <Pacer fps={TARGET_FPS[tier]} />}
+      {!paused && <Pacer fps={idle ? Math.min(IDLE_FPS, TARGET_FPS[tier]) : TARGET_FPS[tier]} />}
       <CameraRig />
       <Governor />
       <Labels />

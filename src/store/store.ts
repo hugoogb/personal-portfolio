@@ -56,6 +56,8 @@ export interface BaseCampState {
   /** The canvas's pixel-ratio cap: the tier's, until the governor lowers it. Any tier change resets it. */
   dpr: number;
   fps: number;
+  /** No input for a while, or the window is in the background: the town drops to 30 fps. */
+  idle: boolean;
   briefOpen: boolean;
   consoleOpen: boolean;
   panel: Panel;
@@ -97,6 +99,7 @@ export interface BaseCampState {
   setBootTier: (tier: Tier) => void;
   setDpr: (dpr: number) => void;
   setFps: (fps: number) => void;
+  setIdle: (idle: boolean) => void;
   setPanel: (panel: Panel) => void;
   setBriefOpen: (open: boolean) => void;
   setConsoleOpen: (open: boolean) => void;
@@ -171,6 +174,7 @@ export const createBaseCampStore = (storage: KeyValueStorage = safeStorage()) =>
         bootTier: null,
         dpr: MAX_DPR[3],
         fps: 60,
+        idle: false,
         briefOpen: false,
         consoleOpen: false,
         panel: null,
@@ -233,6 +237,7 @@ export const createBaseCampStore = (storage: KeyValueStorage = safeStorage()) =>
         setBootTier: (bootTier) => set({ bootTier }),
         setDpr: (dpr) => set((s) => ({ dpr: Math.min(dpr, MAX_DPR[s.tier]) })),
         setFps: (fps) => set({ fps }),
+        setIdle: (idle) => set({ idle }),
         setPanel: (panel) => set({ panel }),
         setBriefOpen: (briefOpen) => set({ briefOpen }),
         setConsoleOpen: (consoleOpen) => {

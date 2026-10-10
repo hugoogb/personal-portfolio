@@ -324,6 +324,27 @@ test.describe("on High", () => {
   });
 });
 
+test("on Medium, a running frame stays in the draw-call budget and shadows keep updating", async ({
+  page,
+}) => {
+  const MEDIUM = JSON.stringify({ state: { qualityMode: "Medium", seen: true }, version: 1 });
+  await page.addInitScript((record) => localStorage.setItem("bc", record), MEDIUM);
+  await page.goto("/");
+  await ready(page);
+  await page.waitForTimeout(1_000);
+  // The shadow map is drawn every other frame, so frames alternate between the main
+  // pass alone and the main pass plus the shadow pass (spec 10: 250 + 60 calls).
+  const calls: number[] = [];
+  for (let i = 0; i < 24; i++) {
+    calls.push(await page.evaluate(() => window.__baseCamp?.info().calls ?? 0));
+    await page.waitForTimeout(37);
+  }
+  expect(Math.min(...calls)).toBeGreaterThan(0);
+  expect(Math.min(...calls)).toBeLessThanOrEqual(250);
+  expect(Math.max(...calls)).toBeLessThanOrEqual(310);
+  expect(Math.max(...calls), "no frame drew the shadow pass").toBeGreaterThan(Math.min(...calls));
+});
+
 test("the town's first paint is text, and nothing shifts", async ({ page }) => {
   await page.goto("/");
   const { lcpTag, lcpUrl, cls, shifts } = await pageMetrics(page);
@@ -359,7 +380,16 @@ test.describe("with reduced motion, entering anyway", () => {
 
 declare global {
   interface Window {
-    __baseCamp?: { screenOf(t: string): { x: number; y: number } | null };
+    __baseCamp?: {
+      screenOf(t: string): { x: number; y: number } | null;
+      info(): {
+        frame: number;
+        calls: number;
+        triangles: number;
+        geometries: number;
+        textures: number;
+      };
+    };
   }
 }
 

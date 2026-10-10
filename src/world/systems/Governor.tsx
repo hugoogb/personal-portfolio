@@ -12,9 +12,9 @@ import { trackTier } from "@/utils/track";
 
 /**
  * The frame-rate governor (spec 8) wired to rendering. It restarts its grace
- * period whenever the tier or the pixel ratio changes or rendering resumes, so
- * a paused frame never reads as a slow one. Lowering the pixel ratio is silent;
- * a tier change shows a toast.
+ * period whenever the tier or the pixel ratio changes or rendering resumes, and
+ * sits out idle stretches (30 fps by design), so neither reads as slowness.
+ * Lowering the pixel ratio is silent; a tier change shows a toast.
  */
 export function Governor() {
   const gov = useRef(initialGovernor());
@@ -24,7 +24,13 @@ export function Governor() {
       gov.current = restartGrace(gov.current);
     };
     const unsubscribe = useBaseCamp.subscribe((s, prev) => {
-      if (s.tier !== prev.tier || s.dpr !== prev.dpr || s.briefOpen !== prev.briefOpen) restart();
+      if (
+        s.tier !== prev.tier ||
+        s.dpr !== prev.dpr ||
+        s.briefOpen !== prev.briefOpen ||
+        s.idle !== prev.idle
+      )
+        restart();
     });
     document.addEventListener("visibilitychange", restart);
     return () => {
@@ -35,6 +41,8 @@ export function Governor() {
 
   useFrame((_, dt) => {
     const s = useBaseCamp.getState();
+    // Idle frames are capped on purpose: they say nothing about what the device can do.
+    if (s.idle) return;
     const before = gov.current;
     const { state, step } = governorTick(before, dt, {
       auto: s.qualityMode === "auto",
