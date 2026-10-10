@@ -51,8 +51,6 @@ export interface BaseCampState {
   /** What the device signals chose; a manual quality mode overrides it. */
   autoTier: Tier;
   tier: Tier;
-  /** The tier boot started on; analytics only, never persisted. */
-  bootTier: Tier | null;
   /** The canvas's pixel-ratio cap: the tier's, until the governor lowers it. Any tier change resets it. */
   dpr: number;
   fps: number;
@@ -96,7 +94,6 @@ export interface BaseCampState {
   setQualityMode: (mode: QualityMode) => void;
   setAutoTier: (tier: Tier) => void;
   setTier: (tier: Tier) => void;
-  setBootTier: (tier: Tier) => void;
   setDpr: (dpr: number) => void;
   setFps: (fps: number) => void;
   setIdle: (idle: boolean) => void;
@@ -171,7 +168,6 @@ export const createBaseCampStore = (storage: KeyValueStorage = safeStorage()) =>
         qualityMode: "auto",
         autoTier: 3,
         tier: 3,
-        bootTier: null,
         dpr: MAX_DPR[3],
         fps: 60,
         idle: false,
@@ -234,7 +230,6 @@ export const createBaseCampStore = (storage: KeyValueStorage = safeStorage()) =>
             return { autoTier, tier, dpr: MAX_DPR[tier] };
           }),
         setTier: (tier) => set({ tier, dpr: MAX_DPR[tier] }),
-        setBootTier: (bootTier) => set({ bootTier }),
         setDpr: (dpr) => set((s) => ({ dpr: Math.min(dpr, MAX_DPR[s.tier]) })),
         setFps: (fps) => set({ fps }),
         setIdle: (idle) => set({ idle }),

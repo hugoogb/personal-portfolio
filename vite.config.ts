@@ -202,8 +202,7 @@ export default defineConfig({
           if (id.includes("/motion/")) return "motion-vendor";
           if (id.includes("/@tabler/icons-react/")) return "icons-vendor";
           if (id.includes("/react-icons/")) return "icons-vendor";
-          if (id.includes("/@vercel/analytics/") || id.includes("/@vercel/speed-insights/"))
-            return "vercel-vendor";
+          if (id.includes("/@vercel/speed-insights/")) return "vercel-vendor";
           return undefined;
         },
       },

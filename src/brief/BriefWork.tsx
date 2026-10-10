@@ -55,7 +55,6 @@ export function BriefWork() {
                     href={place.primary.href}
                     target="_blank"
                     rel="noopener"
-                    data-track={place.name}
                   >
                     {place.primary.label}
                   </a>
@@ -66,7 +65,6 @@ export function BriefWork() {
                     href={place.secondary.href}
                     target="_blank"
                     rel="noopener"
-                    data-track={`${place.name} source`}
                   >
                     {place.secondary.label}
                   </a>

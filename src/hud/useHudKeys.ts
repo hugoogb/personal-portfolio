@@ -42,7 +42,7 @@ export const useHudKeys = () => {
         case "tertiary":
           return place && runTertiary(place);
         case "brief":
-          return toggleBrief("key");
+          return toggleBrief();
         case "console":
           return s.setConsoleOpen(!s.consoleOpen);
         case "escape":

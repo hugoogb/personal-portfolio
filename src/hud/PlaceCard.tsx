@@ -74,13 +74,7 @@ export function PlaceCard({ place }: { place: Place }) {
       </button>
       <div className="card__cmds">
         {place.primary.href ? (
-          <a
-            className="cmd cmd--primary"
-            href={place.primary.href}
-            target="_blank"
-            rel="noopener"
-            data-track={place.name}
-          >
+          <a className="cmd cmd--primary" href={place.primary.href} target="_blank" rel="noopener">
             <kbd>Q</kbd>
             <span>{place.primary.label}</span>
           </a>
@@ -91,13 +85,7 @@ export function PlaceCard({ place }: { place: Place }) {
           </button>
         )}
         {place.secondary ? (
-          <a
-            className="cmd"
-            href={place.secondary.href}
-            target="_blank"
-            rel="noopener"
-            data-track={`${place.name} ${place.secondary.label}`}
-          >
+          <a className="cmd" href={place.secondary.href} target="_blank" rel="noopener">
             <kbd>W</kbd>
             <span>{place.secondary.label}</span>
           </a>
@@ -113,13 +101,7 @@ export function PlaceCard({ place }: { place: Place }) {
             <span>Stack</span>
           </button>
         ) : place.tertiary ? (
-          <a
-            className="cmd"
-            href={place.tertiary.href}
-            target="_blank"
-            rel="noopener"
-            data-track={`${place.name} ${place.tertiary.label}`}
-          >
+          <a className="cmd" href={place.tertiary.href} target="_blank" rel="noopener">
             <kbd>E</kbd>
             <span>{place.tertiary.label}</span>
           </a>

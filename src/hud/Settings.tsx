@@ -5,7 +5,6 @@ import { PRESET_COLORS } from "@/constants/colors.constants";
 import { useBarcelonaHour } from "@/hooks/useBarcelonaHour";
 import { useDialog } from "@/hud/useDialog";
 import { useBaseCamp, type HudMode } from "@/store/store";
-import { trackTier } from "@/utils/track";
 import { clockText, nightAmount } from "@/world/lib/sun";
 
 const QUALITY: QualityMode[] = ["auto", ...TIER_NAMES];
@@ -29,11 +28,6 @@ export function Settings() {
   const fps = useBaseCamp((s) => s.fps);
   const setPanel = useBaseCamp((s) => s.setPanel);
   const setConsoleOpen = useBaseCamp((s) => s.setConsoleOpen);
-  const pickQuality = (mode: QualityMode) => {
-    setQualityMode(mode);
-    const s = useBaseCamp.getState();
-    trackTier(s.bootTier ?? s.tier, s.tier, "manual");
-  };
   const hour = useBarcelonaHour();
   const override = useBaseCamp((s) => s.timeOverride);
   const night = nightAmount(override ?? hour) > 0.5;
@@ -109,7 +103,7 @@ export function Settings() {
                 type="radio"
                 name="quality"
                 checked={qualityMode === mode}
-                onChange={() => pickQuality(mode)}
+                onChange={() => setQualityMode(mode)}
               />
               <span>{mode === "auto" ? "Auto" : mode}</span>
             </label>

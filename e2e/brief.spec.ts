@@ -13,7 +13,7 @@ const PROJECTS = [
   "@avatar-generator",
 ];
 
-// Vercel's analytics scripts only exist on Vercel; under `vite preview` they 404.
+// Vercel's Speed Insights script only exists on Vercel; under `vite preview` it 404s.
 // A failed load's message omits the URL, so match on where it came from.
 const isNoise = (url: string) => url.includes("/_vercel/");
 

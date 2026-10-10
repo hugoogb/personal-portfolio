@@ -1,8 +1,8 @@
 import { CONTACT } from "@/constants/strings.constants";
 
 const LINKS = [
-  { label: "github.com/hugoogb", href: CONTACT.GITHUB, track: "GitHub" },
-  { label: "linkedin.com/in/hugoogb", href: CONTACT.LINKEDIN, track: "LinkedIn" },
+  { label: "github.com/hugoogb", href: CONTACT.GITHUB },
+  { label: "linkedin.com/in/hugoogb", href: CONTACT.LINKEDIN },
 ] as const;
 
 export function BriefContact() {
@@ -28,13 +28,7 @@ export function BriefContact() {
       <ul className="flex flex-wrap gap-3">
         {LINKS.map((link) => (
           <li key={link.href}>
-            <a
-              className="btn-primary"
-              href={link.href}
-              target="_blank"
-              rel="noopener"
-              data-track={link.track}
-            >
+            <a className="btn-primary" href={link.href} target="_blank" rel="noopener">
               {link.label}
             </a>
           </li>

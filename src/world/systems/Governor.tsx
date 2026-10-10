@@ -8,7 +8,6 @@ import {
   restartGrace,
 } from "@/boot/tiers";
 import { useBaseCamp } from "@/store/store";
-import { trackTier } from "@/utils/track";
 
 /**
  * The frame-rate governor (spec 8) wired to rendering. It restarts its grace
@@ -54,12 +53,10 @@ export function Governor() {
     if (state.fps !== before.fps) s.setFps(Math.round(state.fps));
     if (step?.kind === "dpr") s.setDpr(step.dpr);
     if (step?.kind === "tier") {
-      const initial = s.bootTier ?? s.tier;
       const dpr = s.dpr;
       s.setTier(step.tier);
       // A step down never raises the resolution (High's 1.25 is below Medium's 1.5).
       s.setDpr(dpr);
-      trackTier(initial, step.tier, "governor");
       s.toast(`Running smoother: quality set to ${TIER_NAMES[step.tier]}`);
     }
   });
