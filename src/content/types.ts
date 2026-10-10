@@ -26,7 +26,7 @@ export interface PlaceLink {
 
 export interface Place {
   id: PlaceId;
-  /** Deep links (`/#readledger`) and the Brief's anchors use this. */
+  /** Deep links (`/#readledger`) and the story document's anchors use this. */
   slug: string;
   zone: Zone;
   name: string;
@@ -45,7 +45,7 @@ export interface Place {
   secondary?: PlaceLink;
   /** The E button becomes this link when a place has no stack to show. */
   tertiary?: PlaceLink;
-  /** Card banner and Brief picture, projects only. */
+  /** Card banner and story picture, projects only. */
   image?: { src: string; srcSetWebp: string };
   /** Shown instead of a source link when the code is private. */
   closedNote?: string;
