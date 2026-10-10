@@ -48,11 +48,6 @@ describe("Brief", () => {
     expect(external.length).toBeGreaterThan(5);
     for (const link of external) expect(link.getAttribute("rel")).toContain("noopener");
   });
-
-  it("tags outbound links for analytics", () => {
-    const tagged = render(<Brief />).querySelectorAll("a[data-track]");
-    expect(tagged.length).toBeGreaterThanOrEqual(PROJECT_PLACES.length);
-  });
 });
 
 describe("TitleCard", () => {

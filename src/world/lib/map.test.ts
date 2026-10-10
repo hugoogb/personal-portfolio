@@ -16,8 +16,8 @@ describe("map", () => {
     expect(roadRect(ROADS[0])).toEqual({ cx: 0, cz: 0, w: 35, d: 1 });
   });
 
-  it("keeps the six homes clear of every place", () => {
-    expect(HOMES).toHaveLength(6);
+  it("keeps the four homes clear of every place", () => {
+    expect(HOMES).toHaveLength(4);
     for (const [hx, hz] of HOMES) {
       for (const p of PLACES) {
         expect(Math.hypot(hx - p.map.x, hz - p.map.z), p.id).toBeGreaterThan(p.map.r + 1.2);

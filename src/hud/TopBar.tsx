@@ -8,6 +8,10 @@ import { clockText, nightAmount } from "@/world/lib/sun";
 
 const canFullscreen = () => typeof document !== "undefined" && document.fullscreenEnabled;
 
+/** Apple keyboards label the console shortcut with Command, everything else with Ctrl. */
+const consoleShortcut = () =>
+  typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform) ? "⌘K" : "Ctrl K";
+
 const toggleFullscreen = () => {
   if (document.fullscreenElement) void document.exitFullscreen();
   else void document.documentElement.requestFullscreen?.();
@@ -18,6 +22,8 @@ export function TopBar() {
   const status = useBaseCamp((s) => s.status);
   const panel = useBaseCamp((s) => s.panel);
   const setPanel = useBaseCamp((s) => s.setPanel);
+  const consoleOpen = useBaseCamp((s) => s.consoleOpen);
+  const setConsoleOpen = useBaseCamp((s) => s.setConsoleOpen);
   const briefOpen = useBaseCamp((s) => s.briefOpen);
   const hour = useBarcelonaHour();
   const live = liveCount(status);
@@ -30,13 +36,24 @@ export function TopBar() {
       <span className="hud-crest">
         <img src={memoji} alt="" width={30} height={30} />
       </span>
-      <span className="hud-name">Hugo GB</span>
+      <span className="hud-name">Hugo García Benjumea</span>
       <ul className="hud-stats" aria-label="Town status">
         <li className="hud-stat" title="Projects confirmed live">
-          <span className="hud-label">Live</span> {live ? `${live.ok}/${live.total}` : "-"}
+          <span
+            className="hud-stat__dot"
+            data-state={live ? (live.ok === live.total ? "ok" : "down") : "unknown"}
+            aria-hidden="true"
+          />
+          {live ? `${live.ok}/${live.total}` : "-"}{" "}
+          <span className="hud-label">
+            <span className="hud-stat__long">sites </span>online
+          </span>
         </li>
         <li className="hud-stat" title="Places discovered">
-          <span className="hud-label">Found</span> {discovered}/{ORDER.length}
+          {discovered}/{ORDER.length}{" "}
+          <span className="hud-label">
+            <span className="hud-stat__long">places </span>explored
+          </span>
         </li>
         <li className="hud-stat" data-wide-only title="Time in Barcelona">
           <span className="hud-label">BCN</span> {clockText(hour)}{" "}
@@ -57,6 +74,16 @@ export function TopBar() {
       </button>
       <button
         type="button"
+        className="hud-btn"
+        data-wide-only
+        aria-expanded={consoleOpen}
+        aria-keyshortcuts="Control+K Meta+K"
+        onClick={() => setConsoleOpen(!consoleOpen)}
+      >
+        Console <kbd className="hud-kbd">{consoleShortcut()}</kbd>
+      </button>
+      <button
+        type="button"
         className="hud-btn hud-btn--icon"
         aria-label="Settings"
         aria-expanded={panel === "settings"}
@@ -69,7 +96,7 @@ export function TopBar() {
         className="hud-btn"
         data-brief-toggle
         aria-pressed={briefOpen}
-        onClick={() => toggleBrief("button")}
+        onClick={() => toggleBrief()}
       >
         Brief
       </button>

@@ -1,6 +1,8 @@
 export const AX = 2.3;
 export const AZ = 1.6;
 export const GOAL_MOUTH = 0.55;
+/** Kick-off: the car waits on its own half, facing the ball at the centre spot. */
+export const CAR_START = { x: -1.3, y: 0 } as const;
 
 export interface ArenaState {
   /** Car position in arena space (x, and y = arena z). */
@@ -23,7 +25,7 @@ export interface DriveInput {
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
 
 export const createArena = (): ArenaState => ({
-  cp: { x: -1.3, y: 0 },
+  cp: { ...CAR_START },
   th: 0,
   v: 0,
   ball: { x: 0, z: 0 },
@@ -71,7 +73,7 @@ export function stepArena(
     if (a.lock <= 0) {
       a.ball = { x: 0, z: 0 };
       a.bv = { x: 0, y: 0 };
-      a.cp = { x: -1.3, y: 0 };
+      a.cp = { ...CAR_START };
       a.th = 0;
       a.v = 0;
     }

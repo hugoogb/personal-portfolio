@@ -11,6 +11,13 @@ import { barcelonaHour, effectiveHour, nightAmount } from "@/world/lib/sun";
 
 const SHADOW_MAP: Record<Tier, number> = { 0: 0, 1: 0, 2: 1024, 3: 2048 };
 const RECOMPUTE_S = 0.25;
+/**
+ * The shadow map is drawn every other frame, not on every render() call. Left
+ * on autoUpdate, three redraws it for each scene render, which the effects
+ * composer can make more than one a frame. At 60 fps a moving car's shadow
+ * trails it by one frame at most, a pixel or two at the town's zoom.
+ */
+export const SHADOW_EVERY = 2;
 
 const hourNow = () => effectiveHour(useBaseCamp.getState().timeOverride, new Date());
 
@@ -26,6 +33,8 @@ const floodlightsOn = (world: BuiltWorld, on: boolean) => {
 /** The town's light (spec 6), recomputed four times a second from the hour. */
 export function DayNight({ world }: { world: BuiltWorld }) {
   const scene = useThree((s) => s.scene);
+  const gl = useThree((s) => s.gl);
+  const frame = useRef(0);
   const tier = useBaseCamp((s) => s.tier);
   const size = SHADOW_MAP[tier];
   const hemi = useRef<THREE.HemisphereLight>(null);
@@ -39,10 +48,20 @@ export function DayNight({ world }: { world: BuiltWorld }) {
     since.current = RECOMPUTE_S;
   }, [scene, bg, size]);
 
+  // Layout effect: a new light (the map size is its key) must get its map drawn on the very next frame.
+  useLayoutEffect(() => {
+    gl.shadowMap.autoUpdate = false;
+    gl.shadowMap.needsUpdate = true;
+    return () => {
+      gl.shadowMap.autoUpdate = true;
+    };
+  }, [gl, size]);
+
   // Before the first frame, so its shaders already match the hour.
   useLayoutEffect(() => floodlightsOn(world, lighting(hourNow()).stadium > 0), [world]);
 
   useFrame((_, dt) => {
+    if (++frame.current % SHADOW_EVERY === 0) gl.shadowMap.needsUpdate = true;
     since.current += dt;
     if (since.current < RECOMPUTE_S) return;
     since.current = 0;
@@ -85,8 +104,8 @@ export function DayNight({ world }: { world: BuiltWorld }) {
     }
     // The night owl counts the real Barcelona clock, not the preview override.
     if (s.introDone && nightAmount(barcelonaHour(new Date())) > 0.6) s.achieve("night");
-    const packets = kit.life.packetMat as THREE.MeshStandardMaterial | undefined;
-    if (packets) packets.emissiveIntensity = L.packets;
+    const flows = kit.life.flowMat as THREE.MeshBasicMaterial | undefined;
+    if (flows) flows.opacity = Math.min(1, L.packets);
     kit.materials.lamp.emissiveIntensity = L.lamps;
     for (const m of kit.signMats) m.emissiveIntensity = L.signs;
     for (const light of kit.pointLights) light.intensity = L.stadium;

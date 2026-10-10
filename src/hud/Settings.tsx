@@ -1,10 +1,10 @@
-import { HexColorPicker } from "react-colorful";
+import { useState } from "react";
+import { HexColorInput, HexColorPicker } from "react-colorful";
 import { TIER_NAMES, type QualityMode } from "@/boot/tiers";
 import { PRESET_COLORS } from "@/constants/colors.constants";
 import { useBarcelonaHour } from "@/hooks/useBarcelonaHour";
 import { useDialog } from "@/hud/useDialog";
 import { useBaseCamp, type HudMode } from "@/store/store";
-import { trackTier } from "@/utils/track";
 import { clockText, nightAmount } from "@/world/lib/sun";
 
 const QUALITY: QualityMode[] = ["auto", ...TIER_NAMES];
@@ -18,6 +18,8 @@ export function Settings() {
   const ref = useDialog<HTMLDivElement>();
   const accent = useBaseCamp((s) => s.accent);
   const setAccent = useBaseCamp((s) => s.setAccent);
+  const isPreset = PRESET_COLORS.some((c) => c.color === accent);
+  const [customOpen, setCustomOpen] = useState(false);
   const qualityMode = useBaseCamp((s) => s.qualityMode);
   const setQualityMode = useBaseCamp((s) => s.setQualityMode);
   const hudMode = useBaseCamp((s) => s.hudMode);
@@ -26,11 +28,6 @@ export function Settings() {
   const fps = useBaseCamp((s) => s.fps);
   const setPanel = useBaseCamp((s) => s.setPanel);
   const setConsoleOpen = useBaseCamp((s) => s.setConsoleOpen);
-  const pickQuality = (mode: QualityMode) => {
-    setQualityMode(mode);
-    const s = useBaseCamp.getState();
-    trackTier(s.bootTier ?? s.tier, s.tier, "manual");
-  };
   const hour = useBarcelonaHour();
   const override = useBaseCamp((s) => s.timeOverride);
   const night = nightAmount(override ?? hour) > 0.5;
@@ -71,11 +68,31 @@ export function Settings() {
               onClick={() => setAccent(c.color)}
             />
           ))}
+          <button
+            type="button"
+            className="swatch swatch--custom"
+            style={isPreset ? undefined : { ["--custom" as string]: accent }}
+            aria-label="Custom colour"
+            aria-pressed={!isPreset}
+            aria-expanded={customOpen}
+            aria-controls="custom-colour"
+            onClick={() => setCustomOpen((o) => !o)}
+          />
         </div>
-        <details className="panel__custom">
-          <summary>Custom colour</summary>
-          <HexColorPicker color={accent} onChange={setAccent} />
-        </details>
+        {customOpen && (
+          <div id="custom-colour" className="custom-colour">
+            <HexColorPicker color={accent} onChange={setAccent} />
+            <label className="custom-colour__hex">
+              <span
+                className="custom-colour__chip"
+                style={{ background: accent }}
+                aria-hidden="true"
+              />
+              <span className="hud-sr">Hex colour</span>
+              <HexColorInput color={accent} onChange={setAccent} prefixed />
+            </label>
+          </div>
+        )}
       </fieldset>
       <fieldset className="panel__group">
         <legend className="hud-label">Quality</legend>
@@ -86,7 +103,7 @@ export function Settings() {
                 type="radio"
                 name="quality"
                 checked={qualityMode === mode}
-                onChange={() => pickQuality(mode)}
+                onChange={() => setQualityMode(mode)}
               />
               <span>{mode === "auto" ? "Auto" : mode}</span>
             </label>
@@ -112,7 +129,8 @@ export function Settings() {
           ))}
         </div>
       </fieldset>
-      <fieldset className="panel__group">
+      {/* The top bar has no room for these on phones, so they live here there. */}
+      <fieldset className="panel__group panel__more">
         <legend className="hud-label">More</legend>
         <div className="segmented">
           <button type="button" className="hud-btn" onClick={() => setPanel("trophies")}>

@@ -4,15 +4,16 @@ import * as THREE from "three";
 import { onMotionPreferenceChange, prefersReducedMotion } from "@/utils/motion";
 import { useBaseCamp } from "@/store/store";
 import type { BuiltWorld } from "@/world/build";
-import { planRoutes, pointAt } from "@/world/traffic/model";
-import { ambientOn, trafficCaps } from "@/world/lib/ambient";
+import { PIECES, STREAK } from "@/world/traffic/build";
+import { planRoutes, streakPoints } from "@/world/traffic/model";
+import { trafficCaps } from "@/world/lib/ambient";
 import { TrafficSim, type Packet } from "@/world/traffic/sim";
 
 const RED = new THREE.Color("#ef4444");
 const FLAT = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2);
 const HIDDEN = new THREE.Matrix4().makeScale(0, 0, 0);
 
-/** Moves the simulated packets (spec 6b). Packets appear once the build-in has finished. */
+/** Moves the simulated flows (spec 6b). They appear once the build-in has finished. */
 export function Traffic({ world }: { world: BuiltWorld }) {
   const routes = world.traffic.routes;
   /** Responses travel the same roads back, so they use each route reversed. */
@@ -32,8 +33,7 @@ export function Traffic({ world }: { world: BuiltWorld }) {
       sc: new THREE.Vector3(),
       up: new THREE.Vector3(0, 1, 0),
       c: new THREE.Color(),
-      at: { x: 0, z: 0, ry: 0 },
-      ta: { x: 0, z: 0, ry: 0 },
+      pts: Array.from({ length: PIECES + 1 }, () => ({ x: 0, z: 0, ry: 0, u: 0 })),
       accent: new THREE.Color(),
       accentHex: "",
     }),
@@ -66,48 +66,38 @@ export function Traffic({ world }: { world: BuiltWorld }) {
     if (!s.introDone) return;
     const dt = Math.min(0.05, Math.max(0, delta));
     sim.step(dt);
-    if (ambientOn(prefersReducedMotion())) t.chev.offset.x -= dt * 0.9;
-    const { m, q, p, sc, up, c, at, ta } = tmp;
+    const { m, q, p, sc, up, c, pts } = tmp;
     // Parse the accent hex only when it changes, not for every ring every frame.
     if (tmp.accentHex !== s.accent) {
       tmp.accentHex = s.accent;
       tmp.accent.set(s.accent);
     }
 
-    const write = (
-      list: Packet[],
-      mesh: THREE.InstancedMesh,
-      trail: THREE.InstancedMesh,
-      back: boolean,
-    ) => {
-      for (let k = 0; k < mesh.count; k++) {
-        const pk = list[k];
-        if (!pk) {
-          mesh.setMatrixAt(k, HIDDEN);
-          for (let j = 0; j < t.TRAIL; j++) trail.setMatrixAt(k * t.TRAIL + j, HIDDEN);
-          continue;
-        }
+    // Requests and responses draw the same streak: the town shows flow, not direction.
+    const range = t.flows.geometry.getAttribute("flowRange") as THREE.InstancedBufferAttribute;
+    let k = 0;
+    const write = (list: Packet[], back: boolean) => {
+      for (let i = 0; i < list.length; i++) {
+        const pk = list[i];
         const path = back ? reversed[pk.plan] : routes[pk.plan].path;
-        pointAt(path, pk.s, at);
-        q.setFromAxisAngle(up, at.ry);
-        m.compose(
-          p.set(at.x, 0.2 + Math.sin(pk.s * Math.PI * 2) * 0.015, at.z),
-          q,
-          sc.setScalar(1),
-        );
-        mesh.setMatrixAt(k, m);
-        for (let j = 1; j <= t.TRAIL; j++) {
-          const sj = pk.s - j * 0.17;
-          pointAt(path, sj, ta);
-          m.compose(p.set(ta.x, 0.2, ta.z), q, sc.setScalar(sj > 0 ? 1 - j * 0.22 : 0));
-          trail.setMatrixAt(k * t.TRAIL + j - 1, m);
+        const n = streakPoints(path, Math.max(0, pk.s - STREAK), pk.s, pts);
+        for (let j = 1; j < n && k < t.flows.count; j++, k++) {
+          const a = pts[j - 1];
+          const b = pts[j];
+          const dx = b.x - a.x;
+          const dz = b.z - a.z;
+          q.setFromAxisAngle(up, Math.atan2(-dz, dx));
+          m.compose(p.set(b.x, 0.09, b.z), q, sc.set(Math.hypot(dx, dz), 1, 1));
+          t.flows.setMatrixAt(k, m);
+          range.setXY(k, a.u, b.u);
         }
       }
-      mesh.instanceMatrix.needsUpdate = true;
-      trail.instanceMatrix.needsUpdate = true;
     };
-    write(sim.reqs, t.req, t.reqTrail, false);
-    write(sim.ress, t.res, t.resTrail, true);
+    write(sim.reqs, false);
+    write(sim.ress, true);
+    for (; k < t.flows.count; k++) t.flows.setMatrixAt(k, HIDDEN);
+    t.flows.instanceMatrix.needsUpdate = true;
+    range.needsUpdate = true;
 
     for (let k = 0; k < t.rings.count; k++) {
       const pu = sim.pulses[k];

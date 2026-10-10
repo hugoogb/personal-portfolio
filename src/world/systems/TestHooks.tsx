@@ -1,19 +1,35 @@
-import { useThree } from "@react-three/fiber";
-import { useEffect } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
+import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { isPreview } from "@/hud/commands";
 import type { BuiltWorld } from "@/world/build";
 
 declare global {
   interface Window {
-    __baseCamp?: { screenOf(t: string): { x: number; y: number } | null };
+    __baseCamp?: {
+      screenOf(t: string): { x: number; y: number } | null;
+      /** The last frame's renderer counters, for perf checks. */
+      info(): {
+        frame: number;
+        calls: number;
+        triangles: number;
+        geometries: number;
+        textures: number;
+      };
+    };
   }
 }
 
-/** Preview-only: reports where an egg is on the page, so e2e can click it. Does nothing on the live host. */
+/** Preview-only: where an egg is on the page (so e2e can click it) and renderer counters. Does nothing on the live host. */
 export function TestHooks({ world }: { world: BuiltWorld }) {
   const camera = useThree((s) => s.camera);
-  const canvas = useThree((s) => s.gl.domElement);
+  const gl = useThree((s) => s.gl);
+  // Frames drawn: gl.info.render.frame counts every render() call, several a frame under the composer.
+  const frames = useRef(0);
+  useFrame(() => {
+    frames.current++;
+  });
+  const canvas = gl.domElement;
   useEffect(() => {
     if (!isPreview()) return;
     const v = new THREE.Vector3();
@@ -32,10 +48,17 @@ export function TestHooks({ world }: { world: BuiltWorld }) {
       const r = canvas.getBoundingClientRect();
       return { x: ((v.x + 1) / 2) * r.width + r.left, y: ((1 - v.y) / 2) * r.height + r.top };
     };
-    window.__baseCamp = { screenOf };
+    const info = () => ({
+      frame: frames.current,
+      calls: gl.info.render.calls,
+      triangles: gl.info.render.triangles,
+      geometries: gl.info.memory.geometries,
+      textures: gl.info.memory.textures,
+    });
+    window.__baseCamp = { screenOf, info };
     return () => {
       delete window.__baseCamp;
     };
-  }, [world, camera, canvas]);
+  }, [world, camera, canvas, gl]);
   return null;
 }

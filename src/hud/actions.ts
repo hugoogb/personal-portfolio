@@ -3,13 +3,10 @@ import { CONTACT } from "@/constants/strings.constants";
 import type { Place } from "@/content/types";
 import type { Command } from "@/hud/commands";
 import { useBaseCamp } from "@/store/store";
-import { trackBrief, trackOutbound, type BriefSource } from "@/utils/track";
 import { OVERVIEW } from "@/world/lib/map";
 
 /** Opens the prerendered Brief over the town (Boot sets html.brief-open), optionally at a section. */
-export const openBrief = (anchor: string | null = null, source: BriefSource = "button") => {
-  // Already open (a deep link or card while reading): still scroll, but it is not a new open.
-  if (!useBaseCamp.getState().briefOpen) trackBrief(source);
+export const openBrief = (anchor: string | null = null) => {
   useBaseCamp.getState().setBriefOpen(true);
   // Boot applies html.brief-open in an effect; wait for it so we never scroll a hidden Brief.
   let frames = 0;
@@ -34,12 +31,10 @@ export const closeBrief = () => {
   requestAnimationFrame(() => document.querySelector<HTMLElement>("[data-brief-toggle]")?.focus());
 };
 
-export const toggleBrief = (source: BriefSource) =>
-  useBaseCamp.getState().briefOpen ? closeBrief() : openBrief(null, source);
+export const toggleBrief = () => (useBaseCamp.getState().briefOpen ? closeBrief() : openBrief());
 
-/** Keyboard shortcuts open links here; card clicks use real <a> tags tracked by ClientRoot. */
-export const openLink = (href: string, label: string) => {
-  trackOutbound(href, label);
+/** Keyboard shortcuts open links here; card clicks use real <a> tags. */
+export const openLink = (href: string) => {
   window.open(href, "_blank", "noopener");
 };
 
@@ -54,10 +49,10 @@ export const copyEmail = async () => {
 
 export const runPrimary = (place: Place) => {
   const s = useBaseCamp.getState();
-  if (place.primary.href) return openLink(place.primary.href, place.name);
+  if (place.primary.href) return openLink(place.primary.href);
   switch (place.primary.action) {
     case "brief":
-      return openBrief(null, "card");
+      return openBrief();
     case "overview":
       return s.focus(OVERVIEW.x, OVERVIEW.z, OVERVIEW.view);
     case "wave":
@@ -71,12 +66,12 @@ export const runPrimary = (place: Place) => {
 };
 
 export const runSecondary = (place: Place) => {
-  if (place.secondary) openLink(place.secondary.href, `${place.name} ${place.secondary.label}`);
+  if (place.secondary) openLink(place.secondary.href);
 };
 
 export const runTertiary = (place: Place) => {
   if (place.stack.length > 0) return useBaseCamp.getState().toggleStack();
-  if (place.tertiary) openLink(place.tertiary.href, `${place.name} ${place.tertiary.label}`);
+  if (place.tertiary) openLink(place.tertiary.href);
 };
 
 /** The GPU's name from the canvas's existing WebGL context; never throws. */
@@ -111,7 +106,7 @@ export const runCommand = (command: Command) => {
       s.select("arena");
       return s.setDriving(true);
     case "brief":
-      return openBrief(null, "console");
+      return openBrief();
     case "copyEmail":
       return void copyEmail();
     case "time":

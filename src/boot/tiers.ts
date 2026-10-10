@@ -48,6 +48,9 @@ export const MAX_DPR: Record<Tier, number> = { 0: 1, 1: 1, 2: 1.5, 3: 1.25 };
 /** Frames per second each tier is drawn at: Low at 30, the others at 60 even on a 120 Hz display. */
 export const TARGET_FPS: Record<Tier, number> = { 0: 30, 1: 30, 2: 60, 3: 60 };
 
+/** The frame rate while the town is idle: half the work for a tab left open. */
+export const IDLE_FPS = 30;
+
 export const GOVERNOR = {
   graceSeconds: 3,
   windowSeconds: 1,
