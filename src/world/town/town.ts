@@ -18,6 +18,9 @@ const blockedR: [number, number, number, number][] = [
   [-14.3, 7.9, -7.7, 14.2],
   [8.9, -12.1, 17.5, -5.2],
 ];
+/** The seafront lawn between the arena and the restaurant: a few trees, not a wood (user, 10 Oct). */
+const SEAFRONT: [number, number, number, number] = [-7.6, 8.3, 3.2, 14.2];
+const SEAFRONT_TREES = 3;
 const onRoad = (x: number, z: number) =>
   Math.abs(z) < 1.3 || (Math.abs(x) < 1.3 && z < 8.3) || Math.abs(z - 7) < 1.3;
 export const isBlocked = (x: number, z: number) =>
@@ -116,7 +119,7 @@ export function buildTown(kit: Kit) {
   };
   roadSeg(-17, 0, 17, 0);
   roadSeg(0, -13, 0, 7);
-  roadSeg(-16, 7, 17, 7);
+  roadSeg(-17, 7, 17, 7);
   {
     const dash = kit.makeMat("#ffffff");
     for (let x = -16.4; x <= 16.4; x += 1.2)
@@ -124,7 +127,7 @@ export function buildTown(kit: Kit) {
     for (let z = -12.4; z <= 6.4; z += 1.2)
       if (Math.abs(z) > 1.2 && Math.abs(z - 7) > 1.2)
         box(0.07, 0.01, 0.5, dash, 0, 0.07, z, ground, false);
-    for (let x = -15.4; x <= 16.4; x += 1.2)
+    for (let x = -16.4; x <= 16.4; x += 1.2)
       if (Math.abs(x) > 1.2) box(0.5, 0.01, 0.07, dash, x, 0.07, 7, ground, false);
     const zebra = (x: number, z: number, alongX: boolean) => {
       for (let i = -2; i <= 2; i++) {
@@ -172,10 +175,14 @@ export function buildTown(kit: Kit) {
   const sphG = new THREE.SphereGeometry(1, 12, 8),
     coneG = new THREE.ConeGeometry(1, 1, 14),
     trunkG = new THREE.CylinderGeometry(0.06, 0.09, 0.55, 8);
-  for (let i = 0; i < 500 && props.length < 60; i++) {
+  // 32 trees: the user found 60, then 45, too busy (2026-10-10).
+  let seafront = 0;
+  for (let i = 0; i < 500 && props.length < 32; i++) {
     const x = (rand() * 2 - 1) * (HX - 0.6),
       z = (rand() * 2 - 1) * (HZ - 0.6);
     if (isBlocked(x, z)) continue;
+    const [sa, sb, sc, sd] = SEAFRONT;
+    if (x > sa && x < sc && z > sb && z < sd && seafront++ >= SEAFRONT_TREES) continue;
     const g = new THREE.Group();
     g.position.set(x, 0, z);
     const k = 0.75 + rand() * 0.5;
@@ -239,9 +246,7 @@ export function buildTown(kit: Kit) {
   }
   car(2.4, 7.38, 0, "#f4f4f2");
   car(9.9, 6.62, Math.PI, "#e8c547");
-  car(-12, 0.38, 0, "#5b6b7a");
   car(7.5, -0.38, Math.PI, "#6aa2d8");
-  car(-6.4, 6.62, Math.PI, "#d9534f");
   car(0.62, 4.9, Math.PI / 2, "#ffffff", true);
   // ordinary homes, so it reads as a town
   {

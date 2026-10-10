@@ -49,7 +49,7 @@ test("the town mounts without console errors", async ({ page }) => {
   await ready(page);
   await expect(page.locator(".stage canvas")).toBeVisible();
   await expect(card(page, "Headquarters")).toBeVisible();
-  await expect(page.getByText("Hugo GB")).toBeVisible();
+  await expect(page.locator(".hud-name")).toHaveText("Hugo García Benjumea");
   expect(errors).toEqual([]);
 });
 

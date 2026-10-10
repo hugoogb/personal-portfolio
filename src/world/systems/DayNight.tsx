@@ -85,8 +85,8 @@ export function DayNight({ world }: { world: BuiltWorld }) {
     }
     // The night owl counts the real Barcelona clock, not the preview override.
     if (s.introDone && nightAmount(barcelonaHour(new Date())) > 0.6) s.achieve("night");
-    const packets = kit.life.packetMat as THREE.MeshStandardMaterial | undefined;
-    if (packets) packets.emissiveIntensity = L.packets;
+    const flows = kit.life.flowMat as THREE.MeshBasicMaterial | undefined;
+    if (flows) flows.opacity = Math.min(1, L.packets);
     kit.materials.lamp.emissiveIntensity = L.lamps;
     for (const m of kit.signMats) m.emissiveIntensity = L.signs;
     for (const light of kit.pointLights) light.intensity = L.stadium;

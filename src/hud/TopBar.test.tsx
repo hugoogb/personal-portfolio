@@ -7,9 +7,9 @@ import { useBaseCamp } from "@/store/store";
 beforeEach(() => useBaseCamp.setState(useBaseCamp.getInitialState()));
 
 describe("TopBar", () => {
-  it("names Hugo GB and shows no invented live count", () => {
+  it("names Hugo in full and shows no invented live count", () => {
     render(<TopBar />);
-    expect(screen.getByText("Hugo GB")).toBeTruthy();
+    expect(screen.getByText("Hugo García Benjumea")).toBeTruthy();
     expect(screen.getByTitle("Projects confirmed live").textContent).toContain("-");
   });
 

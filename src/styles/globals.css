@@ -151,7 +151,7 @@
     @apply max-w-6xl mx-auto px-6 sm:px-10 lg:px-12 w-full;
   }
 
-  .card {
+  .brief-card {
     @apply bg-card border border-border rounded-lg overflow-hidden transition-all duration-300;
   }
 

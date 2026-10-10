@@ -14,6 +14,17 @@ function Dialog() {
   );
 }
 
+function RadioDialog() {
+  const ref = useDialog<HTMLDivElement>();
+  return (
+    <div ref={ref} role="dialog">
+      <button type="button">first</button>
+      <input type="radio" name="mode" aria-label="auto" defaultChecked />
+      <input type="radio" name="mode" aria-label="dark" />
+    </div>
+  );
+}
+
 function Host() {
   const [open, setOpen] = useState(false);
   return (
@@ -42,5 +53,13 @@ describe("useDialog", () => {
     expect(document.activeElement).toBe(last);
     fireEvent.click(toggle);
     expect(document.activeElement).toBe(toggle);
+  });
+
+  it("treats a radio group as one stop, its checked radio, when wrapping Tab", () => {
+    render(<RadioDialog />);
+    const checked = screen.getByRole("radio", { name: "auto" });
+    checked.focus();
+    fireEvent.keyDown(checked, { key: "Tab" });
+    expect(document.activeElement).toBe(screen.getByRole("button", { name: "first" }));
   });
 });

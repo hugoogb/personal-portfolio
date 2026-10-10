@@ -159,6 +159,10 @@
   border-radius: 50%;
   background: var(--acc);
 }
+/* The memoji's head sits high in its square (rows 8-104 of 128), so nudge it down to centre. */
+.hud-crest img {
+  translate: 0 2px;
+}
 .hud-name {
   font-weight: 800;
   font-size: 16px;
@@ -180,8 +184,42 @@
   font-size: 14px;
   white-space: nowrap;
 }
+.hud-stat {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
 .hud-stat .hud-label {
   color: var(--hud-muted);
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+.hud-stat__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--hud-muted);
+}
+.hud-stat__dot[data-state="ok"] {
+  background: var(--ok);
+}
+.hud-stat__dot[data-state="down"] {
+  background: var(--down);
+}
+.hud-kbd {
+  display: inline-grid;
+  place-items: center;
+  height: 18px;
+  margin-left: 6px;
+  padding: 0 5px;
+  border-radius: 5px;
+  background: rgb(127 127 127 / 0.18);
+  font: 600 11px/1 var(--font-mono);
+  opacity: 0.85;
+}
+.panel__more {
+  display: none;
 }
 .hud-top__spacer {
   flex: 1;
@@ -345,18 +383,20 @@
 }
 .card__cmds {
   display: flex;
+  /* Wrapping beats clipping: a label that cannot fit moves its button to a new row. */
+  flex-wrap: wrap;
   gap: 6px;
   padding: 12px 14px 0;
 }
 .cmd {
   display: inline-flex;
-  flex: 1 1 0;
+  flex: 1 1 auto;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 5px;
   min-width: 0;
   min-height: 38px;
-  padding: 0 10px;
+  padding: 0 7px;
   border: 1px solid var(--hud-line);
   border-radius: 10px;
   background: var(--hud-bg-strong);
@@ -372,12 +412,20 @@
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  line-height: 1;
 }
+/* A fixed keycap box: the mono letter and the label have different metrics, so
+   centring two boxes lines them up where baselines would not. */
 .cmd kbd {
+  display: inline-grid;
   flex: none;
-  font-family: var(--font-mono);
-  font-size: 11px;
-  opacity: 0.7;
+  place-items: center;
+  width: 16px;
+  height: 18px;
+  border-radius: 5px;
+  background: rgb(127 127 127 / 0.18);
+  font: 600 11px/1 var(--font-mono);
+  opacity: 0.85;
 }
 .cmd--primary {
   flex: 0 1 auto;
@@ -453,17 +501,9 @@
   margin: 0;
   font-weight: 700;
 }
-.panel__custom summary {
-  margin-top: 8px;
-  font-size: 13px;
-  cursor: pointer;
-}
-.panel__custom .react-colorful {
-  width: 100%;
-  margin-top: 8px;
-}
 .swatches {
   display: flex;
+  flex-wrap: wrap;
   gap: 8px;
 }
 .swatch {
@@ -475,6 +515,82 @@
 }
 .swatch[aria-pressed="true"] {
   border-color: var(--hud-fg);
+}
+/* The custom swatch: a colour wheel with a disc in its centre, showing the chosen
+   colour once picked and a plus until then. All drawn with gradients centred on the
+   box, so nothing depends on a font's glyph metrics. */
+.swatch--custom {
+  position: relative;
+  padding: 0;
+  background:
+    radial-gradient(circle closest-side, var(--custom, var(--hud-bg-strong)) 66%, transparent 70%),
+    conic-gradient(#f43f5e, #f59e0b, #84cc16, #06b6d4, #6366f1, #d946ef, #f43f5e);
+  background-origin: border-box;
+}
+.swatch--custom::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(var(--hud-fg), var(--hud-fg)) center / 8px 2px no-repeat,
+    linear-gradient(var(--hud-fg), var(--hud-fg)) center / 2px 8px no-repeat;
+}
+.swatch--custom[aria-pressed="true"]::after {
+  content: none;
+}
+.custom-colour {
+  display: grid;
+  gap: 10px;
+  margin-top: 10px;
+  padding: 10px;
+  border: 1px solid var(--hud-line);
+  border-radius: 12px;
+  background: var(--hud-bg-strong);
+}
+.custom-colour .react-colorful {
+  width: 100%;
+  height: 140px;
+}
+.custom-colour .react-colorful__saturation {
+  border-radius: 8px 8px 0 0;
+  border-bottom: 0;
+}
+.custom-colour .react-colorful__hue {
+  height: 12px;
+  border-radius: 0 0 8px 8px;
+}
+.custom-colour .react-colorful__pointer {
+  width: 18px;
+  height: 18px;
+  border-width: 3px;
+}
+.custom-colour__hex {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 0 10px;
+  border: 1px solid var(--hud-line);
+  border-radius: 10px;
+}
+.custom-colour__hex:focus-within {
+  border-color: var(--acc);
+}
+.custom-colour__chip {
+  flex: none;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+.custom-colour__hex input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: 600 14px var(--font-mono);
+  text-transform: uppercase;
+  outline: none;
 }
 .segmented {
   display: flex;
@@ -683,6 +799,7 @@
 @container stage (max-width: 759px) {
   .hud-name,
   [data-wide-only],
+  .hud-stat__long,
   .objective,
   .minimap,
   .hint__wide,
@@ -691,6 +808,9 @@
   }
   .hint__narrow {
     display: inline;
+  }
+  .panel__more {
+    display: block;
   }
   .hud-top {
     top: 8px;

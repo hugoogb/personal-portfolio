@@ -3,6 +3,7 @@ import { SERVICES } from "@/content/services";
 import {
   CAPS,
   DOORS,
+  LANE,
   PROFILES,
   YARD_GATE,
   YARD_TARGET,
@@ -12,6 +13,7 @@ import {
   planRoutes,
   pointAt,
   requestsPerSecond,
+  streakPoints,
 } from "@/world/traffic/model";
 
 describe("routes", () => {
@@ -57,11 +59,48 @@ describe("routes", () => {
   });
 });
 
+describe("streakPoints", () => {
+  const pts = Array.from({ length: 4 }, () => ({ x: 0, z: 0, ry: 0, u: 0 }));
+
+  it("is a single piece on a straight road", () => {
+    const n = streakPoints(
+      [
+        [0, 0],
+        [1, 0],
+        [2, 0],
+      ],
+      0.2,
+      1.4,
+      pts,
+    );
+    expect(n).toBe(2);
+    expect(pts[0].u).toBe(0);
+    expect(pts[1].u).toBe(1);
+  });
+
+  it("bends round a corner through the mitred lane point", () => {
+    // East along z = 0, then south: the right-hand lane sits at z = +LANE, then x = -LANE.
+    const path: [number, number][] = [
+      [0, 0],
+      [1, 0],
+      [1, 1],
+    ];
+    const n = streakPoints(path, 0.5, 1.5, pts);
+    expect(n).toBe(3);
+    expect(pts[1].x).toBeCloseTo(1 - LANE, 6);
+    expect(pts[1].z).toBeCloseTo(LANE, 6);
+    expect(pts[1].u).toBeCloseTo(0.5, 6);
+    // Both neighbours lie on the lane lines that meet there.
+    expect(pts[0].z).toBeCloseTo(LANE, 6);
+    expect(pts[2].x).toBeCloseTo(1 - LANE, 6);
+  });
+});
+
 describe("rates", () => {
   it("log-scales request rate and caps it", () => {
     expect(requestsPerSecond(0)).toBe(0);
     expect(requestsPerSecond(10)).toBeGreaterThan(requestsPerSecond(1));
-    expect(requestsPerSecond(1e9)).toBe(2.5);
+    expect(requestsPerSecond(1e9)).toBe(1);
   });
 
   it("slows packets for slow apps, within readable bounds", () => {
@@ -77,9 +116,9 @@ describe("rates", () => {
   });
 
   it("caps packets per tier (spec 6b)", () => {
-    expect(CAPS[3]).toEqual({ req: 20, res: 10 });
-    expect(CAPS[2]).toEqual({ req: 20, res: 10 });
-    expect(CAPS[1]).toEqual({ req: 10, res: 4 });
+    expect(CAPS[3]).toEqual({ req: 8, res: 4 });
+    expect(CAPS[2]).toEqual({ req: 8, res: 4 });
+    expect(CAPS[1]).toEqual({ req: 4, res: 2 });
     expect(CAPS[0]).toEqual({ req: 0, res: 0 });
   });
 });

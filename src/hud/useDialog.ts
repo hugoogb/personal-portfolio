@@ -14,7 +14,16 @@ export const useDialog = <T extends HTMLElement>() => {
     const node = ref.current;
     if (!node) return;
     const previous = document.activeElement as HTMLElement | null;
-    const items = () => [...node.querySelectorAll<HTMLElement>(FOCUSABLE)];
+    // Tab order as the browser walks it: controls the layout hides are skipped
+    // (Settings' phone-only row on wide screens), and a radio group is one stop,
+    // its checked radio. Otherwise Tab could leave the dialog from its real last
+    // stop without the trap noticing.
+    const items = () =>
+      [...node.querySelectorAll<HTMLElement>(FOCUSABLE)].filter((el) => {
+        if (!(el.checkVisibility?.() ?? true)) return false;
+        if (!(el instanceof HTMLInputElement) || el.type !== "radio" || el.checked) return true;
+        return !node.querySelector(`input[type="radio"][name="${el.name}"]:checked`);
+      });
     (node.querySelector<HTMLElement>("[data-autofocus]") ?? items()[0] ?? node).focus();
     const onKey = (e: KeyboardEvent) => {
       if (e.key !== "Tab") return;

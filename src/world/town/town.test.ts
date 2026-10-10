@@ -35,10 +35,10 @@ describe("buildTown", () => {
     expect(sea!.receiveShadow).toBe(false);
   });
 
-  it("plants about sixty trees, six homes and the street furniture, never on a road or a place", () => {
+  it("plants about 32 trees, four homes and the street furniture, never on a road or a place", () => {
     const kit = createKit();
     const town = buildTown(kit);
-    expect(town.props.length).toBeGreaterThan(60);
+    expect(town.props.length).toBeGreaterThan(32);
     expect(kit.buildIn.props).toBe(town.props);
     for (const p of town.props) {
       const { x, z } = p.position;
@@ -52,8 +52,8 @@ describe("buildTown", () => {
       }
     }
     const trees = town.props.filter((p) => p.userData.kind === "tree").length;
-    expect(trees).toBeGreaterThanOrEqual(55);
-    expect(trees).toBeLessThanOrEqual(60);
+    expect(trees).toBeGreaterThanOrEqual(30);
+    expect(trees).toBeLessThanOrEqual(32);
     expect(town.props.filter((p) => p.userData.kind === "home")).toHaveLength(HOMES.length);
   });
 

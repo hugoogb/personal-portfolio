@@ -9,7 +9,7 @@ export const ROAD_CELLS = (() => {
   const cells = new Set<string>();
   for (let x = -17; x <= 17; x++) cells.add(key([x, 0]));
   for (let z = -13; z <= 7; z++) cells.add(key([0, z]));
-  for (let x = -16; x <= 17; x++) cells.add(key([x, 7]));
+  for (let x = -17; x <= 17; x++) cells.add(key([x, 7]));
   return cells;
 })();
 
@@ -100,6 +100,51 @@ export const pointAt = (
   return out;
 };
 
+export interface StreakPoint {
+  x: number;
+  z: number;
+  /** Heading, filled by pointAt for the tail and head; unused by the corners. */
+  ry: number;
+  /** 0 at the streak's tail, 1 at its head: where this point sits along the fade. */
+  u: number;
+}
+
+/**
+ * The lane-side points a streak from `s0` to `s1` passes through: its tail, a
+ * mitred point at every corner in between, and its head. Drawing a piece
+ * between each pair bends the streak round a corner instead of cutting the
+ * diagonal. Writes into `out` (reused, no allocation) and returns the count.
+ */
+export const streakPoints = (path: Cell[], s0: number, s1: number, out: StreakPoint[]) => {
+  const span = s1 - s0 || 1;
+  let n = 0;
+  pointAt(path, s0, out[n]);
+  out[n++].u = 0;
+  for (let i = Math.floor(s0) + 1; i < s1 && i < path.length - 1 && n < out.length - 1; i++) {
+    const [px, pz] = path[i - 1];
+    const [cx, cz] = path[i];
+    const [nx, nz] = path[i + 1];
+    const l1 = Math.hypot(cx - px, cz - pz) || 1;
+    const l2 = Math.hypot(nx - cx, nz - cz) || 1;
+    // Lane normals either side of the corner (the same side pointAt offsets to).
+    const ax = -(cz - pz) / l1;
+    const az = (cx - px) / l1;
+    const bx = -(nz - cz) / l2;
+    const bz = (nx - cx) / l2;
+    const dot = ax * bx + az * bz;
+    if (dot > 0.999) continue; // straight on: no corner to bend round
+    // The mitre: where the two offset lane lines meet.
+    const k = LANE / (1 + dot);
+    const p = out[n++];
+    p.x = cx + (ax + bx) * k;
+    p.z = cz + (az + bz) * k;
+    p.u = (i - s0) / span;
+  }
+  pointAt(path, s1, out[n]);
+  out[n++].u = 1;
+  return n;
+};
+
 /**
  * Simulated traffic (spec 6b, revised 6 Oct): a fixed, plausible profile per
  * app. These numbers only shape the animation; none is ever shown on screen.
@@ -113,9 +158,9 @@ export const PROFILES: Record<TrafficApp, { rpm: number; p50: number }> = {
   av: { rpm: 4, p50: 40 },
 };
 
-/** Packets per second, log-scaled from requests per minute and capped so busy apps stay readable. */
+/** Flows per second, log-scaled from requests per minute and capped so the roads stay calm. */
 export const requestsPerSecond = (rpm: number) =>
-  Math.min(2.5, Math.log10(1 + Math.max(0, rpm)) * 0.6);
+  Math.min(1, Math.log10(1 + Math.max(0, rpm)) * 0.25);
 
 /** Cells per second: slower apps move visibly slower, clamped to stay readable. */
 export const packetSpeed = (p50: number) =>
@@ -139,7 +184,7 @@ export const planRoutes = (routes: Route[], status: StatusMap | "unknown"): Rout
 
 export const CAPS: Record<Tier, { req: number; res: number }> = {
   0: { req: 0, res: 0 },
-  1: { req: 10, res: 4 },
-  2: { req: 20, res: 10 },
-  3: { req: 20, res: 10 },
+  1: { req: 4, res: 2 },
+  2: { req: 8, res: 4 },
+  3: { req: 8, res: 4 },
 };

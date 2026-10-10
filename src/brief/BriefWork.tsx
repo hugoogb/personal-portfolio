@@ -6,7 +6,7 @@ export function BriefWork() {
       <h2 id="work-title">Work</h2>
       <div className="grid gap-8 md:grid-cols-2">
         {PROJECT_PLACES.map((place) => (
-          <article key={place.id} id={place.slug} className="card flex flex-col min-w-0">
+          <article key={place.id} id={place.slug} className="brief-card flex flex-col min-w-0">
             {place.image && (
               <picture>
                 <source

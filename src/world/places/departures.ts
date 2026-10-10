@@ -96,7 +96,7 @@ export function buildDepartures(kit: Kit): THREE.Group {
   w.add(sg);
   const hg = own(new THREE.CapsuleGeometry(0.5, 1.9, 6, 14));
   hg.rotateZ(Math.PI / 2);
-  const hull = mk(hg, "#8a5a34", sg, 0, 0.25, 0);
+  const hull = mk(hg, "#a06a3e", sg, 0, 0.25, 0);
   hull.scale.set(1, 1, 0.95);
   rbox(2.4, 0.08, 0.84, "#c49a6c", 0, 0.62, 0, sg, 0.03);
   rbox(0.7, 0.45, 0.9, "#7a4e2c", -0.95, 0.62, 0, sg, 0.08);
@@ -116,6 +116,12 @@ export function buildDepartures(kit: Kit): THREE.Group {
   fl.position.set(0.2, 3.05, 0.36);
   fl.rotation.y = Math.PI / 2;
   sg.add(fl);
+  // Night: a stern and a bow lantern (the shared lamp material, so they follow
+  // the lamps' day/night intensity) and a glow on the water keep the dark hull
+  // readable against the dark sea.
+  ball(0.08, kit.materials.lamp, -1.3, 1.0, 0, sg, 10);
+  ball(0.07, kit.materials.lamp, 1.35, 0.78, 0, sg, 10);
+  kit.pool(w, 24.6 - OX, 9.6 - OZ, 3.6, 3.6, -0.36);
   kit.life.ship = { g: sg, home: sg.position.clone(), sail: -1 };
 
   const buoys: THREE.Group[] = [];
@@ -135,13 +141,15 @@ export function buildDepartures(kit: Kit): THREE.Group {
     buoys.push(b);
   }
   const rb = new THREE.Group();
-  rb.position.set(19.4 - OX, -0.42, 12.75 - OZ);
+  // Moored off the pier's far half, clear of the posts and the quay wall.
+  rb.position.set(21.7 - OX, -0.42, 12.95 - OZ);
   rb.rotation.y = 0.2;
   rb.userData.dynamic = true;
   w.add(rb);
   rbox(0.95, 0.2, 0.42, "#c46a3b", 0, 0, 0, rb, 0.09);
-  rbox(0.8, 0.06, 0.32, "#e8d2b0", 0, 0.14, 0, rb, 0.03);
-  rbox(0.08, 0.05, 0.36, "#9a6b45", 0.15, 0.2, 0, rb, 0.02);
+  // The deck sits ON the hull: sharing the hull's top plane made the two faces z-fight.
+  rbox(0.8, 0.025, 0.32, "#e8d2b0", 0, 0.2, 0, rb, 0.01);
+  rbox(0.08, 0.05, 0.36, "#9a6b45", 0.15, 0.225, 0, rb, 0.02);
   buoys.push(rb);
   kit.life.buoys = buoys;
 
