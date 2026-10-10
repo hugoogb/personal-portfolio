@@ -29,6 +29,8 @@ export function Town() {
 
   const off = useCallback((failed: boolean) => {
     window.clearTimeout(timer.current);
+    // Choosing Explore after Lite puts the town back to "loading": it must start again.
+    started.current = false;
     // A device that cannot draw is remembered for the session, so a reload skips the wait.
     if (failed) {
       try {
@@ -134,7 +136,8 @@ export function Town() {
   return (
     <WorldBoundary onError={() => off(true)}>
       {createPortal(<loaded.World onReady={onReady} />, root)}
-      {mode === "explore" && <loaded.Hud />}
+      {/* The HUD waits for the first frame: until then the still image shows (spec 3.4). */}
+      {mode === "explore" && town === "ready" && <loaded.Hud />}
     </WorldBoundary>
   );
 }

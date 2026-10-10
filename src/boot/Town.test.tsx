@@ -4,10 +4,11 @@ import { useEffect } from "react";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Town } from "@/boot/Town";
 import { READY_TIMEOUT_MS } from "@/boot/world";
+import { enterExplore } from "@/story/transitions";
 import { bootTier, readSignals } from "@/boot/detect";
 import { useBaseCamp } from "@/store/store";
 
-const stub = vi.hoisted(() => ({ worldThrows: false }));
+const stub = vi.hoisted(() => ({ worldThrows: false, holdReady: false }));
 
 vi.mock("@/boot/detect", () => ({ readSignals: vi.fn(), bootTier: vi.fn() }));
 vi.mock("@/hud/Hud", () => ({
@@ -16,8 +17,14 @@ vi.mock("@/hud/Hud", () => ({
 vi.mock("@/world/World", () => {
   function MockWorld({ onReady }: { onReady: () => void }) {
     if (stub.worldThrows) throw new Error("Error creating WebGL context.");
-    useEffect(() => onReady(), [onReady]);
-    return <div data-testid="world" />;
+    useEffect(() => {
+      if (!stub.holdReady) onReady();
+    }, [onReady]);
+    return (
+      <button type="button" data-testid="world" onClick={onReady}>
+        first frame
+      </button>
+    );
   }
   return { default: MockWorld };
 });
@@ -36,6 +43,7 @@ const signals = {
 beforeEach(() => {
   html.className = "has-webgl";
   stub.worldThrows = false;
+  stub.holdReady = false;
   sessionStorage.clear();
   document.body.innerHTML = '<div id="town-root"></div>';
   useBaseCamp.setState({ ...useBaseCamp.getInitialState(), mode: "story" });
@@ -69,6 +77,32 @@ describe("Town", () => {
     useBaseCamp.setState({ mode: "explore" });
     render(<Town />);
     expect(await screen.findByTestId("hud")).toBeTruthy();
+  });
+
+  it("loads the town at once on Text -> Explore, and shows the HUD only after the first frame", async () => {
+    stub.holdReady = true;
+    useBaseCamp.setState({ mode: "text" });
+    render(<Town />);
+    act(() => enterExplore());
+    expect(useBaseCamp.getState().mode).toBe("explore");
+    const world = await screen.findByTestId("world");
+    expect(screen.queryByTestId("hud")).toBeNull();
+    act(() => world.click());
+    expect(await screen.findByTestId("hud")).toBeTruthy();
+    expect(useBaseCamp.getState().town).toBe("ready");
+  });
+
+  it("brings the town back from Lite when Explore is chosen", async () => {
+    useBaseCamp.setState({ mode: "explore" });
+    render(<Town />);
+    await screen.findByTestId("hud");
+    act(() => useBaseCamp.getState().setQualityMode("Lite"));
+    await waitFor(() => expect(useBaseCamp.getState().town).toBe("off"));
+    expect(useBaseCamp.getState().mode).toBe("story");
+    act(() => enterExplore());
+    expect(await screen.findByTestId("hud")).toBeTruthy();
+    const s = useBaseCamp.getState();
+    expect([s.mode, s.town, s.qualityMode]).toEqual(["explore", "ready", "auto"]);
   });
 
   it("renders the canvas into #town-root", async () => {

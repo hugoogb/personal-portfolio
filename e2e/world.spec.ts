@@ -128,7 +128,9 @@ test("the console runs commands and unlocks Operator", async ({ page }) => {
   await expect(page.getByText("Achievement unlocked · Operator")).toBeVisible();
 });
 
-test("Lite keeps the story on the still image", async ({ page }) => {
+test("Lite keeps the story on the still image, and Explore turns the town back on", async ({
+  page,
+}) => {
   await page.goto("/");
   await ready(page);
   await page.getByRole("button", { name: "Settings" }).click();
@@ -139,10 +141,17 @@ test("Lite keeps the story on the still image", async ({ page }) => {
   await expect(html).not.toHaveClass(/town-ready/);
   await expect(page.locator(".stage")).toHaveCount(0);
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  await expect(page.getByRole("radio", { name: /Explore/ })).toHaveAttribute(
-    "aria-disabled",
-    "true",
+  // Lite is the visitor's choice, not a device that cannot draw: Explore stays open and says so.
+  const explore = page.getByRole("radio", { name: /Explore/ });
+  await expect(explore).not.toHaveAttribute("aria-disabled");
+  await expect(explore).toHaveAttribute(
+    "title",
+    "3D is off (Lite) - choose Explore to turn it back on",
   );
+  await explore.click();
+  await ready(page);
+  await expect(card(page, "Headquarters")).toBeVisible();
+  await expect(html).toHaveClass(/mode-explore/);
 });
 
 test("the mode switch moves between Explore, Story and Text", async ({ page }) => {
@@ -156,9 +165,9 @@ test("the mode switch moves between Explore, Story and Text", async ({ page }) =
   await page.getByRole("radio", { name: "Text" }).click();
   await expect(html).toHaveClass(/mode-text/);
   await expect(canvas(page)).toHaveCount(0);
-  await page.getByRole("radio", { name: "Story" }).click();
-  await expect(html).toHaveClass(/town-ready/, { timeout: 20_000 });
+  // Straight from Text: the town loads at once, and the HUD waits for its first frame.
   await page.getByRole("radio", { name: "Explore" }).click();
+  await expect(html).toHaveClass(/mode-explore/);
   await ready(page);
   await expect(card(page, "Headquarters")).toBeVisible();
 });
