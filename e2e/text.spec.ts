@@ -32,6 +32,7 @@ test("the HTML itself carries the whole page and the JSON-LD", async ({ request 
   for (const name of PROJECTS) expect(html, name).toContain(name);
   expect(html).toContain("hello@hugoogb.dev");
   expect(html).toContain('id="rail"');
+  expect(html).toContain("/posters/town-");
   expect(html).toContain("application/ld+json");
   const ld = html.match(/<script type="application\/ld\+json">(.*?)<\/script>/s);
   expect(ld).not.toBeNull();

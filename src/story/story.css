@@ -42,6 +42,25 @@ html.mode-explore #backdrop {
   background-size: cover;
   background-position: center;
 }
+/* The still of the town stands in until the canvas is drawn: Barcelona day or night, wide or tall. */
+.backdrop__still {
+  background-image: url("/posters/town-day-wide.webp");
+}
+html.night .backdrop__still {
+  background-image: url("/posters/town-night-wide.webp");
+}
+@media (max-aspect-ratio: 3/4) {
+  .backdrop__still {
+    background-image: url("/posters/town-day-tall.webp");
+  }
+  html.night .backdrop__still {
+    background-image: url("/posters/town-night-tall.webp");
+  }
+}
+/* The still is the landing view: further down the story it dims, so the cards read until the canvas takes over. */
+html.mode-story:not(.town-ready) .backdrop__still {
+  filter: saturate(0.95);
+}
 .backdrop__town {
   opacity: 0;
   transition: opacity 0.6s ease;

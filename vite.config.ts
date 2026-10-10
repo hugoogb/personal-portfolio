@@ -8,6 +8,13 @@ import { headScript } from "./src/boot/head";
 const HEAD_SCRIPT_SLOT = "<!-- head-script -->";
 
 /**
+ * Preloads the still image of the town that Story shows until the canvas is
+ * ready (spec 6.1): the night or day one, wide or tall, unless the head script
+ * chose Text. The media query is the one story.css picks the image with.
+ */
+const posterPreload = `<script>(function(){var c=document.documentElement.classList;if(c.contains("mode-text"))return;var l=document.createElement("link");l.rel="preload";l.as="image";l.fetchPriority="high";l.href="/posters/town-"+(c.contains("night")?"night":"day")+"-"+(matchMedia("(max-aspect-ratio: 3/4)").matches?"tall":"wide")+".webp";document.head.appendChild(l)})()</script>`;
+
+/**
  * Puts src/boot/head.ts into index.html as an inline script, in dev and build
  * alike, so the code that runs before first paint is the code the tests cover.
  */
@@ -17,7 +24,7 @@ const injectHeadScript = (): Plugin => ({
     if (!html.includes(HEAD_SCRIPT_SLOT)) {
       throw new Error(`index.html is missing ${HEAD_SCRIPT_SLOT}`);
     }
-    return html.replace(HEAD_SCRIPT_SLOT, `<script>${headScript}</script>`);
+    return html.replace(HEAD_SCRIPT_SLOT, `<script>${headScript}</script>${posterPreload}`);
   },
 });
 

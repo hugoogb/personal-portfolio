@@ -124,3 +124,13 @@ test("the mode is remembered across a reload", async ({ page }) => {
   await page.reload();
   await expect(page.locator("html")).toHaveClass(/mode-text/);
 });
+
+test("the still image shows before the town is ready", async ({ page }) => {
+  await page.route(/World-|lighting-/, () => new Promise(() => {})); // the town never arrives
+  await page.goto("/");
+  const bg = await page
+    .locator(".backdrop__still")
+    .evaluate((el) => getComputedStyle(el).backgroundImage);
+  expect(bg).toMatch(/\/posters\/town-(day|night)-(wide|tall)\.webp/);
+  await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+});
