@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { describe, expect, it, vi } from "vitest";
 import { ORDER } from "@/content/places";
 import { STORE_KEY, createBaseCampStore } from "@/store/store";
@@ -52,6 +53,7 @@ describe("store", () => {
       hudMode: "dark",
       qualityMode: "Low",
       seen: false,
+      mode: "text",
     });
   });
 
@@ -117,6 +119,27 @@ describe("store", () => {
     expect(store.getState().achievements).toEqual([]);
     expect(store.getState().seen).toBe(false);
     expect(store.getState().hudMode).toBe("dark");
+  });
+});
+
+describe("store, modes", () => {
+  it("persists the mode, applies its class, and drops an invalid saved mode", () => {
+    const storage = memory();
+    const a = createBaseCampStore(storage);
+    a.getState().setMode("explore");
+    expect(document.documentElement.classList.contains("mode-explore")).toBe(true);
+    expect(createBaseCampStore(storage).getState().mode).toBe("explore");
+    storage.setItem(STORE_KEY, JSON.stringify({ state: { mode: "brief" }, version: 1 }));
+    document.documentElement.className = "";
+    expect(createBaseCampStore(storage).getState().mode).toBe("text");
+  });
+
+  it("numbers arrivals so a repeat arrival is a new one", () => {
+    const s = createBaseCampStore(memory());
+    s.getState().arrive("rl");
+    const first = s.getState().arrival!;
+    s.getState().arrive("rl");
+    expect(s.getState().arrival!.seq).toBeGreaterThan(first.seq);
   });
 });
 
@@ -260,6 +283,7 @@ describe("store, phase 2", () => {
       "achievements",
       "discovered",
       "hudMode",
+      "mode",
       "qualityMode",
       "seen",
     ]);

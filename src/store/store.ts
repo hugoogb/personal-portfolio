@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
+import { applyModeClass, readModeClass, type Mode } from "@/boot/mode";
 import { MAX_DPR, TIER_NAMES, resolveTier, type QualityMode, type Tier } from "@/boot/tiers";
 import { ACHIEVEMENT_BY_ID, ACHIEVEMENT_IDS, type AchievementId } from "@/content/achievements";
 import { ORDER } from "@/content/places";
@@ -81,6 +82,13 @@ export interface BaseCampState {
   status: StatusMap | "unknown";
   /** Goals scored in the arena this visit; never saved. */
   score: number;
+  mode: Mode;
+  /** The story stop at the middle of the screen (StoryDriver). */
+  stop: number;
+  /** Whether the town can be shown: Explore is offered only when "ready". */
+  town: "loading" | "ready" | "off";
+  /** The last tour arrival; `seq` makes a repeat a new one. */
+  arrival: { id: PlaceId; seq: number } | null;
 
   select: (id: PlaceId) => void;
   deselect: () => void;
@@ -116,6 +124,10 @@ export interface BaseCampState {
   setStatus: (status: StatusMap | "unknown") => void;
   addGoal: (side: "Blue" | "Orange") => void;
   resetProgress: () => void;
+  setMode: (mode: Mode) => void;
+  setStop: (stop: number) => void;
+  setTown: (town: "loading" | "ready" | "off") => void;
+  arrive: (id: PlaceId) => void;
 }
 
 /** One record for everything persisted except the accent, which keeps today's "color" key. */
@@ -132,7 +144,7 @@ const listOf = <T>(allowed: readonly T[], value: unknown): T[] =>
 
 type Persisted = Pick<
   BaseCampState,
-  "discovered" | "achievements" | "hudMode" | "qualityMode" | "seen"
+  "discovered" | "achievements" | "hudMode" | "qualityMode" | "seen" | "mode"
 >;
 
 /**
@@ -140,7 +152,7 @@ type Persisted = Pick<
  * a hand-edited value, another version. Each field is kept only when it is
  * valid, so one bad field falls back to its default instead of breaking the HUD.
  */
-const restore = (saved: unknown): Partial<Persisted> => {
+const restore = (saved: unknown): Partial<Omit<Persisted, "mode">> => {
   if (!saved || typeof saved !== "object") return {};
   const s = saved as Record<string, unknown>;
   return {
@@ -154,6 +166,7 @@ const restore = (saved: unknown): Partial<Persisted> => {
 
 let nextToastId = 1;
 let nextGoalSeq = 1;
+let nextArrivalSeq = 1;
 
 export const createBaseCampStore = (storage: KeyValueStorage = safeStorage()) =>
   create<BaseCampState>()(
@@ -188,6 +201,10 @@ export const createBaseCampStore = (storage: KeyValueStorage = safeStorage()) =>
         waveAt: 0,
         status: "unknown",
         score: 0,
+        mode: typeof document === "undefined" ? "text" : readModeClass(),
+        stop: 0,
+        town: "loading",
+        arrival: null,
 
         select: (id) => {
           set((s) => ({
@@ -259,6 +276,13 @@ export const createBaseCampStore = (storage: KeyValueStorage = safeStorage()) =>
           get().achieve("goal");
         },
         resetProgress: () => set({ discovered: [], achievements: [], seen: false }),
+        setMode: (mode) => {
+          if (typeof document !== "undefined") applyModeClass(mode);
+          set({ mode });
+        },
+        setStop: (stop) => set({ stop }),
+        setTown: (town) => set({ town }),
+        arrive: (id) => set({ arrival: { id, seq: nextArrivalSeq++ } }),
       }),
       {
         name: STORE_KEY,
@@ -266,13 +290,17 @@ export const createBaseCampStore = (storage: KeyValueStorage = safeStorage()) =>
         storage: createJSONStorage(() => storage),
         // Every version goes through restore(), so no record needs migrating.
         migrate: (saved) => saved as Persisted,
-        merge: (saved, current) => ({ ...current, ...restore(saved) }),
+        // The head script already chose the mode before React and is the only
+        // reader of the saved one, so `current.mode` (from the class) stands:
+        // a #text hash beats the saved mode.
+        merge: (saved, current) => ({ ...current, ...restore(saved), mode: current.mode }),
         partialize: (s): Persisted => ({
           discovered: s.discovered,
           achievements: s.achievements,
           hudMode: s.hudMode,
           qualityMode: s.qualityMode,
           seen: s.seen,
+          mode: s.mode,
         }),
       },
     ),

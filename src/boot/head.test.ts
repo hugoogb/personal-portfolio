@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
-import { bootHead, headScript } from "@/boot/head";
+import { NIGHT_AFTER, NIGHT_BEFORE, bootHead, headScript } from "@/boot/head";
+import { EXPLORE_ONLY_SLUGS } from "@/content/tour";
+import { nightAmount } from "@/world/lib/sun";
 
 interface Env {
   stored?: Record<string, string>;
@@ -9,6 +11,8 @@ interface Env {
   townFailed?: boolean;
   reducedMotion?: boolean;
   saveData?: boolean;
+  hash?: string;
+  hour?: number;
 }
 
 const fake = (env: Env = {}) => {
@@ -18,7 +22,10 @@ const fake = (env: Env = {}) => {
   const doc = {
     documentElement: {
       style: { setProperty: (k: string, v: string) => void props.set(k, v) },
-      classList: { add: (...names: string[]) => names.forEach((c) => classes.add(c)) },
+      classList: {
+        add: (...names: string[]) => names.forEach((c) => classes.add(c)),
+        contains: (c: string) => classes.has(c),
+      },
     },
     createElement: () => ({
       getContext: (type: string) =>
@@ -35,6 +42,7 @@ const fake = (env: Env = {}) => {
   };
   const win = {
     sessionStorage: session,
+    location: { hash: env.hash ?? "" },
     get localStorage() {
       if (env.storageThrows) throw new Error("SecurityError");
       return storage;
@@ -45,9 +53,19 @@ const fake = (env: Env = {}) => {
   return { doc, win, props, classes, state };
 };
 
+const OPTS = {
+  exploreOnly: EXPLORE_ONLY_SLUGS,
+  nightBefore: NIGHT_BEFORE,
+  nightAfter: NIGHT_AFTER,
+};
+/** A Date whose Barcelona hour is `h` (10 Oct is CEST, UTC+2). */
+const dateAt = (h: number) => new Date(Date.UTC(2026, 9, 10, h - 2, 0));
+const saved = (mode: string) => ({ bc: JSON.stringify({ state: { mode }, version: 1 }) });
+const modes = (classes: Set<string>) => [...classes].filter((c) => c.startsWith("mode-"));
+
 const boot = (env: Env = {}) => {
   const f = fake(env);
-  bootHead(f.doc as unknown as Document, f.win as unknown as Window);
+  bootHead(f.doc as unknown as Document, f.win as unknown as Window, OPTS, dateAt(env.hour ?? 12));
   return f;
 };
 
@@ -103,14 +121,14 @@ describe("bootHead", () => {
     expect(f.classes.has("world")).toBe(false);
   });
 
-  it("lets a saved manual quality outrank reduced motion and Save-Data", () => {
+  it("no longer lets a saved manual quality outrank reduced motion or Save-Data: the mode rules decide", () => {
     const stored = { bc: JSON.stringify({ state: { qualityMode: "Low" } }) };
-    expect(boot({ stored, reducedMotion: true }).classes.has("world")).toBe(true);
-    expect(boot({ stored, saveData: true }).classes.has("world")).toBe(true);
+    expect(boot({ stored, reducedMotion: true }).classes.has("world")).toBe(false);
+    expect(boot({ stored, saveData: true }).classes.has("world")).toBe(false);
   });
 
   it("treats a WebGL1-only device as having no WebGL, since the town needs WebGL2", () => {
-    expect([...boot({ webgl1Only: true }).classes]).toEqual([]);
+    expect([...boot({ webgl1Only: true }).classes]).toEqual(["mode-text"]);
   });
 
   it("keeps has-webgl but skips the town after a failed boot this session", () => {
@@ -121,7 +139,53 @@ describe("bootHead", () => {
   });
 
   it("adds nothing without WebGL", () => {
-    expect([...boot({ webgl: false }).classes]).toEqual([]);
+    expect([...boot({ webgl: false }).classes]).toEqual(["mode-text"]);
+  });
+});
+
+describe("mode before first paint", () => {
+  it("starts in Story by default", () => expect(modes(boot().classes)).toEqual(["mode-story"]));
+  it("starts in Text without WebGL2, with reduced motion, with Save-Data or after a failed town", () => {
+    for (const env of [
+      { webgl: false },
+      { reducedMotion: true },
+      { saveData: true },
+      { townFailed: true },
+    ])
+      expect(modes(boot(env).classes)).toEqual(["mode-text"]);
+  });
+  it("restores a saved mode", () => {
+    expect(modes(boot({ stored: saved("explore") }).classes)).toEqual(["mode-explore"]);
+    expect(modes(boot({ stored: saved("text") }).classes)).toEqual(["mode-text"]);
+  });
+  it("keeps a saved Story without WebGL2: the story works on the still image", () => {
+    expect(modes(boot({ webgl: false, stored: saved("story") }).classes)).toEqual(["mode-story"]);
+  });
+  it("turns a saved Explore into Text when WebGL2 is gone", () => {
+    expect(modes(boot({ webgl: false, stored: saved("explore") }).classes)).toEqual(["mode-text"]);
+  });
+  it("lets #text win over a saved mode", () => {
+    expect(modes(boot({ hash: "#text", stored: saved("explore") }).classes)).toEqual(["mode-text"]);
+  });
+  it("opens Explore for an explore-only place, and Text for one without WebGL2", () => {
+    expect(modes(boot({ hash: "#Stadium" }).classes)).toEqual(["mode-explore"]);
+    expect(modes(boot({ hash: "#stadium", webgl: false }).classes)).toEqual(["mode-text"]);
+  });
+  it("leaves the mode alone for a tour section's hash", () => {
+    expect(modes(boot({ hash: "#readledger", stored: saved("text") }).classes)).toEqual([
+      "mode-text",
+    ]);
+  });
+  it("ignores a corrupt saved mode", () => {
+    expect(modes(boot({ stored: { bc: "{not json" } }).classes)).toEqual(["mode-story"]);
+  });
+  it("marks night exactly when the town's lighting is mostly night", () => {
+    for (let h = 0; h < 24; h++)
+      expect(boot({ hour: h }).classes.has("night")).toBe(nightAmount(h) > 0.5);
+  });
+  it("passes its options in the shipped script", () => {
+    expect(headScript).toContain(JSON.stringify(EXPLORE_ONLY_SLUGS[0]));
+    expect(headScript).toContain(JSON.stringify([...EXPLORE_ONLY_SLUGS].sort()));
   });
 });
 
