@@ -41,6 +41,12 @@ test.describe("Text mode", () => {
   });
 });
 
+// Esc leaves Explore now; empty ground is what clears the selection (its label has its own contrast).
+const deselect = async (page: Page) => {
+  const box = (await page.locator("#town-root canvas").boundingBox())!;
+  await page.mouse.click(box.x + 10, box.y + 10);
+};
+
 test.describe("the town", () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript((record) => localStorage.setItem("bc", record), LOW);
@@ -53,7 +59,7 @@ test.describe("the town", () => {
     await page.keyboard.press("Control+k");
     await page.keyboard.type("day");
     await page.keyboard.press("Enter");
-    await page.keyboard.press("Escape");
+    await deselect(page);
     await expect(page.locator(".stage")).toHaveAttribute("data-hud", "light");
     await scan(page, "hud-light");
     await page.getByRole("button", { name: "Settings" }).click();
@@ -70,7 +76,7 @@ test.describe("the town", () => {
     await scan(page, "console");
     await page.keyboard.type("night");
     await page.keyboard.press("Enter");
-    await page.keyboard.press("Escape");
+    await deselect(page);
     await expect(page.locator(".stage")).toHaveAttribute("data-hud", "dark");
     await scan(page, "hud-dark");
     await page.getByRole("button", { name: "Settings" }).click();

@@ -2,6 +2,7 @@ import "@fontsource/barlow-condensed/600.css";
 import "@/hud/hud.css";
 import { useEffect } from "react";
 import { PLACE_BY_ID, placeBySlug } from "@/content/places";
+import { STOPS } from "@/content/tour";
 import { Console } from "@/hud/Console";
 import { DriveBar } from "@/hud/DriveBar";
 import { Hint } from "@/hud/Hint";
@@ -32,11 +33,21 @@ export function Hud() {
   useHudKeys();
 
   // Entering Explore from a link selects that link's place; otherwise keep the selection, or HQ.
+  // From the finale (a stop with no place) nothing is selected, so the camera stays at the overview.
   useEffect(() => {
     const s = useBaseCamp.getState();
     const place = placeBySlug(window.location.hash);
     if (place) s.select(place.id);
-    else if (!s.selected) s.select("hq");
+    else if (!s.selected && STOPS[s.stop]?.place) s.select("hq");
+  }, []);
+
+  // In Explore the address follows the selection (replaceState: no hashchange, no loop).
+  useEffect(() => {
+    return useBaseCamp.subscribe((s, prev) => {
+      if (s.selected === prev.selected) return;
+      const url = s.selected ? `#${PLACE_BY_ID[s.selected].slug}` : location.pathname;
+      history.replaceState(history.state, "", url);
+    });
   }, []);
 
   return (

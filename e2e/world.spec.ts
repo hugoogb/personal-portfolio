@@ -70,13 +70,14 @@ test("/#readledger selects ReadLedger, with its screenshot", async ({ page }) =>
   await expect(shot.getByRole("img", { name: "Screenshot of ReadLedger" })).toBeVisible();
 });
 
-test("the arrow keys cycle and Esc deselects", async ({ page }) => {
+test("the arrow keys cycle and Esc returns to the story at that place", async ({ page }) => {
   await page.goto("/");
   await ready(page);
   await page.keyboard.press("ArrowRight");
   await expect(card(page, "F1 Tracker")).toBeVisible();
   await page.keyboard.press("Escape");
-  await expect(page.getByText("Click a place to inspect it")).toBeVisible();
+  await expect(page.locator("html")).toHaveClass(/mode-story/);
+  await expect(page.locator('[data-rail="f1"]')).toHaveAttribute("aria-current", "true");
 });
 
 test("clicking a place selects it, a drag that ends on it does not, and clicking empty space deselects", async ({
@@ -84,19 +85,20 @@ test("clicking a place selects it, a drag that ends on it does not, and clicking
 }) => {
   await page.goto("/");
   await ready(page);
-  await page.keyboard.press("Escape");
   const hint = page.getByText("Click a place to inspect it");
-  await expect(hint).toBeVisible();
   const box = (await canvas(page).boundingBox())!;
   const cx = box.x + box.width / 2;
   const cy = box.y + box.height / 2;
+  // Esc leaves Explore now, so empty ground is the way to deselect.
+  await page.mouse.click(box.x + 10, box.y + 10);
+  await expect(hint).toBeVisible();
 
   await page.mouse.click(cx, cy);
   await expect(card(page, "Headquarters")).toBeVisible();
 
   // The ground follows the pointer in a pan, so a drag that starts over HQ ends
-  // over HQ. It must not count as a click: pressing Esc first, nothing is selected.
-  await page.keyboard.press("Escape");
+  // over HQ. It must not count as a click: deselect first, then nothing is selected.
+  await page.mouse.click(box.x + 10, box.y + 10);
   await expect(hint).toBeVisible();
   await page.mouse.move(cx, cy);
   await page.mouse.down();

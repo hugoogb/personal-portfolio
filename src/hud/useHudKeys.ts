@@ -2,14 +2,15 @@ import { useEffect } from "react";
 import { PLACE_BY_ID, stepPlace } from "@/content/places";
 import { runPrimary, runSecondary, runTertiary } from "@/hud/actions";
 import { keyAction } from "@/hud/keys";
+import { enterStory } from "@/story/transitions";
 import { useBaseCamp, type BaseCampState } from "@/store/store";
 
-/** Esc closes the innermost thing first, then deselects (spec 4.2). */
+/** Esc closes the innermost thing first, then returns to the story (story spec 3.3). */
 const escape = (s: BaseCampState) => {
   if (s.consoleOpen) return s.setConsoleOpen(false);
   if (s.panel) return s.setPanel(null);
   if (s.driving) return s.setDriving(false);
-  s.deselect();
+  enterStory(s.selected);
 };
 
 export const useHudKeys = () => {

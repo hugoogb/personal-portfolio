@@ -16,7 +16,7 @@ const press = (key: string, init: KeyboardEventInit = {}) =>
 beforeEach(() => useBaseCamp.setState({ ...useBaseCamp.getInitialState(), introDone: true }));
 
 describe("useHudKeys", () => {
-  it("cycles from HQ and deselects on Escape", () => {
+  it("cycles from HQ", () => {
     render(<Probe />);
     press("ArrowRight");
     expect(useBaseCamp.getState().selected).toBe("hq");
@@ -24,19 +24,38 @@ describe("useHudKeys", () => {
     expect(useBaseCamp.getState().selected).toBe("f1");
     press("ArrowLeft");
     expect(useBaseCamp.getState().selected).toBe("hq");
-    press("Escape");
-    expect(useBaseCamp.getState().selected).toBeNull();
   });
 
   it("closes the innermost thing first on Escape", () => {
     render(<Probe />);
-    useBaseCamp.setState({ selected: "rl", panel: "settings", consoleOpen: true });
+    useBaseCamp.setState({ mode: "explore", selected: "rl", panel: "settings", consoleOpen: true });
     press("Escape");
     expect(useBaseCamp.getState().consoleOpen).toBe(false);
     press("Escape");
     expect(useBaseCamp.getState().panel).toBeNull();
     press("Escape");
-    expect(useBaseCamp.getState().selected).toBeNull();
+    expect(useBaseCamp.getState().mode).toBe("story");
+  });
+
+  it("Esc closes the console, then a panel, then stops driving, then returns to Story", () => {
+    render(<Probe />);
+    useBaseCamp.setState({
+      mode: "explore",
+      introDone: true,
+      consoleOpen: true,
+      panel: "settings",
+      driving: true,
+      selected: "arena",
+    });
+    press("Escape");
+    expect(useBaseCamp.getState().consoleOpen).toBe(false);
+    press("Escape");
+    expect(useBaseCamp.getState().panel).toBeNull();
+    press("Escape");
+    expect(useBaseCamp.getState().driving).toBe(false);
+    expect(useBaseCamp.getState().mode).toBe("explore");
+    press("Escape");
+    expect(useBaseCamp.getState().mode).toBe("story");
   });
 
   it("ignores shortcuts typed into a field", () => {

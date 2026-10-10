@@ -77,3 +77,50 @@ test("the landing name stays on screen while the town arrives on a first visit",
     await page.evaluate(() => (window as unknown as { __landingMin: number }).__landingMin),
   ).toBe(1);
 });
+
+test("Story to Explore and back keeps the place", async ({ page }) => {
+  await page.goto("/#readledger");
+  await expect(page.locator("html")).toHaveClass(/town-ready/, { timeout: 20_000 });
+  await page.getByRole("radio", { name: "Explore" }).click();
+  await expect(page.locator("html")).toHaveClass(/mode-explore/);
+  await expect(page.getByRole("heading", { level: 2, name: "ReadLedger" })).toBeVisible();
+  // Keys wait for the build-in to finish.
+  await expect(page.locator(".stage")).not.toHaveAttribute("inert", { timeout: 10_000 });
+  await page.keyboard.press("Escape");
+  await expect(page.locator("html")).toHaveClass(/mode-story/);
+  await expect(page.locator('[data-rail="rl"]')).toHaveAttribute("aria-current", "true");
+});
+
+test("Text is reachable from Story and Explore, and loads no town from a cold start", async ({
+  page,
+}) => {
+  const town: string[] = [];
+  page.on("request", (r) => /World-|lighting-/.test(r.url()) && town.push(r.url()));
+  await page.goto("/#text");
+  await expect(page.locator("html")).toHaveClass(/mode-text/);
+  expect(town).toEqual([]);
+});
+
+test("the finale's prompt opens Explore at the overview", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator("html")).toHaveClass(/town-ready/, { timeout: 20_000 });
+  await page.evaluate(() =>
+    document.getElementById("explore")!.scrollIntoView({ block: "center" }),
+  );
+  await page.getByRole("button", { name: /Explore the town/ }).click();
+  await expect(page.locator("html")).toHaveClass(/mode-explore/);
+});
+
+test("#stadium opens Explore on the stadium", async ({ page }) => {
+  await page.goto("/#stadium");
+  await expect(page.locator("html")).toHaveClass(/mode-explore/);
+  await expect(page.locator("html")).toHaveClass(/town-ready/, { timeout: 20_000 });
+  await expect(page.getByRole("heading", { level: 2, name: /Stadium/ })).toBeVisible();
+});
+
+test("the mode is remembered across a reload", async ({ page }) => {
+  await page.goto("/");
+  await page.getByRole("radio", { name: "Text" }).click();
+  await page.reload();
+  await expect(page.locator("html")).toHaveClass(/mode-text/);
+});

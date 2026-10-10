@@ -1,6 +1,7 @@
 import type { PlaceId } from "@/content/types";
-import { STOPS } from "@/content/tour";
+import { STOPS, stopIndexForPlace } from "@/content/tour";
 import { useBaseCamp, type BaseCampState } from "@/store/store";
+import { prefersReducedMotion } from "@/utils/motion";
 
 const CANT_DRAW = "Your browser can't draw the 3D town";
 export const LITE_HINT = "3D is off (Lite) - choose Explore to turn it back on";
@@ -20,6 +21,14 @@ export const liteOff = (s: Pick<BaseCampState, "town" | "qualityMode">) =>
 export const exploreBlocked = (s: Pick<BaseCampState, "town" | "qualityMode">) =>
   !hasWebgl() || (s.town === "off" && !liteOff(s)) ? CANT_DRAW : null;
 
+export const scrollToStop = (i: number, smooth = false) => {
+  const stop = STOPS[Math.max(0, Math.min(STOPS.length - 1, i))];
+  document.getElementById(stop.anchor)?.scrollIntoView({
+    block: stop.id === "top" ? "start" : "center",
+    behavior: smooth && !prefersReducedMotion() ? "smooth" : "auto",
+  });
+};
+
 /**
  * Explore from any mode. The town loads at once if it is not in yet (the still
  * image shows meanwhile, the HUD waits for the first frame); after Lite, the 3D
@@ -32,10 +41,23 @@ export const enterExplore = (place?: PlaceId) => {
     s.setQualityMode(s.autoTier === 0 ? "Low" : "auto");
     s.setTown("loading");
   }
-  s.select(place ?? STOPS[s.stop]?.place ?? "hq");
+  // The finale has no place: deselect, so the camera stays at the overview.
+  const target = place ?? STOPS[s.stop]?.place ?? null;
+  if (target) s.select(target);
+  else s.deselect();
   s.setMode("explore");
 };
 
-export const enterStory = () => useBaseCamp.getState().setMode("story");
+export const enterStory = (place?: PlaceId | null) => {
+  const s = useBaseCamp.getState();
+  const target = place ?? s.selected ?? "hq";
+  s.setMode("story");
+  requestAnimationFrame(() => scrollToStop(stopIndexForPlace(target)));
+};
 
-export const enterText = () => useBaseCamp.getState().setMode("text");
+export const enterText = () => {
+  const s = useBaseCamp.getState();
+  const i = s.mode === "explore" && s.selected ? stopIndexForPlace(s.selected) : s.stop;
+  s.setMode("text");
+  requestAnimationFrame(() => scrollToStop(i));
+};

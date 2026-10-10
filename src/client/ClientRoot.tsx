@@ -4,7 +4,8 @@ import { Town } from "@/boot/Town";
 import { useAccentFavicon } from "@/hooks/useAccentFavicon";
 import { useStatus } from "@/hooks/useStatus";
 import { ModeSwitch } from "@/story/ModeSwitch";
-import { exploreBlocked } from "@/story/transitions";
+import { enterExplore, exploreBlocked } from "@/story/transitions";
+import { useHashRoutes } from "@/story/useHashRoutes";
 import { useStoryDriver } from "@/story/useStoryDriver";
 import { useStoryStatus } from "@/story/useStoryStatus";
 import { useBaseCamp } from "@/store/store";
@@ -20,6 +21,7 @@ export function ClientRoot() {
   useStatus();
   useStoryStatus();
   useStoryDriver();
+  useHashRoutes();
 
   // The document is never hydrated: the finale's prompt and the inert story are wired here.
   useEffect(() => {
@@ -29,6 +31,14 @@ export function ClientRoot() {
     // Same rule as the switch's Explore option.
     if (cta) cta.disabled = mode !== "story" || exploreBlocked({ town, qualityMode }) !== null;
   }, [mode, town, qualityMode]);
+
+  // The finale's prompt (the button's `disabled` is kept up to date above).
+  useEffect(() => {
+    const cta = document.querySelector<HTMLButtonElement>("[data-explore-cta]");
+    const onClick = () => enterExplore();
+    cta?.addEventListener("click", onClick);
+    return () => cta?.removeEventListener("click", onClick);
+  }, []);
 
   return (
     <>
