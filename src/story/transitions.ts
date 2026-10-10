@@ -50,9 +50,13 @@ export const enterExplore = (place?: PlaceId) => {
 
 export const enterStory = (place?: PlaceId | null) => {
   const s = useBaseCamp.getState();
-  const target = place ?? s.selected ?? "hq";
+  // No place and no selection (Esc after the finale's Explore): back to where the tour was.
+  const i = (place ?? s.selected) ? stopIndexForPlace((place ?? s.selected)!) : s.stop;
+  // Scroll first: the document keeps its layout in Explore, and the driver's first
+  // announce on resuming then sees the target, not the pre-Explore position.
+  scrollToStop(i);
   s.setMode("story");
-  requestAnimationFrame(() => scrollToStop(stopIndexForPlace(target)));
+  requestAnimationFrame(() => scrollToStop(i));
 };
 
 export const enterText = () => {

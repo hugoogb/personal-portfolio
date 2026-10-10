@@ -3,6 +3,7 @@ import { act, cleanup, render } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 import type { PlaceId } from "@/content/types";
 import { useBaseCamp } from "@/store/store";
+import { enterStory } from "@/story/transitions";
 import { Story } from "@/story/Story";
 import { useStoryDriver } from "@/story/useStoryDriver";
 import { useStoryStatus } from "@/story/useStoryStatus";
@@ -47,6 +48,26 @@ beforeEach(() => {
 afterEach(cleanup);
 
 describe("useStoryDriver", () => {
+  it("resuming Story at place Y after a scroll at X never announces X", () => {
+    render(<Driver />);
+    setScroll(focus(3)); // ReadLedger
+    act(() => useBaseCamp.setState({ mode: "explore", selected: "es" }));
+    arrive.mockClear();
+    const sections = [...document.querySelectorAll<HTMLElement>("#story > section[data-stop]")];
+    Element.prototype.scrollIntoView = function (this: Element) {
+      Object.defineProperty(window, "scrollY", {
+        value: focus(sections.indexOf(this as HTMLElement)),
+        configurable: true,
+      });
+    };
+    act(() => enterStory());
+    expect(arrive).not.toHaveBeenCalledWith("rl");
+    expect(arrive).toHaveBeenCalledWith("es");
+    expect(useBaseCamp.getState().stop).toBe(5);
+    expect(useBaseCamp.getState().selected).toBe("es");
+    expect(location.hash).toBe("#esto-no-es-un-restaurante");
+  });
+
   it("scrolling to ReadLedger's centre sets the stop, the hash, the rail and the selection", () => {
     render(<Driver />);
     setScroll(focus(3));

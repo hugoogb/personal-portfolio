@@ -121,6 +121,16 @@ describe("enterStory and enterText", () => {
     expect(spy.mock.contexts[0]).toBe(document.getElementById(stop.anchor));
   });
 
+  it("enterStory with nothing selected returns to the current stop (the finale)", async () => {
+    sections();
+    const spy = vi.fn();
+    Element.prototype.scrollIntoView = spy;
+    useBaseCamp.setState({ mode: "explore", stop: STOPS.length - 1, selected: null });
+    enterStory();
+    await nextFrame();
+    expect(spy.mock.contexts[0]).toBe(document.getElementById("explore"));
+  });
+
   it("enterText scrolls to the current stop", async () => {
     sections();
     const spy = vi.fn();
