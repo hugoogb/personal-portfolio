@@ -2,6 +2,7 @@ import { useFrame } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
 import { useBaseCamp } from "@/store/store";
+import { prefersReducedMotion } from "@/utils/motion";
 import type { BuiltWorld } from "@/world/build";
 import { wasDrag } from "@/world/lib/drag";
 import {
@@ -66,6 +67,16 @@ export function Eggs({ world }: { world: BuiltWorld }) {
   const q = useMemo(() => new THREE.Quaternion(), []);
   const pos = useMemo(() => new THREE.Vector3(), []);
   const tall = useMemo(() => new THREE.Vector3(1, 1.35, 1), []);
+
+  // The tour's arrival at the F1 stop flashes the cars too, without the achievement.
+  useEffect(
+    () =>
+      useBaseCamp.subscribe((s, prev) => {
+        if (s.arrival?.id === "f1" && s.arrival !== prev.arrival && !prefersReducedMotion())
+          flash.current = FLASH_S;
+      }),
+    [],
+  );
 
   useEffect(() => {
     let last = useBaseCamp.getState().waveAt;

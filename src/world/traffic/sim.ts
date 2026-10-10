@@ -54,6 +54,20 @@ export class TrafficSim {
     this.onPulse?.(p);
   }
 
+  /** A tour arrival (spec 4.4): `n` requests leave this route's door at once. */
+  burst(plan: number, n: number) {
+    const route = this.plans[plan]?.route;
+    if (!route || this.caps.req === 0) return;
+    for (let i = 0; i < n; i++) {
+      if (this.reqs.length >= this.caps.req) this.reqs.shift();
+      const p: Packet = { plan, s: -i * 0.35, speed: this.plans[plan].speed };
+      this.reqs.push(p);
+      this.onSpawn?.(p);
+    }
+    const [x, z] = route.path[0];
+    this.pulse(x, z, false);
+  }
+
   step(dt: number) {
     for (let i = 0; i < this.plans.length; i++) {
       const plan = this.plans[i];

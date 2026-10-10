@@ -10,6 +10,7 @@ import { EffectsBoundary } from "@/world/effects/EffectsBoundary";
 import { CAMERA_OFFSET } from "@/world/lib/camera";
 import { wasDrag } from "@/world/lib/drag";
 import { Places } from "@/world/scene/Places";
+import { Arrivals } from "@/world/systems/Arrivals";
 import { ArenaDrive } from "@/world/systems/ArenaDrive";
 import { BuildIn } from "@/world/systems/BuildIn";
 import { CameraRig } from "@/world/systems/CameraRig";
@@ -118,6 +119,7 @@ export default function World({ onReady }: WorldProps) {
         <>
           <BuildIn world={world} />
           <DayNight world={world} />
+          <Arrivals world={world} />
           <primitive object={world.town.root} />
           <Places places={world.places} />
           <Life world={world} />

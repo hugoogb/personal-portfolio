@@ -88,4 +88,17 @@ describe("TrafficSim", () => {
     expect(sim.pulses).toBe(pulses);
     expect(finished).toBeGreaterThan(0);
   });
+
+  it("bursts requests on one route, dropping the oldest when the cap is full", () => {
+    const sim = new TrafficSim(
+      [plan({ rate: 0, speed: 1 }), plan({ rate: 0, speed: 1 })],
+      { req: 4, res: 2 },
+      () => 0,
+    );
+    sim.burst(1, 3);
+    expect(sim.reqs.filter((p) => p.plan === 1)).toHaveLength(3);
+    sim.burst(0, 3);
+    expect(sim.reqs).toHaveLength(4);
+    expect(sim.reqs.filter((p) => p.plan === 0)).toHaveLength(3);
+  });
 });
