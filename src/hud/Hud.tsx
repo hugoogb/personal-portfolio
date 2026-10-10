@@ -15,7 +15,6 @@ import { Toasts } from "@/hud/Toasts";
 import { TopBar } from "@/hud/TopBar";
 import { Trophies } from "@/hud/Trophies";
 import { useHudKeys } from "@/hud/useHudKeys";
-import { useStatus } from "@/hooks/useStatus";
 import { useBaseCamp } from "@/store/store";
 
 /**
@@ -31,7 +30,6 @@ export function Hud() {
   const driving = useBaseCamp((s) => s.driving);
   const introDone = useBaseCamp((s) => s.introDone);
   useHudKeys();
-  useStatus();
 
   // Entering Explore from a link selects that link's place; otherwise keep the selection, or HQ.
   useEffect(() => {

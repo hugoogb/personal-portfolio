@@ -2,8 +2,11 @@ import { SpeedInsights } from "@vercel/speed-insights/react";
 import { useEffect } from "react";
 import { Town } from "@/boot/Town";
 import { useAccentFavicon } from "@/hooks/useAccentFavicon";
+import { useStatus } from "@/hooks/useStatus";
 import { ModeSwitch } from "@/story/ModeSwitch";
 import { exploreBlocked } from "@/story/transitions";
+import { useStoryDriver } from "@/story/useStoryDriver";
+import { useStoryStatus } from "@/story/useStoryStatus";
 import { useBaseCamp } from "@/store/store";
 
 /** Everything on the page that needs JavaScript: the mode switch, the town, the favicon. */
@@ -13,6 +16,10 @@ export function ClientRoot() {
   const town = useBaseCamp((s) => s.town);
   const qualityMode = useBaseCamp((s) => s.qualityMode);
   useAccentFavicon(accent);
+  // Polling runs in every mode; the pills and the tour only matter in the story document.
+  useStatus();
+  useStoryStatus();
+  useStoryDriver();
 
   // The document is never hydrated: the finale's prompt and the inert story are wired here.
   useEffect(() => {
