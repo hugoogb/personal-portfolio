@@ -2,6 +2,24 @@
    Text: a plain page. Story: the town pinned behind, a card per stop.
    Explore: the document hidden (the HUD takes over, Task 4). */
 
+/* Story colours: the cards, rail, chip and landing text follow the town's
+   day/night (the .night class), never the system theme, like the HUD. Text mode
+   keeps the global tokens. */
+html.mode-story {
+  --st-glass: rgb(255 255 255 / 0.8);
+  --st-ink: #1b1f24;
+  --st-muted: #5b6370;
+  --st-line: rgb(20 24 30 / 0.1);
+  --st-line-strong: rgb(20 24 30 / 0.28);
+}
+html.mode-story.night {
+  --st-glass: rgb(18 24 38 / 0.78);
+  --st-ink: #eef2f7;
+  --st-muted: #9aa6b8;
+  --st-line: rgb(255 255 255 / 0.12);
+  --st-line-strong: rgb(255 255 255 / 0.3);
+}
+
 #backdrop {
   display: none;
 }
@@ -77,27 +95,23 @@ html.mode-story .story-stop--finale {
 }
 html.mode-story .story-card {
   width: min(30rem, 100%);
-  background: var(--story-glass, rgb(255 255 255 / 0.8));
+  background: var(--st-glass);
+  color: var(--st-ink);
   -webkit-backdrop-filter: blur(14px) saturate(1.3);
   backdrop-filter: blur(14px) saturate(1.3);
-  border: 1px solid rgb(20 24 30 / 0.1);
+  border: 1px solid var(--st-line);
   border-radius: 16px;
   box-shadow: 0 10px 32px rgb(20 30 50 / 0.16);
   padding: 1.5rem;
-}
-html.mode-story.night .story-card {
-  --story-glass: rgb(18 24 38 / 0.78);
-  color: #eef2f7;
-  border-color: rgb(255 255 255 / 0.12);
 }
 html.mode-story .story-landing,
 html.mode-story .story-finale {
   text-align: center;
   text-shadow: 0 2px 18px rgb(0 0 0 / 0.25);
 }
-html.mode-story.night .story-landing,
-html.mode-story.night .story-finale {
-  color: #fff;
+html.mode-story .story-landing,
+html.mode-story .story-finale {
+  color: var(--st-ink);
 }
 
 /* Explore */
@@ -245,9 +259,6 @@ html.mode-explore #rail {
   position: relative;
   color: var(--text-color);
 }
-html.night .rail__dot {
-  color: #fff;
-}
 .rail__dot[aria-current="true"] {
   background: var(--primary-color);
   border-color: var(--primary-color);
@@ -281,7 +292,6 @@ html.night .rail__dot {
     left: 50%;
     transform: translateX(-50%);
     z-index: 5;
-    background: rgb(255 255 255 / 0.85);
     backdrop-filter: blur(12px);
     border-radius: 999px;
     padding: 0.35rem 0.9rem;
@@ -292,11 +302,98 @@ html.night .rail__dot {
   }
 }
 
+/* Story-mode colours for the shared pieces (declared after them, same specificity + html) */
+html.mode-story .story-chips li,
+html.mode-story .story-badge,
+html.mode-story .story-status,
+html.mode-story .story-btn {
+  border-color: var(--st-line-strong);
+}
+html.mode-story .story-btn:not(.story-btn--primary) {
+  color: var(--st-ink);
+  background: transparent;
+}
+html.mode-story .story-stack,
+html.mode-story .story-note {
+  color: var(--st-muted);
+  opacity: 1;
+}
+html.mode-story .story-landing__cue,
+html.mode-story .story-email {
+  color: var(--st-ink);
+}
+html.mode-story .rail__dot {
+  color: var(--st-ink);
+}
+html.mode-story .rail__label {
+  background: var(--st-glass);
+  color: var(--st-ink);
+  border-radius: 999px;
+  padding: 0.15rem 0.6rem;
+}
+html.mode-story .rail-chip {
+  background: var(--st-glass);
+  color: var(--st-ink);
+  border: 1px solid var(--st-line);
+}
+html.mode-story .rail-chip a {
+  color: var(--st-ink);
+}
+html.mode-story .rail__dot[aria-current="true"] {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+/* Print is always the Text layout, whatever mode is on screen (spec 3.3) */
 @media print {
   #backdrop,
   #rail,
   .story-landing__cue,
   .story-stop--finale {
     display: none !important;
+  }
+  html,
+  body,
+  html.mode-explore,
+  html.mode-explore body {
+    height: auto !important;
+    overflow: visible !important;
+    background: #fff !important;
+  }
+  html.mode-explore #story {
+    visibility: visible !important;
+  }
+  #story {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    color: #000 !important;
+  }
+  .story-stop {
+    display: block !important;
+    min-height: 0 !important;
+    padding: 1.5rem 0 !important;
+    break-inside: avoid;
+  }
+  .story-card,
+  .story-landing,
+  .story-finale {
+    width: auto !important;
+    background: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    padding: 0 !important;
+    text-align: left !important;
+  }
+  #story,
+  #story * {
+    color: #000 !important;
+  }
+  .story-btn--primary {
+    background: none !important;
+    border: 1px solid #000 !important;
   }
 }
