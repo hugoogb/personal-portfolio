@@ -54,14 +54,14 @@ describe("useStoryDriver", () => {
     setScroll(focus(3)); // ReadLedger
     act(() => useBaseCamp.setState({ mode: "explore", selected: "es" }));
     arrive.mockClear();
-    const sections = [...document.querySelectorAll<HTMLElement>("#story > section[data-stop]")];
-    Element.prototype.scrollIntoView = function (this: Element) {
+    const realScrollTo = window.scrollTo;
+    window.scrollTo = ((o: ScrollToOptions) =>
       Object.defineProperty(window, "scrollY", {
-        value: focus(sections.indexOf(this as HTMLElement)),
+        value: o.top,
         configurable: true,
-      });
-    };
+      })) as typeof window.scrollTo;
     act(() => enterStory());
+    window.scrollTo = realScrollTo;
     expect(arrive).not.toHaveBeenCalledWith("rl");
     expect(arrive).toHaveBeenCalledWith("es");
     expect(useBaseCamp.getState().stop).toBe(5);
@@ -145,15 +145,8 @@ describe("useStoryDriver", () => {
 });
 
 describe("switching modes keeps the position", () => {
-  const sections = () => [...document.querySelectorAll<HTMLElement>("#story > section[data-stop]")];
   const realScrollTo = window.scrollTo;
   beforeEach(() => {
-    Element.prototype.scrollIntoView = function (this: Element) {
-      Object.defineProperty(window, "scrollY", {
-        value: focus(sections().indexOf(this as HTMLElement)),
-        configurable: true,
-      });
-    };
     window.scrollTo = ((o: ScrollToOptions) =>
       Object.defineProperty(window, "scrollY", {
         value: o.top,

@@ -147,3 +147,21 @@ test("the still image shows before the town is ready", async ({ page }) => {
   expect(bg).toMatch(/\/posters\/town-(day|night)-(wide|tall)\.webp/);
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 });
+
+test.describe("on a phone", () => {
+  test.use({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true });
+
+  test("a section link lands with the building in the top half and the card sheet below it", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    await page.locator('[data-rail-chip="rl"]').evaluate((a: HTMLAnchorElement) => a.click());
+    await expect(page.locator("[data-rail-label]")).toHaveText("ReadLedger");
+    const top = await page
+      .locator("#readledger .story-card")
+      .evaluate((el) => el.getBoundingClientRect().top / window.innerHeight);
+    // The card sheet starts just under the building's half of the screen, never over it.
+    expect(top).toBeGreaterThan(0.5);
+    expect(top).toBeLessThan(0.65);
+  });
+});

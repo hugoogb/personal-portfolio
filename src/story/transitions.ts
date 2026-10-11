@@ -1,7 +1,7 @@
 import type { PlaceId } from "@/content/types";
 import { STOPS, stopIndexForPlace } from "@/content/tour";
 import { useBaseCamp, type BaseCampState } from "@/store/store";
-import { stopInView } from "@/story/progress";
+import { readStops, stopInView } from "@/story/progress";
 import { prefersReducedMotion } from "@/utils/motion";
 
 const CANT_DRAW = "Your browser can't draw the 3D town";
@@ -35,8 +35,12 @@ export interface How {
 /** "instant", not "auto": the page's smooth scroll-behavior would turn "auto" into a fly-past. */
 export const scrollToStop = (i: number, smooth = false) => {
   const stop = STOPS[Math.max(0, Math.min(STOPS.length - 1, i))];
-  document.getElementById(stop.anchor)?.scrollIntoView({
-    block: stop.id === "top" ? "start" : "center",
+  const el = document.getElementById(stop.anchor);
+  if (!el) return;
+  // To the stop's line (measureStops): centred, or top-aligned for a section taller than the screen.
+  const [line] = readStops([el]);
+  window.scrollTo({
+    top: Math.max(0, line - window.innerHeight / 2),
     behavior: smooth && !prefersReducedMotion() ? "smooth" : "instant",
   });
 };

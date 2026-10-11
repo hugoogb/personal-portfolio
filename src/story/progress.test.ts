@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { currentStop, measureCenters, stopProgress } from "@/story/progress";
+import { currentStop, measureCenters, measureStops, stopProgress } from "@/story/progress";
 
 const centers = measureCenters([
   { top: 0, height: 800 },
@@ -27,5 +27,25 @@ describe("stopProgress", () => {
       { top: 600, height: 900 },
     ]);
     expect(stopProgress(narrow, 1050)).toEqual({ index: 1, fraction: 0 });
+  });
+});
+
+describe("measureStops", () => {
+  it("is the centre of a section no taller than the screen", () => {
+    expect(
+      measureStops(
+        [
+          { top: 0, height: 800 },
+          { top: 800, height: 600 },
+        ],
+        800,
+      ),
+    ).toEqual([400, 1100]);
+  });
+
+  it("is where a tall section's top meets the top of the screen", () => {
+    // A phone card sheet runs past the screen: the stop is reached with the building in view,
+    // and the card is then read while the camera holds.
+    expect(measureStops([{ top: 844, height: 1500 }], 844)).toEqual([844 + 422]);
   });
 });

@@ -34,8 +34,11 @@ export interface Stop {
 export const MAX_AZ = 20;
 /** A phone is narrow: a card's building is framed this much wider than on desktop. */
 const NARROW_ZOOM_OUT = 1.6;
-/** On a phone the building rides this far (of the view) above the centre, over the card sheet. */
-const NARROW_LIFT = 0.25;
+/**
+ * On a phone the building rides this far (of the view) above the centre: the card sheet
+ * starts at 56% of the screen (story.css), so the building centres in the top 56%.
+ */
+const NARROW_LIFT = 0.22;
 /** On desktop the building sits this far (of the view's width) toward the free half. */
 const SIDE_SHIFT = 0.22;
 
@@ -121,8 +124,6 @@ export const STOPS: Stop[] = [
     rail: true,
     side: "left",
     pose: at("hq", 12, -6),
-    // The bio is the longest card: a wider shot keeps HQ clear of it.
-    narrow: { view: 24 },
   },
   project("f1", "right", 12),
   project("rl", "left", -12),
@@ -137,8 +138,6 @@ export const STOPS: Stop[] = [
     rail: true,
     side: "left",
     pose: at("post", 12, -6),
-    // The contact card is short and sits low: the tall Post Office rides lower, clear of the chip.
-    narrowLift: 0.15,
   },
   {
     id: "overview",
@@ -149,8 +148,8 @@ export const STOPS: Stop[] = [
     side: "center",
     // Lifted a little, so the island clears the closing line and button below it.
     pose: { ...lift(OVERVIEW, 4.5), view: OVERVIEW.view * 2.4, az: 0 },
-    // Phones too: a wider view would let the near plane cut the sea at the bottom.
-    narrow: { view: OVERVIEW.view * 2.4 },
+    // Phones: wide enough that the whole island fits the narrow screen.
+    narrow: { view: OVERVIEW.view * 4 },
   },
 ];
 

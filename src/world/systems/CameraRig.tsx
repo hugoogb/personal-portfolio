@@ -9,6 +9,7 @@ import {
   NARROW_WIDTH,
   clampTarget,
   clampView,
+  STORY_VIEW_MAX,
   damp,
   frameFor,
   panDelta,
@@ -170,7 +171,7 @@ export function CameraRig() {
         ? poseAt(currentStop(progress), 0, narrow.current, aspect.current)
         : poseAt(progress.index, progress.fraction, narrow.current, aspect.current);
       // Unclamped: a pose framing a building by the shore sits past the pan limit on purpose.
-      Object.assign(r, { gx: p.x, gz: p.z, gview: clampView(p.view), gaz: p.az });
+      Object.assign(r, { gx: p.x, gz: p.z, gview: clampView(p.view, STORY_VIEW_MAX), gaz: p.az });
     } else if (s.mode === "explore") {
       // Back inside the pan limit, at the fixed isometric angle.
       const t = clampTarget(r.gx, r.gz);

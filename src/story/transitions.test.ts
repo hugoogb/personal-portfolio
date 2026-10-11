@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import { STOPS, stopIndexForPlace } from "@/content/tour";
 import { enterExplore, enterStory, enterText, exploreBlocked } from "@/story/transitions";
 import { useBaseCamp } from "@/store/store";
@@ -80,13 +80,29 @@ describe("enterExplore from the finale", () => {
 });
 
 describe("enterStory and enterText", () => {
-  const original = Element.prototype.scrollIntoView;
+  const H = 800;
+  const realScrollTo = window.scrollTo;
   const nextFrame = () => new Promise((r) => requestAnimationFrame(() => r(null)));
+  let scrolled: number[] = [];
+  /** One screen-tall section per stop, stacked; scrollTo records where it was sent. */
   const sections = () => {
     document.body.innerHTML = STOPS.map((s) => `<section id="${s.anchor}"></section>`).join("");
+    document.querySelectorAll("section").forEach((el, i) => {
+      el.getBoundingClientRect = () => ({ top: i * H - window.scrollY }) as DOMRect;
+      Object.defineProperty(el, "offsetHeight", { value: H, configurable: true });
+    });
   };
+  /** The section the page was last scrolled to. */
+  const landedOn = () => STOPS[Math.round(scrolled[scrolled.length - 1] / H)]?.anchor;
+  beforeEach(() => {
+    scrolled = [];
+    Object.defineProperty(window, "innerHeight", { value: H, configurable: true });
+    Object.defineProperty(window, "scrollY", { value: 0, configurable: true });
+    window.scrollTo = ((o: ScrollToOptions) =>
+      void scrolled.push(o.top ?? 0)) as typeof window.scrollTo;
+  });
   afterEach(() => {
-    Element.prototype.scrollIntoView = original;
+    window.scrollTo = realScrollTo;
     document.body.innerHTML = "";
   });
 
@@ -95,50 +111,51 @@ describe("enterStory and enterText", () => {
     expect(useBaseCamp.getState().mode).toBe("story");
     enterText();
     expect(useBaseCamp.getState().mode).toBe("text");
-    await nextFrame(); // let the scrolls they queue land before the next test stubs scrollIntoView
+    await nextFrame(); // let the scrolls they queue land before the next test
   });
 
   it("return to the selected place's section", async () => {
     sections();
-    const spy = vi.fn();
-    Element.prototype.scrollIntoView = spy;
     useBaseCamp.setState({ mode: "explore", selected: "es", town: "ready" });
     enterStory();
     await nextFrame();
     expect(useBaseCamp.getState().mode).toBe("story");
-    expect(spy.mock.contexts[0]).toBe(document.getElementById("esto-no-es-un-restaurante"));
+    expect(landedOn()).toBe("esto-no-es-un-restaurante");
   });
 
   it("return to the nearest stop for an explore-only place", async () => {
     sections();
-    const spy = vi.fn();
-    Element.prototype.scrollIntoView = spy;
     useBaseCamp.setState({ mode: "explore", selected: "stadium", town: "ready" });
     enterStory();
     await nextFrame();
     expect(useBaseCamp.getState().mode).toBe("story");
-    const stop = STOPS[stopIndexForPlace("stadium")];
-    expect(spy.mock.contexts[0]).toBe(document.getElementById(stop.anchor));
+    expect(landedOn()).toBe(STOPS[stopIndexForPlace("stadium")].anchor);
   });
 
   it("enterStory with nothing selected returns to the current stop (the finale)", async () => {
     sections();
-    const spy = vi.fn();
-    Element.prototype.scrollIntoView = spy;
     useBaseCamp.setState({ mode: "explore", stop: STOPS.length - 1, selected: null });
     enterStory();
     await nextFrame();
-    expect(spy.mock.contexts[0]).toBe(document.getElementById("explore"));
+    expect(landedOn()).toBe("explore");
   });
 
   it("enterText scrolls to the current stop", async () => {
     sections();
-    const spy = vi.fn();
-    Element.prototype.scrollIntoView = spy;
     useBaseCamp.setState({ mode: "story", stop: 3 });
     enterText();
     await nextFrame();
     expect(useBaseCamp.getState().mode).toBe("text");
-    expect(spy.mock.contexts[0]).toBe(document.getElementById(STOPS[3].anchor));
+    expect(landedOn()).toBe(STOPS[3].anchor);
+  });
+
+  it("lands a section taller than the screen with its top at the top of the screen", async () => {
+    sections();
+    const tall = document.getElementById(STOPS[3].anchor)!;
+    Object.defineProperty(tall, "offsetHeight", { value: 2 * H, configurable: true });
+    useBaseCamp.setState({ mode: "story", stop: 3 });
+    enterText();
+    await nextFrame();
+    expect(scrolled[scrolled.length - 1]).toBe(3 * H);
   });
 });

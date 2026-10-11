@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { PROJECT_IDS } from "@/content/places";
 import { RAIL_STOPS, STOPS } from "@/content/tour";
 import { useBaseCamp } from "@/store/store";
-import { currentStop, progress, readCenters, stopProgress, storySections } from "@/story/progress";
+import { currentStop, progress, readStops, stopProgress, storySections } from "@/story/progress";
 import { prefersReducedMotion } from "@/utils/motion";
 
 const ARRIVES = new Set<string>([...PROJECT_IDS, "post"]);
@@ -17,7 +17,7 @@ export const useStoryDriver = () => {
     let centers: number[] = [];
     let last = -1;
     const measure = () => {
-      centers = readCenters(sections);
+      centers = readStops(sections);
     };
     const announce = (i: number) => {
       const stop = STOPS[i];

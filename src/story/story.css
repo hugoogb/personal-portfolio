@@ -170,11 +170,13 @@ html.mode-explore #rail * {
 }
 
 /* Phones: the building rides in the top ~55%, the card is a sheet below. */
+/* Phones: the section's top 56% frames the building; the card sheet starts below it and
+   is read by scrolling on, over the town, while the camera holds (measureStops). */
 @media (max-width: 759px) {
   html.mode-story .story-stop:not(.story-stop--landing):not(.story-stop--finale) {
-    align-items: flex-end;
+    align-items: flex-start;
     justify-content: center;
-    padding: 50svh 0.75rem 1rem;
+    padding: 56svh 0.75rem 1rem;
   }
 }
 
