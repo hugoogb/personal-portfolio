@@ -413,6 +413,13 @@ html.mode-story .rail__label {
   border-radius: 999px;
   padding: 0.15rem 0.6rem;
 }
+/* The chip's summary stays on one line: long stop names are cut, the list shows them whole. */
+.rail-chip summary {
+  max-width: calc(100vw - 2rem);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
 html.mode-story .rail-chip {
   background: var(--st-glass);
   color: var(--st-ink);
