@@ -206,12 +206,23 @@ describe("Town", () => {
     expect(sessionStorage.getItem("bc-town-failed")).toBeNull();
   });
 
-  it("falls back from Explore to Story without WebGL2", async () => {
-    vi.mocked(hasWebgl2).mockReturnValue(false);
-    useBaseCamp.setState({ mode: "explore" });
+  it("stays on the still image when the town already failed this session, loading nothing", async () => {
+    sessionStorage.setItem("bc-town-failed", "1");
     render(<Town />);
     await waitFor(() => expect(useBaseCamp.getState().town).toBe("off"));
     expect(useBaseCamp.getState().mode).toBe("story");
+    expect(hasWebgl2).not.toHaveBeenCalled();
+    expect(readSignals).not.toHaveBeenCalled();
+    expect(worldImport).not.toHaveBeenCalled();
+  });
+
+  it("falls back from Explore to Story without WebGL2, keeping the saved choice", async () => {
+    vi.mocked(hasWebgl2).mockReturnValue(false);
+    useBaseCamp.setState({ mode: "explore", chosenMode: "explore" });
+    render(<Town />);
+    await waitFor(() => expect(useBaseCamp.getState().town).toBe("off"));
+    expect(useBaseCamp.getState().mode).toBe("story");
+    expect(useBaseCamp.getState().chosenMode).toBe("explore");
   });
 
   it("does not probe WebGL2 in Text", async () => {

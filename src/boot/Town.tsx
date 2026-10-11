@@ -4,6 +4,7 @@ import { bootTier, hasWebgl2, readSignals } from "@/boot/detect";
 import { READY_TIMEOUT_MS, TOWN_FAILED_KEY } from "@/boot/world";
 import { WorldBoundary } from "@/boot/WorldBoundary";
 import { useBaseCamp } from "@/store/store";
+import { enterStory } from "@/story/transitions";
 import { effectsEnabled } from "@/world/effects/effectsGate";
 
 interface Loaded {
@@ -12,6 +13,14 @@ interface Loaded {
 }
 
 const html = () => document.documentElement;
+
+const failedThisSession = () => {
+  try {
+    return sessionStorage.getItem(TOWN_FAILED_KEY) === "1";
+  } catch {
+    return false;
+  }
+};
 
 /**
  * The town behind the page (spec 5, 6). Text never loads it. Story and Explore
@@ -44,7 +53,8 @@ export function Town() {
     const wasExplore = s.mode === "explore";
     useBaseCamp.setState({ consoleOpen: false, panel: null, driving: false });
     s.setTown("off");
-    if (wasExplore) s.setMode("story");
+    // Back to the story where Explore left it; a fallback, not the visitor's choice.
+    if (wasExplore) enterStory(undefined, { chosen: false });
     setLoaded(null);
     // Picking Lite removes the button that had focus: hand it to the switch.
     if (wasExplore && typeof requestAnimationFrame === "function")
@@ -60,6 +70,12 @@ export function Town() {
     let cancelled = false;
     let settled = false;
     const start = async () => {
+      // The town already failed this session (timed out or crashed): keep the still image
+      // instead of building, compiling and waiting all over again (spec 6.1.5).
+      if (failedThisSession()) {
+        settled = true;
+        return off(false);
+      }
       // Bounds the whole boot: GPU check, chunk loading and the first frame.
       // A hidden tab draws no frames, so only a visible one can time out.
       const arm = () => {
