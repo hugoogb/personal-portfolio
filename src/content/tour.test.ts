@@ -11,7 +11,8 @@ import {
   poseFor,
   stopIndexForPlace,
 } from "@/content/tour";
-import { CAMERA_OFFSET } from "@/world/lib/camera";
+import { CAMERA_OFFSET, VIEW_MAX } from "@/world/lib/camera";
+import { OVERVIEW_VIEW } from "@/world/lib/buildIn";
 
 describe("tour", () => {
   it("runs landing, about, the five projects, contact, then the overview", () => {
@@ -82,13 +83,15 @@ describe("tour", () => {
   });
 
   it("never zooms out so far that the near plane cuts the ground off the bottom", () => {
-    // The screen's bottom edge starts view/2 below the camera along the screen's up.
+    // The screen's bottom edge starts view/2 below the camera along the screen's up;
+    // past the camera's height the sea there falls behind the near plane (a pale band).
     const upY = Math.hypot(CAMERA_OFFSET[0], CAMERA_OFFSET[2]) / Math.hypot(...CAMERA_OFFSET);
-    for (const s of STOPS)
-      for (const narrow of [false, true])
-        expect((poseFor(s, narrow, narrow ? 0.46 : 1.6).view / 2) * upY).toBeLessThan(
-          CAMERA_OFFSET[1],
-        );
+    const views = [
+      VIEW_MAX,
+      OVERVIEW_VIEW,
+      ...STOPS.flatMap((s) => [poseFor(s, false, 1.6).view, poseFor(s, true, 0.46).view]),
+    ];
+    for (const view of views) expect((view / 2) * upY).toBeLessThan(CAMERA_OFFSET[1] - 1);
   });
 
   it("holds each stop's pose near its centre and blends between stops", () => {

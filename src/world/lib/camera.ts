@@ -1,13 +1,20 @@
 import { ISLAND } from "@/world/lib/map";
 
-/** The camera sits here relative to its target, always (spec 4.1). */
-export const CAMERA_OFFSET = [18, 15.5, 18] as const;
+/**
+ * The camera sits here relative to its target, always (spec 4.1). The view is
+ * orthographic, so the distance does not change the picture; it is kept large
+ * so that, zoomed out, the bottom of the screen never starts below the sea,
+ * where the near plane would cut it off as a pale band.
+ */
+export const CAMERA_OFFSET = [54, 46.5, 54] as const;
 export const VIEW_MIN = 7;
 
 /** Where the camera rig is, written by CameraRig every frame (read by the preview-only test hooks). */
 export const rigState = { x: 0, z: 0, view: 0, az: 0 };
 
 export const VIEW_MAX = 40;
+/** Story may pull back further than a visitor can zoom: the phone overview shows the whole island. */
+export const STORY_VIEW_MAX = 64;
 /** Below this stage width the HUD switches to the narrow layout (spec 4.4). */
 export const NARROW_WIDTH = 760;
 
@@ -42,7 +49,7 @@ const screen = (right: number, up: number): V3 => [
 
 const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
 
-export const clampView = (view: number) => clamp(view, VIEW_MIN, VIEW_MAX);
+export const clampView = (view: number, max: number = VIEW_MAX) => clamp(view, VIEW_MIN, max);
 
 /** The target stays 2 units inside the island's edge. */
 export const clampTarget = (x: number, z: number) => ({
