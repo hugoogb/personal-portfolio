@@ -30,15 +30,19 @@ export const useStoryDriver = () => {
       s.setStop(i);
       const url = stop.id === "top" ? location.pathname + location.search : `#${stop.anchor}`;
       history.replaceState(history.state, "", url);
+      // A stop outside the rail (the finale) shows the nearest rail stop before it.
+      let at = i;
+      while (at > 0 && !STOPS[at].rail) at--;
+      const shown = STOPS[at];
       document.querySelectorAll("[data-rail]").forEach((a) => {
-        if (a.getAttribute("data-rail") === stop.id) a.setAttribute("aria-current", "true");
+        if (a.getAttribute("data-rail") === shown.id) a.setAttribute("aria-current", "true");
         else a.removeAttribute("aria-current");
       });
-      const railIndex = RAIL_STOPS.findIndex((r) => r.id === stop.id);
+      const railIndex = RAIL_STOPS.findIndex((r) => r.id === shown.id);
       if (railIndex >= 0) {
         const label = document.querySelector("[data-rail-label]");
         const count = document.querySelector("[data-rail-count]");
-        if (label) label.textContent = stop.label;
+        if (label) label.textContent = shown.label;
         if (count) count.textContent = `${railIndex + 1} / ${RAIL_STOPS.length}`;
       }
       if (stop.place) s.select(stop.place);

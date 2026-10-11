@@ -80,6 +80,28 @@ describe("useStoryDriver", () => {
     expect(useBaseCamp.getState().selected).toBe("rl");
   });
 
+  it("the finale, which is not in the rail, shows Contact in the rail and the chip", () => {
+    render(<Driver />);
+    setScroll(focus(3));
+    setScroll(focus(8)); // the overview section
+    expect(useBaseCamp.getState().stop).toBe(8);
+    expect(document.querySelector("[data-rail-label]")!.textContent).toBe("Contact");
+    expect(document.querySelector("[data-rail-count]")!.textContent).toBe("8 / 8");
+    expect(document.querySelectorAll('[data-rail][aria-current="true"]')).toHaveLength(1);
+    expect(document.querySelector('[data-rail="contact"]')!.getAttribute("aria-current")).toBe(
+      "true",
+    );
+  });
+
+  it("jumping from the top straight to the finale does the same", () => {
+    render(<Driver />);
+    setScroll(focus(8));
+    expect(document.querySelector("[data-rail-count]")!.textContent).toBe("8 / 8");
+    expect(document.querySelector('[data-rail="contact"]')!.getAttribute("aria-current")).toBe(
+      "true",
+    );
+  });
+
   it("back at the top clears the hash", () => {
     render(<Driver />);
     setScroll(focus(3));
