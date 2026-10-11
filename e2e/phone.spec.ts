@@ -10,10 +10,6 @@ test.use({
 });
 
 test("text first on slow 4G with a 4x slower CPU", async ({ page, context }) => {
-  // Known: on a cold headless browser the head script's WebGL2 probe takes about a second under
-  // SwiftShader, so first paint lands near 2 s (a warm browser: 0.74 s). Remove this line when the
-  // probe leaves the critical path; Playwright then reports the test as unexpectedly passing.
-  test.fail(true, "cold SwiftShader WebGL2 probe in the head script delays first paint");
   const cdp = await context.newCDPSession(page);
   await cdp.send("Network.enable");
   await cdp.send("Network.emulateNetworkConditions", {
@@ -36,7 +32,10 @@ test("text first on slow 4G with a 4x slower CPU", async ({ page, context }) => 
         });
       }),
   );
-  console.log(`slow 4G first-contentful-paint: ${Math.round(fcp)} ms`);
+  test.info().annotations.push({
+    type: "slow 4G first-contentful-paint",
+    description: `${Math.round(fcp)} ms`,
+  });
   expect(fcp).toBeLessThan(1000);
   // The story scrolls while the town is still loading.
   await page.evaluate(() =>

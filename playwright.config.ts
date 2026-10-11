@@ -11,8 +11,25 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI,
   },
   projects: [
+    // Timing assertions run alone, before the rest: parallel workers would slow the throttled page.
+    {
+      name: "phone",
+      testMatch: "phone.spec.ts",
+      use: {
+        ...devices["Desktop Chrome"],
+        launchOptions: {
+          args: [
+            "--enable-unsafe-swiftshader",
+            "--use-angle=swiftshader",
+            "--ignore-gpu-blocklist",
+          ],
+        },
+      },
+    },
     {
       name: "chromium",
+      dependencies: ["phone"],
+      testIgnore: "phone.spec.ts",
       use: {
         ...devices["Desktop Chrome"],
         // Headless Chromium has no GPU; SwiftShader gives the town a WebGL context.

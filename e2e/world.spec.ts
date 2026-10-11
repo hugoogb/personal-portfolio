@@ -195,7 +195,7 @@ test.describe("on a phone", () => {
   });
 });
 
-test("a device without WebGL2 lands in Text", async ({ page }) => {
+test("a device without WebGL2 keeps the story on the still image", async ({ page }) => {
   await page.addInitScript(() => {
     const original = HTMLCanvasElement.prototype.getContext;
     HTMLCanvasElement.prototype.getContext = function (
@@ -211,7 +211,8 @@ test("a device without WebGL2 lands in Text", async ({ page }) => {
   await expect(page.getByRole("heading", { level: 1, name: "Hugo García Benjumea" })).toBeVisible({
     timeout: 20_000,
   });
-  await expect(page.locator("html")).toHaveClass(/mode-text/);
+  await expect(page.locator("html")).toHaveClass(/no-webgl/);
+  await expect(page.locator("html")).toHaveClass(/mode-story/);
   await expect(page.locator("html")).not.toHaveClass(/town-ready/);
 });
 

@@ -5,13 +5,13 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { Town } from "@/boot/Town";
 import { READY_TIMEOUT_MS } from "@/boot/world";
 import { enterExplore } from "@/story/transitions";
-import { bootTier, readSignals } from "@/boot/detect";
+import { bootTier, hasWebgl2, readSignals } from "@/boot/detect";
 import { useBaseCamp } from "@/store/store";
 
 const stub = vi.hoisted(() => ({ worldThrows: false, holdReady: false }));
 const worldImport = vi.hoisted(() => vi.fn());
 
-vi.mock("@/boot/detect", () => ({ readSignals: vi.fn(), bootTier: vi.fn() }));
+vi.mock("@/boot/detect", () => ({ readSignals: vi.fn(), bootTier: vi.fn(), hasWebgl2: vi.fn() }));
 vi.mock("@/hud/Hud", () => ({
   Hud: () => <div data-testid="hud" />,
 }));
@@ -49,7 +49,8 @@ const signals = {
 
 beforeEach(() => {
   worldImport.mockClear();
-  html.className = "has-webgl";
+  html.className = "";
+  vi.mocked(hasWebgl2).mockReset().mockReturnValue(true);
   stub.worldThrows = false;
   stub.holdReady = false;
   sessionStorage.clear();
@@ -72,6 +73,23 @@ describe("Town", () => {
       expect(worldImport).not.toHaveBeenCalled();
       act(() => idle.forEach((cb) => cb()));
       await waitFor(() => expect(worldImport).toHaveBeenCalled());
+    } finally {
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it("does not probe or load until the first frame has been drawn in Story", async () => {
+    const frames: FrameRequestCallback[] = [];
+    vi.stubGlobal("requestAnimationFrame", (cb: FrameRequestCallback) => frames.push(cb));
+    try {
+      render(<Town />);
+      await act(async () => {
+        await new Promise((r) => setTimeout(r, 250));
+      });
+      expect(hasWebgl2).not.toHaveBeenCalled();
+      expect(frames.length).toBeGreaterThan(0);
+      act(() => frames.forEach((cb) => cb(0)));
+      await waitFor(() => expect(hasWebgl2).toHaveBeenCalled());
     } finally {
       vi.unstubAllGlobals();
     }
@@ -170,12 +188,37 @@ describe("Town", () => {
     expect(screen.queryByTestId("world")).toBeNull();
   });
 
-  it("turns the town off without WebGL2, without loading anything, even in Text", async () => {
-    html.className = "";
-    useBaseCamp.setState({ mode: "text" });
+  it("probes WebGL2 only when it is about to load, and marks the class", async () => {
+    render(<Town />);
+    await waitFor(() => expect(useBaseCamp.getState().town).toBe("ready"));
+    expect(hasWebgl2).toHaveBeenCalledTimes(1);
+    expect(html.classList.contains("has-webgl")).toBe(true);
+    expect(html.classList.contains("no-webgl")).toBe(false);
+  });
+
+  it("keeps Story on the still image without WebGL2, loading nothing and setting no session flag", async () => {
+    vi.mocked(hasWebgl2).mockReturnValue(false);
     render(<Town />);
     await waitFor(() => expect(useBaseCamp.getState().town).toBe("off"));
+    expect(useBaseCamp.getState().mode).toBe("story");
+    expect(html.classList.contains("no-webgl")).toBe(true);
     expect(readSignals).not.toHaveBeenCalled();
+    expect(sessionStorage.getItem("bc-town-failed")).toBeNull();
+  });
+
+  it("falls back from Explore to Story without WebGL2", async () => {
+    vi.mocked(hasWebgl2).mockReturnValue(false);
+    useBaseCamp.setState({ mode: "explore" });
+    render(<Town />);
+    await waitFor(() => expect(useBaseCamp.getState().town).toBe("off"));
+    expect(useBaseCamp.getState().mode).toBe("story");
+  });
+
+  it("does not probe WebGL2 in Text", async () => {
+    useBaseCamp.setState({ mode: "text" });
+    render(<Town />);
+    await act(async () => {});
+    expect(hasWebgl2).not.toHaveBeenCalled();
   });
 
   it("turns the town off when the world throws, sets the session flag, and leaves Explore for Story", async () => {
@@ -226,7 +269,7 @@ describe("Town", () => {
       vi.mocked(readSignals).mockReturnValue(new Promise(() => {}));
       render(<Town />);
       act(() => {
-        vi.advanceTimersByTime(200);
+        vi.advanceTimersByTime(300);
       });
       act(() => {
         vi.advanceTimersByTime(READY_TIMEOUT_MS);
@@ -248,7 +291,7 @@ describe("Town", () => {
       vi.mocked(readSignals).mockReturnValue(new Promise(() => {}));
       render(<Town />);
       act(() => {
-        vi.advanceTimersByTime(200);
+        vi.advanceTimersByTime(300);
       });
       act(() => {
         vi.advanceTimersByTime(READY_TIMEOUT_MS);

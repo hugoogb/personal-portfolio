@@ -4,8 +4,8 @@
  * It paints the visitor's saved accent so the prerendered page never flashes
  * orange first, and picks the mode: exactly one html.mode-story, mode-explore
  * or mode-text, from the hash (#text, or an explore-only place), the saved mode
- * and what the device can do. It also marks html.has-webgl when WebGL2 works
- * and html.night when Barcelona is dark.
+ * and what the visitor asked for. It also marks html.night when Barcelona is dark.
+ * It never touches WebGL: Town probes for WebGL2 after first paint.
  *
  * It is shipped as its own source text (headScript below), so bootHead must
  * stay self-contained: only its parameters and globals, no module-level helpers.
@@ -62,18 +62,6 @@ export function bootHead(
     // Storage blocked or a corrupt record: the defaults stand.
   }
 
-  let webgl = false;
-  try {
-    const canvas = doc.createElement("canvas");
-    // The town needs WebGL2 (three r163+ dropped WebGL1), so only WebGL2 counts.
-    const gl = canvas.getContext("webgl2") as WebGL2RenderingContext | null;
-    webgl = Boolean(gl);
-    // Browsers cap live contexts; give this probe's back straight away.
-    gl?.getExtension("WEBGL_lose_context")?.loseContext();
-  } catch {
-    webgl = false;
-  }
-
   const reducedMotion =
     typeof win.matchMedia === "function" &&
     win.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -92,16 +80,15 @@ export function bootHead(
   const slug = String(win.location?.hash ?? "")
     .replace(/^#/, "")
     .toLowerCase();
-  const town = webgl && !failed;
+  // No WebGL2 probe here: creating a context blocks first paint for a second on a slow device.
+  // Town probes after first paint and, without WebGL2, falls back to Story on the still image.
   let mode: string;
   if (slug === "text") mode = "text";
-  else if (opts.exploreOnly.indexOf(slug) !== -1) mode = town ? "explore" : "text";
-  // Story also runs on the still image, so it does not need the town.
+  else if (opts.exploreOnly.indexOf(slug) !== -1) mode = failed ? "story" : "explore";
   else if (savedMode === "story" || savedMode === "text") mode = savedMode;
-  else if (savedMode === "explore") mode = town ? "explore" : "text";
-  else mode = town && !reducedMotion && !saveData && quality !== "Lite" ? "story" : "text";
+  else if (savedMode === "explore") mode = failed ? "story" : "explore";
+  else mode = reducedMotion || saveData || quality === "Lite" ? "text" : "story";
 
-  if (webgl) root.classList.add("has-webgl");
   root.classList.add("mode-" + mode);
 
   try {

@@ -5,7 +5,7 @@ import { enterExplore, enterStory, enterText, exploreBlocked } from "@/story/tra
 import { useBaseCamp } from "@/store/store";
 
 beforeEach(() => {
-  document.documentElement.className = "has-webgl";
+  document.documentElement.className = "";
   useBaseCamp.setState({
     mode: "text",
     town: "loading",
@@ -29,10 +29,10 @@ describe("enterExplore", () => {
   });
 
   it("does nothing without WebGL2, or for a town that failed", () => {
-    document.documentElement.className = "";
+    document.documentElement.className = "no-webgl";
     enterExplore();
     expect(useBaseCamp.getState().mode).toBe("text");
-    document.documentElement.className = "has-webgl";
+    document.documentElement.className = "";
     useBaseCamp.setState({ town: "off" });
     enterExplore();
     expect(useBaseCamp.getState().mode).toBe("text");
@@ -60,7 +60,7 @@ describe("exploreBlocked", () => {
     expect(exploreBlocked(useBaseCamp.getState())).toBe("Your browser can't draw the 3D town");
     useBaseCamp.setState({ qualityMode: "Lite" });
     expect(exploreBlocked(useBaseCamp.getState())).toBeNull();
-    document.documentElement.className = "";
+    document.documentElement.className = "no-webgl";
     expect(exploreBlocked(useBaseCamp.getState())).toBe("Your browser can't draw the 3D town");
   });
 });

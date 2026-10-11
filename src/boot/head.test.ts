@@ -6,8 +6,6 @@ import { nightAmount } from "@/world/lib/sun";
 interface Env {
   stored?: Record<string, string>;
   storageThrows?: boolean;
-  webgl?: boolean;
-  webgl1Only?: boolean;
   townFailed?: boolean;
   reducedMotion?: boolean;
   saveData?: boolean;
@@ -18,7 +16,7 @@ interface Env {
 const fake = (env: Env = {}) => {
   const props = new Map<string, string>();
   const classes = new Set<string>();
-  const state = { lost: false };
+  const state = { probed: false };
   const doc = {
     documentElement: {
       style: { setProperty: (k: string, v: string) => void props.set(k, v) },
@@ -27,14 +25,11 @@ const fake = (env: Env = {}) => {
         contains: (c: string) => classes.has(c),
       },
     },
-    createElement: () => ({
-      getContext: (type: string) =>
-        env.webgl === false ||
-        (env.webgl1Only && type === "webgl2") ||
-        type === "experimental-webgl"
-          ? null
-          : { getExtension: () => ({ loseContext: () => void (state.lost = true) }) },
-    }),
+    // The head script must never create a canvas: that is a WebGL probe before first paint.
+    createElement: () => {
+      state.probed = true;
+      throw new Error("the head script must not probe WebGL");
+    },
   };
   const storage = { getItem: (k: string) => env.stored?.[k] ?? null };
   const session = {
@@ -86,7 +81,6 @@ describe("bootHead", () => {
   });
 
   it.each([
-    ["without WebGL", { webgl: false }],
     ["with reduced motion", { reducedMotion: true }],
     ["with Save-Data", { saveData: true }],
     [
@@ -109,19 +103,10 @@ describe("bootHead", () => {
     expect(f.classes.has("mode-story")).toBe(true);
   });
 
-  it("releases the WebGL context it probed with", () => {
-    expect(boot().state.lost).toBe(true);
-  });
-  it("marks WebGL support separately, and starts the town on a capable device", () => {
+  it("never probes WebGL: that waits for Town, after first paint", () => {
     const f = boot();
-    expect(f.classes.has("has-webgl")).toBe(true);
-    expect(f.classes.has("mode-story")).toBe(true);
-  });
-
-  it("keeps has-webgl but not the town when the visitor chose Lite", () => {
-    const f = boot({ stored: { bc: JSON.stringify({ state: { qualityMode: "Lite" } }) } });
-    expect(f.classes.has("has-webgl")).toBe(true);
-    expect(f.classes.has("mode-text")).toBe(true);
+    expect(f.state.probed).toBe(false);
+    expect(f.classes.has("has-webgl")).toBe(false);
   });
 
   it("no longer lets a saved manual quality outrank reduced motion or Save-Data: the mode rules decide", () => {
@@ -130,48 +115,33 @@ describe("bootHead", () => {
     expect(boot({ stored, saveData: true }).classes.has("mode-text")).toBe(true);
   });
 
-  it("treats a WebGL1-only device as having no WebGL, since the town needs WebGL2", () => {
-    expect([...boot({ webgl1Only: true }).classes]).toEqual(["mode-text"]);
-  });
-
-  it("keeps has-webgl but skips the town after a failed boot this session", () => {
-    const f = boot({ townFailed: true });
-    expect(f.classes.has("has-webgl")).toBe(true);
-    expect(f.classes.has("mode-text")).toBe(true);
-  });
-
-  it("adds nothing without WebGL", () => {
-    expect([...boot({ webgl: false }).classes]).toEqual(["mode-text"]);
+  it("adds only the mode class on a plain device", () => {
+    expect([...boot().classes]).toEqual(["mode-story"]);
   });
 });
 
 describe("mode before first paint", () => {
   it("starts in Story by default", () => expect(modes(boot().classes)).toEqual(["mode-story"]));
-  it("starts in Text without WebGL2, with reduced motion, with Save-Data or after a failed town", () => {
-    for (const env of [
-      { webgl: false },
-      { reducedMotion: true },
-      { saveData: true },
-      { townFailed: true },
-    ])
+  it("starts in Text with reduced motion or Save-Data, and in Story after a failed town", () => {
+    for (const env of [{ reducedMotion: true }, { saveData: true }])
       expect(modes(boot(env).classes)).toEqual(["mode-text"]);
+    expect(modes(boot({ townFailed: true }).classes)).toEqual(["mode-story"]);
   });
   it("restores a saved mode", () => {
     expect(modes(boot({ stored: saved("explore") }).classes)).toEqual(["mode-explore"]);
     expect(modes(boot({ stored: saved("text") }).classes)).toEqual(["mode-text"]);
   });
-  it("keeps a saved Story without WebGL2: the story works on the still image", () => {
-    expect(modes(boot({ webgl: false, stored: saved("story") }).classes)).toEqual(["mode-story"]);
-  });
-  it("turns a saved Explore into Text when WebGL2 is gone", () => {
-    expect(modes(boot({ webgl: false, stored: saved("explore") }).classes)).toEqual(["mode-text"]);
+  it("turns a saved Explore into Story after a failed town", () => {
+    expect(modes(boot({ townFailed: true, stored: saved("explore") }).classes)).toEqual([
+      "mode-story",
+    ]);
   });
   it("lets #text win over a saved mode", () => {
     expect(modes(boot({ hash: "#text", stored: saved("explore") }).classes)).toEqual(["mode-text"]);
   });
-  it("opens Explore for an explore-only place, and Text for one without WebGL2", () => {
+  it("opens Explore for an explore-only place, and Story after a failed town", () => {
     expect(modes(boot({ hash: "#Stadium" }).classes)).toEqual(["mode-explore"]);
-    expect(modes(boot({ hash: "#stadium", webgl: false }).classes)).toEqual(["mode-text"]);
+    expect(modes(boot({ hash: "#stadium", townFailed: true }).classes)).toEqual(["mode-story"]);
   });
   it("leaves the mode alone for a tour section's hash", () => {
     expect(modes(boot({ hash: "#readledger", stored: saved("text") }).classes)).toEqual([

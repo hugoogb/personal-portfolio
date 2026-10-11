@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState, type ComponentType } from "react";
 import { createPortal } from "react-dom";
-import { bootTier, readSignals } from "@/boot/detect";
+import { bootTier, hasWebgl2, readSignals } from "@/boot/detect";
 import { READY_TIMEOUT_MS, TOWN_FAILED_KEY } from "@/boot/world";
 import { WorldBoundary } from "@/boot/WorldBoundary";
 import { useBaseCamp } from "@/store/store";
@@ -55,8 +55,6 @@ export function Town() {
 
   useEffect(() => {
     if (town === "off") return;
-    // Checked in every mode, so Text on such a device says why Explore is off.
-    if (!html().classList.contains("has-webgl")) return off(false);
     if (!wanted || started.current) return;
     started.current = true;
     let cancelled = false;
@@ -71,6 +69,14 @@ export function Town() {
         );
       };
       arm();
+      // The WebGL2 probe runs here, after first paint, not in the head script. Without it the
+      // story stays on the still image and Explore says why it is off.
+      if (!hasWebgl2(window)) {
+        settled = true;
+        html().classList.add("no-webgl");
+        return off(false);
+      }
+      html().classList.add("has-webgl");
       // The town's code downloads while the GPU check runs, not after it.
       const chunks = Promise.all([import("@/hud/Hud"), import("@/world/World")]);
       chunks.catch(() => {});
@@ -100,19 +106,29 @@ export function Town() {
         off(true);
       });
     };
-    // Explore starts at once. Story waits for first paint and an idle browser, so the text and
-    // the still image get the network and the main thread first (spec 6.1). The ready timer is
-    // armed in start(), so the wait does not count against it.
+    // Explore starts at once. Story waits for the first paint (a frame, then a task after it) and
+    // an idle browser, so the text and the still image get the network and the main thread first
+    // (spec 6.1). The ready timer is armed in start(), so the wait does not count against it.
+    let frame: number | undefined;
+    let after: number | undefined;
     let idle: number | undefined;
     let fallback: number | undefined;
+    const whenIdle = () => {
+      if (typeof requestIdleCallback === "function")
+        idle = requestIdleCallback(kick, { timeout: 1500 });
+      else fallback = window.setTimeout(kick, 200);
+    };
     if (useBaseCamp.getState().mode === "explore") kick();
-    else if (typeof requestIdleCallback === "function")
-      idle = requestIdleCallback(kick, { timeout: 1500 });
-    else fallback = window.setTimeout(kick, 200);
+    else if (typeof requestAnimationFrame === "function")
+      frame = requestAnimationFrame(() => (after = window.setTimeout(whenIdle, 0)));
+    else whenIdle();
     return () => {
       cancelled = true;
       if (idle !== undefined && typeof cancelIdleCallback === "function") cancelIdleCallback(idle);
       window.clearTimeout(fallback);
+      window.clearTimeout(after);
+      if (frame !== undefined && typeof cancelAnimationFrame === "function")
+        cancelAnimationFrame(frame);
       // Interrupted before it finished (StrictMode's rehearsal, or Text mid-load): start over next time.
       if (!settled) {
         started.current = false;

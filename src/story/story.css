@@ -184,8 +184,11 @@ html.mode-explore #rail * {
   display: inline-block;
   margin-top: 2rem;
   font-size: 0.85rem;
-  text-decoration: underline;
-  text-underline-offset: 6px;
+  /* A border, not text-decoration: the underline alone held a cold phone's first paint back by
+     a third of a second. */
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 4px;
 }
 .story-card__title {
   display: flex;
@@ -317,6 +320,11 @@ html.mode-explore #rail * {
 .rail-chip {
   display: none;
 }
+@keyframes chip-in {
+  from {
+    visibility: hidden;
+  }
+}
 @media (max-width: 759px) {
   .rail {
     display: none;
@@ -332,6 +340,9 @@ html.mode-explore #rail * {
     border-radius: 999px;
     padding: 0.35rem 0.9rem;
     font-size: 0.8rem;
+    /* A fixed layer with a backdrop blur costs a cold phone's first paint most of a second.
+       Hidden for the first 0.4 s, it shows once the text and the still are on screen. */
+    animation: chip-in 0s 0.4s backwards;
   }
   .rail-chip[open] {
     border-radius: 14px;

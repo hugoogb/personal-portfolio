@@ -6,8 +6,10 @@ import { prefersReducedMotion } from "@/utils/motion";
 const CANT_DRAW = "Your browser can't draw the 3D town";
 export const LITE_HINT = "3D is off (Lite) - choose Explore to turn it back on";
 
+// Town probes WebGL2 after first paint and marks html.no-webgl when it is missing; until
+// then the device is given the benefit of the doubt.
 const hasWebgl = () =>
-  typeof document !== "undefined" && document.documentElement.classList.contains("has-webgl");
+  typeof document === "undefined" || !document.documentElement.classList.contains("no-webgl");
 
 /** The town was turned off by the visitor's Lite choice, not by the device. */
 export const liteOff = (s: Pick<BaseCampState, "town" | "qualityMode">) =>

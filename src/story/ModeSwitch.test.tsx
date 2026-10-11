@@ -7,7 +7,7 @@ import { useBaseCamp } from "@/store/store";
 const explore = () => screen.getByRole("radio", { name: /Explore/ });
 
 beforeEach(() => {
-  document.documentElement.className = "has-webgl";
+  document.documentElement.className = "";
   useBaseCamp.setState({
     mode: "story",
     town: "loading",
@@ -26,7 +26,7 @@ describe("ModeSwitch", () => {
   });
 
   it("keeps Explore disabled without WebGL2, and says why", () => {
-    document.documentElement.className = "";
+    document.documentElement.className = "no-webgl";
     render(<ModeSwitch />);
     expect(explore().getAttribute("aria-disabled")).toBe("true");
     expect(explore().getAttribute("title")).toMatch(/can't draw the 3D town/);
