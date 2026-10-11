@@ -71,4 +71,20 @@ describe("ModeSwitch", () => {
     fireEvent.click(screen.getByRole("radio", { name: "Text" }));
     expect(useBaseCamp.getState().mode).toBe("text");
   });
+
+  it("is one tab stop, and the arrows move and select, wrapping and skipping a disabled option", () => {
+    render(<ModeSwitch />);
+    const tabs = () => screen.getAllByRole("radio").map((r) => r.getAttribute("tabindex"));
+    expect(tabs()).toEqual(["0", "-1", "-1"]);
+    fireEvent.keyDown(screen.getByRole("radio", { name: "Story" }), { key: "ArrowLeft" });
+    expect(useBaseCamp.getState().mode).toBe("text");
+    expect(tabs()).toEqual(["-1", "-1", "0"]);
+  });
+
+  it("skips Explore when it is blocked", () => {
+    document.documentElement.className = "no-webgl";
+    render(<ModeSwitch />);
+    fireEvent.keyDown(screen.getByRole("radio", { name: "Story" }), { key: "ArrowRight" });
+    expect(useBaseCamp.getState().mode).toBe("text");
+  });
 });

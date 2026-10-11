@@ -76,7 +76,6 @@ export function Town() {
         html().classList.add("no-webgl");
         return off(false);
       }
-      html().classList.add("has-webgl");
       // The town's code downloads while the GPU check runs, not after it.
       const chunks = Promise.all([import("@/hud/Hud"), import("@/world/World")]);
       chunks.catch(() => {});

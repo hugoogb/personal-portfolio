@@ -192,7 +192,7 @@ describe("Town", () => {
     render(<Town />);
     await waitFor(() => expect(useBaseCamp.getState().town).toBe("ready"));
     expect(hasWebgl2).toHaveBeenCalledTimes(1);
-    expect(html.classList.contains("has-webgl")).toBe(true);
+    expect(html.classList.contains("has-webgl")).toBe(false);
     expect(html.classList.contains("no-webgl")).toBe(false);
   });
 

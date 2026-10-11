@@ -17,7 +17,7 @@ html.mode-story.night,
 html.mode-explore.night {
   --st-glass: rgb(18 24 38 / 0.78);
   --st-ink: #eef2f7;
-  --st-muted: #9aa6b8;
+  --st-muted: #c4cdda;
   --st-line: rgb(255 255 255 / 0.12);
   --st-line-strong: rgb(255 255 255 / 0.3);
 }
@@ -31,7 +31,12 @@ html.mode-explore #backdrop {
   position: fixed;
   inset: 0;
   z-index: 0;
-  background: var(--background-color);
+  /* Under the still: the town's own day or night, never the system theme, so the text on it keeps its contrast while the image loads. */
+  background: #e4eaf0;
+}
+html.mode-story.night #backdrop,
+html.mode-explore.night #backdrop {
+  background: #0c1322;
 }
 .backdrop__still,
 .backdrop__town {
@@ -287,7 +292,7 @@ html.mode-explore #rail * {
   transform: translateY(-50%);
   z-index: 5;
   display: grid;
-  gap: 0.7rem;
+  gap: 0.8rem;
 }
 .rail__dot {
   display: block;
@@ -297,6 +302,12 @@ html.mode-explore #rail * {
   border: 2px solid currentColor;
   position: relative;
   color: var(--text-color);
+}
+/* A 24px hit area (WCAG 2.5.8) around the 11px dot; the look is unchanged. */
+.rail__dot::after {
+  content: "";
+  position: absolute;
+  inset: -0.52rem;
 }
 .rail__dot[aria-current="true"] {
   background: var(--primary-color);
