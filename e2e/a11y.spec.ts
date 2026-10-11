@@ -40,6 +40,52 @@ const townShown = async (page: Page) => {
     .toBe("1");
 };
 
+/** One project Live and one Down, so the status pills are on the page for the scans. */
+const statuses = (page: Page) =>
+  page.route("**/api/status", (route) =>
+    route.fulfill({
+      json: {
+        services: [
+          { id: "rl", ok: true, ms: 40 },
+          { id: "wt", ok: false, ms: null },
+        ],
+      },
+    }),
+  );
+
+/** Barcelona noon and 23:00 on 10 Oct (CEST): the head script reads the clock for html.night. */
+const CLOCKS = [
+  ["day", "2026-10-10T10:00:00Z"],
+  ["night", "2026-10-10T21:00:00Z"],
+] as const;
+
+/**
+ * A pill's contrast against its card: the glass blended over the backdrop's own colour
+ * (axe cannot read through the glass to the town, so it would only report "incomplete").
+ */
+const pillContrast = (page: Page, id: string) =>
+  page.evaluate((place) => {
+    const rgba = (c: string) => {
+      const [r, g, b, a = 1] = c.match(/[\d.]+/g)!.map(Number);
+      return { r, g, b, a };
+    };
+    const pill = document.querySelector<HTMLElement>(`[data-status-for="${place}"]`)!;
+    const card = pill.closest(".story-card")!;
+    const glass = rgba(getComputedStyle(card).backgroundColor);
+    const under = rgba(getComputedStyle(document.getElementById("backdrop")!).backgroundColor);
+    const mix = (k: "r" | "g" | "b") => glass[k] * glass.a + under[k] * (1 - glass.a);
+    const lum = (c: { r: number; g: number; b: number }) => {
+      const ch = (v: number) => {
+        const x = v / 255;
+        return x <= 0.03928 ? x / 12.92 : ((x + 0.055) / 1.055) ** 2.4;
+      };
+      return 0.2126 * ch(c.r) + 0.7152 * ch(c.g) + 0.0722 * ch(c.b);
+    };
+    const a = lum(rgba(getComputedStyle(pill).color));
+    const b = lum({ r: mix("r"), g: mix("g"), b: mix("b") });
+    return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
+  }, id);
+
 /** Serious and critical only: those block people; the rest are logged for the report. */
 const scan = async (page: Page, name: string, skip?: string) => {
   const axe = new AxeBuilder({ page }).exclude("canvas");
@@ -56,35 +102,58 @@ const scan = async (page: Page, name: string, skip?: string) => {
 };
 
 test.describe("Text mode", () => {
-  test.beforeEach(async ({ page }) => seed(page, TEXT));
-  test("has no serious violations", async ({ page }) => {
-    await page.goto("/");
-    await expect(page.locator("html")).toHaveClass(/mode-text/);
-    await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-    await expect(page.getByRole("radiogroup", { name: "View" })).toBeVisible();
-    await scan(page, "text");
+  test.beforeEach(async ({ page }) => {
+    await seed(page, TEXT);
+    await statuses(page);
   });
+  for (const scheme of ["light", "dark"] as const) {
+    test(`has no serious violations on a ${scheme} system theme`, async ({ page }) => {
+      await page.emulateMedia({ colorScheme: scheme });
+      await page.goto("/");
+      await expect(page.locator("html")).toHaveClass(/mode-text/);
+      await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
+      await expect(page.getByRole("radiogroup", { name: "View" })).toBeVisible();
+      await expect(page.locator('[data-status-for="rl"]')).toHaveText("Live");
+      await expect(page.locator('[data-status-for="wt"]')).toHaveText("Down");
+      await scan(page, `text-${scheme}`);
+    });
+  }
 });
 
 test.describe("Story", () => {
   test.beforeEach(async ({ page }) => seed(page, STORY));
 
-  test("has no serious violations, and the rail and switch are keyboard-reachable", async ({
-    page,
-  }) => {
-    await page.goto("/");
-    await expect(page.locator("html")).toHaveClass(/mode-story/);
-    await townShown(page);
-    await scan(page, "story", "#explore-title");
-    // The finale text sits on the town, which axe cannot read from off screen: scan it in view too.
-    await page.locator("#explore-title").scrollIntoViewIfNeeded();
-    await scan(page, "story-finale", "#top");
-    await page.keyboard.press("Tab");
-    await expect(page.locator(":focus")).toBeVisible();
-    const rail = page.getByRole("navigation", { name: "Sections" });
-    await expect(rail.getByRole("link")).toHaveCount(8);
-    await expect(page.getByRole("radiogroup", { name: "View" })).toBeVisible();
-  });
+  for (const [time, at] of CLOCKS) {
+    test(`has no serious violations by ${time}, and the rail and switch are keyboard-reachable`, async ({
+      page,
+    }) => {
+      // Pinned, so the scan is the same whatever hour the suite runs at.
+      await page.clock.setFixedTime(new Date(at));
+      await statuses(page);
+      await page.goto("/");
+      await expect(page.locator("html")).toHaveClass(/mode-story/);
+      if (time === "night") await expect(page.locator("html")).toHaveClass(/(^|\s)night(\s|$)/);
+      else await expect(page.locator("html")).not.toHaveClass(/(^|\s)night(\s|$)/);
+      await townShown(page);
+      await scan(page, `story-${time}`, "#explore-title");
+      // The status pills sit on the cards' glass: at least 4.5:1 against it, day and night.
+      for (const [id, text] of [
+        ["rl", "Live"],
+        ["wt", "Down"],
+      ] as const) {
+        await expect(page.locator(`[data-status-for="${id}"]`)).toHaveText(text);
+        expect(await pillContrast(page, id), `${id} pill by ${time}`).toBeGreaterThanOrEqual(4.5);
+      }
+      // The finale text sits on the town, which axe cannot read from off screen: scan it in view too.
+      await page.locator("#explore-title").scrollIntoViewIfNeeded();
+      await scan(page, `story-finale-${time}`, "#top");
+      await page.keyboard.press("Tab");
+      await expect(page.locator(":focus")).toBeVisible();
+      const rail = page.getByRole("navigation", { name: "Sections" });
+      await expect(rail.getByRole("link")).toHaveCount(8);
+      await expect(page.getByRole("radiogroup", { name: "View" })).toBeVisible();
+    });
+  }
 
   test("the current rail link is marked", async ({ page }) => {
     await page.goto("/#contact");

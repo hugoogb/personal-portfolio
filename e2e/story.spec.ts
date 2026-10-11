@@ -91,9 +91,22 @@ test("Story to Explore and back keeps the place", async ({ page }) => {
   await expect(page.locator('[data-rail="rl"]')).toHaveAttribute("aria-current", "true");
 });
 
-test("Text is reachable from Story and Explore, and loads no town from a cold start", async ({
-  page,
-}) => {
+test("Text is reachable from Story and from Explore", async ({ page }) => {
+  await page.goto("/");
+  await expect(page.locator("html")).toHaveClass(/mode-story/);
+  await page.getByRole("radio", { name: "Text" }).click();
+  await expect(page.locator("html")).toHaveClass(/mode-text/);
+  await page.getByRole("radio", { name: "Story" }).click();
+  await expect(page.locator("html")).toHaveClass(/mode-story/);
+  await page.getByRole("radio", { name: "Explore" }).click();
+  await expect(page.locator("html")).toHaveClass(/mode-explore/);
+  await expect(page.locator("html")).toHaveClass(/town-ready/, { timeout: 20_000 });
+  await page.getByRole("radio", { name: "Text" }).click();
+  await expect(page.locator("html")).toHaveClass(/mode-text/);
+  await expect(page.locator(".stage")).toHaveCount(0);
+});
+
+test("a cold #text start loads no town", async ({ page }) => {
   const town: string[] = [];
   page.on("request", (r) => /World-|lighting-/.test(r.url()) && town.push(r.url()));
   await page.goto("/#text");
