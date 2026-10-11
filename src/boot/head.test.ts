@@ -136,6 +136,18 @@ describe("mode before first paint", () => {
       "mode-story",
     ]);
   });
+  it("reads the chosen mode first, and the legacy mode key when there is none", () => {
+    const record = (state: object) => ({ bc: JSON.stringify({ state, version: 1 }) });
+    expect(
+      modes(boot({ stored: record({ chosenMode: "text", mode: "explore" }) }).classes),
+    ).toEqual(["mode-text"]);
+    expect(modes(boot({ stored: record({ mode: "text" }) }).classes)).toEqual(["mode-text"]);
+    // A record written by the new store with nothing chosen: the signals decide.
+    expect(modes(boot({ stored: record({ chosenMode: null }) }).classes)).toEqual(["mode-story"]);
+    expect(
+      modes(boot({ stored: record({ chosenMode: null }), reducedMotion: true }).classes),
+    ).toEqual(["mode-text"]);
+  });
   it("lets #text win over a saved mode", () => {
     expect(modes(boot({ hash: "#text", stored: saved("explore") }).classes)).toEqual(["mode-text"]);
   });

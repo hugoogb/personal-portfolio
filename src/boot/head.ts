@@ -3,8 +3,8 @@
  *
  * It paints the visitor's saved accent so the prerendered page never flashes
  * orange first, and picks the mode: exactly one html.mode-story, mode-explore
- * or mode-text, from the hash (#text, or an explore-only place), the saved mode
- * and what the visitor asked for. It also marks html.night when Barcelona is dark.
+ * or mode-text, from the hash (#text, or an explore-only place), the mode the
+ * visitor last chose and what the device asks for. It also marks html.night when Barcelona is dark.
  * It never touches WebGL: Town probes for WebGL2 after first paint.
  *
  * It is shipped as its own source text (headScript below), so bootHead must
@@ -56,7 +56,8 @@ export function bootHead(
     if (saved) {
       const state = JSON.parse(saved)?.state;
       quality = state?.qualityMode ?? null;
-      savedMode = state?.mode ?? null;
+      // The mode the visitor chose; records from before chosenMode keep theirs under `mode`.
+      savedMode = (state?.chosenMode !== undefined ? state.chosenMode : state?.mode) ?? null;
     }
   } catch {
     // Storage blocked or a corrupt record: the defaults stand.

@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import { PROJECT_IDS } from "@/content/places";
 import { RAIL_STOPS, STOPS } from "@/content/tour";
 import { useBaseCamp } from "@/store/store";
-import { currentStop, measureCenters, progress, stopProgress } from "@/story/progress";
+import { currentStop, progress, readCenters, stopProgress, storySections } from "@/story/progress";
 import { prefersReducedMotion } from "@/utils/motion";
 
 const ARRIVES = new Set<string>([...PROJECT_IDS, "post"]);
@@ -12,17 +12,12 @@ export const useStoryDriver = () => {
   const mode = useBaseCamp((s) => s.mode);
   useEffect(() => {
     if (mode !== "story") return;
-    const sections = [...document.querySelectorAll<HTMLElement>("#story > section[data-stop]")];
+    const sections = storySections();
     if (!sections.length) return;
     let centers: number[] = [];
     let last = -1;
     const measure = () => {
-      centers = measureCenters(
-        sections.map((el) => ({
-          top: el.getBoundingClientRect().top + window.scrollY,
-          height: el.offsetHeight,
-        })),
-      );
+      centers = readCenters(sections);
     };
     const announce = (i: number) => {
       const stop = STOPS[i];
@@ -34,8 +29,9 @@ export const useStoryDriver = () => {
       let at = i;
       while (at > 0 && !STOPS[at].rail) at--;
       const shown = STOPS[at];
-      document.querySelectorAll("[data-rail]").forEach((a) => {
-        if (a.getAttribute("data-rail") === shown.id) a.setAttribute("aria-current", "true");
+      document.querySelectorAll("[data-rail], [data-rail-chip]").forEach((a) => {
+        const id = a.getAttribute("data-rail") ?? a.getAttribute("data-rail-chip");
+        if (id === shown.id) a.setAttribute("aria-current", "true");
         else a.removeAttribute("aria-current");
       });
       const railIndex = RAIL_STOPS.findIndex((r) => r.id === shown.id);

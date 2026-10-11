@@ -15,3 +15,32 @@ export const stopProgress = (centers: number[], focusY: number) => {
 
 export const currentStop = (p: { index: number; fraction: number }) =>
   p.index + (p.fraction >= 0.5 ? 1 : 0);
+
+/** Each tour section's centre in page coordinates, measured on the layout on screen. */
+export const readCenters = (sections: HTMLElement[]) =>
+  measureCenters(
+    sections.map((el) => ({
+      top: el.getBoundingClientRect().top + window.scrollY,
+      height: el.offsetHeight,
+    })),
+  );
+
+export const storySections = () => [
+  ...document.querySelectorAll<HTMLElement>("#story > section[data-stop]"),
+];
+
+/**
+ * The stop at the middle of the screen now, or null with no story on the page. Sections
+ * the layout hides (Text has no finale) are skipped: a hidden box would measure at the top.
+ */
+export const stopInView = (): number | null => {
+  const shown = storySections()
+    .map((el, i) => ({ el, i }))
+    .filter(({ el }) => el.getClientRects().length > 0);
+  if (!shown.length) return null;
+  const p = stopProgress(
+    readCenters(shown.map((s) => s.el)),
+    window.scrollY + window.innerHeight / 2,
+  );
+  return shown[currentStop(p)]!.i;
+};

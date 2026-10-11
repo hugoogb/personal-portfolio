@@ -3,7 +3,7 @@ import { act, cleanup, render } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 import type { PlaceId } from "@/content/types";
 import { useBaseCamp } from "@/store/store";
-import { enterStory } from "@/story/transitions";
+import { enterExplore, enterStory, enterText } from "@/story/transitions";
 import { Story } from "@/story/Story";
 import { useStoryDriver } from "@/story/useStoryDriver";
 import { useStoryStatus } from "@/story/useStoryStatus";
@@ -41,6 +41,7 @@ beforeEach(() => {
   render(<Story />);
   document.querySelectorAll<HTMLElement>("#story > section[data-stop]").forEach((el, i) => {
     el.getBoundingClientRect = () => ({ top: i * H - window.scrollY }) as DOMRect;
+    el.getClientRects = () => [{}] as unknown as DOMRectList;
     Object.defineProperty(el, "offsetHeight", { value: H, configurable: true });
   });
 });
@@ -78,6 +79,15 @@ describe("useStoryDriver", () => {
     expect(document.querySelector("[data-rail-label]")!.textContent).toBe("ReadLedger");
     expect(document.querySelector("[data-rail-count]")!.textContent).toBe("4 / 8");
     expect(useBaseCamp.getState().selected).toBe("rl");
+  });
+
+  it("marks the current stop in the phone chip's list too", () => {
+    render(<Driver />);
+    setScroll(focus(3));
+    expect(document.querySelector('[data-rail-chip="rl"]')!.getAttribute("aria-current")).toBe(
+      "true",
+    );
+    expect(document.querySelectorAll('[data-rail-chip][aria-current="true"]')).toHaveLength(1);
   });
 
   it("the finale, which is not in the rail, shows Contact in the rail and the chip", () => {
@@ -131,6 +141,95 @@ describe("useStoryDriver", () => {
     setScroll(focus(3));
     expect(useBaseCamp.getState().stop).toBe(0);
     expect(location.hash).toBe("");
+  });
+});
+
+describe("switching modes keeps the position", () => {
+  const sections = () => [...document.querySelectorAll<HTMLElement>("#story > section[data-stop]")];
+  const realScrollTo = window.scrollTo;
+  beforeEach(() => {
+    Element.prototype.scrollIntoView = function (this: Element) {
+      Object.defineProperty(window, "scrollY", {
+        value: focus(sections().indexOf(this as HTMLElement)),
+        configurable: true,
+      });
+    };
+    window.scrollTo = ((o: ScrollToOptions) =>
+      Object.defineProperty(window, "scrollY", {
+        value: o.top,
+        configurable: true,
+      })) as typeof window.scrollTo;
+  });
+  afterEach(() => {
+    window.scrollTo = realScrollTo;
+  });
+
+  it("Story -> Explore -> Story comes back to the same scroll position, announcing only that stop", () => {
+    render(<Driver />);
+    setScroll(focus(4) + 100); // Wrapped Things, a little past its centre
+    act(() => enterExplore());
+    expect(useBaseCamp.getState().selected).toBe("wt");
+    // Explore's layout clamps the page to the top.
+    Object.defineProperty(window, "scrollY", { value: 0, configurable: true });
+    arrive.mockClear();
+    const urls: string[] = [];
+    const replace = history.replaceState.bind(history);
+    history.replaceState = (d, u, url) => {
+      urls.push(String(url));
+      replace(d, u, url);
+    };
+    try {
+      act(() => enterStory());
+    } finally {
+      history.replaceState = replace;
+    }
+    expect(window.scrollY).toBe(focus(4) + 100);
+    expect(useBaseCamp.getState().stop).toBe(4);
+    expect(urls).toEqual(["#wrapped-things"]);
+    expect(arrive.mock.calls).toEqual([["wt"]]);
+  });
+
+  it("Text -> Story lands on the section read in Text, not the stale stop", () => {
+    useBaseCamp.setState({ mode: "text", stop: 4, selected: "wt" });
+    render(<Driver />);
+    setScroll(focus(7)); // Contact, read in Text
+    act(() => enterStory());
+    expect(useBaseCamp.getState().mode).toBe("story");
+    expect(useBaseCamp.getState().stop).toBe(7);
+    expect(location.hash).toBe("#contact");
+  });
+
+  it("Text, which hides the finale, measures past it: the end of the page is Contact", () => {
+    const finale = document.getElementById("explore")!;
+    // A display:none box measures as an empty rect at the top of the viewport.
+    finale.getClientRects = () => [] as unknown as DOMRectList;
+    finale.getBoundingClientRect = () => ({ top: 0 }) as DOMRect;
+    Object.defineProperty(finale, "offsetHeight", { value: 0, configurable: true });
+    useBaseCamp.setState({ mode: "text", stop: 2, selected: "f1" });
+    render(<Driver />);
+    setScroll(focus(7) + 300);
+    // Explore, not Story: the driver would re-measure the (stubbed) hidden finale.
+    act(() => enterExplore());
+    expect(useBaseCamp.getState().stop).toBe(7);
+    expect(useBaseCamp.getState().selected).toBe("post");
+  });
+
+  it("Text -> Explore selects the project read in Text", () => {
+    useBaseCamp.setState({ mode: "text", stop: 4, selected: "wt", town: "loading" });
+    render(<Driver />);
+    setScroll(focus(3)); // ReadLedger
+    act(() => enterExplore());
+    expect(useBaseCamp.getState().mode).toBe("explore");
+    expect(useBaseCamp.getState().selected).toBe("rl");
+  });
+
+  it("Explore -> Text lands on the selected place's section", () => {
+    useBaseCamp.setState({ mode: "explore", stop: 0, selected: "es" });
+    render(<Driver />);
+    act(() => enterText());
+    expect(useBaseCamp.getState().mode).toBe("text");
+    expect(window.scrollY).toBe(focus(5));
+    expect(useBaseCamp.getState().stop).toBe(5);
   });
 });
 

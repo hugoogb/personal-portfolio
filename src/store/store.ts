@@ -1,6 +1,6 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
-import { applyModeClass, readModeClass, type Mode } from "@/boot/mode";
+import { applyModeClass, isMode, readModeClass, type Mode } from "@/boot/mode";
 import { MAX_DPR, TIER_NAMES, resolveTier, type QualityMode, type Tier } from "@/boot/tiers";
 import { ACHIEVEMENT_BY_ID, ACHIEVEMENT_IDS, type AchievementId } from "@/content/achievements";
 import { ORDER } from "@/content/places";
@@ -81,7 +81,10 @@ export interface BaseCampState {
   status: StatusMap | "unknown";
   /** Goals scored in the arena this visit; never saved. */
   score: number;
+  /** The mode on screen: the head script's pick, then hashes, fallbacks and choices. Never saved. */
   mode: Mode;
+  /** The mode the visitor last picked (switch, finale, Esc, console); the only one saved (spec 3.4). */
+  chosenMode: Mode | null;
   /** The story stop at the middle of the screen (StoryDriver). */
   stop: number;
   /** Whether the town can be shown: Explore is offered only when "ready". */
@@ -122,7 +125,10 @@ export interface BaseCampState {
   setStatus: (status: StatusMap | "unknown") => void;
   addGoal: (side: "Blue" | "Orange") => void;
   resetProgress: () => void;
+  /** Changes the mode on screen without recording it as the visitor's choice. */
   setMode: (mode: Mode) => void;
+  /** Records the visitor's own pick, which the next visit starts in. */
+  chooseMode: (mode: Mode) => void;
   setStop: (stop: number) => void;
   setTown: (town: "loading" | "ready" | "off") => void;
   arrive: (id: PlaceId) => void;
@@ -142,7 +148,7 @@ const listOf = <T>(allowed: readonly T[], value: unknown): T[] =>
 
 type Persisted = Pick<
   BaseCampState,
-  "discovered" | "achievements" | "hudMode" | "qualityMode" | "seen" | "mode"
+  "discovered" | "achievements" | "hudMode" | "qualityMode" | "seen" | "chosenMode"
 >;
 
 /**
@@ -150,10 +156,13 @@ type Persisted = Pick<
  * a hand-edited value, another version. Each field is kept only when it is
  * valid, so one bad field falls back to its default instead of breaking the HUD.
  */
-const restore = (saved: unknown): Partial<Omit<Persisted, "mode">> => {
+const restore = (saved: unknown): Partial<Persisted> => {
   if (!saved || typeof saved !== "object") return {};
   const s = saved as Record<string, unknown>;
+  // Records from before chosenMode saved the mode on screen under `mode`.
+  const chosen = s.chosenMode !== undefined ? s.chosenMode : s.mode;
   return {
+    chosenMode: isMode(chosen) ? chosen : null,
     discovered: listOf(ORDER, s.discovered),
     achievements: listOf(ACHIEVEMENT_IDS, s.achievements),
     hudMode: isOneOf(HUD_MODES, s.hudMode) ? s.hudMode : "auto",
@@ -199,6 +208,7 @@ export const createBaseCampStore = (storage: KeyValueStorage = safeStorage()) =>
         status: "unknown",
         score: 0,
         mode: typeof document === "undefined" ? "text" : readModeClass(),
+        chosenMode: null,
         stop: 0,
         town: "loading",
         arrival: null,
@@ -276,6 +286,7 @@ export const createBaseCampStore = (storage: KeyValueStorage = safeStorage()) =>
           if (typeof document !== "undefined") applyModeClass(mode);
           set({ mode });
         },
+        chooseMode: (chosenMode) => set({ chosenMode }),
         setStop: (stop) => set({ stop }),
         setTown: (town) => set({ town }),
         arrive: (id) => set({ arrival: { id, seq: nextArrivalSeq++ } }),
@@ -286,9 +297,8 @@ export const createBaseCampStore = (storage: KeyValueStorage = safeStorage()) =>
         storage: createJSONStorage(() => storage),
         // Every version goes through restore(), so no record needs migrating.
         migrate: (saved) => saved as Persisted,
-        // The head script already chose the mode before React and is the only
-        // reader of the saved one, so `current.mode` (from the class) stands:
-        // a #text hash beats the saved mode.
+        // The head script already picked the mode on screen (hash, choice, signals), so
+        // `current.mode` (from the class) stands; only the visitor's choice is restored.
         merge: (saved, current) => ({ ...current, ...restore(saved), mode: current.mode }),
         partialize: (s): Persisted => ({
           discovered: s.discovered,
@@ -296,7 +306,7 @@ export const createBaseCampStore = (storage: KeyValueStorage = safeStorage()) =>
           hudMode: s.hudMode,
           qualityMode: s.qualityMode,
           seen: s.seen,
-          mode: s.mode,
+          chosenMode: s.chosenMode,
         }),
       },
     ),
