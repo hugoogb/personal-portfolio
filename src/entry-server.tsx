@@ -1,8 +1,7 @@
 import { StrictMode } from "react";
 import { renderToPipeableStream } from "react-dom/server";
 import { Writable } from "node:stream";
-import { Brief } from "@/brief/Brief";
-import { TitleCard } from "@/brief/TitleCard";
+import { Story } from "@/story/Story";
 
 export { structuredData } from "@/utils/structuredData";
 
@@ -28,8 +27,7 @@ export const render = () =>
 
     const stream = renderToPipeableStream(
       <StrictMode>
-        <TitleCard />
-        <Brief />
+        <Story />
       </StrictMode>,
       {
         onAllReady: () => stream.pipe(sink),

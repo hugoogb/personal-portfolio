@@ -1,10 +1,35 @@
 // @vitest-environment jsdom
 import { describe, expect, it, vi } from "vitest";
-import { gpuRenderer } from "@/hud/actions";
+import { PLACE_BY_ID } from "@/content/places";
+import { gpuRenderer, runCommand, runPrimary } from "@/hud/actions";
+import { enterStory, enterText } from "@/story/transitions";
+
+vi.mock("@/story/transitions", () => ({
+  enterStory: vi.fn(),
+  enterText: vi.fn(),
+  enterExplore: vi.fn(),
+}));
+
+describe("runPrimary", () => {
+  it("takes HQ's About me back to the story", () => {
+    expect(PLACE_BY_ID.hq.primary).toEqual({ label: "About me", action: "story" });
+    runPrimary(PLACE_BY_ID.hq);
+    expect(enterStory).toHaveBeenCalled();
+  });
+});
+
+describe("runCommand", () => {
+  it("switches to Story or Text from the console", () => {
+    runCommand({ id: "story", label: "story", run: { type: "mode", mode: "story" } });
+    expect(enterStory).toHaveBeenCalled();
+    runCommand({ id: "text", label: "text", run: { type: "mode", mode: "text" } });
+    expect(enterText).toHaveBeenCalled();
+  });
+});
 
 describe("gpuRenderer", () => {
   const withGl = (gl: unknown) => {
-    document.body.innerHTML = '<div class="stage"><canvas></canvas></div>';
+    document.body.innerHTML = '<div id="town-root"><canvas></canvas></div>';
     document.querySelector("canvas")!.getContext = (() => gl) as never;
   };
 

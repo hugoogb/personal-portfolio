@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { describe, expect, it, vi } from "vitest";
 import { ORDER } from "@/content/places";
 import { STORE_KEY, createBaseCampStore } from "@/store/store";
@@ -52,6 +53,7 @@ describe("store", () => {
       hudMode: "dark",
       qualityMode: "Low",
       seen: false,
+      chosenMode: null,
     });
   });
 
@@ -117,6 +119,61 @@ describe("store", () => {
     expect(store.getState().achievements).toEqual([]);
     expect(store.getState().seen).toBe(false);
     expect(store.getState().hudMode).toBe("dark");
+  });
+});
+
+describe("store, modes", () => {
+  const saved = (storage: KeyValueStorage) =>
+    JSON.parse(storage.getItem(STORE_KEY) ?? "{}").state ?? {};
+
+  it("applies the mode's class, and drops an invalid saved mode", () => {
+    const storage = memory();
+    const a = createBaseCampStore(storage);
+    a.getState().setMode("explore");
+    expect(document.documentElement.classList.contains("mode-explore")).toBe(true);
+    expect(createBaseCampStore(storage).getState().mode).toBe("explore");
+    storage.setItem(STORE_KEY, JSON.stringify({ state: { mode: "brief" }, version: 1 }));
+    document.documentElement.className = "";
+    expect(createBaseCampStore(storage).getState().mode).toBe("text");
+  });
+
+  it("saves only a mode the visitor chose, never one a hash or a fallback set", () => {
+    const storage = memory();
+    const store = createBaseCampStore(storage);
+    store.getState().setMode("explore");
+    store.getState().select("rl");
+    expect(saved(storage).chosenMode).toBeNull();
+    expect(saved(storage)).not.toHaveProperty("mode");
+    store.getState().chooseMode("text");
+    expect(saved(storage).chosenMode).toBe("text");
+    // A later fallback (Town off, a #text hash) changes the mode on screen, not the choice.
+    store.getState().setMode("story");
+    store.getState().setStop(3);
+    expect(saved(storage).chosenMode).toBe("text");
+  });
+
+  it("restores the choice, reading a legacy saved mode when there is no choice", () => {
+    const storage = memory();
+    storage.setItem(STORE_KEY, JSON.stringify({ state: { mode: "explore" }, version: 1 }));
+    const legacy = createBaseCampStore(storage);
+    expect(legacy.getState().chosenMode).toBe("explore");
+    legacy.getState().setStop(2);
+    expect(saved(storage).chosenMode).toBe("explore");
+    storage.setItem(
+      STORE_KEY,
+      JSON.stringify({ state: { chosenMode: "text", mode: "explore" }, version: 1 }),
+    );
+    expect(createBaseCampStore(storage).getState().chosenMode).toBe("text");
+    storage.setItem(STORE_KEY, JSON.stringify({ state: { chosenMode: "brief" }, version: 1 }));
+    expect(createBaseCampStore(storage).getState().chosenMode).toBeNull();
+  });
+
+  it("numbers arrivals so a repeat arrival is a new one", () => {
+    const s = createBaseCampStore(memory());
+    s.getState().arrive("rl");
+    const first = s.getState().arrival!;
+    s.getState().arrive("rl");
+    expect(s.getState().arrival!.seq).toBeGreaterThan(first.seq);
   });
 });
 
@@ -258,6 +315,7 @@ describe("store, phase 2", () => {
     const saved = JSON.parse(storage.getItem(STORE_KEY) ?? "{}");
     expect(Object.keys(saved.state).sort()).toEqual([
       "achievements",
+      "chosenMode",
       "discovered",
       "hudMode",
       "qualityMode",

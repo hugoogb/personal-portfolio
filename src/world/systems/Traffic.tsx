@@ -48,6 +48,10 @@ export function Traffic({ world }: { world: BuiltWorld }) {
     const unsub = useBaseCamp.subscribe((s, prev) => {
       if (s.status !== prev.status) sim.setPlans(planRoutes(routes, s.status));
       if (s.tier !== prev.tier) sim.setCaps(trafficCaps(s.tier, prefersReducedMotion()));
+      if (s.arrival && s.arrival !== prev.arrival) {
+        const i = routes.findIndex((r) => r.id === s.arrival!.id);
+        if (i >= 0 && !prefersReducedMotion()) sim.burst(i, 3);
+      }
     });
     // The preference can flip mid-visit: empty the roads (or refill them) at once.
     const onPref = () =>

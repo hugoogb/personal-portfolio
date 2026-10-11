@@ -1,9 +1,18 @@
 import { expect, test } from "@playwright/test";
 import { pageMetrics } from "./pageMetrics";
 
-// These cover the Brief as the page. Reduced motion keeps every device on Lite,
-// so the town never covers it (e2e/world.spec.ts covers the town).
-test.use({ reducedMotion: "reduce" });
+// These cover the story document as the page, in Text mode. The town and the
+// tour are covered elsewhere.
+const TEXT = JSON.stringify({ state: { mode: "text" }, version: 1 });
+
+test.beforeEach(async ({ page }) => {
+  await page.addInitScript((record) => {
+    // Seed once per tab, so a choice made during the test survives a reload.
+    if (sessionStorage.getItem("seeded")) return;
+    localStorage.setItem("bc", record);
+    sessionStorage.setItem("seeded", "1");
+  }, TEXT);
+});
 
 const PROJECTS = [
   "F1 Tracker",
@@ -17,14 +26,17 @@ const PROJECTS = [
 // A failed load's message omits the URL, so match on where it came from.
 const isNoise = (url: string) => url.includes("/_vercel/");
 
-test("the HTML itself carries the whole Brief and the JSON-LD", async ({ request }) => {
+test("the HTML itself carries the whole page and the JSON-LD", async ({ request }) => {
   const html = await (await request.get("/")).text();
+  expect(html).toContain("<h1");
   for (const name of PROJECTS) expect(html, name).toContain(name);
-  expect(html).toContain("mailto:hello@hugoogb.dev");
+  expect(html).toContain("hello@hugoogb.dev");
+  expect(html).toContain('id="rail"');
+  expect(html).toContain("/posters/town-");
+  expect(html).toContain("application/ld+json");
   const ld = html.match(/<script type="application\/ld\+json">(.*?)<\/script>/s);
   expect(ld).not.toBeNull();
-  const data = JSON.parse(ld![1]);
-  expect(JSON.stringify(data)).toContain("Hugo García Benjumea");
+  expect(JSON.stringify(JSON.parse(ld![1]))).toContain("Hugo García Benjumea");
 });
 
 test("loads without console errors", async ({ page }) => {
@@ -39,7 +51,7 @@ test("loads without console errors", async ({ page }) => {
 });
 
 test("links into the site still land", async ({ page }) => {
-  for (const hash of ["about", "work", "stack", "contact", "readledger", "f1-tracker"]) {
+  for (const hash of ["about", "contact", "readledger", "f1-tracker"]) {
     // Each link arrives from outside, so start from a fresh load: a same-page hash
     // change issued mid smooth-scroll is a different case, and headless Chromium
     // drops it.
@@ -52,11 +64,11 @@ test("links into the site still land", async ({ page }) => {
 test.describe("without JavaScript", () => {
   test.use({ javaScriptEnabled: false });
 
-  test("the Brief is complete", async ({ page }) => {
+  test("the page is complete", async ({ page }) => {
     await page.goto("/");
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
     for (const name of PROJECTS) {
-      await expect(page.getByRole("heading", { level: 3, name: new RegExp(name) })).toBeVisible();
+      await expect(page.getByRole("heading", { level: 2, name: new RegExp(name) })).toBeVisible();
     }
     await expect(page.getByRole("link", { name: "hello@hugoogb.dev" })).toBeVisible();
   });
@@ -73,11 +85,18 @@ for (const width of [320, 390]) {
   });
 }
 
-test("reduced motion gets no 3D", async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/");
-  await expect(page.locator("canvas")).toHaveCount(0);
-  await expect(page.locator("html")).not.toHaveClass(/can-world/);
+test.describe("reduced motion", () => {
+  // No seed here: the preference alone must choose Text.
+  test("starts in Text and loads no town code", async ({ page }) => {
+    await page.addInitScript(() => localStorage.removeItem("bc"));
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    const requests: string[] = [];
+    page.on("request", (req) => requests.push(req.url()));
+    await page.goto("/");
+    await page.waitForLoadState("networkidle");
+    await expect(page.locator("html")).toHaveClass(/mode-text/);
+    expect(requests.filter((u) => /World-|lighting-/.test(u))).toEqual([]);
+  });
 });
 
 test("garbage in storage never breaks the page", async ({ page }) => {

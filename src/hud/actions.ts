@@ -2,36 +2,9 @@ import { TIER_NAMES } from "@/boot/tiers";
 import { CONTACT } from "@/constants/strings.constants";
 import type { Place } from "@/content/types";
 import type { Command } from "@/hud/commands";
+import { enterStory, enterText } from "@/story/transitions";
 import { useBaseCamp } from "@/store/store";
 import { OVERVIEW } from "@/world/lib/map";
-
-/** Opens the prerendered Brief over the town (Boot sets html.brief-open), optionally at a section. */
-export const openBrief = (anchor: string | null = null) => {
-  useBaseCamp.getState().setBriefOpen(true);
-  // Boot applies html.brief-open in an effect; wait for it so we never scroll a hidden Brief.
-  let frames = 0;
-  const reveal = () => {
-    if (!document.documentElement.classList.contains("brief-open") && ++frames < 10) {
-      requestAnimationFrame(reveal);
-      return;
-    }
-    const brief = document.getElementById("brief");
-    if (!brief) return;
-    brief.setAttribute("tabindex", "-1");
-    const target = anchor ? document.getElementById(anchor) : brief;
-    target?.scrollIntoView?.({ block: "start" });
-    brief.focus({ preventScroll: true });
-  };
-  requestAnimationFrame(reveal);
-};
-
-export const closeBrief = () => {
-  useBaseCamp.getState().setBriefOpen(false);
-  // The stage is inert until the next render; focus once it is live again.
-  requestAnimationFrame(() => document.querySelector<HTMLElement>("[data-brief-toggle]")?.focus());
-};
-
-export const toggleBrief = () => (useBaseCamp.getState().briefOpen ? closeBrief() : openBrief());
 
 /** Keyboard shortcuts open links here; card clicks use real <a> tags. */
 export const openLink = (href: string) => {
@@ -51,8 +24,8 @@ export const runPrimary = (place: Place) => {
   const s = useBaseCamp.getState();
   if (place.primary.href) return openLink(place.primary.href);
   switch (place.primary.action) {
-    case "brief":
-      return openBrief();
+    case "story":
+      return enterStory();
     case "overview":
       return s.focus(OVERVIEW.x, OVERVIEW.z, OVERVIEW.view);
     case "wave":
@@ -77,7 +50,7 @@ export const runTertiary = (place: Place) => {
 /** The GPU's name from the canvas's existing WebGL context; never throws. */
 export const gpuRenderer = (): string => {
   try {
-    const canvas = document.querySelector<HTMLCanvasElement>(".stage canvas");
+    const canvas = document.querySelector<HTMLCanvasElement>("#town-root canvas");
     const gl = (canvas?.getContext("webgl2") ?? canvas?.getContext("webgl")) as
       | WebGL2RenderingContext
       | WebGLRenderingContext
@@ -105,8 +78,8 @@ export const runCommand = (command: Command) => {
     case "drive":
       s.select("arena");
       return s.setDriving(true);
-    case "brief":
-      return openBrief();
+    case "mode":
+      return command.run.mode === "story" ? enterStory() : enterText();
     case "copyEmail":
       return void copyEmail();
     case "time":

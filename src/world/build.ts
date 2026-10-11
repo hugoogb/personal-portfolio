@@ -132,7 +132,7 @@ const SLICE_MS = 12;
 const nextTask = () => new Promise<void>((resolve) => setTimeout(resolve, 0));
 
 /**
- * Builds the town in slices of about 12 ms, so the title card keeps animating
+ * Builds the town in slices of about 12 ms, so the page keeps scrolling
  * and stays clickable. Built at once it was one task of over 100 ms on a
  * laptop, and nearly half a second on a phone. The kit is disposed if the
  * build is abandoned (`signal` aborts) or throws.

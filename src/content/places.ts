@@ -48,7 +48,7 @@ export const PLACES: Place[] = [
     desc: "Hugo García, full-stack engineer in Barcelona. TypeScript end to end: React and Next.js in the browser, Node.js and NestJS on the server, PostgreSQL underneath.",
     stats: ["Barcelona · remote", "EU & US hours", "Roles + freelance"],
     stack: ["TypeScript", "React", "Next.js", "Node.js", "NestJS", "PostgreSQL"],
-    primary: { label: "Read the brief", action: "brief" },
+    primary: { label: "About me", action: "story" },
     secondary: { label: "GitHub", href: CONTACT.GITHUB },
     map: { x: -3, z: -3.2, r: 2.2, top: 3.9, zoom: 12 },
   },

@@ -36,7 +36,7 @@ export const bootTier = (signals: TierSignals, mode: QualityMode) => {
 };
 
 /** The town needs WebGL2 (three r163+ has no WebGL1 path). The probe's context is given back. */
-const hasWebgl2 = (win: Window): boolean => {
+export const hasWebgl2 = (win: Window = window): boolean => {
   try {
     const gl = win.document.createElement("canvas").getContext("webgl2");
     gl?.getExtension("WEBGL_lose_context")?.loseContext();

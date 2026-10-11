@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
+import { applyModeClass, isMode, readModeClass, type Mode } from "@/boot/mode";
 import { MAX_DPR, TIER_NAMES, resolveTier, type QualityMode, type Tier } from "@/boot/tiers";
 import { ACHIEVEMENT_BY_ID, ACHIEVEMENT_IDS, type AchievementId } from "@/content/achievements";
 import { ORDER } from "@/content/places";
@@ -56,7 +57,6 @@ export interface BaseCampState {
   fps: number;
   /** No input for a while, or the window is in the background: the town drops to 30 fps. */
   idle: boolean;
-  briefOpen: boolean;
   consoleOpen: boolean;
   panel: Panel;
   driving: boolean;
@@ -81,6 +81,16 @@ export interface BaseCampState {
   status: StatusMap | "unknown";
   /** Goals scored in the arena this visit; never saved. */
   score: number;
+  /** The mode on screen: the head script's pick, then hashes, fallbacks and choices. Never saved. */
+  mode: Mode;
+  /** The mode the visitor last picked (switch, finale, Esc, console); the only one saved (spec 3.4). */
+  chosenMode: Mode | null;
+  /** The story stop at the middle of the screen (StoryDriver). */
+  stop: number;
+  /** Whether the town can be shown: Explore is offered only when "ready". */
+  town: "loading" | "ready" | "off";
+  /** The last tour arrival; `seq` makes a repeat a new one. */
+  arrival: { id: PlaceId; seq: number } | null;
 
   select: (id: PlaceId) => void;
   deselect: () => void;
@@ -98,7 +108,6 @@ export interface BaseCampState {
   setFps: (fps: number) => void;
   setIdle: (idle: boolean) => void;
   setPanel: (panel: Panel) => void;
-  setBriefOpen: (open: boolean) => void;
   setConsoleOpen: (open: boolean) => void;
   setDriving: (on: boolean) => void;
   toggleStack: () => void;
@@ -116,6 +125,13 @@ export interface BaseCampState {
   setStatus: (status: StatusMap | "unknown") => void;
   addGoal: (side: "Blue" | "Orange") => void;
   resetProgress: () => void;
+  /** Changes the mode on screen without recording it as the visitor's choice. */
+  setMode: (mode: Mode) => void;
+  /** Records the visitor's own pick, which the next visit starts in. */
+  chooseMode: (mode: Mode) => void;
+  setStop: (stop: number) => void;
+  setTown: (town: "loading" | "ready" | "off") => void;
+  arrive: (id: PlaceId) => void;
 }
 
 /** One record for everything persisted except the accent, which keeps today's "color" key. */
@@ -132,7 +148,7 @@ const listOf = <T>(allowed: readonly T[], value: unknown): T[] =>
 
 type Persisted = Pick<
   BaseCampState,
-  "discovered" | "achievements" | "hudMode" | "qualityMode" | "seen"
+  "discovered" | "achievements" | "hudMode" | "qualityMode" | "seen" | "chosenMode"
 >;
 
 /**
@@ -143,7 +159,10 @@ type Persisted = Pick<
 const restore = (saved: unknown): Partial<Persisted> => {
   if (!saved || typeof saved !== "object") return {};
   const s = saved as Record<string, unknown>;
+  // Records from before chosenMode saved the mode on screen under `mode`.
+  const chosen = s.chosenMode !== undefined ? s.chosenMode : s.mode;
   return {
+    chosenMode: isMode(chosen) ? chosen : null,
     discovered: listOf(ORDER, s.discovered),
     achievements: listOf(ACHIEVEMENT_IDS, s.achievements),
     hudMode: isOneOf(HUD_MODES, s.hudMode) ? s.hudMode : "auto",
@@ -154,6 +173,7 @@ const restore = (saved: unknown): Partial<Persisted> => {
 
 let nextToastId = 1;
 let nextGoalSeq = 1;
+let nextArrivalSeq = 1;
 
 export const createBaseCampStore = (storage: KeyValueStorage = safeStorage()) =>
   create<BaseCampState>()(
@@ -171,7 +191,6 @@ export const createBaseCampStore = (storage: KeyValueStorage = safeStorage()) =>
         dpr: MAX_DPR[3],
         fps: 60,
         idle: false,
-        briefOpen: false,
         consoleOpen: false,
         panel: null,
         driving: false,
@@ -188,6 +207,11 @@ export const createBaseCampStore = (storage: KeyValueStorage = safeStorage()) =>
         waveAt: 0,
         status: "unknown",
         score: 0,
+        mode: typeof document === "undefined" ? "text" : readModeClass(),
+        chosenMode: null,
+        stop: 0,
+        town: "loading",
+        arrival: null,
 
         select: (id) => {
           set((s) => ({
@@ -234,7 +258,6 @@ export const createBaseCampStore = (storage: KeyValueStorage = safeStorage()) =>
         setFps: (fps) => set({ fps }),
         setIdle: (idle) => set({ idle }),
         setPanel: (panel) => set({ panel }),
-        setBriefOpen: (briefOpen) => set({ briefOpen }),
         setConsoleOpen: (consoleOpen) => {
           set({ consoleOpen });
           if (consoleOpen) get().achieve("console");
@@ -259,6 +282,14 @@ export const createBaseCampStore = (storage: KeyValueStorage = safeStorage()) =>
           get().achieve("goal");
         },
         resetProgress: () => set({ discovered: [], achievements: [], seen: false }),
+        setMode: (mode) => {
+          if (typeof document !== "undefined") applyModeClass(mode);
+          set({ mode });
+        },
+        chooseMode: (chosenMode) => set({ chosenMode }),
+        setStop: (stop) => set({ stop }),
+        setTown: (town) => set({ town }),
+        arrive: (id) => set({ arrival: { id, seq: nextArrivalSeq++ } }),
       }),
       {
         name: STORE_KEY,
@@ -266,13 +297,16 @@ export const createBaseCampStore = (storage: KeyValueStorage = safeStorage()) =>
         storage: createJSONStorage(() => storage),
         // Every version goes through restore(), so no record needs migrating.
         migrate: (saved) => saved as Persisted,
-        merge: (saved, current) => ({ ...current, ...restore(saved) }),
+        // The head script already picked the mode on screen (hash, choice, signals), so
+        // `current.mode` (from the class) stands; only the visitor's choice is restored.
+        merge: (saved, current) => ({ ...current, ...restore(saved), mode: current.mode }),
         partialize: (s): Persisted => ({
           discovered: s.discovered,
           achievements: s.achievements,
           hudMode: s.hudMode,
           qualityMode: s.qualityMode,
           seen: s.seen,
+          chosenMode: s.chosenMode,
         }),
       },
     ),

@@ -8,6 +8,13 @@ import { headScript } from "./src/boot/head";
 const HEAD_SCRIPT_SLOT = "<!-- head-script -->";
 
 /**
+ * Preloads the still image of the town that Story shows until the canvas is
+ * ready (spec 6.1): the night or day one, wide or tall, unless the head script
+ * chose Text. The media query is the one story.css picks the image with.
+ */
+const posterPreload = `<script>(function(){var c=document.documentElement.classList;if(c.contains("mode-text"))return;var l=document.createElement("link");l.rel="preload";l.as="image";l.fetchPriority="high";l.href="/posters/town-"+(c.contains("night")?"night":"day")+"-"+(matchMedia("(max-aspect-ratio: 3/4)").matches?"tall":"wide")+".webp";document.head.appendChild(l)})()</script>`;
+
+/**
  * Puts src/boot/head.ts into index.html as an inline script, in dev and build
  * alike, so the code that runs before first paint is the code the tests cover.
  */
@@ -17,7 +24,7 @@ const injectHeadScript = (): Plugin => ({
     if (!html.includes(HEAD_SCRIPT_SLOT)) {
       throw new Error(`index.html is missing ${HEAD_SCRIPT_SLOT}`);
     }
-    return html.replace(HEAD_SCRIPT_SLOT, `<script>${headScript}</script>`);
+    return html.replace(HEAD_SCRIPT_SLOT, `<script>${headScript}</script>${posterPreload}`);
   },
 });
 
@@ -64,7 +71,7 @@ const detectGpuBenchmarks = (): Plugin => {
 
 /**
  * Preloads the fonts the first paint is set in: the two variable fonts of the
- * Brief and the HUD's label face. Without it
+ * story document and the HUD's label face. Without it
  * the text paints in the fallback face and then jumps when the font arrives,
  * which is a layout shift; with it the font is in flight from the first byte
  * of HTML. Build only: in dev the fonts are served from node_modules.
@@ -98,11 +105,12 @@ const preloadFonts = (): Plugin => ({
 
 /**
  * Starts the town's chunks downloading from the HTML itself, before the entry
- * script has even run: Boot would otherwise ask for them only once React had
+ * script has even run: Town would otherwise ask for them only once React had
  * rendered. An inline script after the head script preloads them only when
- * that script chose the town (html.can-world), so Brief-only visitors (no
- * WebGL, reduced motion, Save-Data) never fetch them. The effects chunk is
- * left to Boot, which knows the tier.
+ * that script chose Explore (html.mode-explore), where the town is the page.
+ * Story loads them when the browser is idle, and a preload would compete with
+ * the still image and the fonts on a slow connection; Text never fetches them.
+ * The effects chunk is left to Town, which knows the tier.
  */
 const preloadTown = (): Plugin => ({
   name: "base-camp-preload-town",
@@ -129,8 +137,8 @@ const preloadTown = (): Plugin => ({
       }
       if (!files.length) return;
       const hrefs = JSON.stringify(files.map((f) => `/${f}`));
-      const script = `<script>if(document.documentElement.classList.contains("can-world"))for(const h of ${hrefs}){const l=document.createElement("link");l.rel="modulepreload";l.crossOrigin="";l.href=h;document.head.appendChild(l)}</script>`;
-      // Straight after the head script, which sets can-world: an inline script after the
+      const script = `<script>if(document.documentElement.classList.contains("mode-explore"))for(const h of ${hrefs}){const l=document.createElement("link");l.rel="modulepreload";l.crossOrigin="";l.href=h;document.head.appendChild(l)}</script>`;
+      // Straight after the head script, which sets the mode: an inline script after the
       // stylesheet would wait for it to load before it ran.
       const head = html.indexOf(headScript.slice(0, 40));
       if (head < 0) throw new Error("preloadTown: the head script is not in index.html");

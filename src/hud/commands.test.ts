@@ -4,11 +4,22 @@ import { PLACES } from "@/content/places";
 import { COMMANDS, commandsFor, filterCommands, isPreview } from "@/hud/commands";
 
 describe("commands", () => {
-  it("has a go command for every place, plus drive, brief and copy email", () => {
+  it("has a go command for every place, plus drive, story, text and copy email", () => {
     expect(COMMANDS.filter((c) => c.run.type === "go")).toHaveLength(PLACES.length);
     expect(COMMANDS.map((c) => c.label)).toEqual(
-      expect.arrayContaining(["drive", "brief", "copy email", "go readledger", "go post office"]),
+      expect.arrayContaining([
+        "drive",
+        "story",
+        "text",
+        "copy email",
+        "go readledger",
+        "go post office",
+      ]),
     );
+  });
+
+  it("no longer offers the Brief", () => {
+    expect(COMMANDS.some((c) => c.label === "brief")).toBe(false);
   });
 
   it("lists everything for an empty query", () => {
