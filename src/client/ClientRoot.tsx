@@ -28,9 +28,40 @@ export function ClientRoot() {
     document.getElementById("story")?.toggleAttribute("inert", mode === "explore");
     document.getElementById("rail")?.toggleAttribute("inert", mode === "explore");
     const cta = document.querySelector<HTMLButtonElement>("[data-explore-cta]");
-    // Same rule as the switch's Explore option.
-    if (cta) cta.disabled = mode !== "story" || exploreBlocked({ town, qualityMode }) !== null;
+    // Same rule as the switch's Explore option, and the same reason, shown under the button.
+    const blocked = exploreBlocked({ town, qualityMode });
+    if (cta) cta.disabled = mode !== "story" || blocked !== null;
+    const why = document.getElementById("explore-why");
+    if (why) {
+      why.textContent = blocked ?? "";
+      why.hidden = blocked === null;
+    }
+    if (blocked) cta?.setAttribute("aria-describedby", "explore-why");
+    else cta?.removeAttribute("aria-describedby");
   }, [mode, town, qualityMode]);
+
+  // The phone chip's list closes on a pick, a tap outside it, or Esc.
+  useEffect(() => {
+    const chip = document.getElementById("rail-chip") as HTMLDetailsElement | null;
+    if (!chip) return;
+    const onClick = (e: MouseEvent) => {
+      if (!chip.open) return;
+      const target = e.target instanceof Element ? e.target : null;
+      if (!target || target.closest("[data-rail-chip]") || !chip.contains(target))
+        chip.open = false;
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key !== "Escape" || !chip.open) return;
+      chip.open = false;
+      chip.querySelector("summary")?.focus();
+    };
+    document.addEventListener("click", onClick);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("click", onClick);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, []);
 
   // The finale's prompt (the button's `disabled` is kept up to date above).
   useEffect(() => {

@@ -123,8 +123,6 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    /* The header is fixed, so a section scrolled to must stop clear of it. */
-    scroll-padding-top: 5rem;
   }
 
   body {
