@@ -91,12 +91,15 @@
   --border-radius-l: 24px;
 }
 
-.dark {
-  --background-color: #050505;
-  --card-background-color: #0f0f0f;
-  --text-color: #fafafa;
-  --text-muted: #a3a3a3;
-  --border-color: #1f1f1f;
+/* Text mode follows the system theme. The town's HUD has its own light/dark mode. */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-color: #050505;
+    --card-background-color: #0f0f0f;
+    --text-color: #fafafa;
+    --text-muted: #a3a3a3;
+    --border-color: #1f1f1f;
+  }
 }
 
 @supports (color: oklch(from red l c h)) {
@@ -110,16 +113,16 @@
     --primary-display: oklch(from var(--primary-color) min(l, 0.62) c h);
   }
 
-  .dark {
-    --primary-display: oklch(from var(--primary-color) max(l, 0.62) c h);
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --primary-display: oklch(from var(--primary-color) max(l, 0.62) c h);
+    }
   }
 }
 
 @layer base {
   html {
     scroll-behavior: smooth;
-    /* The header is fixed, so a section scrolled to must stop clear of it. */
-    scroll-padding-top: 5rem;
   }
 
   body {
@@ -142,18 +145,6 @@
 }
 
 @layer components {
-  .section-container {
-    @apply max-w-6xl mx-auto px-6 sm:px-10 lg:px-12 w-full;
-  }
-
-  .card {
-    @apply bg-card border border-border rounded-lg overflow-hidden transition-all duration-300;
-  }
-
-  .btn-primary {
-    @apply inline-flex items-center justify-center px-6 py-3 border border-border rounded-full bg-card text-text text-sm font-medium shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200;
-  }
-
   /* Custom Color Picker Styling */
   .custom-color-picker .react-colorful {
     width: 100%;

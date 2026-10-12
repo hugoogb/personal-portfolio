@@ -45,3 +45,6 @@ pnpm-lock.yaml
 # TypeScript incremental build cache
 tsconfig.tsbuildinfo
 *.tsbuildinfo
+# Playwright
+test-results/
+playwright-report/

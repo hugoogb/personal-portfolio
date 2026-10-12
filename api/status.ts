@@ -1,22 +1,14 @@
+import type { PlaceId } from "../src/content/types";
+import { STATUS_TARGETS } from "../src/content/services";
+
 export const config = { runtime: "edge" };
 
-interface Target {
-  /** Matches `host` in services.constants.ts, which is how the panel joins them. */
-  host: string;
-  url: string;
-}
-
-const TARGETS: Target[] = [
-  { host: "f1-tracker.hugoogb.dev", url: "https://f1-tracker.hugoogb.dev" },
-  { host: "readledger.app", url: "https://readledger.app" },
-  { host: "wrappedthings.app", url: "https://wrappedthings.app" },
-  { host: "estonoesunrestaurante.com", url: "https://estonoesunrestaurante.com" },
-  { host: "avatar-generator.hugoogb.dev", url: "https://avatar-generator.hugoogb.dev" },
-];
+type Target = (typeof STATUS_TARGETS)[number];
 
 const TIMEOUT_MS = 5_000;
 
 interface Probe {
+  id: PlaceId;
   host: string;
   ok: boolean;
   status: number;
@@ -46,11 +38,11 @@ const timed = async (url: string, method: "HEAD" | "GET") => {
  * hanging up - falls back to GET. Each attempt is timed on its own, so a
  * fallback never reports the failed attempt's time as well.
  */
-const probe = async ({ host, url }: Target): Promise<Probe> => {
+const probe = async ({ id, host, url }: Target): Promise<Probe> => {
   try {
     const head = await timed(url, "HEAD");
     if (head.response.status !== 405 && head.response.status !== 501) {
-      return { host, ok: head.response.ok, status: head.response.status, ms: head.ms };
+      return { id, host, ok: head.response.ok, status: head.response.status, ms: head.ms };
     }
   } catch {
     // Fall through - a host that hangs up on HEAD still deserves a GET.
@@ -58,9 +50,9 @@ const probe = async ({ host, url }: Target): Promise<Probe> => {
 
   try {
     const get = await timed(url, "GET");
-    return { host, ok: get.response.ok, status: get.response.status, ms: get.ms };
+    return { id, host, ok: get.response.ok, status: get.response.status, ms: get.ms };
   } catch {
-    return { host, ok: false, status: 0, ms: null };
+    return { id, host, ok: false, status: 0, ms: null };
   }
 };
 
@@ -75,7 +67,7 @@ const probe = async ({ host, url }: Target): Promise<Probe> => {
  * this page gets.
  */
 export default async function handler(): Promise<Response> {
-  const services = await Promise.all(TARGETS.map(probe));
+  const services = await Promise.all(STATUS_TARGETS.map(probe));
 
   return new Response(JSON.stringify({ checkedAt: new Date().toISOString(), services }), {
     headers: {

@@ -1,0 +1,559 @@
+/* Story mode (spec 3, 4.3). One document, three layouts, picked by html.mode-*.
+   Text: a plain page. Story: the town pinned behind, a card per stop.
+   Explore: the document hidden (the HUD takes over, Task 4). */
+
+/* Story colours: the cards, rail, chip and landing text follow the town's
+   day/night (the .night class), never the system theme, like the HUD. Text mode
+   keeps the global tokens. */
+html.mode-story,
+html.mode-explore {
+  --st-glass: rgb(255 255 255 / 0.8);
+  --st-ink: #1b1f24;
+  --st-muted: #5b6370;
+  --st-line: rgb(20 24 30 / 0.1);
+  --st-line-strong: rgb(20 24 30 / 0.28);
+}
+html.mode-story.night,
+html.mode-explore.night {
+  --st-glass: rgb(18 24 38 / 0.78);
+  --st-ink: #eef2f7;
+  --st-muted: #c4cdda;
+  --st-line: rgb(255 255 255 / 0.12);
+  --st-line-strong: rgb(255 255 255 / 0.3);
+}
+
+#backdrop {
+  display: none;
+}
+html.mode-story #backdrop,
+html.mode-explore #backdrop {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  /* Under the still: the town's own day or night, never the system theme, so the text on it keeps its contrast while the image loads. */
+  background: #e4eaf0;
+}
+html.mode-story.night #backdrop,
+html.mode-explore.night #backdrop {
+  background: #0c1322;
+}
+.backdrop__still,
+.backdrop__town {
+  position: absolute;
+  inset: 0;
+}
+.backdrop__still {
+  background-size: cover;
+  background-position: center;
+}
+/* The still of the town stands in until the canvas is drawn: Barcelona day or night, wide or tall. */
+.backdrop__still {
+  background-image: url("/posters/town-day-wide.webp");
+}
+html.night .backdrop__still {
+  background-image: url("/posters/town-night-wide.webp");
+}
+@media (max-aspect-ratio: 3/4) {
+  .backdrop__still {
+    background-image: url("/posters/town-day-tall.webp");
+  }
+  html.night .backdrop__still {
+    background-image: url("/posters/town-night-tall.webp");
+  }
+}
+.backdrop__town {
+  opacity: 0;
+  transition: opacity 0.6s ease;
+}
+html.town-ready .backdrop__town {
+  opacity: 1;
+}
+html.mode-story .backdrop__town {
+  pointer-events: none;
+}
+
+#story {
+  position: relative;
+  z-index: 1;
+}
+
+/* Text (and no-JS, which has no mode class) */
+html:not(.mode-story):not(.mode-explore) #story {
+  max-width: 72rem;
+  margin: 0 auto;
+  padding: 0 1.5rem 4rem;
+}
+html:not(.mode-story):not(.mode-explore) .story-stop {
+  padding: 3.5rem 0;
+}
+html:not(.mode-story):not(.mode-explore) .story-stop--landing {
+  padding-top: 5rem;
+}
+/* A readable measure: lines of about 65 characters, the screenshot no wider than the card. */
+html:not(.mode-story):not(.mode-explore) .story-card {
+  max-width: 44rem;
+}
+html:not(.mode-story):not(.mode-explore) .story-text {
+  max-width: 65ch;
+}
+html:not(.mode-story):not(.mode-explore) .story-landing__cue,
+html:not(.mode-story):not(.mode-explore) .story-stop--finale,
+html:not(.mode-story) #rail {
+  display: none;
+}
+
+/* Story */
+html.mode-story .story-stop {
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  padding: 6rem clamp(1rem, 4vw, 3.5rem);
+}
+html.mode-story .story-stop[data-side="left"] {
+  justify-content: flex-start;
+}
+html.mode-story .story-stop[data-side="right"] {
+  justify-content: flex-end;
+}
+html.mode-story .story-stop--landing,
+html.mode-story .story-stop--finale {
+  justify-content: center;
+  align-items: flex-end;
+  padding-bottom: 14svh;
+}
+html.mode-story .story-card {
+  width: min(30rem, 100%);
+  background: var(--st-glass);
+  color: var(--st-ink);
+  -webkit-backdrop-filter: blur(14px) saturate(1.3);
+  backdrop-filter: blur(14px) saturate(1.3);
+  border: 1px solid var(--st-line);
+  border-radius: 16px;
+  box-shadow: 0 10px 32px rgb(20 30 50 / 0.16);
+  padding: 1.5rem;
+}
+html.mode-story .story-landing,
+html.mode-story .story-finale {
+  text-align: center;
+  text-shadow: 0 2px 18px rgb(0 0 0 / 0.25);
+}
+html.mode-story .story-landing,
+html.mode-story .story-finale {
+  color: var(--st-ink);
+}
+/* Reduced motion: a cut between stops dips the town for a moment, then the
+   normal transition brings it back. */
+html.town-ready .backdrop__town.town-cut {
+  opacity: 0.35;
+  transition: none;
+}
+
+/* Explore */
+html.mode-explore,
+html.mode-explore body {
+  height: 100%;
+  overflow: hidden;
+}
+html.mode-explore #story,
+html.mode-explore #rail {
+  visibility: hidden;
+}
+/* Every descendant inherits that visibility, and the reduced-motion rule in
+   globals.css gives each a (tiny) transition on all properties, which Chromium
+   can leave hanging on "visible": the story stayed over the town. Hide at once. */
+html.mode-explore #story,
+html.mode-explore #story *,
+html.mode-explore #rail,
+html.mode-explore #rail * {
+  transition: none !important;
+}
+
+/* Phones: the building rides in the top ~55%, the card is a sheet below. */
+/* Phones: the section's top 56% frames the building; the card sheet starts below it and
+   is read by scrolling on, over the town, while the camera holds (measureStops). */
+@media (max-width: 759px) {
+  html.mode-story .story-stop:not(.story-stop--landing):not(.story-stop--finale) {
+    align-items: flex-start;
+    justify-content: center;
+    padding: 56svh 0.75rem 1rem;
+  }
+}
+
+/* Shared card contents */
+.story-landing h1 {
+  font-size: clamp(2.5rem, 7vw, 5rem);
+  letter-spacing: -0.02em;
+}
+.story-landing__role {
+  text-transform: uppercase;
+  letter-spacing: 0.2em;
+  margin-top: 0.5rem;
+}
+.story-landing__cue {
+  display: inline-block;
+  margin-top: 2rem;
+  font-size: 0.85rem;
+  /* A border, not text-decoration: the underline alone held a cold phone's first paint back by
+     a third of a second. */
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  padding-bottom: 4px;
+}
+.story-card__title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1rem;
+}
+.story-shot {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top;
+  border-radius: 10px;
+}
+.story-text {
+  margin-top: 0.75rem;
+  line-height: 1.6;
+}
+.story-chips,
+.story-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.9rem;
+}
+.story-chips li {
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  padding: 0.15rem 0.5rem;
+  font-size: 0.75rem;
+}
+.story-meta li {
+  font-size: 0.85rem;
+  font-weight: 600;
+  margin-right: 1rem;
+}
+.story-stack {
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+.story-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem;
+  margin-top: 1.1rem;
+}
+.story-btn {
+  display: inline-flex;
+  padding: 0.6rem 1.1rem;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+.story-btn--primary {
+  background: var(--primary-color);
+  color: var(--primary-fg);
+  border-color: transparent;
+}
+.story-badge,
+.story-status {
+  border: 1px solid var(--border-color);
+  border-radius: 999px;
+  padding: 0.05rem 0.55rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+.story-status[data-state="ok"] {
+  color: #15803d;
+}
+.story-status[data-state="down"] {
+  color: #dc2626;
+}
+/* On the night glass and on a dark Text page those two fall under 4.5:1: lighter tones
+   (at least 4.5:1 even where the glass sits on white, as axe assumes over the canvas). */
+html.mode-story.night .story-status[data-state="ok"] {
+  color: #86efac;
+}
+html.mode-story.night .story-status[data-state="down"] {
+  color: #fca5a5;
+}
+@media (prefers-color-scheme: dark) {
+  html:not(.mode-story):not(.mode-explore) .story-status[data-state="ok"] {
+    color: #86efac;
+  }
+  html:not(.mode-story):not(.mode-explore) .story-status[data-state="down"] {
+    color: #fca5a5;
+  }
+}
+.story-email {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: 1.5rem;
+  text-decoration: underline;
+  text-decoration-color: var(--primary-color);
+  text-underline-offset: 6px;
+  overflow-wrap: anywhere;
+}
+.story-note {
+  font-size: 0.75rem;
+  opacity: 0.8;
+}
+.story-finale__why {
+  margin-top: 0.75rem;
+}
+
+/* Rail (desktop) and chip (phones) */
+.rail {
+  position: fixed;
+  right: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 5;
+  display: grid;
+  gap: 0.8rem;
+}
+.rail__dot {
+  display: block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  position: relative;
+  color: var(--text-color);
+}
+/* A 24px hit area (WCAG 2.5.8) around the 11px dot; the look is unchanged. */
+.rail__dot::after {
+  content: "";
+  position: absolute;
+  inset: -0.52rem;
+}
+.rail__dot[aria-current="true"] {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+}
+.rail__label {
+  position: absolute;
+  right: 1.4rem;
+  top: 50%;
+  transform: translateY(-50%);
+  white-space: nowrap;
+  font-size: 0.8rem;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.2s;
+}
+.rail__dot:hover .rail__label,
+.rail__dot:focus-visible .rail__label {
+  opacity: 1;
+}
+.rail-chip {
+  display: none;
+}
+@keyframes chip-in {
+  from {
+    visibility: hidden;
+  }
+}
+@media (max-width: 759px) {
+  .rail {
+    display: none;
+  }
+  .rail-chip {
+    display: block;
+    position: fixed;
+    top: 0.75rem;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+    backdrop-filter: blur(12px);
+    border-radius: 999px;
+    padding: 0.35rem 0.9rem;
+    font-size: 0.8rem;
+    /* A fixed layer with a backdrop blur costs a cold phone's first paint most of a second.
+       Hidden for the first 0.4 s, it shows once the text and the still are on screen. */
+    animation: chip-in 0s 0.4s backwards;
+  }
+  .rail-chip[open] {
+    border-radius: 14px;
+  }
+}
+
+/* Story-mode colours for the shared pieces (declared after them, same specificity + html) */
+html.mode-story .story-chips li,
+html.mode-story .story-badge,
+html.mode-story .story-status,
+html.mode-story .story-btn {
+  border-color: var(--st-line-strong);
+}
+html.mode-story .story-btn:not(.story-btn--primary) {
+  color: var(--st-ink);
+  background: transparent;
+}
+html.mode-story .story-stack,
+html.mode-story .story-note {
+  color: var(--st-muted);
+  opacity: 1;
+}
+html.mode-story .story-landing__cue,
+html.mode-story .story-email {
+  color: var(--st-ink);
+}
+html.mode-story .rail__dot {
+  color: var(--st-ink);
+}
+html.mode-story .rail__label {
+  background: var(--st-glass);
+  color: var(--st-ink);
+  border-radius: 999px;
+  padding: 0.15rem 0.6rem;
+}
+/* The chip's summary stays on one line: long stop names are cut, the list shows them whole. */
+.rail-chip summary {
+  max-width: calc(100vw - 2rem);
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+html.mode-story .rail-chip {
+  background: var(--st-glass);
+  color: var(--st-ink);
+  border: 1px solid var(--st-line);
+}
+html.mode-story .rail-chip a {
+  color: var(--st-ink);
+}
+html.mode-story .rail__dot[aria-current="true"] {
+  background: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+/* Mode switch (spec 3.4): Story · Explore · Text, in every mode. Text uses the
+   page's tokens; Story and Explore the town's day/night ones, so the pill reads
+   over the canvas whatever the system theme. */
+.mode-switch {
+  --ms-bg: var(--card-background-color);
+  --ms-ink: var(--text-color);
+  --ms-line: var(--border-color);
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 30;
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  border: 1px solid var(--ms-line);
+  border-radius: 999px;
+  background: var(--ms-bg);
+  color: var(--ms-ink);
+  -webkit-backdrop-filter: blur(14px) saturate(1.3);
+  backdrop-filter: blur(14px) saturate(1.3);
+  box-shadow: 0 8px 24px rgb(20 30 50 / 0.14);
+  font-family: var(--font-display);
+}
+html.mode-story .mode-switch,
+html.mode-explore .mode-switch {
+  --ms-bg: var(--st-glass);
+  --ms-ink: var(--st-ink);
+  --ms-line: var(--st-line);
+}
+.mode-switch__opt {
+  padding: 6px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: 600 0.85rem/1.2 var(--font-display);
+  cursor: pointer;
+}
+.mode-switch__opt[aria-checked="true"] {
+  background: var(--primary-color);
+  color: var(--primary-fg);
+}
+.mode-switch__opt[aria-disabled="true"] {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.mode-switch__opt:focus-visible {
+  outline: 2px solid var(--primary-display);
+  outline-offset: 2px;
+}
+/* Explore: above the minimap (180px square, 12px from the corner). */
+html.mode-explore .mode-switch {
+  right: 12px;
+  bottom: 204px;
+}
+@media (max-width: 759px) {
+  .mode-switch,
+  html.mode-explore .mode-switch {
+    right: auto;
+    left: 50%;
+    bottom: 12px;
+    transform: translateX(-50%);
+  }
+  /* Keep the last lines of a card sheet clear of the pill. */
+  html.mode-story .story-stop:not(.story-stop--landing):not(.story-stop--finale) {
+    padding-bottom: 4.5rem;
+  }
+}
+
+/* Print is always the Text layout, whatever mode is on screen (spec 3.3) */
+@media print {
+  #backdrop,
+  #rail,
+  .stage,
+  .mode-switch,
+  .story-landing__cue,
+  .story-stop--finale {
+    display: none !important;
+  }
+  html,
+  body,
+  html.mode-explore,
+  html.mode-explore body {
+    height: auto !important;
+    overflow: visible !important;
+    background: #fff !important;
+  }
+  html.mode-explore #story {
+    visibility: visible !important;
+  }
+  #story {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    color: #000 !important;
+  }
+  .story-stop {
+    display: block !important;
+    min-height: 0 !important;
+    padding: 1.5rem 0 !important;
+    break-inside: avoid;
+  }
+  .story-card,
+  .story-landing,
+  .story-finale {
+    width: auto !important;
+    background: none !important;
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    padding: 0 !important;
+    text-align: left !important;
+  }
+  #story,
+  #story * {
+    color: #000 !important;
+  }
+  .story-btn--primary {
+    background: none !important;
+    border: 1px solid #000 !important;
+  }
+}
