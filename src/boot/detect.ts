@@ -35,15 +35,25 @@ export const bootTier = (signals: TierSignals, mode: QualityMode) => {
   return { auto, tier: signals.webgl ? resolveTier(mode, auto) : (0 as Tier) };
 };
 
-/** The town needs WebGL2 (three r163+ has no WebGL1 path). The probe's context is given back. */
+const probed = new WeakMap<Window, boolean>();
+
+/**
+ * The town needs WebGL2 (three r163+ has no WebGL1 path). The probe's context is
+ * given back, and the answer kept: boot asks twice, and each probe is a context.
+ */
 export const hasWebgl2 = (win: Window = window): boolean => {
+  const known = probed.get(win);
+  if (known !== undefined) return known;
+  let ok = false;
   try {
     const gl = win.document.createElement("canvas").getContext("webgl2");
     gl?.getExtension("WEBGL_lose_context")?.loseContext();
-    return Boolean(gl);
+    ok = Boolean(gl);
   } catch {
-    return false;
+    ok = false;
   }
+  probed.set(win, ok);
+  return ok;
 };
 
 export const readSignals = async (win: Window = window): Promise<TierSignals> => {

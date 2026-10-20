@@ -92,19 +92,18 @@ export function bootHead(
 
   root.classList.add("mode-" + mode);
 
-  try {
-    const parts = new Intl.DateTimeFormat("en-GB", {
-      timeZone: "Europe/Madrid",
-      hour: "2-digit",
-      minute: "2-digit",
-      hourCycle: "h23",
-    }).formatToParts(now);
-    const read = (t: string) => Number(parts.find((p) => p.type === t)?.value ?? 0);
-    const h = read("hour") + read("minute") / 60;
-    if (h < opts.nightBefore || h > opts.nightAfter) root.classList.add("night");
-  } catch {
-    // No Intl time zones: day.
-  }
+  // Barcelona's hour from UTC: CET, and CEST from the last Sunday of March to the last Sunday
+  // of October, both switching at 01:00 UTC (the EU rule). Not Intl: its first use with a time
+  // zone loads the zone data, about 20 ms before first paint on a slow phone.
+  const year = now.getUTCFullYear();
+  const lastSunday = (month: number) => {
+    const d = new Date(Date.UTC(year, month + 1, 0, 1));
+    d.setUTCDate(d.getUTCDate() - d.getUTCDay());
+    return d.getTime();
+  };
+  const summer = now.getTime() >= lastSunday(2) && now.getTime() < lastSunday(9);
+  const h = (now.getUTCHours() + now.getUTCMinutes() / 60 + (summer ? 2 : 1)) % 24;
+  if (h < opts.nightBefore || h > opts.nightAfter) root.classList.add("night");
 }
 
 export const headScript = `(${bootHead.toString()})(document, window, ${JSON.stringify({
