@@ -17,6 +17,7 @@ import {
   shouldPlayBuildIn,
   skipBuildIn,
 } from "@/world/lib/buildIn";
+import { freezeStatic } from "@/world/lib/freeze";
 
 const apply = (world: BuiltWorld, t: number) => {
   const { kit, places, rings } = world;
@@ -39,6 +40,12 @@ const apply = (world: BuiltWorld, t: number) => {
   });
 };
 
+/** The settled town stops recomposing its static matrices every frame. */
+const freeze = (world: BuiltWorld) => {
+  freezeStatic(world.town.root);
+  for (const g of Object.values(world.places)) freezeStatic(g);
+};
+
 /**
  * The first-visit build-in (spec 5.4): the island rises, roads draw out,
  * places pop from HQ outward, props rise by ring, and the camera lands at
@@ -51,6 +58,7 @@ export function BuildIn({ world }: { world: BuiltWorld }) {
     const s = useBaseCamp.getState();
     if (!shouldPlayBuildIn({ firstVisit: s.firstVisit, reducedMotion: prefersReducedMotion() })) {
       apply(world, BUILD_IN_S);
+      freeze(world);
       skipBuildIn(s);
       return;
     }
@@ -75,6 +83,7 @@ export function BuildIn({ world }: { world: BuiltWorld }) {
     }
     if (t.current >= BUILD_IN_S) {
       t.current = -1;
+      freeze(world);
       s.markIntroDone();
     }
   });

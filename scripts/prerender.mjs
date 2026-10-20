@@ -26,7 +26,15 @@ const now = new Date();
 // `<` escaped so no string in the data can close the script element early.
 const jsonLd = JSON.stringify(structuredData(now)).replace(/</g, "\\u003c");
 
+// The page's one stylesheet (about 8 KB compressed) goes into the HTML: as a file it is
+// a round trip that first paint waits on, which on slow 4G is most of a second's budget.
+const STYLESHEET = /<link rel="stylesheet" crossorigin href="\/(assets\/[^"]+\.css)">/;
+const sheet = template.match(STYLESHEET);
+if (!sheet) throw new Error("prerender: no stylesheet link in dist/index.html");
+const css = await readFile(new URL(sheet[1], dist), "utf8");
+
 const html = template
+  .replace(sheet[0], () => `<style>${css}</style>`)
   .replace(ROOT, `<div id="root">${await render()}</div>`)
   .replace("</head>", `  <script type="application/ld+json">${jsonLd}</script>\n  </head>`);
 

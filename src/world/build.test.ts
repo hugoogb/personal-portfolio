@@ -3,7 +3,7 @@ import * as THREE from "three";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { ORDER, PLACE_BY_ID } from "@/content/places";
 import { stubCanvas } from "@/test/canvas";
-import { buildWorld, buildWorldInSlices } from "@/world/build";
+import { buildWorld, buildWorldInSlices, nextTask } from "@/world/build";
 import { PROP_RINGS } from "@/world/lib/buildIn";
 
 // These tests bake the whole town in jsdom, which is slow under load.
@@ -96,11 +96,12 @@ describe("buildWorld", () => {
 describe("buildWorldInSlices", () => {
   it("builds the same town as buildWorld, over several tasks", async () => {
     let tasks = 0;
-    const real = globalThis.setTimeout;
-    vi.stubGlobal("setTimeout", ((fn: () => void, ms?: number) => {
-      tasks++;
-      return real(fn, ms);
-    }) as typeof setTimeout);
+    vi.stubGlobal("scheduler", {
+      yield: () => {
+        tasks++;
+        return Promise.resolve();
+      },
+    });
     // Each slice ends at once, so every step is its own task.
     const now = vi.spyOn(performance, "now");
     let t = 0;
@@ -112,6 +113,17 @@ describe("buildWorldInSlices", () => {
       expect(tasks).toBeGreaterThan(5);
     } finally {
       now.mockRestore();
+      vi.unstubAllGlobals();
+    }
+  });
+
+  it("yields with a message-channel task where there is no scheduler.yield", async () => {
+    vi.stubGlobal("scheduler", undefined);
+    const timeout = vi.spyOn(globalThis, "setTimeout");
+    try {
+      await expect(nextTask()).resolves.toBeUndefined();
+      expect(timeout).not.toHaveBeenCalled();
+    } finally {
       vi.unstubAllGlobals();
     }
   });

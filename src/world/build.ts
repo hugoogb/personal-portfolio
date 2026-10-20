@@ -129,7 +129,24 @@ export function buildWorld(): BuiltWorld {
 
 /** Main-thread time one slice may take before the build yields to the browser. */
 const SLICE_MS = 12;
-const nextTask = () => new Promise<void>((resolve) => setTimeout(resolve, 0));
+/**
+ * Hands the main thread back to the browser between two slices: scheduler.yield()
+ * where there is one (it resumes ahead of other queued work), a message-channel
+ * task elsewhere. Not setTimeout(0): from the fifth nested call browsers wait at
+ * least 4 ms each time, idle time that only delays the town.
+ */
+export const nextTask = (): Promise<void> => {
+  const scheduler = (globalThis as { scheduler?: { yield?: () => Promise<void> } }).scheduler;
+  if (typeof scheduler?.yield === "function") return scheduler.yield();
+  return new Promise((resolve) => {
+    const channel = new MessageChannel();
+    channel.port1.onmessage = () => {
+      channel.port1.close();
+      resolve();
+    };
+    channel.port2.postMessage(null);
+  });
+};
 
 /**
  * Builds the town in slices of about 12 ms, so the page keeps scrolling

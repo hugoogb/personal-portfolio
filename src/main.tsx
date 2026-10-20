@@ -2,8 +2,8 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 // Self-hosted rather than linked from Google Fonts: a third-party stylesheet
 // blocks first paint behind two extra connections, and these ship in our CSS.
-import "@fontsource-variable/hanken-grotesk";
-import "@fontsource-variable/raleway";
+// The two story faces, cut to the weights in use (scripts/fonts.py).
+import "@/styles/fonts.css";
 import "@fontsource/ibm-plex-mono/400.css";
 import "@/styles/globals.css";
 // The story document is prerendered and never imported by the client, so its

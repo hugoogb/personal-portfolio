@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
+import { RoundedBoxGeometry } from "@/world/kit/roundedBox";
 import type { Tier } from "@/boot/tiers";
 
 /** Soft clay, the locked art kit (spec 5.1); the reference sketch's STYLES.clay. */
@@ -133,6 +133,13 @@ export function createKit(seed = 1337) {
     return g;
   };
 
+  /** One geometry per shape and size: spheres and cylinders repeat across the town (trees, posts). */
+  const cached = (key: string, make: () => THREE.BufferGeometry) => {
+    let g = geoCache.get(key);
+    if (!g) geoCache.set(key, (g = own(make())));
+    return g;
+  };
+
   const mk = (
     geo: THREE.BufferGeometry,
     m: MatLike,
@@ -183,7 +190,15 @@ export function createKit(seed = 1337) {
     z: number,
     parent: THREE.Object3D,
     seg = 16,
-  ) => mk(new THREE.CylinderGeometry(rt, rb, h, seg), m, parent, x, y + h / 2, z);
+  ) =>
+    mk(
+      cached(`c${rt}|${rb}|${h}|${seg}`, () => new THREE.CylinderGeometry(rt, rb, h, seg)),
+      m,
+      parent,
+      x,
+      y + h / 2,
+      z,
+    );
   const ball = (
     r: number,
     m: MatLike,
@@ -192,7 +207,15 @@ export function createKit(seed = 1337) {
     z: number,
     parent: THREE.Object3D,
     seg = 16,
-  ) => mk(new THREE.SphereGeometry(r, seg, Math.round(seg * 0.75)), m, parent, x, y, z);
+  ) =>
+    mk(
+      cached(`s${r}|${seg}`, () => new THREE.SphereGeometry(r, seg, Math.round(seg * 0.75))),
+      m,
+      parent,
+      x,
+      y,
+      z,
+    );
   const gable = (
     w: number,
     d: number,

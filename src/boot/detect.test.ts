@@ -1,5 +1,5 @@
-import { describe, expect, it } from "vitest";
-import { bootTier, signalsFrom } from "@/boot/detect";
+import { describe, expect, it, vi } from "vitest";
+import { bootTier, hasWebgl2, signalsFrom } from "@/boot/detect";
 
 const base = {
   reducedMotion: false,
@@ -48,5 +48,17 @@ describe("bootTier", () => {
 
   it("never starts the town without WebGL", () => {
     expect(bootTier({ ...signals, webgl: false }, "High").tier).toBe(0);
+  });
+});
+
+describe("hasWebgl2", () => {
+  it("creates one probe context per window, however often it is asked", () => {
+    const loseContext = vi.fn();
+    const getContext = vi.fn(() => ({ getExtension: () => ({ loseContext }) }));
+    const win = { document: { createElement: () => ({ getContext }) } } as unknown as Window;
+    expect(hasWebgl2(win)).toBe(true);
+    expect(hasWebgl2(win)).toBe(true);
+    expect(getContext).toHaveBeenCalledTimes(1);
+    expect(loseContext).toHaveBeenCalledTimes(1);
   });
 });

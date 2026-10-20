@@ -403,6 +403,9 @@ declare global {
         triangles: number;
         geometries: number;
         textures: number;
+        programs: number;
+        objects: number;
+        autoMatrices: number;
       };
       camera(): { x: number; z: number; view: number; az: number };
       setHour(h: number | null): void;
