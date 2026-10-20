@@ -1,4 +1,4 @@
-import { getGPUTier, type TierType } from "detect-gpu";
+import type { TierType } from "detect-gpu";
 import {
   chooseTier,
   resolveTier,
@@ -62,7 +62,9 @@ export const readSignals = async (win: Window = window): Promise<TierSignals> =>
   };
   let gpu: GpuResult | null = null;
   try {
-    // Benchmark tables are served from this site (vite.config.ts), not unpkg.
+    // Loaded here, with the town, not in the first paint's bundle. Benchmark tables
+    // are served from this site (vite.config.ts), not unpkg.
+    const { getGPUTier } = await import("detect-gpu");
     gpu = await getGPUTier({ benchmarksURL: "/benchmarks" });
   } catch {
     gpu = null;
