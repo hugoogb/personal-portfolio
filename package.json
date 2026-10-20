@@ -31,7 +31,6 @@
     "@tailwindcss/vite": "^4.1.18",
     "@vercel/speed-insights": "^1.1.0",
     "detect-gpu": "5.0.70",
-    "motion": "^12.23.26",
     "n8ao": "2.0.1",
     "postprocessing": "6.39.5",
     "react": "19.3.0",
