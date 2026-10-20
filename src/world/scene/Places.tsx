@@ -6,6 +6,13 @@ import { useBaseCamp } from "@/store/store";
 import { eggUnderPointer } from "@/world/lib/eggs";
 import { wasDrag } from "@/world/lib/drag";
 
+/** The place's anchor never moves: its matrix is composed once, not every frame. */
+const pin = (g: THREE.Group | null) => {
+  if (!g) return;
+  g.updateMatrix();
+  g.matrixAutoUpdate = false;
+};
+
 function PlaceNode({ place, object }: { place: Place; object: THREE.Group }) {
   const onClick = (e: ThreeEvent<MouseEvent>) => {
     if (eggUnderPointer(e.intersections)) return;
@@ -25,7 +32,7 @@ function PlaceNode({ place, object }: { place: Place; object: THREE.Group }) {
     document.body.style.cursor = "";
   };
   return (
-    <group position={[place.map.x, 0, place.map.z]}>
+    <group position={[place.map.x, 0, place.map.z]} ref={pin}>
       <primitive object={object} />
       {/* One generous hit volume per place; three.js raycasts invisible meshes. The
           handlers live on it alone, so the place's own parts (the straw hat, the
