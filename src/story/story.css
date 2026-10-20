@@ -47,19 +47,36 @@ html.mode-explore.night #backdrop {
   background-size: cover;
   background-position: center;
 }
-/* The still of the town stands in until the canvas is drawn: Barcelona day or night, wide or tall. */
+/* The still of the town stands in until the canvas is drawn: Barcelona day or night, wide or tall.
+   AVIF where the browser takes it (and preloads it, vite.config.ts); WebP otherwise. */
 .backdrop__still {
   background-image: url("/posters/town-day-wide.webp");
+  background-image: image-set(
+    url("/posters/town-day-wide.avif") type("image/avif"),
+    url("/posters/town-day-wide.webp") type("image/webp")
+  );
 }
 html.night .backdrop__still {
   background-image: url("/posters/town-night-wide.webp");
+  background-image: image-set(
+    url("/posters/town-night-wide.avif") type("image/avif"),
+    url("/posters/town-night-wide.webp") type("image/webp")
+  );
 }
 @media (max-aspect-ratio: 3/4) {
   .backdrop__still {
     background-image: url("/posters/town-day-tall.webp");
+    background-image: image-set(
+      url("/posters/town-day-tall.avif") type("image/avif"),
+      url("/posters/town-day-tall.webp") type("image/webp")
+    );
   }
   html.night .backdrop__still {
     background-image: url("/posters/town-night-tall.webp");
+    background-image: image-set(
+      url("/posters/town-night-tall.avif") type("image/avif"),
+      url("/posters/town-night-tall.webp") type("image/webp")
+    );
   }
 }
 .backdrop__town {

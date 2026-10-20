@@ -10,9 +10,10 @@ const HEAD_SCRIPT_SLOT = "<!-- head-script -->";
 /**
  * Preloads the still image of the town that Story shows until the canvas is
  * ready (spec 6.1): the night or day one, wide or tall, unless the head script
- * chose Text. The media query is the one story.css picks the image with.
+ * chose Text. The media query is the one story.css picks the image with. It is
+ * the AVIF story.css prefers; a browser without AVIF skips a preload of that type.
  */
-const posterPreload = `<script>(function(){var c=document.documentElement.classList;if(c.contains("mode-text"))return;var l=document.createElement("link");l.rel="preload";l.as="image";l.fetchPriority="high";l.href="/posters/town-"+(c.contains("night")?"night":"day")+"-"+(matchMedia("(max-aspect-ratio: 3/4)").matches?"tall":"wide")+".webp";document.head.appendChild(l)})()</script>`;
+const posterPreload = `<script>(function(){var c=document.documentElement.classList;if(c.contains("mode-text"))return;var l=document.createElement("link");l.rel="preload";l.as="image";l.fetchPriority="high";l.type="image/avif";l.href="/posters/town-"+(c.contains("night")?"night":"day")+"-"+(matchMedia("(max-aspect-ratio: 3/4)").matches?"tall":"wide")+".avif";document.head.appendChild(l)})()</script>`;
 
 /**
  * Puts src/boot/head.ts into index.html as an inline script, in dev and build

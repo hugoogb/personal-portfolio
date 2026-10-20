@@ -8,6 +8,7 @@
  * sharp is not a project dependency; it comes from that scratch install.
  * Needs no GPU: SwiftShader draws it, slowly. The images are committed, each
  * at most 60000 bytes (spec 8): the webp quality steps down from 72 until it fits.
+ * Each also gets an AVIF twin, which story.css prefers.
  */
 import { chromium } from "playwright-core";
 import { mkdir, writeFile } from "node:fs/promises";
@@ -16,6 +17,7 @@ const { default: sharp } = await import(process.env.SHARP ?? "sharp");
 
 const BASE = process.env.POSTER_URL ?? "http://localhost:4173/";
 const MAX_BYTES = 60_000;
+const AVIF_SHARE = 0.7;
 const SHOTS = [
   { name: "wide", width: 1600, height: 1000 },
   { name: "tall", width: 600, height: 1100 },
@@ -57,7 +59,18 @@ for (const shot of SHOTS) {
       webp = await sharp(png).webp({ quality, effort: 6 }).toBuffer();
     }
     await writeFile(out, webp);
-    console.log(`poster: ${out} ${webp.length} bytes, quality ${quality}`);
+    // AVIF first for the browsers that take it (story.css): the same look in fewer bytes.
+    // It must earn its place: at most AVIF_SHARE of the webp's bytes.
+    let avifQuality = 60;
+    let avif = await sharp(png).avif({ quality: avifQuality, effort: 9 }).toBuffer();
+    while (avif.length > webp.length * AVIF_SHARE && avifQuality > 20) {
+      avifQuality -= 5;
+      avif = await sharp(png).avif({ quality: avifQuality, effort: 9 }).toBuffer();
+    }
+    await writeFile(out.replace(/\.webp$/, ".avif"), avif);
+    console.log(
+      `poster: ${out} ${webp.length} bytes, quality ${quality}; avif ${avif.length} bytes, quality ${avifQuality}`,
+    );
     await page.close();
   }
 }
