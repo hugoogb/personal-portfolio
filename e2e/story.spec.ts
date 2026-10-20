@@ -140,11 +140,20 @@ test("the mode is remembered across a reload", async ({ page }) => {
 
 test("the still image shows before the town is ready", async ({ page }) => {
   await page.route(/World-|lighting-/, () => new Promise(() => {})); // the town never arrives
+  const posters: string[] = [];
+  page.on("request", (r) => {
+    if (r.url().includes("/posters/")) posters.push(new URL(r.url()).pathname);
+  });
   await page.goto("/");
   const bg = await page
     .locator(".backdrop__still")
     .evaluate((el) => getComputedStyle(el).backgroundImage);
-  expect(bg).toMatch(/\/posters\/town-(day|night)-(wide|tall)\.webp/);
+  expect(bg).toMatch(/\/posters\/town-(day|night)-(wide|tall)\.avif/);
+  // The preload and the stylesheet agree: one image, fetched once.
+  await page.waitForLoadState("load");
+  expect(posters).toHaveLength(1);
+  expect(posters[0]).toMatch(/\.avif$/);
+  expect(bg).toContain(posters[0]);
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
 });
 

@@ -17,6 +17,11 @@ declare global {
         triangles: number;
         geometries: number;
         textures: number;
+        /** Linked shader programs: each is a compile on the first frame. */
+        programs: number;
+        /** Objects in the scene, and how many recompute their matrix every frame. */
+        objects: number;
+        autoMatrices: number;
       };
       /** Where the camera rig is: ground target, view height and azimuth in degrees. */
       camera(): { x: number; z: number; view: number; az: number };
@@ -30,6 +35,7 @@ declare global {
 export function TestHooks({ world }: { world: BuiltWorld }) {
   const camera = useThree((s) => s.camera);
   const gl = useThree((s) => s.gl);
+  const scene = useThree((s) => s.scene);
   // Frames drawn: gl.info.render.frame counts every render() call, several a frame under the composer.
   const frames = useRef(0);
   useFrame(() => {
@@ -54,19 +60,30 @@ export function TestHooks({ world }: { world: BuiltWorld }) {
       const r = canvas.getBoundingClientRect();
       return { x: ((v.x + 1) / 2) * r.width + r.left, y: ((1 - v.y) / 2) * r.height + r.top };
     };
-    const info = () => ({
-      frame: frames.current,
-      calls: gl.info.render.calls,
-      triangles: gl.info.render.triangles,
-      geometries: gl.info.memory.geometries,
-      textures: gl.info.memory.textures,
-    });
+    const info = () => {
+      let objects = 0;
+      let autoMatrices = 0;
+      scene.traverse((o) => {
+        objects++;
+        if (o.matrixAutoUpdate) autoMatrices++;
+      });
+      return {
+        frame: frames.current,
+        calls: gl.info.render.calls,
+        triangles: gl.info.render.triangles,
+        geometries: gl.info.memory.geometries,
+        textures: gl.info.memory.textures,
+        programs: gl.info.programs?.length ?? 0,
+        objects,
+        autoMatrices,
+      };
+    };
     const cameraPose = () => ({ ...rigState });
     const setHour = (h: number | null) => useBaseCamp.getState().setTimeOverride(h);
     window.__baseCamp = { screenOf, info, camera: cameraPose, setHour };
     return () => {
       delete window.__baseCamp;
     };
-  }, [world, camera, canvas, gl]);
+  }, [world, camera, canvas, gl, scene]);
   return null;
 }

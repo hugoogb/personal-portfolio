@@ -2,6 +2,7 @@ import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { IDLE_FPS, TARGET_FPS } from "@/boot/tiers";
 import { useIdle } from "@/hooks/useIdle";
+import { isPreview } from "@/hud/commands";
 import { useBaseCamp } from "@/store/store";
 import { buildWorldInSlices, type BuiltWorld } from "@/world/build";
 import { effectsEnabled, probeHalfFloat } from "@/world/effects/effectsGate";
@@ -130,6 +131,14 @@ export default function World({ onReady }: WorldProps) {
       frameloop="never"
       camera={{ position: [...CAMERA_OFFSET], zoom: 30, near: 0.1, far: 300 }}
       gl={{ antialias: tier >= 2 && !composed, powerPreference: "high-performance" }}
+      onCreated={({ gl, scene }) => {
+        // The scene itself never moves. Left on, it recomposes its matrix every frame, which
+        // makes three recompute every world matrix in the town, static or not.
+        scene.matrixAutoUpdate = false;
+        // three reads every program's compile log on first use, synchronously: a stall per
+        // shader on a phone. Previews (and e2e) keep the check, so a broken shader still shows.
+        gl.debug.checkShaderErrors = isPreview();
+      }}
       onPointerMissed={() => {
         if (!wasDrag() && !useBaseCamp.getState().driving) useBaseCamp.getState().deselect();
       }}

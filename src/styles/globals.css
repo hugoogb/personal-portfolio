@@ -1,8 +1,8 @@
 @import "tailwindcss";
 
 @theme {
-  --font-primary: "Raleway Variable", "Raleway", system-ui, sans-serif;
-  --font-display: "Hanken Grotesk Variable", "Hanken Grotesk", system-ui, sans-serif;
+  --font-primary: "Raleway", system-ui, sans-serif;
+  --font-display: "Hanken Grotesk", system-ui, sans-serif;
   /* Reserved for genuine machine strings - hostnames, package names, endpoints.
      Never for small labels, where a mono face is decoration rather than meaning. */
   --font-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;

@@ -171,6 +171,27 @@ const restore = (saved: unknown): Partial<Persisted> => {
   };
 };
 
+/**
+ * persist writes on every set(), and most sets (the camera view a few times a
+ * second, hover, the frame rate, the story stop) change nothing it saves. An
+ * unchanged record is not written again: localStorage writes are synchronous.
+ */
+const writeOnChange = (storage: KeyValueStorage): KeyValueStorage => {
+  const last = new Map<string, string>();
+  return {
+    getItem: (key) => storage.getItem(key),
+    setItem: (key, value) => {
+      if (last.get(key) === value) return;
+      last.set(key, value);
+      storage.setItem(key, value);
+    },
+    removeItem: (key) => {
+      last.delete(key);
+      storage.removeItem(key);
+    },
+  };
+};
+
 let nextToastId = 1;
 let nextGoalSeq = 1;
 let nextArrivalSeq = 1;
@@ -294,7 +315,7 @@ export const createBaseCampStore = (storage: KeyValueStorage = safeStorage()) =>
       {
         name: STORE_KEY,
         version: 1,
-        storage: createJSONStorage(() => storage),
+        storage: createJSONStorage(() => writeOnChange(storage)),
         // Every version goes through restore(), so no record needs migrating.
         migrate: (saved) => saved as Persisted,
         // The head script already picked the mode on screen (hash, choice, signals), so

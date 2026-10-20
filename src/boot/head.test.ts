@@ -167,6 +167,26 @@ describe("mode before first paint", () => {
     for (let h = 0; h < 24; h++)
       expect(boot({ hour: h }).classes.has("night")).toBe(nightAmount(h) > 0.5);
   });
+  it("reads Barcelona's clock like Intl does, through both daylight-saving changes", () => {
+    const intlHour = (d: Date) => {
+      const p = new Intl.DateTimeFormat("en-GB", {
+        timeZone: "Europe/Madrid",
+        hour: "2-digit",
+        minute: "2-digit",
+        hourCycle: "h23",
+      }).formatToParts(d);
+      const read = (t: string) => Number(p.find((x) => x.type === t)?.value);
+      return read("hour") + read("minute") / 60;
+    };
+    const start = Date.UTC(2026, 0, 1);
+    for (let t = start; t < Date.UTC(2028, 0, 1); t += 20 * 60_000) {
+      const now = new Date(t);
+      const f = fake();
+      bootHead(f.doc as unknown as Document, f.win as unknown as Window, OPTS, now);
+      const h = intlHour(now);
+      expect(f.classes.has("night"), now.toISOString()).toBe(h < NIGHT_BEFORE || h > NIGHT_AFTER);
+    }
+  });
   it("passes its options in the shipped script", () => {
     expect(headScript).toContain(JSON.stringify(EXPLORE_ONLY_SLUGS[0]));
     expect(headScript).toContain(JSON.stringify([...EXPLORE_ONLY_SLUGS].sort()));
