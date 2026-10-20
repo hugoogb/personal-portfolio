@@ -11,7 +11,7 @@
  * stay self-contained: only its parameters and globals, no module-level helpers.
  * This module is imported by vite.config.ts, so it imports sun by a relative path.
  */
-import { dayAmount } from "../world/lib/sun";
+import { dayAmount } from "../world/lib/sun.ts";
 
 /** Barcelona hours where the lighting crosses half-night, found once at build time. */
 const crossing = (lo: number, hi: number) => {

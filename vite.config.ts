@@ -3,7 +3,7 @@ import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
 import tailwindcss from "@tailwindcss/vite";
-import { headScript } from "./src/boot/head";
+import { headScript } from "./src/boot/head.ts";
 
 const HEAD_SCRIPT_SLOT = "<!-- head-script -->";
 
@@ -28,7 +28,7 @@ const injectHeadScript = (): Plugin => ({
   },
 });
 
-const BENCHMARKS_DIR = path.resolve(__dirname, "node_modules/detect-gpu/dist/benchmarks");
+const BENCHMARKS_DIR = path.resolve(import.meta.dirname, "node_modules/detect-gpu/dist/benchmarks");
 
 /**
  * detect-gpu looks the visitor's GPU up in benchmark tables it would otherwise
@@ -154,7 +154,7 @@ const preloadTown = (): Plugin => ({
 });
 
 const R3F_CANVAS = /@react-three[/\\]fiber[/\\]dist[/\\]react-three-fiber\.esm\.js$/;
-const CATALOGUE = path.resolve(__dirname, "src/world/lib/catalogue.ts");
+const CATALOGUE = path.resolve(import.meta.dirname, "src/world/lib/catalogue.ts");
 
 /**
  * R3F's Canvas calls `extend(THREE)` with `import * as THREE from "three"`, which
@@ -164,6 +164,9 @@ const CATALOGUE = path.resolve(__dirname, "src/world/lib/catalogue.ts");
  * dependency pre-bundling gets the same redirect, so dev fails like the build
  * when a tag is missing. The build stops if R3F stops importing three that way.
  */
+const redirectToCatalogue = (source: string, importer: string | undefined) =>
+  source === "three" && importer && R3F_CANVAS.test(importer) ? CATALOGUE : null;
+
 const threeCatalogue = (): Plugin => {
   let ssr = false;
   let redirected = false;
@@ -174,9 +177,9 @@ const threeCatalogue = (): Plugin => {
       ssr = Boolean(config.build.ssr);
     },
     resolveId(source, importer) {
-      if (source !== "three" || !importer || !R3F_CANVAS.test(importer)) return null;
-      redirected = true;
-      return CATALOGUE;
+      const id = redirectToCatalogue(source, importer);
+      if (id) redirected = true;
+      return id;
     },
     generateBundle() {
       if (!ssr && !redirected)
@@ -211,7 +214,7 @@ const bundleReport = (): Plugin => {
           dynamicImports: out.dynamicImports,
         };
       }
-      const dir = path.resolve(__dirname, "node_modules/.cache/base-camp");
+      const dir = path.resolve(import.meta.dirname, "node_modules/.cache/base-camp");
       mkdirSync(dir, { recursive: true });
       writeFileSync(path.join(dir, "bundle-report.json"), JSON.stringify({ chunks }, null, 2));
     },
@@ -231,7 +234,7 @@ export default defineConfig({
   ],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      "@": path.resolve(import.meta.dirname, "./src"),
     },
   },
   server: {
@@ -239,21 +242,15 @@ export default defineConfig({
     open: true,
   },
   optimizeDeps: {
-    esbuildOptions: {
-      plugins: [
-        {
-          name: "base-camp-three-catalogue",
-          setup(build) {
-            build.onResolve({ filter: /^three$/ }, (args) =>
-              R3F_CANVAS.test(args.importer) ? { path: CATALOGUE } : undefined,
-            );
-          },
-        },
-      ],
+    // The dev server pre-bundles dependencies apart from the plugins above: same redirect there.
+    rolldownOptions: {
+      plugins: [{ name: "base-camp-three-catalogue", resolveId: redirectToCatalogue }],
     },
   },
   build: {
     outDir: "dist",
+    // three.js is one ~740 KB chunk by design; scripts/check-budgets.mjs is the real size gate.
+    chunkSizeWarningLimit: 800,
     rollupOptions: {
       output: {
         manualChunks(id) {
