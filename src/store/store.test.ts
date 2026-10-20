@@ -38,6 +38,22 @@ describe("store", () => {
     expect(store.getState().achievements).toEqual(["goal"]);
   });
 
+  it("writes storage only when what it saves changes", () => {
+    const storage = memory();
+    const setItem = vi.spyOn(storage, "setItem");
+    const store = createBaseCampStore(storage);
+    store.getState().setHudMode("dark");
+    const writes = setItem.mock.calls.length;
+    // The camera, hover, frame rate and story stop change many times a second; none is saved.
+    store.getState().setView({ x: 1, z: 2, view: 30, aspect: 1 });
+    store.getState().setHover("rl");
+    store.getState().setFps(42);
+    store.getState().setStop(3);
+    expect(setItem).toHaveBeenCalledTimes(writes);
+    store.getState().setHudMode("light");
+    expect(setItem).toHaveBeenCalledTimes(writes + 1);
+  });
+
   it("persists only progress and preferences, under one key", () => {
     const storage = memory();
     const store = createBaseCampStore(storage);
