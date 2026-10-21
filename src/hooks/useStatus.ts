@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import type { PlaceId } from "@/content/types";
 import { useBaseCamp, type StatusMap } from "@/store/store";
 
-const POLL_MS = 60_000;
+const POLL_MS = 300_000;
 
 const TIMEOUT_MS = 10_000;
 
@@ -41,7 +41,7 @@ const requestSignal = (unmount: AbortSignal): { signal: AbortSignal; done: () =>
   };
 };
 
-/** Status on boot, then every minute while the tab is visible (spec 9.6). */
+/** Status on boot, then every five minutes while the tab is visible (spec 9.6). */
 export const useStatus = () => {
   useEffect(() => {
     let alive = true;

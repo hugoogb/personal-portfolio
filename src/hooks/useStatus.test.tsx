@@ -76,7 +76,7 @@ describe("useStatus", () => {
       vi.stubGlobal("fetch", () => new Promise<Response>((res) => resolvers.push(res)));
       render(<Probe />);
       expect(resolvers).toHaveLength(1);
-      await vi.advanceTimersByTimeAsync(60_000);
+      await vi.advanceTimersByTimeAsync(300_000);
       expect(resolvers).toHaveLength(2);
       const reply = (id: string) => ({
         ok: true,
