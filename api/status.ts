@@ -63,7 +63,7 @@ const probe = async ({ id, host, url }: Target): Promise<Probe> => {
  *
  * Asking from the server instead sidesteps that entirely: there is no Origin
  * header to reject and no preflight to fail. The response is cached at the edge
- * so the upstream hosts see roughly one probe a minute however much traffic
+ * so the upstream hosts see roughly one probe every five minutes however much traffic
  * this page gets.
  */
 export default async function handler(): Promise<Response> {
@@ -72,7 +72,7 @@ export default async function handler(): Promise<Response> {
   return new Response(JSON.stringify({ checkedAt: new Date().toISOString(), services }), {
     headers: {
       "content-type": "application/json; charset=utf-8",
-      "cache-control": "public, s-maxage=60, stale-while-revalidate=300",
+      "cache-control": "public, s-maxage=300, stale-while-revalidate=600",
     },
   });
 }
