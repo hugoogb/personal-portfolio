@@ -1,8 +1,15 @@
 import { describe, expect, it } from "vitest";
 import { isHexColor, readAccent, writeAccent } from "@/store/accent";
-import { createSafeStorage } from "@/store/storage";
+import type { KeyValueStorage } from "@/store/storage";
 
-const memory = () => createSafeStorage(() => undefined);
+const memory = (): KeyValueStorage => {
+  const data = new Map<string, string>();
+  return {
+    getItem: (k) => data.get(k) ?? null,
+    setItem: (k, v) => void data.set(k, v),
+    removeItem: (k) => void data.delete(k),
+  };
+};
 
 describe("accent", () => {
   it("accepts only #rrggbb", () => {

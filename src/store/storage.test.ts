@@ -21,17 +21,16 @@ describe("createSafeStorage", () => {
     expect(storage.getItem("k")).toBeNull();
   });
 
-  it("falls back to memory when the backend throws", () => {
-    const storage = createSafeStorage(() => {
-      throw new Error("SecurityError");
-    });
-    expect(() => storage.setItem("k", "v")).not.toThrow();
-    expect(storage.getItem("k")).toBe("v");
-  });
-
-  it("falls back to memory when there is no backend", () => {
-    const storage = createSafeStorage(() => undefined);
-    storage.setItem("k", "v");
-    expect(storage.getItem("k")).toBe("v");
+  it("never throws when the backend throws or is missing", () => {
+    for (const storage of [
+      createSafeStorage(() => {
+        throw new Error("SecurityError");
+      }),
+      createSafeStorage(() => undefined),
+    ]) {
+      expect(() => storage.setItem("k", "v")).not.toThrow();
+      expect(storage.getItem("k")).toBeNull();
+      expect(() => storage.removeItem("k")).not.toThrow();
+    }
   });
 });

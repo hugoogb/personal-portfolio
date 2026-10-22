@@ -1,4 +1,4 @@
-import { TECH_GROUPS } from "@/constants/icons.constants";
+import { TECH } from "@/constants/tech.constants";
 import { PROJECTS } from "@/constants/projects.constants";
 import { CONTACT } from "@/constants/strings.constants";
 
@@ -56,7 +56,7 @@ export const structuredData = (modified: Date) => ({
         addressLocality: "Barcelona",
         addressCountry: "ES",
       },
-      knowsAbout: TECH_GROUPS.flatMap((group) => group.icons.map((icon) => icon.name)),
+      knowsAbout: TECH,
       sameAs: [CONTACT.GITHUB, CONTACT.LINKEDIN, "https://www.npmjs.com/org/avatar-generator"],
     },
     ...PROJECTS.map((project) => ({

@@ -126,7 +126,6 @@ export function buildArena(kit: Kit): THREE.Group {
       roughness: 0.4,
     }),
   );
-  kit.life.pads = pm;
   for (const [x, z] of [
     [-1.7, -1.15],
     [1.7, -1.15],
@@ -174,7 +173,6 @@ export function buildArena(kit: Kit): THREE.Group {
   flame.visible = false;
   flame.userData.dynamic = true;
   car.add(flame);
-  const lights: THREE.Object3D[] = [];
   for (const [x, z] of [
     [-2.85, -2.45],
     [2.85, -2.45],
@@ -186,14 +184,7 @@ export function buildArena(kit: Kit): THREE.Group {
     hd.rotation.y = Math.atan2(x, z);
   }
   pool(g, 0, 0, AX * 2 + 1.4, AZ * 2 + 1.6, 0.16);
-  kit.life.arena = {
-    g,
-    ball: b,
-    car,
-    flame,
-    lights,
-    lock: 0,
-  };
+  kit.life.arena = { g, ball: b, car, flame };
   kit.onFrame((_dt, t) => {
     pm.emissiveIntensity = 0.7 + Math.sin(t * 3) * 0.45;
   });

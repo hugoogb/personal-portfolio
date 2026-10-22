@@ -11,8 +11,6 @@ export type PlaceId =
   | "board"
   | "post";
 
-export type Zone = "centre" | "industrial" | "outskirts" | "seafront";
-
 /** Where a project actually runs; drives the traffic routes and the yard's racks. */
 export type Host = "vps" | "vercel";
 
@@ -28,7 +26,6 @@ export interface Place {
   id: PlaceId;
   /** Deep links (`/#readledger`) and the story document's anchors use this. */
   slug: string;
-  zone: Zone;
   name: string;
   /** Short floating label, when the name is too long for one. */
   label?: string;

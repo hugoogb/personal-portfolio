@@ -8,8 +8,8 @@ export interface KeyLike {
   target?: EventTarget | null;
 }
 
-const isField = (target: EventTarget | null | undefined) =>
-  typeof HTMLElement !== "undefined" &&
+/** A form field the visitor is typing into: shortcuts leave it alone. */
+export const isField = (target: EventTarget | null | undefined) =>
   target instanceof HTMLElement &&
   (target.contentEditable === "true" ||
     target.isContentEditable ||

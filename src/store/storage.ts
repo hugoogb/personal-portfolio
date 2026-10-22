@@ -6,40 +6,21 @@ export interface KeyValueStorage {
 
 /**
  * localStorage can be missing (server render) or throw on every call (private
- * windows, blocked site data). The town must still work in those cases, so
- * every write also lands in memory and reads fall back to it.
+ * windows, blocked site data). Then nothing is saved and the town still works.
  */
 export const createSafeStorage = (backend: () => Storage | undefined): KeyValueStorage => {
-  const memory = new Map<string, string>();
-  const attempt = <T>(apply: (s: Storage) => T, fallback: () => T): T => {
+  const attempt = <T>(apply: (s: Storage) => T, fallback: T): T => {
     try {
       const real = backend();
-      return real ? apply(real) : fallback();
+      return real ? apply(real) : fallback;
     } catch {
-      return fallback();
+      return fallback;
     }
   };
-
   return {
-    getItem: (key) =>
-      attempt(
-        (s) => s.getItem(key) ?? memory.get(key) ?? null,
-        () => memory.get(key) ?? null,
-      ),
-    setItem: (key, value) => {
-      memory.set(key, value);
-      attempt(
-        (s) => s.setItem(key, value),
-        () => undefined,
-      );
-    },
-    removeItem: (key) => {
-      memory.delete(key);
-      attempt(
-        (s) => s.removeItem(key),
-        () => undefined,
-      );
-    },
+    getItem: (key) => attempt((s) => s.getItem(key), null),
+    setItem: (key, value) => attempt((s) => s.setItem(key, value), undefined),
+    removeItem: (key) => attempt((s) => s.removeItem(key), undefined),
   };
 };
 

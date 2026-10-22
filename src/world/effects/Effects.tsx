@@ -9,6 +9,23 @@ import { effectiveHour } from "@/world/lib/sun";
 
 const EVERY_S = 0.25;
 
+interface AOPass {
+  autoDetectTransparency: boolean;
+  configuration: { transparencyAware: boolean };
+}
+
+/**
+ * N8AO checks every frame for transparent materials and, finding the town's glass, smoke and light
+ * pools, draws the whole scene twice more into two full-size targets to keep the AO off them. That
+ * was an eighth of High's frame, and over this town the difference does not show (a touch more AO
+ * behind the server yard's glass), so the AO treats the scene as opaque.
+ */
+const opaqueAO = (pass: AOPass | null) => {
+  if (!pass) return;
+  pass.autoDetectTransparency = false;
+  pass.configuration.transparencyAware = false;
+};
+
 export interface EffectsProps {
   /** High: ambient occlusion and night bloom. Otherwise only tone mapping and FXAA. */
   full: boolean;
@@ -51,6 +68,7 @@ export default function Effects({ full }: EffectsProps) {
         // The sample counts barely move the cost (it is the full-screen passes); the
         // low ones keep the noise soft at this zoom.
         <N8AO
+          ref={opaqueAO}
           halfRes
           aoSamples={8}
           denoiseSamples={4}
