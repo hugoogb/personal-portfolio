@@ -52,7 +52,10 @@ export const gpuRenderer = (): string => {
   try {
     const canvas = document.querySelector<HTMLCanvasElement>("#town-root canvas");
     const gl = (canvas?.getContext("webgl2") ?? canvas?.getContext("webgl")) as
-      WebGL2RenderingContext | WebGLRenderingContext | null | undefined;
+      | WebGL2RenderingContext
+      | WebGLRenderingContext
+      | null
+      | undefined;
     // The plain parameter first (no Firefox deprecation warning); browsers that mask it as a
     // generic "WebKit WebGL" still name the GPU through the debug extension.
     const plain = gl?.getParameter(gl.RENDERER);

@@ -1,5 +1,15 @@
 export type PlaceId =
-  "hq" | "f1" | "rl" | "wt" | "es" | "av" | "yard" | "stadium" | "arena" | "board" | "post";
+  | "hq"
+  | "f1"
+  | "rl"
+  | "wt"
+  | "es"
+  | "av"
+  | "yard"
+  | "stadium"
+  | "arena"
+  | "board"
+  | "post";
 
 /** Where a project actually runs; drives the traffic routes and the yard's racks. */
 export type Host = "vps" | "vercel";
