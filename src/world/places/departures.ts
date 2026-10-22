@@ -122,7 +122,8 @@ export function buildDepartures(kit: Kit): THREE.Group {
   ball(0.08, kit.materials.lamp, -1.3, 1.0, 0, sg, 10);
   ball(0.07, kit.materials.lamp, 1.35, 0.78, 0, sg, 10);
   kit.pool(w, 24.6 - OX, 9.6 - OZ, 3.6, 3.6, -0.36);
-  kit.life.ship = { g: sg, home: sg.position.clone(), sail: -1 };
+  const home = sg.position.clone();
+  kit.life.ship = { g: sg, home, sail: -1 };
 
   const buoys: THREE.Group[] = [];
   for (const [x, z] of [
@@ -151,7 +152,6 @@ export function buildDepartures(kit: Kit): THREE.Group {
   rbox(0.8, 0.025, 0.32, "#e8d2b0", 0, 0.2, 0, rb, 0.01);
   rbox(0.08, 0.05, 0.36, "#9a6b45", 0.15, 0.225, 0, rb, 0.02);
   buoys.push(rb);
-  kit.life.buoys = buoys;
 
   // the straw hat on the beach
   const hat = new THREE.Group();
@@ -185,7 +185,6 @@ export function buildDepartures(kit: Kit): THREE.Group {
   });
   kit.life.hat = hat;
 
-  const home = (kit.life.ship as { home: THREE.Vector3 }).home;
   kit.onFrame((_dt, t) => {
     sg.position.y = home.y + Math.sin(t * 1.6) * 0.05;
     sg.rotation.z = Math.sin(t * 1.2) * 0.03;

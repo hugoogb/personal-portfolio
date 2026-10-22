@@ -4,9 +4,9 @@ import { expect, test, type Page } from "@playwright/test";
 // choice is remembered. detect-gpu blocklists SwiftShader, so every seed pins a manual quality.
 const record = (state: object) =>
   JSON.stringify({ state: { qualityMode: "Low", ...state }, version: 1 });
-const STORY = record({ mode: "story" });
-const TEXT = record({ mode: "text" });
-const EXPLORE = record({ mode: "explore", seen: true });
+const STORY = record({ chosenMode: "story" });
+const TEXT = record({ chosenMode: "text" });
+const EXPLORE = record({ chosenMode: "explore", seen: true });
 
 /** Seeds the saved record once per tab, so a choice made during the test survives a reload. */
 const seed = (page: Page, value: string) =>

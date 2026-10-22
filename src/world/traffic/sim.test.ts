@@ -16,12 +16,11 @@ const run = (sim: TrafficSim, seconds: number, dt = 0.05) => {
 
 describe("TrafficSim", () => {
   it("spawns about rate x time requests, within the cap", () => {
-    let spawned = 0;
+    // Slow enough that none arrives within 5 s, so every spawn is still on the road.
     const sim = new TrafficSim([plan({ rate: 2, speed: 0.01 })], { req: 20, res: 10 }, () => 0);
-    sim.onSpawn = () => spawned++;
     run(sim, 5);
-    expect(spawned).toBeGreaterThanOrEqual(9);
-    expect(spawned).toBeLessThanOrEqual(11);
+    expect(sim.reqs.length).toBeGreaterThanOrEqual(9);
+    expect(sim.reqs.length).toBeLessThanOrEqual(11);
     run(sim, 30);
     expect(sim.reqs.length).toBeLessThanOrEqual(20);
   });
@@ -35,10 +34,10 @@ describe("TrafficSim", () => {
   it("sends no responses for a down service, and pulses red at the yard", () => {
     const sim = new TrafficSim([plan({ rate: 1, down: true })], { req: 20, res: 10 }, () => 0.5);
     let downPulses = 0;
-    sim.onPulse = (p) => {
-      if (p.down) downPulses++;
-    };
-    run(sim, 30);
+    for (let t = 0; t < 30; t += 0.05) {
+      sim.step(0.05);
+      if (sim.pulses.some((p) => p.down)) downPulses++;
+    }
     expect(sim.ress.length).toBe(0);
     expect(downPulses).toBeGreaterThan(0);
   });
@@ -79,10 +78,10 @@ describe("TrafficSim", () => {
     run(sim, 3);
     const { reqs, ress, pulses } = sim;
     let finished = 0;
-    sim.onPulse = (pu) => {
-      if (pu.life === 1 && pu.x !== route.path[0][0]) finished++;
-    };
-    run(sim, 30);
+    for (let t = 0; t < 30; t += 0.05) {
+      sim.step(0.05);
+      if (sim.pulses.some((pu) => pu.x !== route.path[0][0])) finished++;
+    }
     expect(sim.reqs).toBe(reqs);
     expect(sim.ress).toBe(ress);
     expect(sim.pulses).toBe(pulses);

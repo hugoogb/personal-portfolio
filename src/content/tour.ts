@@ -26,8 +26,6 @@ export interface Stop {
   pose: Pose;
   /** A phone's pose, where it differs: by default the desktop view times NARROW_ZOOM_OUT. */
   narrow?: Partial<Pose>;
-  /** On a phone, how far (of the view) the building rides above the centre: NARROW_LIFT by default. */
-  narrowLift?: number;
 }
 
 /** Story only: the camera may swing this far around its target (spec 4.2). */
@@ -104,7 +102,7 @@ const project = (
   pose: at(id, PLACE_BY_ID[id].map.zoom, az),
 });
 
-/** The tour, in document order (spec 3.1). Poses are tuned by eye in Task 6. */
+/** The tour, in document order (spec 3.1). Poses are tuned by eye. */
 export const STOPS: Stop[] = [
   {
     id: "top",
@@ -162,14 +160,14 @@ export const EXPLORE_ONLY_SLUGS = PLACES.filter((p) => !TOUR_PLACES.includes(p.i
 /** A stop's pose for this screen: the building sits in the half the card leaves free. */
 export const poseFor = (stop: Stop, narrow: boolean, aspect: number): Pose => {
   if (narrow) {
-    // Phones: the card is a sheet below, so the building rides in the top ~55%.
+    // Phones: the card is a sheet below, so the building rides in the top 56%.
     const { x, z, az, view } = {
       ...stop.pose,
       view: stop.pose.view * NARROW_ZOOM_OUT,
       ...stop.narrow,
     };
     if (stop.side === "center") return { x, z, view, az };
-    const d = groundShift(0, -view * (stop.narrowLift ?? NARROW_LIFT), az);
+    const d = groundShift(0, -view * NARROW_LIFT, az);
     return { x: x + d.x, z: z + d.z, view, az };
   }
   const { x, z, az, view } = stop.pose;

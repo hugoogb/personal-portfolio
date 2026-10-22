@@ -159,36 +159,13 @@ type Persisted = Pick<
 const restore = (saved: unknown): Partial<Persisted> => {
   if (!saved || typeof saved !== "object") return {};
   const s = saved as Record<string, unknown>;
-  // Records from before chosenMode saved the mode on screen under `mode`.
-  const chosen = s.chosenMode !== undefined ? s.chosenMode : s.mode;
   return {
-    chosenMode: isMode(chosen) ? chosen : null,
+    chosenMode: isMode(s.chosenMode) ? s.chosenMode : null,
     discovered: listOf(ORDER, s.discovered),
     achievements: listOf(ACHIEVEMENT_IDS, s.achievements),
     hudMode: isOneOf(HUD_MODES, s.hudMode) ? s.hudMode : "auto",
     qualityMode: isOneOf(QUALITY_MODES, s.qualityMode) ? s.qualityMode : "auto",
     seen: s.seen === true,
-  };
-};
-
-/**
- * persist writes on every set(), and most sets (the camera view a few times a
- * second, hover, the frame rate, the story stop) change nothing it saves. An
- * unchanged record is not written again: localStorage writes are synchronous.
- */
-const writeOnChange = (storage: KeyValueStorage): KeyValueStorage => {
-  const last = new Map<string, string>();
-  return {
-    getItem: (key) => storage.getItem(key),
-    setItem: (key, value) => {
-      if (last.get(key) === value) return;
-      last.set(key, value);
-      storage.setItem(key, value);
-    },
-    removeItem: (key) => {
-      last.delete(key);
-      storage.removeItem(key);
-    },
   };
 };
 
@@ -315,7 +292,7 @@ export const createBaseCampStore = (storage: KeyValueStorage = safeStorage()) =>
       {
         name: STORE_KEY,
         version: 1,
-        storage: createJSONStorage(() => writeOnChange(storage)),
+        storage: createJSONStorage(() => storage),
         // Every version goes through restore(), so no record needs migrating.
         migrate: (saved) => saved as Persisted,
         // The head script already picked the mode on screen (hash, choice, signals), so

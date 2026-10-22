@@ -15,57 +15,6 @@
   --color-text: var(--text-color);
   --color-muted: var(--text-muted);
   --color-border: var(--border-color);
-
-  --radius-lg: var(--border-radius-l);
-  --radius-md: var(--border-radius-m);
-  --radius-sm: var(--border-radius-s);
-
-  --animate-fade-in: fadeIn 0.5s ease-out;
-  --animate-slide-up: slideUp 0.5s ease-out;
-  /* Above the fold, entrances are CSS so they start at first paint of the
-     prerendered HTML instead of waiting on JS. The hero moves but never fades:
-     it holds the largest text on the page, and text at opacity 0 does not count
-     as painted, which would push Largest Contentful Paint back by the whole
-     animation. */
-  --animate-hero-in: heroIn 0.8s ease-out;
-  --animate-panel-in: panelIn 0.6s ease-out 0.15s both;
-
-  @keyframes fadeIn {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-  @keyframes heroIn {
-    0% {
-      transform: translateX(-30px);
-    }
-    100% {
-      transform: translateX(0);
-    }
-  }
-  @keyframes panelIn {
-    0% {
-      transform: translateY(16px);
-      opacity: 0;
-    }
-    100% {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
-  @keyframes slideUp {
-    0% {
-      transform: translateY(10px);
-      opacity: 0;
-    }
-    100% {
-      transform: translateY(0);
-      opacity: 1;
-    }
-  }
 }
 
 :root {
@@ -85,10 +34,6 @@
   --text-color: #171717;
   --text-muted: #737373;
   --border-color: #e5e5e5;
-
-  --border-radius-s: 8px;
-  --border-radius-m: 16px;
-  --border-radius-l: 24px;
 }
 
 /* Text mode follows the system theme. The town's HUD has its own light/dark mode. */
@@ -144,29 +89,6 @@
   }
 }
 
-@layer components {
-  /* Custom Color Picker Styling */
-  .custom-color-picker .react-colorful {
-    width: 100%;
-    height: 160px;
-    border-radius: 16px;
-  }
-  .custom-color-picker .react-colorful__saturation {
-    border-radius: 12px 12px 0 0;
-    border-bottom: none;
-  }
-  .custom-color-picker .react-colorful__hue {
-    border-radius: 0 0 12px 12px;
-    height: 14px;
-  }
-  .custom-color-picker .react-colorful__pointer {
-    width: 18px;
-    height: 18px;
-    border: 3px solid white;
-    box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
-  }
-}
-
 @layer base {
   :focus-visible {
     outline: 2px solid var(--primary-display);
@@ -174,10 +96,9 @@
     border-radius: 4px;
   }
 
-  /* The page leans on motion: smooth scrolling to a section, per-section
-     reveals, image zooms, a pulsing availability dot. Honour the OS setting.
-     The universal selector covers <html>, so smooth scrolling is off here too
-     and `scrollIntoView` jumps straight to the target. */
+  /* Honour the OS setting for every animation and transition. The universal
+     selector covers <html>, so smooth scrolling is off here too and
+     `scrollIntoView` jumps straight to the target. */
   @media (prefers-reduced-motion: reduce) {
     *,
     *::before,

@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { RoundedBoxGeometry } from "three/addons/geometries/RoundedBoxGeometry.js";
+import { RoundedBoxGeometry } from "@/world/kit/roundedBox";
 import { PLACES } from "@/content/places";
 import { CLAY, mkRand, type Kit } from "@/world/kit/kit";
 import { HOMES, ISLAND } from "@/world/lib/map";
@@ -260,7 +260,7 @@ export function buildTown(kit: Kit) {
       root.add(g);
       rbox(1.6, 1.05, 1.25, WALLS[i % WALLS.length], 0, 0, 0, g, 0.1);
       kit.windows(g, 1.6, 1.25, 1.05, 1, 0, 0);
-      kit.door(g, 0, 0.63, "z", "#6b4a35");
+      kit.door(g, 0, 0.63);
       kit.gable(1.6, 1.25, 0.68, ROOFS[i % ROOFS.length], 0, 1.05, 0, g, 0.12);
       if (i % 2) rbox(0.22, 0.5, 0.22, "#a2877a", 0.45, 1.35, -0.3, g, 0.04);
       kit.bush(g, -0.95, 0.45, 0.8);
@@ -329,7 +329,6 @@ export function buildTown(kit: Kit) {
         depthWrite: false,
       }),
     );
-    kit.life.foam = fm;
     const foam = new THREE.Mesh(
       own(new RoundedBoxGeometry(HX * 2 + 2.7, 0.02, HZ * 2 + 2.7, 4, 1.1)),
       fm,
@@ -404,7 +403,7 @@ export function addSmoke(
   kit: Kit,
   root: THREE.Object3D,
   sources: THREE.Vector3[],
-  ready: () => boolean = () => true,
+  ready: () => boolean,
 ) {
   const N = 36;
   const smoke = new THREE.InstancedMesh(

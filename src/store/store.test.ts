@@ -4,7 +4,14 @@ import { ORDER } from "@/content/places";
 import { STORE_KEY, createBaseCampStore } from "@/store/store";
 import { createSafeStorage, type KeyValueStorage } from "@/store/storage";
 
-const memory = (): KeyValueStorage => createSafeStorage(() => undefined);
+const memory = (): KeyValueStorage => {
+  const data = new Map<string, string>();
+  return {
+    getItem: (k) => data.get(k) ?? null,
+    setItem: (k, v) => void data.set(k, v),
+    removeItem: (k) => void data.delete(k),
+  };
+};
 
 describe("store", () => {
   it("selects a place and remembers it as discovered, once", () => {
@@ -36,22 +43,6 @@ describe("store", () => {
     expect(store.getState().unlock("goal")).toBe(true);
     expect(store.getState().unlock("goal")).toBe(false);
     expect(store.getState().achievements).toEqual(["goal"]);
-  });
-
-  it("writes storage only when what it saves changes", () => {
-    const storage = memory();
-    const setItem = vi.spyOn(storage, "setItem");
-    const store = createBaseCampStore(storage);
-    store.getState().setHudMode("dark");
-    const writes = setItem.mock.calls.length;
-    // The camera, hover, frame rate and story stop change many times a second; none is saved.
-    store.getState().setView({ x: 1, z: 2, view: 30, aspect: 1 });
-    store.getState().setHover("rl");
-    store.getState().setFps(42);
-    store.getState().setStop(3);
-    expect(setItem).toHaveBeenCalledTimes(writes);
-    store.getState().setHudMode("light");
-    expect(setItem).toHaveBeenCalledTimes(writes + 1);
   });
 
   it("persists only progress and preferences, under one key", () => {
@@ -168,17 +159,9 @@ describe("store, modes", () => {
     expect(saved(storage).chosenMode).toBe("text");
   });
 
-  it("restores the choice, reading a legacy saved mode when there is no choice", () => {
+  it("restores a valid choice and drops an unknown one", () => {
     const storage = memory();
-    storage.setItem(STORE_KEY, JSON.stringify({ state: { mode: "explore" }, version: 1 }));
-    const legacy = createBaseCampStore(storage);
-    expect(legacy.getState().chosenMode).toBe("explore");
-    legacy.getState().setStop(2);
-    expect(saved(storage).chosenMode).toBe("explore");
-    storage.setItem(
-      STORE_KEY,
-      JSON.stringify({ state: { chosenMode: "text", mode: "explore" }, version: 1 }),
-    );
+    storage.setItem(STORE_KEY, JSON.stringify({ state: { chosenMode: "text" }, version: 1 }));
     expect(createBaseCampStore(storage).getState().chosenMode).toBe("text");
     storage.setItem(STORE_KEY, JSON.stringify({ state: { chosenMode: "brief" }, version: 1 }));
     expect(createBaseCampStore(storage).getState().chosenMode).toBeNull();

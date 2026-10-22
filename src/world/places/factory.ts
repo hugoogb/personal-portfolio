@@ -25,7 +25,7 @@ export function buildFactory(kit: Kit): THREE.Group {
     rbox(0.05, 0.5, 0.42, "#ffffff", 1.505, 0.6, z, g, 0.02, false);
     rbox(0.05, 0.42, 0.34, winPick(), 1.52, 0.64, z, g, 0.02, false);
   }
-  door(g, 1.12, 1.12, "z", "#3e63dd");
+  door(g, 1.12, 1.12, "#3e63dd");
   rbox(3.1, 0.14, 2.3, "#3e63dd", 0, 1.8, 0, g, 0.05);
   for (const x of [-0.6, 0.4]) rbox(0.7, 0.06, 1.4, win, x, 1.94, -0.1, g, 0.03, false);
   for (const [x, z] of [

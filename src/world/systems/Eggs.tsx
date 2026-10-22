@@ -143,7 +143,6 @@ export function Eggs({ world }: { world: BuiltWorld }) {
       flash.current -= dt;
       const on = flashOn(flash.current, t);
       for (const c of f1.cars) c.body.material = on ? flashMat : c.mat;
-      if (flash.current <= 0) for (const c of f1.cars) c.body.material = c.mat;
     }
 
     if (stadium && stadium.wave >= 0) {
@@ -157,19 +156,9 @@ export function Eggs({ world }: { world: BuiltWorld }) {
     }
 
     if (fans && fans.cheer > 0) {
-      fans.cheer -= dt;
-      if (fans.cheer > 0) {
-        writeFans(fans.cheer, t);
-      } else {
-        fans.cheer = 0;
-        for (let i = 0; i < fans.seats.length; i++) {
-          const s = fans.seats[i];
-          pos.set(s[0], s[1], s[2]);
-          m4.compose(pos, q, tall);
-          fans.eggs.setMatrixAt(i, m4);
-        }
-        fans.eggs.instanceMatrix.needsUpdate = true;
-      }
+      // At zero the fans write back to their seats.
+      fans.cheer = Math.max(0, fans.cheer - dt);
+      writeFans(fans.cheer, t);
     }
   });
 

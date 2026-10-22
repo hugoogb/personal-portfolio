@@ -114,6 +114,8 @@ export function DayNight({ world }: { world: BuiltWorld }) {
       floodlightsOn(world, L.stadium > 0);
     }
     kit.materials.pool.opacity = L.pools;
+    // By day the pools are clear: skip their draws instead of blending nothing.
+    kit.materials.pool.visible = L.pools > 0;
     const board = kit.life.boardFace as THREE.MeshStandardMaterial | undefined;
     if (board) board.emissiveIntensity = L.board;
   });

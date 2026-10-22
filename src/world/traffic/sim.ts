@@ -21,8 +21,6 @@ export class TrafficSim {
   reqs: Packet[] = [];
   ress: Packet[] = [];
   pulses: Pulse[] = [];
-  onSpawn?: (p: Packet) => void;
-  onPulse?: (p: Pulse) => void;
   private acc: number[];
 
   constructor(
@@ -33,12 +31,8 @@ export class TrafficSim {
     this.acc = plans.map(() => rand());
   }
 
+  /** New rates and up/down for the same routes (planRoutes keeps one plan per route). */
   setPlans(plans: RoutePlan[]) {
-    if (plans.length !== this.plans.length) {
-      this.acc = plans.map(() => this.rand());
-      this.reqs = [];
-      this.ress = [];
-    }
     this.plans = plans;
   }
 
@@ -49,9 +43,7 @@ export class TrafficSim {
   }
 
   private pulse(x: number, z: number, down: boolean) {
-    const p = { x, z, life: 1, down };
-    this.pulses.push(p);
-    this.onPulse?.(p);
+    this.pulses.push({ x, z, life: 1, down });
   }
 
   /** A tour arrival (spec 4.4): `n` requests leave this route's door at once; none to a service that is down. */
@@ -60,9 +52,7 @@ export class TrafficSim {
     if (!route || this.plans[plan].down || this.caps.req === 0) return;
     for (let i = 0; i < n; i++) {
       if (this.reqs.length >= this.caps.req) this.reqs.shift();
-      const p: Packet = { plan, s: -i * 0.35, speed: this.plans[plan].speed };
-      this.reqs.push(p);
-      this.onSpawn?.(p);
+      this.reqs.push({ plan, s: -i * 0.35, speed: this.plans[plan].speed });
     }
     const [x, z] = route.path[0];
     this.pulse(x, z, false);
@@ -75,9 +65,7 @@ export class TrafficSim {
       while (this.acc[i] >= 1) {
         this.acc[i] -= 1;
         if (this.reqs.length >= this.caps.req) continue;
-        const p: Packet = { plan: i, s: 0, speed: plan.speed };
-        this.reqs.push(p);
-        this.onSpawn?.(p);
+        this.reqs.push({ plan: i, s: 0, speed: plan.speed });
         const [x, z] = plan.route.path[0];
         this.pulse(x, z, false);
       }

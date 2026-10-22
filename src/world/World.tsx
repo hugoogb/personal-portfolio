@@ -1,15 +1,17 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import * as THREE from "three";
 import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { IDLE_FPS, TARGET_FPS } from "@/boot/tiers";
 import { useIdle } from "@/hooks/useIdle";
 import { isPreview } from "@/hud/commands";
 import { useBaseCamp } from "@/store/store";
 import { buildWorldInSlices, type BuiltWorld } from "@/world/build";
-import { effectsEnabled, probeHalfFloat } from "@/world/effects/effectsGate";
+import { canRenderHalfFloat, effectsEnabled, probeHalfFloat } from "@/world/effects/effectsGate";
 import { FloatTargets } from "@/world/effects/FloatTargets";
 import { EffectsBoundary } from "@/world/effects/EffectsBoundary";
 import { CAMERA_OFFSET } from "@/world/lib/camera";
 import { wasDrag } from "@/world/lib/drag";
+import { skipUnlitPointLights } from "@/world/lib/pointLights";
 import { Places } from "@/world/scene/Places";
 import { Arrivals } from "@/world/systems/Arrivals";
 import { ArenaDrive } from "@/world/systems/ArenaDrive";
@@ -27,6 +29,8 @@ import { YardLights } from "@/world/systems/YardLights";
 
 const Effects = lazy(() => import("@/world/effects/Effects"));
 
+skipUnlitPointLights();
+
 const usePageHidden = () => {
   const [hidden, setHidden] = useState(() => document.hidden);
   useEffect(() => {
@@ -40,20 +44,33 @@ const usePageHidden = () => {
 /**
  * Compiles every shader in the scene before the first frame, so none of it lands on a drawn one.
  * Where KHR_parallel_shader_compile exists this runs off the main thread (spec 6.1, step 4).
+ * three keys a program by where it draws: into a render target it outputs linear colour with no
+ * tone mapping, onto the canvas sRGB and tone-mapped. So when the composer draws the scene into
+ * its buffers, the compile runs with a render target bound too, or it builds programs the frame
+ * never uses and the first frame compiles the real ones on the main thread.
  */
-function Compile({ onDone }: { onDone: () => void }) {
+function Compile({ offscreen, onDone }: { offscreen: boolean; onDone: () => void }) {
   const gl = useThree((s) => s.gl);
   const scene = useThree((s) => s.scene);
   const camera = useThree((s) => s.camera);
   useEffect(() => {
     let live = true;
-    gl.compileAsync(scene, camera)
+    const target = offscreen && canRenderHalfFloat(gl) ? new THREE.WebGLRenderTarget(1, 1) : null;
+    const previous = gl.getRenderTarget();
+    gl.setRenderTarget(target);
+    // compileAsync picks every program synchronously, then waits for them to link.
+    const compiling = gl.compileAsync(scene, camera);
+    gl.setRenderTarget(previous);
+    compiling
       .catch(() => undefined)
-      .then(() => live && onDone());
+      .then(() => {
+        target?.dispose();
+        if (live) onDone();
+      });
     return () => {
       live = false;
     };
-  }, [gl, scene, camera, onDone]);
+  }, [gl, scene, camera, offscreen, onDone]);
   return null;
 }
 
@@ -76,12 +93,11 @@ export interface WorldProps {
 /**
  * The town's canvas (spec 9.2). The pacer draws it at the tier's frame rate,
  * at 30 fps while nobody is using it (useIdle), and stops while the tab is
- * hidden (or, as a guard, in Text, where it is unmounted anyway).
+ * hidden. Text never mounts it (Town).
  */
 export default function World({ onReady }: WorldProps) {
   const tier = useBaseCamp((s) => s.tier);
   const dpr = useBaseCamp((s) => s.dpr);
-  const mode = useBaseCamp((s) => s.mode);
   const idle = useBaseCamp((s) => s.idle);
   useIdle();
   // Built in an effect so StrictMode's simulated unmount disposes a world that is then rebuilt,
@@ -113,7 +129,7 @@ export default function World({ onReady }: WorldProps) {
   const [compiled, setCompiled] = useState(false);
   const onCompiled = useCallback(() => setCompiled(true), []);
   // The first frame is drawn whatever the tab is doing, so boot can finish.
-  const paused = drawn && (hidden || mode === "text");
+  const paused = drawn && hidden;
 
   // The context is made once. A town that starts on High draws through the composer, which
   // antialiases with FXAA, so its canvas has no MSAA. The composer then stays through Medium
@@ -126,7 +142,9 @@ export default function World({ onReady }: WorldProps) {
   return (
     <Canvas
       orthographic
-      shadows={tier >= 2}
+      // PCF by name: R3F's `shadows` alone asks for PCFSoft, which three r186 swaps for PCF on the
+      // first shadow pass, so every lit program compiled before it would be compiled again.
+      shadows={tier >= 2 && "percentage"}
       dpr={[1, dpr]}
       frameloop="never"
       camera={{ position: [...CAMERA_OFFSET], zoom: 30, near: 0.1, far: 300 }}
@@ -155,13 +173,13 @@ export default function World({ onReady }: WorldProps) {
           <DayNight world={world} />
           <Arrivals world={world} />
           <primitive object={world.town.root} />
-          <Compile onDone={onCompiled} />
+          <Compile offscreen={composer} onDone={onCompiled} />
           <Places places={world.places} />
           <Life world={world} />
           <Traffic world={world} />
           <ArenaDrive world={world} />
           <Eggs world={world} />
-          <TestHooks world={world} />
+          {isPreview() && <TestHooks world={world} />}
           <YardLights world={world} />
           {compiled && <FirstFrame onDrawn={() => setDrawn(true)} onReady={onReady} />}
         </>

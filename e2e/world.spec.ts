@@ -10,7 +10,7 @@ const LOW = JSON.stringify({
     hudMode: "auto",
     qualityMode: "Low",
     seen: false,
-    mode: "explore",
+    chosenMode: "explore",
   },
   version: 1,
 });
@@ -277,7 +277,7 @@ test("a down service shows Down on its card and the top bar counts only what is 
 
 test.describe("on High", () => {
   const HIGH = JSON.stringify({
-    state: { qualityMode: "High", seen: true, mode: "explore" },
+    state: { qualityMode: "High", seen: true, chosenMode: "explore" },
     version: 1,
   });
 
@@ -335,7 +335,7 @@ test("on Medium, a running frame stays in the draw-call budget and shadows keep 
   page,
 }) => {
   const MEDIUM = JSON.stringify({
-    state: { qualityMode: "Medium", seen: true, mode: "explore" },
+    state: { qualityMode: "Medium", seen: true, chosenMode: "explore" },
     version: 1,
   });
   await page.addInitScript((record) => localStorage.setItem("bc", record), MEDIUM);
@@ -375,7 +375,10 @@ test.describe("with reduced motion, after switching to Story", () => {
       if (sessionStorage.getItem("story-seeded")) return;
       localStorage.setItem(
         "bc",
-        JSON.stringify({ state: { qualityMode: "Low", seen: false, mode: "story" }, version: 1 }),
+        JSON.stringify({
+          state: { qualityMode: "Low", seen: false, chosenMode: "story" },
+          version: 1,
+        }),
       );
       sessionStorage.setItem("story-seeded", "1");
     });

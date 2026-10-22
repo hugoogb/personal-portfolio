@@ -8,12 +8,12 @@ const LOW = JSON.stringify({
     hudMode: "auto",
     qualityMode: "Low",
     seen: true,
-    mode: "explore",
+    chosenMode: "explore",
   },
   version: 1,
 });
-const TEXT = JSON.stringify({ state: { mode: "text" }, version: 1 });
-const STORY = JSON.stringify({ state: { mode: "story", qualityMode: "Low" }, version: 1 });
+const TEXT = JSON.stringify({ state: { chosenMode: "text" }, version: 1 });
+const STORY = JSON.stringify({ state: { chosenMode: "story", qualityMode: "Low" }, version: 1 });
 
 /** Seeds the saved record once per tab, so a choice made during the test survives a reload. */
 const seed = (page: Page, record: string) =>

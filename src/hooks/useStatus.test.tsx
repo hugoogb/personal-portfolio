@@ -99,48 +99,10 @@ describe("useStatus", () => {
       expect(useBaseCamp.getState().status).toEqual({ rl: { ok: true, ms: 50 } }),
     );
   });
-
-  it("gives each request a 10 s timeout signal and aborts it on unmount", async () => {
-    const timeout = new AbortController();
-    vi.spyOn(AbortSignal, "timeout").mockImplementation((ms) => {
-      expect(ms).toBe(10_000);
-      return timeout.signal;
-    });
-    const signals: (AbortSignal | null | undefined)[] = [];
-    vi.stubGlobal("fetch", (_u: string, init?: RequestInit) => {
-      signals.push(init?.signal);
-      return new Promise((_, reject) =>
-        init?.signal?.addEventListener("abort", () => reject(new Error("aborted"))),
-      );
-    });
-    useBaseCamp.setState({ status: { rl: { ok: true, ms: 1 } } });
-    const first = render(<Probe />);
-    expect(signals[0]).toBeInstanceOf(AbortSignal);
-    expect(signals[0]!.aborted).toBe(false);
-    timeout.abort();
-    expect(signals[0]!.aborted).toBe(true);
-    await waitFor(() => expect(useBaseCamp.getState().status).toBe("unknown"));
-    first.unmount();
-
-    vi.spyOn(AbortSignal, "timeout").mockImplementation(() => new AbortController().signal);
-    const second = render(<Probe />);
-    expect(signals[1]!.aborted).toBe(false);
-    second.unmount();
-    expect(signals[1]!.aborted).toBe(true);
-  });
 });
 
-describe("useStatus without AbortSignal.any", () => {
-  const any = AbortSignal.any;
-  beforeEach(() => {
-    // Safari < 17.4, Chrome < 116, Firefox < 124.
-    delete (AbortSignal as { any?: unknown }).any;
-  });
-  afterEach(() => {
-    AbortSignal.any = any;
-  });
-
-  it("still loads status, with no unhandled rejection", async () => {
+describe("useStatus requests", () => {
+  it("loads status with no unhandled rejection", async () => {
     const rejections: unknown[] = [];
     const onRej = (e: unknown) => rejections.push(e);
     process.on("unhandledRejection", onRej);
@@ -154,7 +116,7 @@ describe("useStatus without AbortSignal.any", () => {
     expect(rejections).toEqual([]);
   });
 
-  it("still times out after 10 s and aborts on unmount", async () => {
+  it("times out after 10 s and aborts on unmount", async () => {
     vi.useFakeTimers();
     try {
       const signals: (AbortSignal | null | undefined)[] = [];

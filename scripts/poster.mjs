@@ -24,7 +24,7 @@ const SHOTS = [
 ];
 const HOURS = { day: 13, night: 23 };
 const SEED = JSON.stringify({
-  state: { mode: "story", qualityMode: "High", seen: true },
+  state: { chosenMode: "story", qualityMode: "High", seen: true },
   version: 1,
 });
 

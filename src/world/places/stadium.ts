@@ -96,7 +96,6 @@ export function buildStadium(kit: Kit): THREE.Group {
   });
   crowd.castShadow = true;
   g.add(crowd);
-  const lights: THREE.PointLight[] = [];
   for (const [x, z] of [
     [-3.7, -3.4],
     [3.7, -3.4],
@@ -108,7 +107,6 @@ export function buildStadium(kit: Kit): THREE.Group {
     const L = new THREE.PointLight("#fff1d6", 0, 11, 1.5);
     L.position.set(x * 0.8, 4.2, z * 0.8);
     g.add(L);
-    lights.push(L);
     kit.pointLights.push(L);
   }
   rbox(1.7, 0.62, 0.14, "#1f2329", 0, 2.45, -3.35, g, 0.05);
@@ -148,9 +146,8 @@ export function buildStadium(kit: Kit): THREE.Group {
   }
   const pball = ball(0.045, "#ffffff", 0, 0.18, 0, g, 10);
   pball.userData.dynamic = true;
-  kit.life.players = players;
   kit.life.pball = pball;
-  kit.life.stadium = { crowd, seats, lights, wave: -1 };
+  kit.life.stadium = { crowd, seats, wave: -1 };
 
   let pT = 0;
   let pTarget = 0;

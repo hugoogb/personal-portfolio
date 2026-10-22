@@ -56,8 +56,7 @@ export function bootHead(
     if (saved) {
       const state = JSON.parse(saved)?.state;
       quality = state?.qualityMode ?? null;
-      // The mode the visitor chose; records from before chosenMode keep theirs under `mode`.
-      savedMode = (state?.chosenMode !== undefined ? state.chosenMode : state?.mode) ?? null;
+      savedMode = state?.chosenMode ?? null;
     }
   } catch {
     // Storage blocked or a corrupt record: the defaults stand.

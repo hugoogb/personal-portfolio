@@ -1,6 +1,6 @@
 /* Story mode (spec 3, 4.3). One document, three layouts, picked by html.mode-*.
    Text: a plain page. Story: the town pinned behind, a card per stop.
-   Explore: the document hidden (the HUD takes over, Task 4). */
+   Explore: the document hidden (the HUD takes over). */
 
 /* Story colours: the cards, rail, chip and landing text follow the town's
    day/night (the .night class), never the system theme, like the HUD. Text mode
@@ -154,9 +154,6 @@ html.mode-story .story-landing,
 html.mode-story .story-finale {
   text-align: center;
   text-shadow: 0 2px 18px rgb(0 0 0 / 0.25);
-}
-html.mode-story .story-landing,
-html.mode-story .story-finale {
   color: var(--st-ink);
 }
 /* Reduced motion: a cut between stops dips the town for a moment, then the
@@ -186,7 +183,6 @@ html.mode-explore #rail * {
   transition: none !important;
 }
 
-/* Phones: the building rides in the top ~55%, the card is a sheet below. */
 /* Phones: the section's top 56% frames the building; the card sheet starts below it and
    is read by scrolling on, over the town, while the camera holds (measureStops). */
 @media (max-width: 759px) {

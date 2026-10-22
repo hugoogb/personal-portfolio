@@ -5,15 +5,8 @@ const SIZE = 64;
 
 /** Same rule as --primary-fg in globals.css: a label that stays readable. */
 const contrastOn = (hex: string) => {
-  const value = hex.replace("#", "");
-  const full =
-    value.length === 3
-      ? value
-          .split("")
-          .map((c) => c + c)
-          .join("")
-      : value;
-  const [r, g, b] = [0, 2, 4].map((i) => parseInt(full.slice(i, i + 2), 16) / 255);
+  // Accents are always #rrggbb (isHexColor).
+  const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
   const channel = (c: number) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
   const luminance = 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
   return luminance > 0.45 ? "#000000" : "#ffffff";

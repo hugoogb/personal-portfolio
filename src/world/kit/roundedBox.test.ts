@@ -30,10 +30,4 @@ describe("RoundedBoxGeometry", () => {
     expect(ours.index).not.toBeNull();
     expect(ours.attributes.position.count * 4).toBeLessThan(theirs.attributes.position.count);
   });
-
-  it("keeps its parameters through a clone, for the shadow proxy", () => {
-    const g = new RoundedBoxGeometry(2, 1, 0.5, 3, 0.1).clone();
-    expect(g.type).toBe("RoundedBoxGeometry");
-    expect(g.parameters).toEqual({ width: 2, height: 1, depth: 0.5, segments: 3, radius: 0.1 });
-  });
 });

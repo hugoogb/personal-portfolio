@@ -188,11 +188,10 @@ describe("Town", () => {
     expect(screen.queryByTestId("world")).toBeNull();
   });
 
-  it("probes WebGL2 only when it is about to load, and marks the class", async () => {
+  it("probes WebGL2 once, when it is about to load", async () => {
     render(<Town />);
     await waitFor(() => expect(useBaseCamp.getState().town).toBe("ready"));
     expect(hasWebgl2).toHaveBeenCalledTimes(1);
-    expect(html.classList.contains("has-webgl")).toBe(false);
     expect(html.classList.contains("no-webgl")).toBe(false);
   });
 

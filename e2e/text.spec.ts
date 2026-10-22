@@ -3,7 +3,7 @@ import { pageMetrics } from "./pageMetrics";
 
 // These cover the story document as the page, in Text mode. The town and the
 // tour are covered elsewhere.
-const TEXT = JSON.stringify({ state: { mode: "text" }, version: 1 });
+const TEXT = JSON.stringify({ state: { chosenMode: "text" }, version: 1 });
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript((record) => {

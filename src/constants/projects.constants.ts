@@ -1,4 +1,4 @@
-import { TechId } from "@/constants/icons.constants";
+import { TechId } from "@/constants/tech.constants";
 import type { Project } from "@/types/project.types";
 
 import avatarGeneratorImg from "@/assets/images/avatar-generator.png";
@@ -22,7 +22,6 @@ const srcSet = (small: string, large: string) => `${small} 640w, ${large} 1280w`
 
 export const PROJECTS: Project[] = [
   {
-    id: 0,
     name: "F1 Tracker",
     desc: "Every Formula 1 season since 1950 as an interactive analytics dashboard - results, records, lap timing and title permutations, served by a Python API over PostgreSQL.",
     techStack: {
@@ -32,14 +31,12 @@ export const PROJECTS: Project[] = [
       infra: [TechId.Docker, TechId.Vercel],
     },
     urlPreview: "https://f1-tracker.hugoogb.dev",
-    runsOn: "vercel · fastapi + postgres in docker",
     src: f1TrackerImg,
     srcSetWebp: srcSet(f1Tracker640, f1Tracker1280),
     stats: ["Self-hosted API + Postgres", "Docker images built in CI", "Weekly automated ingest"],
     repoUrl: "https://github.com/hugoogb/f1-tracker",
   },
   {
-    id: 1,
     name: "ReadLedger",
     desc: "A manga collection tracker that goes past a checklist - reading progress, yearly goals, what you've spent and what you've saved buying second-hand, with series data from MangaDex.",
     techStack: {
@@ -49,14 +46,12 @@ export const PROJECTS: Project[] = [
       infra: [TechId.Docker],
     },
     urlPreview: "https://readledger.app",
-    runsOn: "docker · postgres + pgbouncer",
     src: readledgerImg,
     srcSetWebp: srcSet(readledger640, readledger1280),
     stats: ["MangaDex import", "Passwordless email-code auth", "Spend & savings analytics"],
     repoUrl: "https://github.com/hugoogb/readledger",
   },
   {
-    id: 2,
     name: "Wrapped Things",
     desc: "A social counter for the things you actually do - gym visits, books, beers, flights. Log them, race friends head-to-head, and unwrap your week, month or year as a shareable Wrap.",
     techStack: {
@@ -68,14 +63,12 @@ export const PROJECTS: Project[] = [
     urlPreview: "https://wrappedthings.app",
     previewLabel: "Join the waitlist",
     status: "pre-launch",
-    runsOn: "expo · react native · supabase",
     src: wrappedThingsImg,
     srcSetWebp: srcSet(wrappedThings640, wrappedThings1280),
     stats: ["Local-first sync + realtime", "Shareable Wrap image export", "Row-level security"],
     closedSource: "Pre-launch · closed source",
   },
   {
-    id: 3,
     name: "Esto no es un restaurante",
     desc: 'A meal planner that answers "what do I cook today?" with dishes the family already makes, and says why it picked each one. Offline-first, in Spanish, invite-only.',
     techStack: {
@@ -86,7 +79,6 @@ export const PROJECTS: Project[] = [
     },
     urlPreview: "https://estonoesunrestaurante.com",
     previewLabel: "Open the app",
-    runsOn: "docker · caddy, nestjs, postgres",
     src: estonoesunrestauranteImg,
     srcSetWebp: srcSet(estonoesunrestaurante640, estonoesunrestaurante1280),
     stats: [
@@ -97,7 +89,6 @@ export const PROJECTS: Project[] = [
     closedSource: "Private household app · closed source",
   },
   {
-    id: 4,
     name: "@avatar-generator",
     desc: "A deterministic SVG avatar library: the same seed always gives the same avatar, across eleven styles. A core, one package per style, and renderers for React, Vue, Svelte, Angular and plain HTML.",
     techStack: {
@@ -112,6 +103,5 @@ export const PROJECTS: Project[] = [
     srcSetWebp: srcSet(avatarGenerator640, avatarGenerator1280),
     stats: ["Zero-dependency core", "One package per style", "Framework renderers + web component"],
     repoUrl: "https://github.com/hugoogb/avatar-generator",
-    npmUrl: "https://www.npmjs.com/org/avatar-generator",
   },
 ];

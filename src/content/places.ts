@@ -39,7 +39,6 @@ export const PLACES: Place[] = [
   {
     id: "hq",
     slug: "about",
-    zone: "centre",
     name: "Headquarters",
     label: "HQ",
     kind: "About",
@@ -55,7 +54,6 @@ export const PLACES: Place[] = [
   {
     id: "f1",
     slug: "f1-tracker",
-    zone: "outskirts",
     kind: "Service",
     pill: "Live",
     color: "#e5484d",
@@ -65,7 +63,6 @@ export const PLACES: Place[] = [
   {
     id: "rl",
     slug: "readledger",
-    zone: "centre",
     kind: "Service",
     pill: "Live",
     color: "#2f9e8f",
@@ -75,7 +72,6 @@ export const PLACES: Place[] = [
   {
     id: "wt",
     slug: "wrapped-things",
-    zone: "centre",
     kind: "App",
     pill: "Pre-launch",
     color: "#7c5cff",
@@ -85,7 +81,6 @@ export const PLACES: Place[] = [
   {
     id: "es",
     slug: "esto-no-es-un-restaurante",
-    zone: "seafront",
     kind: "App",
     pill: "Live",
     color: "#e0a526",
@@ -95,7 +90,6 @@ export const PLACES: Place[] = [
   {
     id: "av",
     slug: "avatar-generator",
-    zone: "industrial",
     kind: "Library",
     pill: "Live",
     color: "#3e63dd",
@@ -105,7 +99,6 @@ export const PLACES: Place[] = [
   {
     id: "yard",
     slug: "server-yard",
-    zone: "industrial",
     name: "Server Yard",
     kind: "Infrastructure",
     pill: "All systems up",
@@ -119,7 +112,6 @@ export const PLACES: Place[] = [
   {
     id: "stadium",
     slug: "stadium",
-    zone: "outskirts",
     name: "The Stadium",
     kind: "Football",
     pill: "Verdiblanco",
@@ -133,7 +125,6 @@ export const PLACES: Place[] = [
   {
     id: "arena",
     slug: "arena",
-    zone: "outskirts",
     name: "The Arena",
     kind: "Rocket League",
     pill: "Playable",
@@ -147,7 +138,6 @@ export const PLACES: Place[] = [
   {
     id: "board",
     slug: "departures",
-    zone: "seafront",
     name: "Departures",
     kind: "Where I work",
     pill: "Boarding",
@@ -161,7 +151,6 @@ export const PLACES: Place[] = [
   {
     id: "post",
     slug: "contact",
-    zone: "centre",
     name: "Post Office",
     kind: "Contact",
     pill: "Open",

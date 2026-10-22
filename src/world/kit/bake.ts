@@ -69,8 +69,14 @@ export function bakeStatic(root: THREE.Object3D, opts: BakeOptions = {}): number
       return;
     }
     const toRootM = new THREE.Matrix4().multiplyMatrices(toRoot, mesh.matrixWorld);
-    const geo = mesh.geometry.clone().applyMatrix4(toRootM);
-    const shadowGeo = mesh.castShadow ? (coarse(mesh.geometry)?.applyMatrix4(toRootM) ?? geo) : geo;
+    // Not clone(): it runs the geometry's constructor first, which builds a default sphere or
+    // rounded box only for copy() to overwrite it, and that was a third of the town's build.
+    const geo = new THREE.BufferGeometry().copy(mesh.geometry).applyMatrix4(toRootM);
+    // Only the shadow proxy draws these; without it (or for a mesh that casts none) skip the work.
+    const shadowGeo =
+      opts.shadowProxy && mesh.castShadow
+        ? (coarse(mesh.geometry)?.applyMatrix4(toRootM) ?? geo)
+        : null;
     let material = mesh.material;
     let matKey = material.uuid;
     if (isPlain(material) && !opts.keep?.has(material)) {
@@ -102,9 +108,11 @@ export function bakeStatic(root: THREE.Object3D, opts: BakeOptions = {}): number
       );
     }
     b.geos.push(geo);
-    shadowGeo.computeBoundingSphere();
-    // Specks cast no shadow worth drawing at this zoom.
-    if (shadowGeo.boundingSphere!.radius >= TINY) b.shadows.push(shadowGeo);
+    if (shadowGeo) {
+      shadowGeo.computeBoundingSphere();
+      // Specks cast no shadow worth drawing at this zoom.
+      if (shadowGeo.boundingSphere!.radius >= TINY) b.shadows.push(shadowGeo);
+    }
     b.meshes.push(mesh);
   };
   visit(root);
