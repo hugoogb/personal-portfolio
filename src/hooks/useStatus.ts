@@ -23,28 +23,9 @@ export const fetchStatus = async (signal?: AbortSignal): Promise<StatusMap | "un
   }
 };
 
-/** A request signal that aborts on timeout or unmount; AbortSignal.any is missing before Safari 17.4, Chrome 116 and Firefox 124. */
-const requestSignal = (unmount: AbortSignal): { signal: AbortSignal; done: () => void } => {
-  if (typeof AbortSignal.any === "function" && typeof AbortSignal.timeout === "function")
-    return { signal: AbortSignal.any([AbortSignal.timeout(TIMEOUT_MS), unmount]), done: () => {} };
-  const ac = new AbortController();
-  const abort = () => ac.abort();
-  const timer = window.setTimeout(abort, TIMEOUT_MS);
-  if (unmount.aborted) abort();
-  else unmount.addEventListener("abort", abort, { once: true });
-  return {
-    signal: ac.signal,
-    done: () => {
-      window.clearTimeout(timer);
-      unmount.removeEventListener("abort", abort);
-    },
-  };
-};
-
 /** Status on boot, then every five minutes while the tab is visible (spec 9.6). */
 export const useStatus = () => {
   useEffect(() => {
-    let alive = true;
     // Aborts the request in flight when the hook unmounts.
     const unmount = new AbortController();
     let seq = 0;
@@ -52,15 +33,20 @@ export const useStatus = () => {
     const tick = async () => {
       if (document.hidden) return;
       const mine = ++seq;
-      const req = requestSignal(unmount.signal);
+      // Each request gives up after 10 s, or at once on unmount.
+      const request = new AbortController();
+      const abort = () => request.abort();
+      const timer = window.setTimeout(abort, TIMEOUT_MS);
+      unmount.signal.addEventListener("abort", abort, { once: true });
       try {
-        const status = await fetchStatus(req.signal);
+        const status = await fetchStatus(request.signal);
         // An older response never overwrites a newer one.
-        if (!alive || mine < applied) return;
+        if (unmount.signal.aborted || mine < applied) return;
         applied = mine;
         useBaseCamp.getState().setStatus(status);
       } finally {
-        req.done();
+        window.clearTimeout(timer);
+        unmount.signal.removeEventListener("abort", abort);
       }
     };
     void tick();
@@ -70,7 +56,6 @@ export const useStatus = () => {
     };
     document.addEventListener("visibilitychange", onVisible);
     return () => {
-      alive = false;
       unmount.abort();
       window.clearInterval(id);
       document.removeEventListener("visibilitychange", onVisible);

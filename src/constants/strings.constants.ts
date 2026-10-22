@@ -14,10 +14,3 @@ export const CONTACT = {
   GITHUB: "https://github.com/hugoogb",
   LINKEDIN: "https://www.linkedin.com/in/hugoogb/",
 } as const;
-
-// Image alt text patterns
-export const ALT_TEXT = {
-  PROFILE: "Hugo García Benjumea",
-  PROJECT: (name: string) => `Screenshot of ${name}`,
-  SECTION: (title: string) => `${title} section`,
-} as const;

@@ -1,7 +1,6 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
-import { isPreview } from "@/hud/commands";
 import { useBaseCamp } from "@/store/store";
 import { rigState } from "@/world/lib/camera";
 import type { BuiltWorld } from "@/world/build";
@@ -31,7 +30,7 @@ declare global {
   }
 }
 
-/** Preview-only: where an egg is on the page (so e2e can click it), renderer counters, the camera and the clock. Does nothing on the live host. */
+/** Preview-only (World mounts it there): where an egg is on the page (so e2e can click it), renderer counters, the camera and the clock. */
 export function TestHooks({ world }: { world: BuiltWorld }) {
   const camera = useThree((s) => s.camera);
   const gl = useThree((s) => s.gl);
@@ -43,7 +42,6 @@ export function TestHooks({ world }: { world: BuiltWorld }) {
   });
   const canvas = gl.domElement;
   useEffect(() => {
-    if (!isPreview()) return;
     const v = new THREE.Vector3();
     const screenOf = (target: string) => {
       const life = world.kit.life;

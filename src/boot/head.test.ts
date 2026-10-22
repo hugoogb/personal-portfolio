@@ -55,7 +55,9 @@ const OPTS = {
 };
 /** A Date whose Barcelona hour is `h` (10 Oct is CEST, UTC+2). */
 const dateAt = (h: number) => new Date(Date.UTC(2026, 9, 10, h - 2, 0));
-const saved = (mode: string) => ({ bc: JSON.stringify({ state: { mode }, version: 1 }) });
+const saved = (mode: string) => ({
+  bc: JSON.stringify({ state: { chosenMode: mode }, version: 1 }),
+});
 const modes = (classes: Set<string>) => [...classes].filter((c) => c.startsWith("mode-"));
 
 const boot = (env: Env = {}) => {
@@ -106,7 +108,6 @@ describe("bootHead", () => {
   it("never probes WebGL: that waits for Town, after first paint", () => {
     const f = boot();
     expect(f.state.probed).toBe(false);
-    expect(f.classes.has("has-webgl")).toBe(false);
   });
 
   it("no longer lets a saved manual quality outrank reduced motion or Save-Data: the mode rules decide", () => {
@@ -136,12 +137,9 @@ describe("mode before first paint", () => {
       "mode-story",
     ]);
   });
-  it("reads the chosen mode first, and the legacy mode key when there is none", () => {
+  it("reads the chosen mode", () => {
     const record = (state: object) => ({ bc: JSON.stringify({ state, version: 1 }) });
-    expect(
-      modes(boot({ stored: record({ chosenMode: "text", mode: "explore" }) }).classes),
-    ).toEqual(["mode-text"]);
-    expect(modes(boot({ stored: record({ mode: "text" }) }).classes)).toEqual(["mode-text"]);
+    expect(modes(boot({ stored: record({ chosenMode: "text" }) }).classes)).toEqual(["mode-text"]);
     // A record written by the new store with nothing chosen: the signals decide.
     expect(modes(boot({ stored: record({ chosenMode: null }) }).classes)).toEqual(["mode-story"]);
     expect(

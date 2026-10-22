@@ -1,4 +1,4 @@
-import { TECH_GROUPS } from "@/constants/icons.constants";
+import { TECH } from "@/constants/tech.constants";
 
 export function StoryAbout() {
   return (
@@ -31,7 +31,9 @@ export function StoryAbout() {
           <li>EU &amp; US hours</li>
         </ul>
         <ul className="story-chips" aria-label="Stack">
-          {TECH_GROUPS.flatMap((g) => g.icons.map((icon) => <li key={icon.name}>{icon.name}</li>))}
+          {TECH.map((name) => (
+            <li key={name}>{name}</li>
+          ))}
         </ul>
       </div>
     </section>

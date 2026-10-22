@@ -93,10 +93,4 @@ export class RoundedBoxGeometry extends THREE.BufferGeometry {
       uvs[v * 2 + 1] = uvOf(face.v, radius, sides);
     }
   }
-
-  override copy(source: RoundedBoxGeometry): this {
-    super.copy(source);
-    this.parameters = { ...source.parameters };
-    return this;
-  }
 }

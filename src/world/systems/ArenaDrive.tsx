@@ -1,6 +1,7 @@
 import { useFrame, useThree } from "@react-three/fiber";
 import { useEffect, useMemo, useRef } from "react";
 import * as THREE from "three";
+import { isField } from "@/hud/keys";
 import { useBaseCamp } from "@/store/store";
 import type { BuiltWorld } from "@/world/build";
 import { CHEER_S } from "@/world/lib/eggs";
@@ -15,10 +16,6 @@ interface ArenaParts {
 
 const FOCUS_EVERY_S = 0.1;
 const NARROW_PX = 760;
-
-const isField = (t: EventTarget | null) =>
-  t instanceof HTMLElement &&
-  (t.isContentEditable || ["INPUT", "TEXTAREA", "SELECT"].includes(t.tagName));
 
 /** Drive the arena car: keys or a held pointer steer, the camera follows, goals score. */
 export function ArenaDrive({ world }: { world: BuiltWorld }) {

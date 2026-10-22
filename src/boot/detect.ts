@@ -14,13 +14,9 @@ type GpuResult = { tier: number; type: TierType };
  * detect-gpu's verdict as tier signals. A blocklisted GPU is tier 0; a GPU it
  * does not know (FALLBACK) tells us nothing, so the heuristics decide.
  */
-export const signalsFrom = (
-  gpu: GpuResult | null,
-  base: BaseSignals,
-  webgl2 = true,
-): TierSignals => ({
+export const signalsFrom = (gpu: GpuResult | null, base: BaseSignals): TierSignals => ({
   ...base,
-  webgl: webgl2 && (gpu ? gpu.type !== "WEBGL_UNSUPPORTED" : true),
+  webgl: gpu ? gpu.type !== "WEBGL_UNSUPPORTED" : true,
   gpuTier:
     gpu?.type === "BLOCKLISTED"
       ? 0
@@ -35,25 +31,17 @@ export const bootTier = (signals: TierSignals, mode: QualityMode) => {
   return { auto, tier: signals.webgl ? resolveTier(mode, auto) : (0 as Tier) };
 };
 
-const probed = new WeakMap<Window, boolean>();
-
 /**
- * The town needs WebGL2 (three r163+ has no WebGL1 path). The probe's context is
- * given back, and the answer kept: boot asks twice, and each probe is a context.
+ * The town needs WebGL2 (three r163+ has no WebGL1 path). The probe's context is given back at once.
  */
 export const hasWebgl2 = (win: Window = window): boolean => {
-  const known = probed.get(win);
-  if (known !== undefined) return known;
-  let ok = false;
   try {
     const gl = win.document.createElement("canvas").getContext("webgl2");
     gl?.getExtension("WEBGL_lose_context")?.loseContext();
-    ok = Boolean(gl);
+    return Boolean(gl);
   } catch {
-    ok = false;
+    return false;
   }
-  probed.set(win, ok);
-  return ok;
 };
 
 export const readSignals = async (win: Window = window): Promise<TierSignals> => {
@@ -79,5 +67,5 @@ export const readSignals = async (win: Window = window): Promise<TierSignals> =>
   } catch {
     gpu = null;
   }
-  return signalsFrom(gpu, base, hasWebgl2(win));
+  return signalsFrom(gpu, base);
 };

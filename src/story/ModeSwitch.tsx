@@ -40,7 +40,8 @@ export function ModeSwitch() {
       i = (i + step + OPTIONS.length) % OPTIONS.length;
       if (!off(i)) break;
     }
-    if (i === from || off(i)) return;
+    // At most one option is ever off, so the loop always lands on one that is not.
+    if (i === from) return;
     refs.current[i]?.focus();
     if (OPTIONS[i]!.mode !== mode) OPTIONS[i]!.go();
   };
@@ -48,7 +49,7 @@ export function ModeSwitch() {
     <div className="mode-switch" role="radiogroup" aria-label="View">
       {OPTIONS.map((o, i) => {
         const isExplore = o.mode === "explore";
-        const disabled = isExplore && blocked !== null;
+        const disabled = off(i);
         return (
           <button
             key={o.mode}

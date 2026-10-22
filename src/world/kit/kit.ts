@@ -20,12 +20,9 @@ export const CLAY = {
 
 export interface MatOpts {
   rough?: number;
-  metal?: number;
   emissive?: string;
   emissiveIntensity?: number;
   map?: THREE.Texture;
-  /** Use the map as the emissive map too (glowing signs). */
-  emissiveMap?: boolean;
   side?: THREE.Side;
   transparent?: boolean;
   opacity?: number;
@@ -95,13 +92,12 @@ export function createKit(seed = 1337) {
       transparent: !!o.transparent,
       opacity: o.opacity ?? 1,
       roughness: o.rough ?? CLAY.rough,
-      metalness: o.metal ?? 0,
+      metalness: 0,
     };
     if (o.map) params.map = o.map;
     if (o.emissive) {
       params.emissive = o.emissive;
       params.emissiveIntensity = o.emissiveIntensity ?? 0;
-      if (o.emissiveMap && o.map) params.emissiveMap = o.map;
     }
     return own(new THREE.MeshStandardMaterial(params));
   };
@@ -315,16 +311,8 @@ export function createKit(seed = 1337) {
     }
     return front;
   };
-  const door = (
-    parent: THREE.Object3D,
-    x: number,
-    z: number,
-    face: "z" | "x" = "z",
-    c = "#6b4a35",
-  ) =>
-    face === "z"
-      ? rbox(0.42, 0.7, 0.06, c, x, 0, z, parent, 0.03, false)
-      : rbox(0.06, 0.7, 0.42, c, x, 0, z, parent, 0.03, false);
+  const door = (parent: THREE.Object3D, x: number, z: number, c = "#6b4a35") =>
+    rbox(0.42, 0.7, 0.06, c, x, 0, z, parent, 0.03, false);
 
   const canvasTex = (w: number, h: number, draw: Draw) => {
     const canvas = document.createElement("canvas");
@@ -432,12 +420,11 @@ export function createKit(seed = 1337) {
     ball(0.16 * k, materials.leafA, x + 0.16 * k, 0.12 * k, z + 0.09 * k, g, 10);
     ball(0.13 * k, materials.leafB, x - 0.12 * k, 0.1 * k, z + 0.12 * k, g, 10);
   };
-  const stripeTex = (a: string, b: string, n = 8, vertical = true) =>
+  const stripeTex = (a: string, b: string, n = 8) =>
     canvasTex(128, 128, (c, w, h) => {
       for (let i = 0; i < n; i++) {
         c.fillStyle = i % 2 ? b : a;
-        if (vertical) c.fillRect((i * w) / n, 0, w / n, h);
-        else c.fillRect(0, (i * h) / n, w, h / n);
+        c.fillRect((i * w) / n, 0, w / n, h);
       }
     });
   const umbrella = (

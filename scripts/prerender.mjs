@@ -1,5 +1,5 @@
 /**
- * Bakes the rendered page into dist/index.html, which the client then hydrates.
+ * Bakes the rendered page into dist/index.html. The client never hydrates it (main.tsx).
  *
  * The site is one page that is identical for every visitor, so it is rendered
  * once, at build time. Without this the HTML is an empty <div id="root"> and

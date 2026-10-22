@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 // detect-gpu blocklists SwiftShader, so pin a manual quality; start in Story.
-const STORY = JSON.stringify({ state: { mode: "story", qualityMode: "Low" }, version: 1 });
+const STORY = JSON.stringify({ state: { chosenMode: "story", qualityMode: "Low" }, version: 1 });
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript((record) => {

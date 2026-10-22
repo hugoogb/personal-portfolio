@@ -5,15 +5,14 @@ import { liveCount } from "@/hud/pill";
 import { useBaseCamp, type Panel } from "@/store/store";
 import { clockText, nightAmount } from "@/world/lib/sun";
 
-const canFullscreen = () => typeof document !== "undefined" && document.fullscreenEnabled;
+const canFullscreen = () => document.fullscreenEnabled;
 
 /** Apple keyboards label the console shortcut with Command, everything else with Ctrl. */
-const consoleShortcut = () =>
-  typeof navigator !== "undefined" && /Mac|iPhone|iPad/.test(navigator.platform) ? "⌘K" : "Ctrl K";
+const consoleShortcut = () => (/Mac|iPhone|iPad/.test(navigator.platform) ? "⌘K" : "Ctrl K");
 
 const toggleFullscreen = () => {
   if (document.fullscreenElement) void document.exitFullscreen();
-  else void document.documentElement.requestFullscreen?.();
+  else void document.documentElement.requestFullscreen();
 };
 
 export function TopBar() {
