@@ -193,6 +193,15 @@ test.describe("on a phone", () => {
     await page.getByRole("button", { name: "Details" }).click();
     await expect(page.locator(".card__desc")).toContainText("hello@hugoogb.dev");
   });
+
+  test("the arena does not offer a drive without a keyboard", async ({ page }) => {
+    await page.goto("/#arena");
+    await ready(page);
+    await expect(card(page, "The Arena")).toBeVisible();
+    await expect(page.getByRole("button", { name: /Take the wheel/ })).toHaveCount(0);
+    await expect(page.getByRole("button", { name: /Needs a keyboard/ })).toBeDisabled();
+    await expect(page.getByRole("region", { name: "Driving" })).toHaveCount(0);
+  });
 });
 
 test("a device without WebGL2 keeps the story on the still image", async ({ page }) => {
