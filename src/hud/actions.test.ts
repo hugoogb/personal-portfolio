@@ -1,8 +1,11 @@
 // @vitest-environment jsdom
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { PLACE_BY_ID } from "@/content/places";
 import { gpuRenderer, runCommand, runPrimary } from "@/hud/actions";
 import { enterStory, enterText } from "@/story/transitions";
+import { useBaseCamp } from "@/store/store";
+import { VIEW_MAX } from "@/world/lib/camera";
+import { OVERVIEW } from "@/world/lib/map";
 
 vi.mock("@/story/transitions", () => ({
   enterStory: vi.fn(),
@@ -15,6 +18,40 @@ describe("runPrimary", () => {
     expect(PLACE_BY_ID.hq.primary).toEqual({ label: "About me", action: "story" });
     runPrimary(PLACE_BY_ID.hq);
     expect(enterStory).toHaveBeenCalled();
+  });
+});
+
+describe("touch-only devices", () => {
+  beforeEach(() => {
+    useBaseCamp.setState(useBaseCamp.getInitialState());
+    vi.stubGlobal("matchMedia", () => ({ matches: false }));
+  });
+  afterEach(() => vi.unstubAllGlobals());
+
+  it("do not start the drive from Q or the console, and say why", () => {
+    runPrimary(PLACE_BY_ID.arena);
+    runCommand({ id: "drive", label: "drive", run: { type: "drive" } });
+    const s = useBaseCamp.getState();
+    expect(s.driving).toBe(false);
+    expect(s.toasts.map((t) => t.text)).toEqual([
+      expect.stringContaining("keyboard"),
+      expect.stringContaining("keyboard"),
+    ]);
+  });
+
+  it("pull the overview back on a narrow screen", () => {
+    vi.stubGlobal("innerWidth", 390);
+    runPrimary(PLACE_BY_ID.yard);
+    expect(useBaseCamp.getState().goal).toMatchObject({ x: OVERVIEW.x, view: VIEW_MAX });
+  });
+});
+
+describe("runPrimary with a pointer", () => {
+  beforeEach(() => useBaseCamp.setState(useBaseCamp.getInitialState()));
+
+  it("starts the drive at the arena", () => {
+    runPrimary(PLACE_BY_ID.arena);
+    expect(useBaseCamp.getState()).toMatchObject({ driving: true, selected: "arena" });
   });
 });
 

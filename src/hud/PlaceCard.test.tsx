@@ -1,11 +1,15 @@
 // @vitest-environment jsdom
 import { act, fireEvent, render, screen } from "@testing-library/react";
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { PLACE_BY_ID } from "@/content/places";
 import { PlaceCard } from "@/hud/PlaceCard";
 import { useBaseCamp } from "@/store/store";
 
 beforeEach(() => useBaseCamp.setState(useBaseCamp.getInitialState()));
+afterEach(() => vi.unstubAllGlobals());
+
+/** A phone: no input points finely. */
+const touchOnly = () => vi.stubGlobal("matchMedia", () => ({ matches: false }));
 
 describe("PlaceCard", () => {
   it("shows a project's screenshot, honest status and a real link", () => {
@@ -48,5 +52,19 @@ describe("PlaceCard", () => {
     fireEvent.click(toggle);
     expect(toggle.getAttribute("aria-expanded")).toBe("true");
     expect(toggle.textContent).toBe("Less");
+  });
+
+  it("offers the drive with a pointer and keys", () => {
+    render(<PlaceCard place={PLACE_BY_ID.arena} />);
+    fireEvent.click(screen.getByRole("button", { name: /Take the wheel/ }));
+    expect(useBaseCamp.getState().driving).toBe(true);
+  });
+
+  it("does not offer the drive on a touch-only device", () => {
+    touchOnly();
+    render(<PlaceCard place={PLACE_BY_ID.arena} />);
+    expect(screen.queryByRole("button", { name: /Take the wheel/ })).toBeNull();
+    const q = screen.getByRole("button", { name: /Needs a keyboard/ });
+    expect(q.hasAttribute("disabled")).toBe(true);
   });
 });

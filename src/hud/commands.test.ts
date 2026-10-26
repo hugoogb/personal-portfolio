@@ -44,6 +44,14 @@ describe("time commands", () => {
   });
 });
 
+describe("drive command", () => {
+  it("is not offered on a touch-only device", () => {
+    expect(commandsFor(false).some((c) => c.id === "drive")).toBe(true);
+    expect(commandsFor(false, true).some((c) => c.id === "drive")).toBe(false);
+    expect(commandsFor(true, true).some((c) => c.run.type === "time")).toBe(true);
+  });
+});
+
 describe("isPreview", () => {
   afterEach(() => {
     vi.unstubAllEnvs();

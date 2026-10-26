@@ -456,6 +456,17 @@
 .hint__narrow {
   display: none;
 }
+/* A touch-only device (utils/input.ts) has no keys to show, whatever its width. */
+@media not (any-pointer: fine) {
+  .hint__wide,
+  .cmd kbd,
+  .hud-kbd {
+    display: none;
+  }
+  .hint__narrow {
+    display: inline;
+  }
+}
 
 /* Panels: settings and trophies */
 .panel {

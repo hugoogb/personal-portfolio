@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { stepPlace } from "@/content/places";
 import type { Place } from "@/content/types";
-import { runPrimary } from "@/hud/actions";
+import { canRunPrimary, runPrimary } from "@/hud/actions";
 import { pillFor } from "@/hud/pill";
 import { useBaseCamp } from "@/store/store";
 
@@ -78,10 +78,15 @@ export function PlaceCard({ place }: { place: Place }) {
             <kbd>Q</kbd>
             <span>{place.primary.label}</span>
           </a>
-        ) : (
+        ) : canRunPrimary(place) ? (
           <button type="button" className="cmd cmd--primary" onClick={() => runPrimary(place)}>
             <kbd>Q</kbd>
             <span>{place.primary.label}</span>
+          </button>
+        ) : (
+          <button type="button" className="cmd cmd--primary" disabled title="Needs a keyboard">
+            <kbd>Q</kbd>
+            <span>Needs a keyboard</span>
           </button>
         )}
         {place.secondary ? (

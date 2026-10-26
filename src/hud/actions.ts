@@ -4,6 +4,8 @@ import type { Place } from "@/content/types";
 import type { Command } from "@/hud/commands";
 import { enterStory, enterText } from "@/story/transitions";
 import { useBaseCamp } from "@/store/store";
+import { isTouchOnly } from "@/utils/input";
+import { NARROW_WIDTH, VIEW_MAX } from "@/world/lib/camera";
 import { OVERVIEW } from "@/world/lib/map";
 
 /** Keyboard shortcuts open links here; card clicks use real <a> tags. */
@@ -20,6 +22,19 @@ export const copyEmail = async () => {
   }
 };
 
+/** Whether a place's primary action can run on this device; links always can. */
+export const canRunPrimary = (place: Place) => place.primary.action !== "drive" || !isTouchOnly();
+
+const NO_KEYBOARD = "Driving needs a keyboard: try it on a computer";
+
+/** Every way into drive mode (card, Q, console) comes through here. */
+const drive = () => {
+  const s = useBaseCamp.getState();
+  if (isTouchOnly()) return s.toast(NO_KEYBOARD);
+  s.select("arena");
+  s.setDriving(true);
+};
+
 export const runPrimary = (place: Place) => {
   const s = useBaseCamp.getState();
   if (place.primary.href) return openLink(place.primary.href);
@@ -27,12 +42,17 @@ export const runPrimary = (place: Place) => {
     case "story":
       return enterStory();
     case "overview":
-      return s.focus(OVERVIEW.x, OVERVIEW.z, OVERVIEW.view);
+      // A portrait phone sees a third of a desktop's width: pull back as far as Explore allows.
+      return s.focus(
+        OVERVIEW.x,
+        OVERVIEW.z,
+        window.innerWidth < NARROW_WIDTH ? VIEW_MAX : OVERVIEW.view,
+      );
     case "wave":
       s.startWave();
       return s.toast("Wave started in the stands");
     case "drive":
-      return s.setDriving(true);
+      return drive();
     case "copyEmail":
       return void copyEmail();
   }
@@ -76,8 +96,7 @@ export const runCommand = (command: Command) => {
     case "go":
       return s.select(command.run.id);
     case "drive":
-      s.select("arena");
-      return s.setDriving(true);
+      return drive();
     case "mode":
       return command.run.mode === "story" ? enterStory() : enterText();
     case "copyEmail":
