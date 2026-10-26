@@ -35,9 +35,14 @@ const TIME_COMMANDS: Command[] = [
   { id: "live", label: "live", run: { type: "time", hour: null } },
 ];
 
-/** "night" and "day" exist to check the lighting; they are not offered on the live site (spec 4.3). */
-export const commandsFor = (preview: boolean): Command[] =>
-  preview ? [...COMMANDS, ...TIME_COMMANDS] : COMMANDS;
+/**
+ * "night" and "day" exist to check the lighting; they are not offered on the live site (spec 4.3).
+ * "drive" needs a keyboard, so a touch-only device is not offered it.
+ */
+export const commandsFor = (preview: boolean, touchOnly = false): Command[] => {
+  const list = preview ? [...COMMANDS, ...TIME_COMMANDS] : COMMANDS;
+  return touchOnly ? list.filter((c) => c.run.type !== "drive") : list;
+};
 
 export const isPreview = () =>
   import.meta.env.DEV || !/(^|\.)hugoogb\.dev$/.test(window.location.hostname);
