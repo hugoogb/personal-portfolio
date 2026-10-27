@@ -1,5 +1,5 @@
-import { useEffect } from "react";
 import { DEFAULT_COLOR } from "@/constants/colors.constants";
+import { baseCamp } from "@/store/core";
 
 const SIZE = 64;
 
@@ -42,35 +42,41 @@ const draw = (color: string): string | null => {
  * icon is better than a generated one, and this should read as a reward for
  * having touched the picker rather than a replacement for the brand.
  */
-export const useAccentFavicon = (color: string) => {
-  useEffect(() => {
-    document.querySelector('meta[name="theme-color"]')?.setAttribute("content", color);
+const paint = (color: string) => {
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content", color);
 
-    const generated = document.getElementById("accent-favicon");
-    const isDefault = color.toLowerCase() === DEFAULT_COLOR.toLowerCase();
+  const generated = document.getElementById("accent-favicon");
+  const isDefault = color.toLowerCase() === DEFAULT_COLOR.toLowerCase();
 
-    if (isDefault) {
-      generated?.remove();
-      document
-        .querySelectorAll<HTMLLinkElement>('link[rel="icon"]:not(#accent-favicon)')
-        .forEach((link) => link.removeAttribute("disabled"));
-      return;
-    }
-
-    const href = draw(color);
-    if (!href) return;
-
-    // Hide the shipped icons rather than delete them: switching back to the
-    // default accent has to be able to restore them.
+  if (isDefault) {
+    generated?.remove();
     document
       .querySelectorAll<HTMLLinkElement>('link[rel="icon"]:not(#accent-favicon)')
-      .forEach((link) => link.setAttribute("disabled", ""));
+      .forEach((link) => link.removeAttribute("disabled"));
+    return;
+  }
 
-    const link = (generated as HTMLLinkElement | null) ?? document.createElement("link");
-    link.id = "accent-favicon";
-    link.rel = "icon";
-    link.type = "image/png";
-    link.href = href;
-    if (!generated) document.head.appendChild(link);
-  }, [color]);
+  const href = draw(color);
+  if (!href) return;
+
+  // Hide the shipped icons rather than delete them: switching back to the
+  // default accent has to be able to restore them.
+  document
+    .querySelectorAll<HTMLLinkElement>('link[rel="icon"]:not(#accent-favicon)')
+    .forEach((link) => link.setAttribute("disabled", ""));
+
+  const link = (generated as HTMLLinkElement | null) ?? document.createElement("link");
+  link.id = "accent-favicon";
+  link.rel = "icon";
+  link.type = "image/png";
+  link.href = href;
+  if (!generated) document.head.appendChild(link);
+};
+
+/** Paints the accent now and on every change; returns the cleanup. */
+export const startAccentFavicon = () => {
+  paint(baseCamp.getState().accent);
+  return baseCamp.subscribe((s, prev) => {
+    if (s.accent !== prev.accent) paint(s.accent);
+  });
 };

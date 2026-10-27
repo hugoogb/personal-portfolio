@@ -36,7 +36,7 @@ src/
 ├── types/          # TypeScript types
 ├── utils/          # Utility functions
 ├── App.tsx         # Main app component
-└── main.tsx        # Entry point
+└── main.ts         # Entry point
 ```
 
 ## Live Demo

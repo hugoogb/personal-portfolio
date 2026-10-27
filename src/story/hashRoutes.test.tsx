@@ -4,10 +4,11 @@ import { act } from "react";
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import type { Mode } from "@/boot/mode";
 import { useBaseCamp } from "@/store/store";
-import { useHashRoutes } from "@/story/useHashRoutes";
+import { useEffect } from "react";
+import { startHashRoutes } from "@/story/hashRoutes";
 
 function Routes() {
-  useHashRoutes();
+  useEffect(startHashRoutes, []);
   return null;
 }
 
