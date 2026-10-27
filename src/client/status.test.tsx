@@ -1,14 +1,15 @@
 // @vitest-environment jsdom
 import { render, waitFor } from "@testing-library/react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { fetchStatus, useStatus } from "@/hooks/useStatus";
+import { useEffect } from "react";
+import { fetchStatus, startStatus } from "@/client/status";
 import { useBaseCamp } from "@/store/store";
 
 const json = (body: unknown, ok = true) =>
   Promise.resolve({ ok, json: () => Promise.resolve(body) } as Response);
 
 function Probe() {
-  useStatus();
+  useEffect(startStatus, []);
   return null;
 }
 
@@ -68,7 +69,7 @@ describe("fetchStatus timeout", () => {
   });
 });
 
-describe("useStatus", () => {
+describe("startStatus", () => {
   it("never lets an older response overwrite a newer one", async () => {
     vi.useFakeTimers();
     try {
@@ -101,7 +102,7 @@ describe("useStatus", () => {
   });
 });
 
-describe("useStatus requests", () => {
+describe("startStatus requests", () => {
   it("loads status with no unhandled rejection", async () => {
     const rejections: unknown[] = [];
     const onRej = (e: unknown) => rejections.push(e);

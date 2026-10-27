@@ -1,6 +1,6 @@
 import type { PlaceId } from "@/content/types";
 import { STOPS, stopIndexForPlace } from "@/content/tour";
-import { useBaseCamp, type BaseCampState } from "@/store/store";
+import { baseCamp, type BaseCampState } from "@/store/core";
 import { readStops, stopInView } from "@/story/progress";
 import { prefersReducedMotion } from "@/utils/motion";
 
@@ -69,7 +69,7 @@ const land = (i: number, y: number | null) => {
  * comes back at the device's own tier, or Low when that pick was Lite too.
  */
 export const enterExplore = (place?: PlaceId, { chosen = true }: How = {}) => {
-  const s = useBaseCamp.getState();
+  const s = baseCamp.getState();
   if (exploreBlocked(s)) return;
   // Text has no driver, so its stop is measured now; Story's is the driver's.
   const stop = s.mode === "text" ? (stopInView() ?? s.stop) : s.stop;
@@ -88,7 +88,7 @@ export const enterExplore = (place?: PlaceId, { chosen = true }: How = {}) => {
 };
 
 export const enterStory = (place?: PlaceId | null, { chosen = true }: How = {}) => {
-  const s = useBaseCamp.getState();
+  const s = baseCamp.getState();
   let i: number;
   let y: number | null = null;
   if (s.mode === "text") {
@@ -110,7 +110,7 @@ export const enterStory = (place?: PlaceId | null, { chosen = true }: How = {}) 
 };
 
 export const enterText = ({ chosen = true }: How = {}) => {
-  const s = useBaseCamp.getState();
+  const s = baseCamp.getState();
   if (chosen) s.chooseMode("text");
   if (s.mode === "text") return;
   const i = s.mode === "explore" ? stopLeavingExplore(s) : s.stop;
