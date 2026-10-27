@@ -5,8 +5,9 @@ import type { PlaceId } from "@/content/types";
 import { useBaseCamp } from "@/store/store";
 import { enterExplore, enterStory, enterText } from "@/story/transitions";
 import { Story } from "@/story/Story";
-import { useStoryDriver } from "@/story/useStoryDriver";
-import { useStoryStatus } from "@/story/useStoryStatus";
+import { useEffect } from "react";
+import { startStoryDriver } from "@/story/storyDriver";
+import { startStoryStatus } from "@/story/storyStatus";
 
 const reduced = vi.hoisted(() => ({ value: false }));
 vi.mock("@/utils/motion", () => ({
@@ -15,8 +16,14 @@ vi.mock("@/utils/motion", () => ({
 }));
 
 function Driver() {
-  useStoryDriver();
-  useStoryStatus();
+  useEffect(() => {
+    const driver = startStoryDriver();
+    const status = startStoryStatus();
+    return () => {
+      driver();
+      status();
+    };
+  }, []);
   return null;
 }
 
@@ -48,8 +55,8 @@ beforeEach(() => {
 
 afterEach(cleanup);
 
-describe("useStoryDriver", () => {
-  it("resuming Story at place Y after a scroll at X never announces X", () => {
+describe("startStoryDriver", () => {
+  it("resuming Story at place Y after a scroll at X never announces X", async () => {
     render(<Driver />);
     setScroll(focus(3)); // ReadLedger
     act(() => useBaseCamp.setState({ mode: "explore", selected: "es" }));
@@ -60,7 +67,7 @@ describe("useStoryDriver", () => {
         value: o.top,
         configurable: true,
       })) as typeof window.scrollTo;
-    act(() => enterStory());
+    await act(async () => enterStory());
     window.scrollTo = realScrollTo;
     expect(arrive).not.toHaveBeenCalledWith("rl");
     expect(arrive).toHaveBeenCalledWith("es");
@@ -157,7 +164,7 @@ describe("switching modes keeps the position", () => {
     window.scrollTo = realScrollTo;
   });
 
-  it("Story -> Explore -> Story comes back to the same scroll position, announcing only that stop", () => {
+  it("Story -> Explore -> Story comes back to the same scroll position, announcing only that stop", async () => {
     render(<Driver />);
     setScroll(focus(4) + 100); // Wrapped Things, a little past its centre
     act(() => enterExplore());
@@ -172,7 +179,7 @@ describe("switching modes keeps the position", () => {
       replace(d, u, url);
     };
     try {
-      act(() => enterStory());
+      await act(async () => enterStory());
     } finally {
       history.replaceState = replace;
     }
@@ -182,11 +189,11 @@ describe("switching modes keeps the position", () => {
     expect(arrive.mock.calls).toEqual([["wt"]]);
   });
 
-  it("Text -> Story lands on the section read in Text, not the stale stop", () => {
+  it("Text -> Story lands on the section read in Text, not the stale stop", async () => {
     useBaseCamp.setState({ mode: "text", stop: 4, selected: "wt" });
     render(<Driver />);
     setScroll(focus(7)); // Contact, read in Text
-    act(() => enterStory());
+    await act(async () => enterStory());
     expect(useBaseCamp.getState().mode).toBe("story");
     expect(useBaseCamp.getState().stop).toBe(7);
     expect(location.hash).toBe("#contact");
@@ -226,7 +233,7 @@ describe("switching modes keeps the position", () => {
   });
 });
 
-describe("useStoryStatus", () => {
+describe("startStoryStatus", () => {
   it("fills the pills from the status, and hides them while it is unknown", () => {
     render(<Driver />);
     const pill = document.querySelector<HTMLElement>('[data-status-for="rl"]')!;

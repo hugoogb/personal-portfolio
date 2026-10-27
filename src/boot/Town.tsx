@@ -8,9 +8,11 @@ import { enterStory } from "@/story/transitions";
 import { effectsEnabled } from "@/world/effects/effectsGate";
 
 interface Loaded {
-  Hud: ComponentType;
   World: ComponentType<{ onReady: () => void }>;
 }
+
+/** Only Explore shows the HUD, so Story never downloads it (nor its stylesheet and label font). */
+const loadHud = () => import("@/hud/Hud").then((m) => m.Hud);
 
 const html = () => document.documentElement;
 
@@ -32,6 +34,7 @@ export function Town() {
   const town = useBaseCamp((s) => s.town);
   const tier = useBaseCamp((s) => s.tier);
   const [loaded, setLoaded] = useState<Loaded | null>(null);
+  const [Hud, setHud] = useState<ComponentType | null>(null);
   const wanted = mode !== "text";
   const started = useRef(false);
   const timer = useRef<number | undefined>(undefined);
@@ -93,8 +96,8 @@ export function Town() {
         return off(false);
       }
       // The town's code downloads while the GPU check runs, not after it.
-      const chunks = Promise.all([import("@/hud/Hud"), import("@/world/World")]);
-      chunks.catch(() => {});
+      const chunk = import("@/world/World");
+      chunk.catch(() => {});
       const store = useBaseCamp.getState();
       const chosen = bootTier(await readSignals(), store.qualityMode);
       if (cancelled) return;
@@ -108,10 +111,10 @@ export function Town() {
       // High draws through the composer: fetch it alongside the world, so it is in by the first
       // frame. A failure here is left to the world's own import, whose boundary drops the effects.
       if (effectsEnabled(chosen.tier)) import("@/world/effects/Effects").catch(() => {});
-      const [hud, world] = await chunks;
+      const world = await chunk;
       if (cancelled) return;
       settled = true;
-      setLoaded({ Hud: hud.Hud, World: world.default });
+      setLoaded({ World: world.default });
     };
     const kick = () => {
       if (cancelled) return;
@@ -168,6 +171,20 @@ export function Town() {
     if (loaded && tier === 0) off(false);
   }, [loaded, tier, off]);
 
+  // Fetched with the world in Explore, so it is in by the first frame; Story fetches it on Explore.
+  const hudWanted = mode === "explore" && town !== "off";
+  useEffect(() => {
+    if (!hudWanted || Hud) return;
+    let cancelled = false;
+    loadHud().then(
+      (component) => !cancelled && setHud(() => component),
+      () => !cancelled && off(true),
+    );
+    return () => {
+      cancelled = true;
+    };
+  }, [hudWanted, Hud, off]);
+
   const onReady = useCallback(() => {
     window.clearTimeout(timer.current);
     html().classList.add("town-ready");
@@ -182,7 +199,7 @@ export function Town() {
     <WorldBoundary onError={() => off(true)}>
       {createPortal(<loaded.World onReady={onReady} />, root)}
       {/* The HUD waits for the first frame: until then the still image shows (spec 3.4). */}
-      {mode === "explore" && town === "ready" && <loaded.Hud />}
+      {mode === "explore" && town === "ready" && Hud && <Hud />}
     </WorldBoundary>
   );
 }

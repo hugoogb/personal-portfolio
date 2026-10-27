@@ -1,0 +1,97 @@
+import { PROJECT_IDS } from "@/content/places";
+import { RAIL_STOPS, STOPS } from "@/content/tour";
+import type { Mode } from "@/boot/mode";
+import { baseCamp } from "@/store/core";
+import { currentStop, progress, readStops, stopProgress, storySections } from "@/story/progress";
+import { prefersReducedMotion } from "@/utils/motion";
+
+const ARRIVES = new Set<string>([...PROJECT_IDS, "post"]);
+
+/** Follows the scroll while Story is on screen; returns the cleanup. */
+const drive = () => {
+  const sections = storySections();
+  if (!sections.length) return;
+  let centers: number[] = [];
+  let last = -1;
+  const measure = () => {
+    centers = readStops(sections);
+  };
+  const announce = (i: number) => {
+    const stop = STOPS[i];
+    const s = baseCamp.getState();
+    s.setStop(i);
+    const url = stop.id === "top" ? location.pathname + location.search : `#${stop.anchor}`;
+    history.replaceState(history.state, "", url);
+    // A stop outside the rail (the finale) shows the nearest rail stop before it.
+    let at = i;
+    while (at > 0 && !STOPS[at].rail) at--;
+    const shown = STOPS[at];
+    document.querySelectorAll("[data-rail], [data-rail-chip]").forEach((a) => {
+      const id = a.getAttribute("data-rail") ?? a.getAttribute("data-rail-chip");
+      if (id === shown.id) a.setAttribute("aria-current", "true");
+      else a.removeAttribute("aria-current");
+    });
+    const railIndex = RAIL_STOPS.findIndex((r) => r.id === shown.id);
+    if (railIndex >= 0) {
+      const label = document.querySelector("[data-rail-label]");
+      const count = document.querySelector("[data-rail-count]");
+      if (label) label.textContent = shown.label;
+      if (count) count.textContent = `${railIndex + 1} / ${RAIL_STOPS.length}`;
+    }
+    if (stop.place) s.select(stop.place);
+    if (stop.place && ARRIVES.has(stop.place) && !prefersReducedMotion()) s.arrive(stop.place);
+  };
+  const update = () => {
+    const p = stopProgress(centers, window.scrollY + window.innerHeight / 2);
+    progress.index = p.index;
+    progress.fraction = p.fraction;
+    const i = currentStop(p);
+    if (i !== last) {
+      if (last >= 0 && prefersReducedMotion()) progress.cut++;
+      last = i;
+      announce(i);
+    }
+  };
+  const onResize = () => {
+    measure();
+    update();
+  };
+  measure();
+  update();
+  const ro = typeof ResizeObserver === "function" ? new ResizeObserver(onResize) : null;
+  const story = document.getElementById("story");
+  if (story) ro?.observe(story);
+  window.addEventListener("scroll", update, { passive: true });
+  window.addEventListener("resize", onResize);
+  return () => {
+    ro?.disconnect();
+    window.removeEventListener("scroll", update);
+    window.removeEventListener("resize", onResize);
+  };
+};
+
+/** Scroll position to tour stop (spec 5.3). Active in Story only; returns the cleanup. */
+export const startStoryDriver = () => {
+  let stop: (() => void) | undefined;
+  let seq = 0;
+  const sync = (mode: Mode) => {
+    stop?.();
+    stop = undefined;
+    if (mode !== "story") return;
+    // A microtask later, like an effect after a render: enterStory scrolls to its stop right
+    // after setting the mode, so the first announce sees the target and nothing on the way.
+    const mine = ++seq;
+    queueMicrotask(() => {
+      if (mine === seq && baseCamp.getState().mode === "story") stop = drive();
+    });
+  };
+  if (baseCamp.getState().mode === "story") stop = drive();
+  const unsubscribe = baseCamp.subscribe((s, prev) => {
+    if (s.mode !== prev.mode) sync(s.mode);
+  });
+  return () => {
+    seq++;
+    unsubscribe();
+    stop?.();
+  };
+};

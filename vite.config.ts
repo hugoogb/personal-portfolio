@@ -131,7 +131,7 @@ const preloadTown = (): Plugin => ({
         const chunk = ctx.bundle![file];
         if (chunk?.type === "chunk") chunk.imports.forEach(visit);
       };
-      for (const name of ["World", "Hud"]) {
+      for (const name of ["TownApp", "World", "Hud"]) {
         const chunk = byName(name);
         if (chunk) visit(chunk.fileName);
       }
