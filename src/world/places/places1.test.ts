@@ -5,7 +5,7 @@ import { PLACE_BY_ID } from "@/content/places";
 import type { PlaceId } from "@/content/types";
 import { stubCanvas } from "@/test/canvas";
 import { createKit, type Kit } from "@/world/kit/kit";
-import { buildGift } from "@/world/places/gift";
+import { buildTally } from "@/world/places/tally";
 import { buildHq } from "@/world/places/hq";
 import { buildLibrary } from "@/world/places/library";
 import { buildPostOffice } from "@/world/places/postOffice";
@@ -18,7 +18,7 @@ const CASES: [PlaceId, (kit: Kit) => THREE.Group][] = [
   ["hq", buildHq],
   ["rl", buildLibrary],
   ["post", buildPostOffice],
-  ["wt", buildGift],
+  ["wt", buildTally],
 ];
 
 const size = (g: THREE.Object3D) => new THREE.Box3().setFromObject(g);
@@ -68,15 +68,15 @@ describe("HQ", () => {
   });
 });
 
-describe("gift", () => {
-  it("keeps lifting its lid", () => {
+describe("tally counter", () => {
+  it("clicks its button", () => {
     const kit = createKit();
-    buildGift(kit);
-    const hinge = (kit.life.gift as { hinge: THREE.Object3D }).hinge;
-    expect(hinge.userData.dynamic).toBe(true);
-    kit.frame(0.1, 0, { night: 0, lit: 0, tier: 3 });
-    const a = hinge.rotation.x;
-    kit.frame(0.1, 1.4, { night: 0, lit: 0, tier: 3 });
-    expect(hinge.rotation.x).not.toBe(a);
+    buildTally(kit);
+    const button = (kit.life.tally as { button: THREE.Object3D }).button;
+    expect(button.userData.dynamic).toBe(true);
+    kit.frame(0.1, 1, { night: 0, lit: 0, tier: 3 });
+    const rest = button.position.y;
+    kit.frame(0.1, 2.51, { night: 0, lit: 0, tier: 3 });
+    expect(button.position.y).toBeLessThan(rest);
   });
 });

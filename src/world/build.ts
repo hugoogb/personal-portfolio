@@ -6,7 +6,7 @@ import { bakeStatic } from "@/world/kit/bake";
 import { createKit, type FrameEnv, type Kit } from "@/world/kit/kit";
 import { PROP_RINGS, ringOf } from "@/world/lib/buildIn";
 import { useBaseCamp } from "@/store/store";
-import { GLOW, type GiftLife } from "@/world/places/gift";
+import { GLOW, SCREEN, type TallyLife } from "@/world/places/tally";
 import { PLACE_BUILDERS } from "@/world/places/index";
 import { buildRoutes } from "@/world/traffic/model";
 import { buildTraffic } from "@/world/traffic/build";
@@ -88,7 +88,14 @@ export function* buildSteps(kit: Kit): Generator<void, BuiltWorld> {
       if (mesh.material === kit.materials.win) mesh.material = win;
       else if (mesh.material === kit.materials.winDim) mesh.material = winDim;
     });
-    const glows = id === "wt" ? [{ material: (kit.life.gift as GiftLife).glow, base: GLOW }] : [];
+    const tally = kit.life.tally as TallyLife;
+    const glows =
+      id === "wt"
+        ? [
+            { material: tally.glow, base: GLOW },
+            { material: tally.screen, base: SCREEN },
+          ]
+        : [];
     placeWindows[id] = { win, winDim, glows };
     keep.add(win);
     keep.add(winDim);

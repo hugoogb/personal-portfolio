@@ -22,7 +22,8 @@ describe("pillFor", () => {
   });
 
   it("keeps pre-launch amber even when the waitlist is up", () => {
-    expect(pillFor(PLACE_BY_ID.wt, { wt: { ok: true, ms: 80 } })).toEqual({
+    const waitlist = { ...PLACE_BY_ID.wt, pill: "Pre-launch", preLaunch: true };
+    expect(pillFor(waitlist, { wt: { ok: true, ms: 80 } })).toEqual({
       text: "Pre-launch",
       tone: "pre",
     });
