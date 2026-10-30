@@ -23,7 +23,7 @@ const srcSet = (small: string, large: string) => `${small} 640w, ${large} 1280w`
 export const PROJECTS: Project[] = [
   {
     name: "F1 Tracker",
-    desc: "Every Formula 1 season since 1950 as an interactive analytics dashboard - results, records, lap timing and title permutations, served by a Python API over PostgreSQL.",
+    desc: "Every Formula 1 season since 1950 as an interactive analytics dashboard - results, records, lap timing and title permutations. An AI race engineer answers questions straight from the data.",
     techStack: {
       languages: [TechId.Typescript, TechId.Python],
       frontend: [TechId.React, TechId.Nextjs, TechId.Tailwind],
@@ -33,7 +33,11 @@ export const PROJECTS: Project[] = [
     urlPreview: "https://f1-tracker.hugoogb.dev",
     src: f1TrackerImg,
     srcSetWebp: srcSet(f1Tracker640, f1Tracker1280),
-    stats: ["Self-hosted API + Postgres", "Docker images built in CI", "Weekly automated ingest"],
+    stats: [
+      "Self-hosted API + Postgres",
+      "AI chat with live data tools",
+      "Weekly automated ingest",
+    ],
     repoUrl: "https://github.com/hugoogb/f1-tracker",
   },
   {
@@ -53,20 +57,19 @@ export const PROJECTS: Project[] = [
   },
   {
     name: "Wrapped Things",
-    desc: "A social counter for the things you actually do - gym visits, books, beers, flights. Log them, race friends head-to-head, and unwrap your week, month or year as a shareable Wrap.",
+    desc: "An iPhone app that counts the things you actually do - gym visits, books, beers, flights. Log them, race friends head-to-head, and unwrap your week, month or year as a shareable Wrap.",
     techStack: {
       languages: [TechId.Typescript],
       frontend: [TechId.React, TechId.Expo],
       backend: [TechId.Supabase, TechId.Postgres],
       infra: [],
     },
-    urlPreview: "https://wrappedthings.app",
-    previewLabel: "Join the waitlist",
-    status: "pre-launch",
+    urlPreview: "https://apps.apple.com/app/wrapped-things/id6768630540",
+    previewLabel: "Get it on the App Store",
     src: wrappedThingsImg,
     srcSetWebp: srcSet(wrappedThings640, wrappedThings1280),
     stats: ["Local-first sync + realtime", "Shareable Wrap image export", "Row-level security"],
-    closedSource: "Pre-launch · closed source",
+    closedSource: "iOS app · closed source",
   },
   {
     name: "Esto no es un restaurante",
@@ -83,7 +86,7 @@ export const PROJECTS: Project[] = [
     srcSetWebp: srcSet(estonoesunrestaurante640, estonoesunrestaurante1280),
     stats: [
       "Offline-first PWA with idempotent replay",
-      "Explainable suggestion engine",
+      "Rules engine + AI meal pick",
       "Zod schemas shared web ↔ API",
     ],
     closedSource: "Private household app · closed source",

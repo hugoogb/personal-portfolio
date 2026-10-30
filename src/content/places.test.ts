@@ -110,9 +110,13 @@ describe("places", () => {
       label: "Open site",
       href: "https://f1-tracker.hugoogb.dev",
     });
-    expect(PLACE_BY_ID.wt.preLaunch).toBe(true);
+    expect(PLACE_BY_ID.wt.primary).toEqual({
+      label: "Get it on the App Store",
+      href: "https://apps.apple.com/app/wrapped-things/id6768630540",
+    });
+    expect(PLACE_BY_ID.wt.preLaunch).toBeUndefined();
     expect(PLACE_BY_ID.wt.secondary).toBeUndefined();
-    expect(PLACE_BY_ID.wt.closedNote).toBe("Pre-launch · closed source");
+    expect(PLACE_BY_ID.wt.closedNote).toBe("iOS app · closed source");
     expect(PLACE_BY_ID.rl.secondary?.href).toBe("https://github.com/hugoogb/readledger");
   });
 });

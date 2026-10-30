@@ -73,7 +73,7 @@ export const PLACES: Place[] = [
     id: "wt",
     slug: "wrapped-things",
     kind: "App",
-    pill: "Pre-launch",
+    pill: "Live",
     color: "#7c5cff",
     ...fromProject(project("Wrapped Things")),
     map: { x: -3.2, z: 3.6, r: 2.3, top: 3.6, zoom: 13 },
