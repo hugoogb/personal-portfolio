@@ -111,8 +111,8 @@ describe("places", () => {
       href: "https://f1-tracker.hugoogb.dev",
     });
     expect(PLACE_BY_ID.wt.primary).toEqual({
-      label: "Get it on the App Store",
-      href: "https://apps.apple.com/app/wrapped-things/id6768630540",
+      label: "Open site",
+      href: "https://wrappedthings.app",
     });
     expect(PLACE_BY_ID.wt.preLaunch).toBeUndefined();
     expect(PLACE_BY_ID.wt.secondary).toBeUndefined();
