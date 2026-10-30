@@ -5,7 +5,7 @@ import { buildArena } from "@/world/places/arena";
 import { buildCircuit } from "@/world/places/circuit";
 import { buildDepartures } from "@/world/places/departures";
 import { buildFactory } from "@/world/places/factory";
-import { buildGift } from "@/world/places/gift";
+import { buildTally } from "@/world/places/tally";
 import { buildHq } from "@/world/places/hq";
 import { buildLibrary } from "@/world/places/library";
 import { buildPostOffice } from "@/world/places/postOffice";
@@ -17,7 +17,7 @@ export const PLACE_BUILDERS: Record<PlaceId, (kit: Kit) => THREE.Group> = {
   hq: buildHq,
   f1: buildCircuit,
   rl: buildLibrary,
-  wt: buildGift,
+  wt: buildTally,
   es: buildRestaurant,
   av: buildFactory,
   yard: buildYard,

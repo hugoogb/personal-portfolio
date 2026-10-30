@@ -552,7 +552,7 @@ export function createKit(seed = 1337) {
     accent,
     paintAccent,
     pointLights: [] as THREE.PointLight[],
-    /** Named objects later phases drive (arena, stadium seats, ship, hat, LEDs, F1 cars, gift). */
+    /** Named objects later phases drive (arena, stadium seats, ship, hat, LEDs, F1 cars, tally counter). */
     life: {} as Record<string, unknown>,
     /** What the build-in animates. */
     buildIn: {
