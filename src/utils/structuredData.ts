@@ -16,7 +16,7 @@ const WEBSITE_ID = `${SITE}#website`;
  * describe the work without inviting "missing field" warnings in Search Console
  * that SoftwareApplication would raise for not having prices or ratings.
  */
-export const structuredData = (modified: Date) => ({
+export const structuredData = () => ({
   "@context": "https://schema.org",
   "@graph": [
     {
@@ -32,10 +32,9 @@ export const structuredData = (modified: Date) => ({
       "@type": "ProfilePage",
       "@id": `${SITE}#profile`,
       url: SITE,
-      name: "Hugo García Benjumea | Full-Stack Engineer",
+      name: "Hugo García Benjumea | Full-Stack Engineer in Barcelona",
       isPartOf: { "@id": WEBSITE_ID },
       mainEntity: { "@id": PERSON_ID },
-      dateModified: modified.toISOString(),
     },
     {
       "@type": "Person",

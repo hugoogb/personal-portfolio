@@ -7,9 +7,12 @@ export function StoryFinale() {
       aria-labelledby="explore-title"
     >
       <div className="story-finale">
-        <h2 id="explore-title" className="story-finale__title">
+        <p
+          id="explore-title"
+          className="font-display text-2xl font-bold leading-tight tracking-tight sm:text-3xl md:text-4xl"
+        >
           That's the tour.
-        </h2>
+        </p>
         <button type="button" className="story-btn story-btn--primary" data-explore-cta disabled>
           Explore the town &rarr;
         </button>
