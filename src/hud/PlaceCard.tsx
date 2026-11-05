@@ -27,12 +27,7 @@ export function PlaceCard({ place }: { place: Place }) {
       {place.image && (
         <picture className="card__banner">
           <source type="image/webp" srcSet={place.image.srcSetWebp} sizes="420px" />
-          <img
-            src={place.image.src}
-            alt={`Screenshot of ${place.name}`}
-            loading="lazy"
-            decoding="async"
-          />
+          <img src={place.image.src} alt={place.image.alt} loading="lazy" decoding="async" />
         </picture>
       )}
       <div className="card__head">

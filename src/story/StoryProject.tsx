@@ -21,7 +21,7 @@ export function StoryProject({ place }: { place: Place }) {
             />
             <img
               src={place.image.src}
-              alt={`Screenshot of ${place.name}`}
+              alt={place.image.alt}
               width={1280}
               height={800}
               loading="lazy"
@@ -30,11 +30,11 @@ export function StoryProject({ place }: { place: Place }) {
             />
           </picture>
         )}
-        <h2 id={`${place.slug}-title`} className="story-card__title">
-          {place.name}
+        <div className="story-card__title">
+          <h2 id={`${place.slug}-title`}>{place.name}</h2>
           {place.preLaunch && <span className="story-badge">pre-launch</span>}
           <span className="story-status" data-status-for={place.id} hidden />
-        </h2>
+        </div>
         <p className="story-text">{place.desc}</p>
         {place.stats.length > 0 && (
           <ul className="story-chips">

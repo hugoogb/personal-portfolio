@@ -14,7 +14,7 @@ const touchOnly = () => vi.stubGlobal("matchMedia", () => ({ matches: false }));
 describe("PlaceCard", () => {
   it("shows a project's screenshot, honest status and a real link", () => {
     render(<PlaceCard place={PLACE_BY_ID.rl} />);
-    expect(screen.getByRole("img", { name: "Screenshot of ReadLedger" })).toBeTruthy();
+    expect(screen.getByRole("img", { name: /^ReadLedger landing page/ })).toBeTruthy();
     expect(screen.getByText("Status unavailable")).toBeTruthy();
     const open = screen.getByRole("link", { name: /Open site/ });
     expect(open.getAttribute("href")).toBe("https://readledger.app");

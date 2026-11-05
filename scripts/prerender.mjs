@@ -22,9 +22,8 @@ if (!template.includes(ROOT)) {
   throw new Error(`prerender: ${ROOT} not found in dist/index.html`);
 }
 
-const now = new Date();
 // `<` escaped so no string in the data can close the script element early.
-const jsonLd = JSON.stringify(structuredData(now)).replace(/</g, "\\u003c");
+const jsonLd = JSON.stringify(structuredData()).replace(/</g, "\\u003c");
 
 // The page's one stylesheet (about 8 KB compressed) goes into the HTML: as a file it is
 // a round trip that first paint waits on, which on slow 4G is most of a second's budget.
@@ -39,14 +38,6 @@ const html = template
   .replace("</head>", `  <script type="application/ld+json">${jsonLd}</script>\n  </head>`);
 
 await writeFile(new URL("index.html", dist), html);
-
-// The page changes on every deploy, so the deploy date is the honest lastmod.
-const sitemapUrl = new URL("sitemap.xml", dist);
-const sitemap = await readFile(sitemapUrl, "utf8");
-await writeFile(
-  sitemapUrl,
-  sitemap.replace("</loc>", `</loc>\n    <lastmod>${now.toISOString().slice(0, 10)}</lastmod>`),
-);
 
 await rm(ssr, { recursive: true, force: true });
 
