@@ -67,7 +67,7 @@ test("/#readledger selects ReadLedger, with its screenshot", async ({ page }) =>
   await expect(card(page, "ReadLedger")).toBeVisible();
   // The story document stays in the DOM under the town, so scope to the card.
   const shot = page.getByRole("region", { name: "ReadLedger, Service" });
-  await expect(shot.getByRole("img", { name: "Screenshot of ReadLedger" })).toBeVisible();
+  await expect(shot.getByRole("img", { name: /^ReadLedger landing page/ })).toBeVisible();
 });
 
 test("the arrow keys cycle and Esc returns to the story at that place", async ({ page }) => {

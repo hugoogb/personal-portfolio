@@ -18,6 +18,8 @@ export interface Project {
   status?: string;
   /** Original PNG/JPG, used as the <picture> fallback. */
   src: string;
+  /** What the screenshot shows. Search reads it, so it describes the picture, not the project. */
+  alt: string;
   /** Responsive WebP candidates ("<url> 640w, <url> 1280w") preferred over `src`. */
   srcSetWebp?: string;
   /** Public repository, when the code is open. */

@@ -1,3 +1,4 @@
+import { inject as injectAnalytics } from "@vercel/analytics";
 import { injectSpeedInsights } from "@vercel/speed-insights";
 import { startAccentFavicon } from "@/client/accentFavicon";
 import { startStatus } from "@/client/status";
@@ -48,6 +49,7 @@ const wireRailChip = () => {
  * tour, the status pills, the favicon. React comes with the town, which Text never loads.
  */
 export const startClient = (root: HTMLElement) => {
+  injectAnalytics();
   injectSpeedInsights();
   startAccentFavicon();
   // Polling runs in every mode; the pills and the tour only matter in the story document.

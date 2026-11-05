@@ -43,7 +43,7 @@ export interface Place {
   /** The E button becomes this link when a place has no stack to show. */
   tertiary?: PlaceLink;
   /** Card banner and story picture, projects only. */
-  image?: { src: string; srcSetWebp: string };
+  image?: { src: string; srcSetWebp: string; alt: string };
   /** Shown instead of a source link when the code is private. */
   closedNote?: string;
   /** World placement: centre, selection-ring radius, label height, camera zoom. */

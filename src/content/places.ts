@@ -24,7 +24,7 @@ const fromProject = (p: Project) => ({
     ...p.techStack.backend,
     ...p.techStack.infra,
   ] as string[],
-  image: { src: p.src, srcSetWebp: p.srcSetWebp ?? "" },
+  image: { src: p.src, srcSetWebp: p.srcSetWebp ?? "", alt: p.alt },
   preLaunch: p.status === "pre-launch" || undefined,
   primary: { label: p.previewLabel ?? "Open site", href: p.urlPreview },
   secondary: p.repoUrl ? { label: "Source", href: p.repoUrl } : undefined,
