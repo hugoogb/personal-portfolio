@@ -9,12 +9,6 @@ import {
 } from "@/boot/tiers";
 import { useBaseCamp } from "@/store/store";
 
-/**
- * The frame-rate governor (spec 8) wired to rendering. It restarts its grace
- * period whenever the tier or the pixel ratio changes or rendering resumes, and
- * sits out idle stretches (30 fps by design), so neither reads as slowness.
- * Lowering the pixel ratio is silent; a tier change shows a toast.
- */
 export function Governor() {
   const gov = useRef(initialGovernor());
 
@@ -26,7 +20,6 @@ export function Governor() {
       if (
         s.tier !== prev.tier ||
         s.dpr !== prev.dpr ||
-        // A mode change can resize the canvas, so its frame times start over.
         s.mode !== prev.mode ||
         s.idle !== prev.idle
       )
@@ -41,7 +34,6 @@ export function Governor() {
 
   useFrame((_, dt) => {
     const s = useBaseCamp.getState();
-    // Idle frames are capped on purpose: they say nothing about what the device can do.
     if (s.idle) return;
     const before = gov.current;
     const { state, step } = governorTick(before, dt, {
@@ -56,7 +48,6 @@ export function Governor() {
     if (step?.kind === "tier") {
       const dpr = s.dpr;
       s.setTier(step.tier);
-      // A step down never raises the resolution (High's 1.25 is below Medium's 1.5).
       s.setDpr(dpr);
       s.toast(`Running smoother: quality set to ${TIER_NAMES[step.tier]}`);
     }

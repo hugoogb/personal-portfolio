@@ -1,4 +1,3 @@
-/** What the card slot shows when nothing is selected (spec 4.1). */
 export function Hint() {
   return (
     <p className="hint glass">

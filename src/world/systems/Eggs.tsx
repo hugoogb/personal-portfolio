@@ -43,11 +43,6 @@ const cursor = (v: string) => {
   document.body.style.cursor = v;
 };
 
-/**
- * The easter eggs: the straw hat sails the caravel, the F1 cars flash purple on a
- * click, and the stadium wave and the fans' cheer move their instances. Each egg has
- * its own invisible hit target (three.js raycasts invisible meshes).
- */
 export function Eggs({ world }: { world: BuiltWorld }) {
   const { kit } = world;
   const hat = kit.life.hat as THREE.Object3D | undefined;
@@ -68,7 +63,6 @@ export function Eggs({ world }: { world: BuiltWorld }) {
   const pos = useMemo(() => new THREE.Vector3(), []);
   const tall = useMemo(() => new THREE.Vector3(1, 1.35, 1), []);
 
-  // The tour's arrival at the F1 stop flashes the cars too, without the achievement.
   useEffect(
     () =>
       useBaseCamp.subscribe((s, prev) => {
@@ -113,7 +107,6 @@ export function Eggs({ world }: { world: BuiltWorld }) {
     clock.current += dt;
     const t = clock.current;
 
-    // The hat never moves: place its hit target once the build-in has settled the world.
     if (hat && hatHit.current && !hatPlaced.current && useBaseCamp.getState().introDone) {
       hat.updateWorldMatrix(true, false);
       hat.getWorldPosition(hatHit.current.position);
@@ -156,7 +149,6 @@ export function Eggs({ world }: { world: BuiltWorld }) {
     }
 
     if (fans && fans.cheer > 0) {
-      // At zero the fans write back to their seats.
       fans.cheer = Math.max(0, fans.cheer - dt);
       writeFans(fans.cheer, t);
     }
@@ -170,7 +162,6 @@ export function Eggs({ world }: { world: BuiltWorld }) {
           visible={false}
           userData={{ eggTarget: true }}
           onClick={(e) => {
-            // Until it is placed on the hat the target sits at the origin: not clickable.
             if (!hatPlaced.current) return;
             e.stopPropagation();
             if (wasDrag()) return;

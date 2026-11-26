@@ -1,8 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import { pageMetrics } from "./pageMetrics";
 
-// detect-gpu blocklists SwiftShader, so pin a manual quality: the town then
-// loads on any WebGL context. These tests drive the HUD, so they start in Explore.
 const LOW = JSON.stringify({
   state: {
     discovered: [],
@@ -19,7 +17,6 @@ const isNoise = (url: string) => url.includes("/_vercel/");
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript((record) => {
-    // Seed once per tab, so a choice made during the test survives a reload.
     if (sessionStorage.getItem("seeded")) return;
     localStorage.setItem("bc", record);
     sessionStorage.setItem("seeded", "1");
@@ -33,7 +30,6 @@ const ready = async (page: Page) => {
 const canvas = (page: Page) => page.locator("#town-root canvas");
 const card = (page: Page, name: string) => page.getByRole("heading", { level: 2, name });
 
-/** Counts the distinct colours in a PNG, so a blank or uniform canvas shows up as one. */
 const colours = (page: Page, png: Buffer) =>
   page.evaluate(async (b64) => {
     const bytes = Uint8Array.from(atob(b64), (c) => c.charCodeAt(0));
@@ -65,7 +61,6 @@ test("/#readledger selects ReadLedger, with its screenshot", async ({ page }) =>
   await page.goto("/#readledger");
   await ready(page);
   await expect(card(page, "ReadLedger")).toBeVisible();
-  // The story document stays in the DOM under the town, so scope to the card.
   const shot = page.getByRole("region", { name: "ReadLedger, Service" });
   await expect(shot.getByRole("img", { name: /^ReadLedger landing page/ })).toBeVisible();
 });
@@ -89,15 +84,12 @@ test("clicking a place selects it, a drag that ends on it does not, and clicking
   const box = (await canvas(page).boundingBox())!;
   const cx = box.x + box.width / 2;
   const cy = box.y + box.height / 2;
-  // Esc leaves Explore now, so empty ground is the way to deselect.
   await page.mouse.click(box.x + 10, box.y + 10);
   await expect(hint).toBeVisible();
 
   await page.mouse.click(cx, cy);
   await expect(card(page, "Headquarters")).toBeVisible();
 
-  // The ground follows the pointer in a pan, so a drag that starts over HQ ends
-  // over HQ. It must not count as a click: deselect first, then nothing is selected.
   await page.mouse.click(box.x + 10, box.y + 10);
   await expect(hint).toBeVisible();
   await page.mouse.move(cx, cy);
@@ -105,14 +97,11 @@ test("clicking a place selects it, a drag that ends on it does not, and clicking
   await page.mouse.move(cx + 40, cy, { steps: 8 });
   await page.mouse.up();
   await expect(hint).toBeVisible();
-  // Control: a plain click on that same spot does select HQ, so the drag guard is what held it back.
   await page.mouse.click(cx + 40, cy);
   await expect(card(page, "Headquarters")).toBeVisible();
 
-  // Zoomed all the way out, only sky or sea is left in the corner.
   await page.mouse.move(cx, cy);
   for (let i = 0; i < 6; i++) await page.mouse.wheel(0, 2000);
-  // Selection survives zooming. The camera eases over about 0.5s, so let it settle.
   await expect(card(page, "Headquarters")).toBeVisible();
   await page.waitForTimeout(600);
   await expect(page.getByRole("dialog")).toHaveCount(0);
@@ -136,14 +125,12 @@ test("Lite keeps the story on the still image, and Explore turns the town back o
   await page.goto("/");
   await ready(page);
   await page.getByRole("button", { name: "Settings" }).click();
-  // Picking Lite removes the radio itself, so check() cannot confirm its state; click it.
   await page.getByRole("radio", { name: "Lite" }).click();
   const html = page.locator("html");
   await expect(html).toHaveClass(/mode-story/);
   await expect(html).not.toHaveClass(/town-ready/);
   await expect(page.locator(".stage")).toHaveCount(0);
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-  // Lite is the visitor's choice, not a device that cannot draw: Explore stays open and says so.
   const explore = page.getByRole("radio", { name: /Explore/ });
   await expect(explore).not.toHaveAttribute("aria-disabled");
   await expect(explore).toHaveAttribute(
@@ -167,7 +154,6 @@ test("the mode switch moves between Explore, Story and Text", async ({ page }) =
   await page.getByRole("radio", { name: "Text" }).click();
   await expect(html).toHaveClass(/mode-text/);
   await expect(canvas(page)).toHaveCount(0);
-  // Straight from Text: the town loads at once, and the HUD waits for its first frame.
   await page.getByRole("radio", { name: "Explore" }).click();
   await expect(html).toHaveClass(/mode-explore/);
   await ready(page);
@@ -304,8 +290,6 @@ test.describe("on High", () => {
     await expect(card(page, "Headquarters")).toBeVisible();
     await page.keyboard.press("ArrowRight");
     await expect(card(page, "F1 Tracker")).toBeVisible();
-    // The chunk was really requested and blocked. The boundary caught the failure; R3F's
-    // onCaughtError reports caught errors through reportError, so exactly one pageerror shows.
     expect(requested).toBeGreaterThan(0);
     expect(errors).toHaveLength(1);
     expect(errors[0]).toContain("dynamically imported module");
@@ -323,7 +307,6 @@ test.describe("on High", () => {
     const chunk = page.waitForResponse(/\/assets\/Effects-.*\.js/);
     await page.goto("/");
     await ready(page);
-    // The chunk really loaded (a High town that never mounted the composer would not fetch it).
     expect((await chunk).ok()).toBe(true);
     await page.waitForTimeout(1_000);
     expect(errors).toEqual([]);
@@ -351,8 +334,6 @@ test("on Medium, a running frame stays in the draw-call budget and shadows keep 
   await page.goto("/");
   await ready(page);
   await page.waitForTimeout(1_000);
-  // The shadow map is drawn every other frame, so frames alternate between the main
-  // pass alone and the main pass plus the shadow pass (spec 10: 250 + 60 calls).
   const calls: number[] = [];
   for (let i = 0; i < 24; i++) {
     calls.push(await page.evaluate(() => window.__baseCamp?.info().calls ?? 0));
@@ -377,8 +358,6 @@ test("the town's first paint is text, and nothing shifts", async ({ page }) => {
 test.describe("with reduced motion, after switching to Story", () => {
   test.use({ reducedMotion: "reduce" });
 
-  // Reduced motion starts in Text; this visitor switched to Story on an earlier
-  // visit, so the saved mode is Story (on Low, as the file-level seed pins).
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {
       if (sessionStorage.getItem("story-seeded")) return;
@@ -428,7 +407,6 @@ declare global {
 const screenOf = (page: Page, target: "hat" | "car0") =>
   page.evaluate((t) => window.__baseCamp?.screenOf(t) ?? null, target);
 
-/** Waits for the target to be on screen, then clicks it; a moving target gets up to 3 tries. */
 const clickTarget = async (page: Page, target: "hat" | "car0", toast: string) => {
   for (let attempt = 0; attempt < 3; attempt++) {
     await expect
@@ -437,12 +415,13 @@ const clickTarget = async (page: Page, target: "hat" | "car0", toast: string) =>
     const at = await screenOf(page, target);
     if (!at) continue;
     await page.mouse.click(at.x, at.y);
-    try {
-      await expect(page.getByText(toast)).toBeVisible({ timeout: 1000 });
-      return;
-    } catch {
-      // Missed (the target moved or was not placed yet): read the position again.
-    }
+    const hit = await expect(page.getByText(toast))
+      .toBeVisible({ timeout: 1000 })
+      .then(
+        () => true,
+        () => false,
+      );
+    if (hit) return;
   }
   await expect(page.getByText(toast)).toBeVisible();
 };

@@ -84,7 +84,6 @@ describe("enterStory and enterText", () => {
   const realScrollTo = window.scrollTo;
   const nextFrame = () => new Promise((r) => requestAnimationFrame(() => r(null)));
   let scrolled: number[] = [];
-  /** One screen-tall section per stop, stacked; scrollTo records where it was sent. */
   const sections = () => {
     document.body.innerHTML = STOPS.map((s) => `<section id="${s.anchor}"></section>`).join("");
     document.querySelectorAll("section").forEach((el, i) => {
@@ -92,7 +91,6 @@ describe("enterStory and enterText", () => {
       Object.defineProperty(el, "offsetHeight", { value: H, configurable: true });
     });
   };
-  /** The section the page was last scrolled to. */
   const landedOn = () => STOPS[Math.round(scrolled[scrolled.length - 1] / H)]?.anchor;
   beforeEach(() => {
     scrolled = [];
@@ -111,7 +109,7 @@ describe("enterStory and enterText", () => {
     expect(useBaseCamp.getState().mode).toBe("story");
     enterText();
     expect(useBaseCamp.getState().mode).toBe("text");
-    await nextFrame(); // let the scrolls they queue land before the next test
+    await nextFrame();
   });
 
   it("return to the selected place's section", async () => {

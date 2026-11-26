@@ -7,7 +7,6 @@ import { clockText, nightAmount } from "@/world/lib/sun";
 
 const canFullscreen = () => document.fullscreenEnabled;
 
-/** Apple keyboards label the console shortcut with Command, everything else with Ctrl. */
 const consoleShortcut = () => (/Mac|iPhone|iPad/.test(navigator.platform) ? "⌘K" : "Ctrl K");
 
 const toggleFullscreen = () => {

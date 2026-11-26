@@ -6,7 +6,6 @@ export type PillTone = "ok" | "down" | "unknown" | "pre" | "neutral";
 
 const SERVICES = new Set<PlaceId>(STATUS_TARGETS.map((t) => t.id));
 
-/** The card pill (spec 9.6): real status for services, the place's own words otherwise. */
 export const pillFor = (
   place: Place,
   status: StatusMap | "unknown",
@@ -19,7 +18,6 @@ export const pillFor = (
   return { text: s.ms === null ? "Live" : `Live · ${s.ms} ms`, tone: "ok" };
 };
 
-/** "Live k/n" counts only what is confirmed ok; null means no data yet (shown as "-"). */
 export const liveCount = (status: StatusMap | "unknown") =>
   status === "unknown"
     ? null

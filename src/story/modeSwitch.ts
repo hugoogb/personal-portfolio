@@ -15,10 +15,6 @@ const OPTIONS: { mode: Mode; label: string; go: () => void }[] = [
   { mode: "text", label: "Text", go: () => enterText() },
 ];
 
-/**
- * Story · Explore · Text (spec 3.4), in plain DOM so the first paint's code needs no React.
- * Always visible; Explore is off only where the town cannot draw. Returns the cleanup.
- */
 export const mountModeSwitch = (parent: HTMLElement) => {
   const group = document.createElement("div");
   group.className = "mode-switch";
@@ -54,7 +50,6 @@ export const mountModeSwitch = (parent: HTMLElement) => {
     });
   };
 
-  // Radio-group keys (WAI-ARIA): arrows move and select, wrapping, skipping a disabled option.
   const onKeyDown = (e: KeyboardEvent, from: number) => {
     const step =
       e.key === "ArrowRight" || e.key === "ArrowDown"
@@ -69,7 +64,6 @@ export const mountModeSwitch = (parent: HTMLElement) => {
       i = (i + step + OPTIONS.length) % OPTIONS.length;
       if (!off(i)) break;
     }
-    // At most one option is ever off, so the loop always lands on one that is not.
     if (i === from) return;
     buttons[i]!.focus();
     if (OPTIONS[i]!.mode !== baseCamp.getState().mode) OPTIONS[i]!.go();

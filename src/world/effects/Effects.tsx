@@ -14,12 +14,6 @@ interface AOPass {
   configuration: { transparencyAware: boolean };
 }
 
-/**
- * N8AO checks every frame for transparent materials and, finding the town's glass, smoke and light
- * pools, draws the whole scene twice more into two full-size targets to keep the AO off them. That
- * was an eighth of High's frame, and over this town the difference does not show (a touch more AO
- * behind the server yard's glass), so the AO treats the scene as opaque.
- */
 const opaqueAO = (pass: AOPass | null) => {
   if (!pass) return;
   pass.autoDetectTransparency = false;
@@ -27,18 +21,9 @@ const opaqueAO = (pass: AOPass | null) => {
 };
 
 export interface EffectsProps {
-  /** High: ambient occlusion and night bloom. Otherwise only tone mapping and FXAA. */
   full: boolean;
 }
 
-/**
- * The High finish (spec 5.5): soft ambient occlusion all the time, and bloom
- * on the night lights. Loaded as its own chunk, so other tiers never download
- * it. A canvas made for it has no MSAA: the composer antialiases with FXAA,
- * because N8AO over a multisampled target costs several times the scene
- * itself. When a High town steps down to Medium the composer stays, without
- * AO and bloom, so the scene's shaders do not all recompile.
- */
 export default function Effects({ full }: EffectsProps) {
   const bloom = useRef<BloomEffect>(null);
   const strength = useRef(0);
@@ -61,12 +46,8 @@ export default function Effects({ full }: EffectsProps) {
   });
 
   return (
-    // No merging: FXAA reads its input texture directly at edges, so merged into the tone-mapping
-    // pass it would return untone-mapped HDR there. On its own pass it reads the final colours.
     <EffectComposer multisampling={0} mergeMode="none">
       {full ? (
-        // The sample counts barely move the cost (it is the full-screen passes); the
-        // low ones keep the noise soft at this zoom.
         <N8AO
           ref={opaqueAO}
           halfRes
@@ -85,9 +66,7 @@ export default function Effects({ full }: EffectsProps) {
       ) : (
         <></>
       )}
-      {/* The composer turns the renderer's tone mapping off; this restores the Canvas's ACES, after bloom has seen the HDR values. */}
       <ToneMapping mode={ToneMappingMode.ACES_FILMIC} />
-      {/* Last, on its own pass (see mergeMode). */}
       <FXAA />
     </EffectComposer>
   );

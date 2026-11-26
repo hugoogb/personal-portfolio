@@ -1,7 +1,6 @@
 import * as THREE from "three";
 import type { Kit } from "@/world/kit/kit";
 
-/** The post office: an ochre civic building with a clock tower and a big envelope (reference 1008-1039). */
 export function buildPostOffice(kit: Kit): THREE.Group {
   const { rbox, cyl, ball, mk, hip, canvasTex, textPlane, bush, mat, own } = kit;
   const g = new THREE.Group();
@@ -19,10 +18,8 @@ export function buildPostOffice(kit: Kit): THREE.Group {
     rbox(0.28, 0.64, 0.05, kit.winPick(), x, 0.44, 0.92, g, 0.02, false);
   }
   rbox(2.9, 0.12, 2.1, BLUE, 0, 1.74, -0.1, g, 0.04);
-  // roof sign
   rbox(1.5, 0.32, 0.07, BLUE, 0.55, 1.86, 0.82, g, 0.03);
   textPlane(g, "POST OFFICE", BLUE, 1.4, 0.24, 0.55, 2.02, 0.86);
-  // envelope on the facade
   {
     const env = canvasTex(160, 100, (c, w, h) => {
       c.fillStyle = "#ffffff";
@@ -45,7 +42,6 @@ export function buildPostOffice(kit: Kit): THREE.Group {
     em.position.set(-0.95, 1.32, 0.915);
     g.add(em);
   }
-  // clock tower
   rbox(0.8, 1.55, 0.8, OCH, -0.85, 1.86, -0.55, g, 0.06);
   {
     const clk = canvasTex(128, 128, (c) => {
@@ -83,7 +79,6 @@ export function buildPostOffice(kit: Kit): THREE.Group {
     g.add(c2);
   }
   hip(0.8, 0.8, 0.6, BLUE, -0.85, 3.41, -0.55, g);
-  // parcel lockers on the east wall, a red pillar box, a flag
   for (let r = 0; r < 3; r++)
     for (let k = 0; k < 4; k++)
       rbox(

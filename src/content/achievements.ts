@@ -3,11 +3,9 @@ export type AchievementId = "explorer" | "goal" | "hat" | "lap" | "night" | "con
 export interface Achievement {
   id: AchievementId;
   name: string;
-  /** Shown in the trophies panel; a nudge, not a walkthrough. */
   hint: string;
 }
 
-/** Spec section 7. Quiet: each unlocks once, with a toast, and is saved. */
 export const ACHIEVEMENTS: Achievement[] = [
   { id: "explorer", name: "Explorer", hint: "Discover every place in town" },
   { id: "goal", name: "Top corner", hint: "Score a goal in the arena" },

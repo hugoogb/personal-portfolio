@@ -1,7 +1,5 @@
 import { expect, test } from "@playwright/test";
 
-// Spec 6.2: on a throttled phone, the story's text is readable within 1 s, before any 3D.
-// GPU timings (town-ready under 3 s) are checked on real devices: SwiftShader has no GPU.
 test.use({
   viewport: { width: 390, height: 844 },
   deviceScaleFactor: 3,
@@ -37,7 +35,6 @@ test("text first on slow 4G with a 4x slower CPU", async ({ page, context }) => 
     description: `${Math.round(fcp)} ms`,
   });
   expect(fcp).toBeLessThan(1000);
-  // The story scrolls while the town is still loading.
   await page.evaluate(() =>
     document.getElementById("readledger")!.scrollIntoView({ block: "center" }),
   );

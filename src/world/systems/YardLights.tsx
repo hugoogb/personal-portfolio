@@ -9,7 +9,6 @@ import { ledColor, yardState } from "@/world/lib/status";
 const EVERY_S = 0.12;
 const PER_TICK = 8;
 
-/** The yard's rack LEDs blink and follow the real status of the apps; under reduced motion they settle instead. */
 export function YardLights({ world }: { world: BuiltWorld }) {
   const since = useRef(0);
   const settled = useRef<StatusMap | "unknown" | null>(null);
@@ -32,7 +31,6 @@ export function YardLights({ world }: { world: BuiltWorld }) {
       if (leds.instanceColor) leds.instanceColor.needsUpdate = true;
       return;
     }
-    // Still: colour every LED once per status (a new one comes every five minutes), then rest.
     const status = useBaseCamp.getState().status;
     if (settled.current === status) return;
     settled.current = status;

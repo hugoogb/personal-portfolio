@@ -2,7 +2,6 @@ import * as THREE from "three";
 import type { Kit } from "@/world/kit/kit";
 import { AX, AZ, CAR_START } from "@/world/lib/arena";
 
-/** Rocket League arena with egg-shaped fans (reference 975-1006; pad glow 1480). */
 export function buildArena(kit: Kit): THREE.Group {
   const { rbox, cyl, ball, mk, mat, makeMat, canvasTex, crowdRow, pool, own, rand } = kit;
   const g = new THREE.Group();
@@ -82,7 +81,6 @@ export function buildArena(kit: Kit): THREE.Group {
       false,
     );
   }
-  // stands: two tiers behind the far wall, one tier in front
   rbox(AX * 2 + 0.2, 0.3, 0.45, "#3a4458", 0, 0.12, -(AZ + 0.42), g, 0.05);
   rbox(AX * 2 + 0.2, 0.3, 0.42, "#3a4458", 0, 0.42, -(AZ + 0.84), g, 0.05);
   rbox(AX * 2 + 0.2, 0.24, 0.42, "#3a4458", 0, 0.12, AZ + 0.42, g, 0.05);
@@ -140,7 +138,6 @@ export function buildArena(kit: Kit): THREE.Group {
   const car = new THREE.Group();
   car.userData.dynamic = true;
   g.add(car);
-  // Parked at kick-off, not on the centre spot under the ball, before anyone drives.
   car.position.set(CAR_START.x, 0.12, CAR_START.y);
   rbox(0.74, 0.2, 0.42, "#2d6cdf", 0, 0.08, 0, car, 0.08);
   rbox(0.36, 0.17, 0.34, "#1b2740", -0.06, 0.26, 0, car, 0.07);

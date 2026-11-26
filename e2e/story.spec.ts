@@ -1,11 +1,9 @@
 import { expect, test } from "@playwright/test";
 
-// detect-gpu blocklists SwiftShader, so pin a manual quality; start in Story.
 const STORY = JSON.stringify({ state: { chosenMode: "story", qualityMode: "Low" }, version: 1 });
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript((record) => {
-    // Seed once per tab, so a choice made during the test survives a reload.
     if (sessionStorage.getItem("seeded")) return;
     localStorage.setItem("bc", record);
     sessionStorage.setItem("seeded", "1");
@@ -56,7 +54,6 @@ test("the landing name stays on screen while the town arrives on a first visit",
   await page.goto("/");
   const name = page.locator(".story-landing h1");
   await expect(name).toBeVisible();
-  // Sample the name's opacity (with its card's) from first paint through the build-in.
   await page.evaluate(() => {
     const w = window as unknown as { __landingMin: number };
     w.__landingMin = 1;
@@ -71,7 +68,6 @@ test("the landing name stays on screen while the town arrives on a first visit",
     tick();
   });
   await expect(page.locator("html")).toHaveClass(/town-ready/, { timeout: 20_000 });
-  // The build-in runs about 2 s after the first frame.
   await page.waitForTimeout(2500);
   expect(
     await page.evaluate(() => (window as unknown as { __landingMin: number }).__landingMin),
@@ -84,7 +80,6 @@ test("Story to Explore and back keeps the place", async ({ page }) => {
   await page.getByRole("radio", { name: "Explore" }).click();
   await expect(page.locator("html")).toHaveClass(/mode-explore/);
   await expect(page.getByRole("heading", { level: 2, name: "ReadLedger" })).toBeVisible();
-  // Keys wait for the build-in to finish.
   await expect(page.locator(".stage")).not.toHaveAttribute("inert", { timeout: 10_000 });
   await page.keyboard.press("Escape");
   await expect(page.locator("html")).toHaveClass(/mode-story/);
@@ -139,7 +134,7 @@ test("the mode is remembered across a reload", async ({ page }) => {
 });
 
 test("the still image shows before the town is ready", async ({ page }) => {
-  await page.route(/World-|lighting-/, () => new Promise(() => {})); // the town never arrives
+  await page.route(/World-|lighting-/, () => new Promise(() => {}));
   const posters: string[] = [];
   page.on("request", (r) => {
     if (r.url().includes("/posters/")) posters.push(new URL(r.url()).pathname);
@@ -149,7 +144,6 @@ test("the still image shows before the town is ready", async ({ page }) => {
     .locator(".backdrop__still")
     .evaluate((el) => getComputedStyle(el).backgroundImage);
   expect(bg).toMatch(/\/posters\/town-(day|night)-(wide|tall)\.avif/);
-  // The preload and the stylesheet agree: one image, fetched once.
   await page.waitForLoadState("load");
   expect(posters).toHaveLength(1);
   expect(posters[0]).toMatch(/\.avif$/);
@@ -169,7 +163,6 @@ test.describe("on a phone", () => {
     const top = await page
       .locator("#readledger .story-card")
       .evaluate((el) => el.getBoundingClientRect().top / window.innerHeight);
-    // The card sheet starts just under the building's half of the screen, never over it.
     expect(top).toBeGreaterThan(0.5);
     expect(top).toBeLessThan(0.65);
   });

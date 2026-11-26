@@ -17,7 +17,6 @@ interface ArenaParts {
 const FOCUS_EVERY_S = 0.1;
 const NARROW_PX = 760;
 
-/** Drive the arena car: keys or a held pointer steer, the camera follows, goals score. */
 export function ArenaDrive({ world }: { world: BuiltWorld }) {
   const driving = useBaseCamp((s) => s.driving);
   const { gl, camera, raycaster } = useThree();
@@ -52,7 +51,6 @@ export function ArenaDrive({ world }: { world: BuiltWorld }) {
     p.ball.rotation.x += (a.bv.y * dt) / 0.3;
   };
 
-  // The world can unmount mid-drive (Settings to Lite): drive mode must not outlive it.
   useEffect(() => () => useBaseCamp.getState().setDriving(false), []);
 
   useEffect(() => {
@@ -61,7 +59,6 @@ export function ArenaDrive({ world }: { world: BuiltWorld }) {
     since.current = FOCUS_EVERY_S;
     const held = keys.current;
     const onKeyDown = (e: KeyboardEvent) => {
-      // A Cmd/Ctrl chord swallows the keyup on macOS, which would leave the key held.
       if (isField(e.target) || e.metaKey || e.ctrlKey) return;
       const k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
       if (k === " " || k.startsWith("Arrow")) e.preventDefault();
@@ -103,7 +100,6 @@ export function ArenaDrive({ world }: { world: BuiltWorld }) {
       window.removeEventListener("pointercancel", onUp);
       held.clear();
       pointer.current = null;
-      // Leaving drive mode: park the car and ball, then frame the arena again.
       state.current = createArena();
       writeMeshes(false, 0, 0);
       const s = useBaseCamp.getState();
@@ -143,7 +139,6 @@ export function ArenaDrive({ world }: { world: BuiltWorld }) {
       const fans = world.kit.life.fans as { cheer: number } | undefined;
       if (fans) fans.cheer = CHEER_S;
     }
-    // With a pointer held the throttle is the pointer's; the flame follows the keys only.
     writeMeshes(boost, thr, dt);
 
     since.current += dt;

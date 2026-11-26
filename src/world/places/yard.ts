@@ -2,7 +2,6 @@ import * as THREE from "three";
 import type { Kit } from "@/world/kit/kit";
 import { LED_PALETTE } from "@/world/lib/status";
 
-/** Server yard, a glass data centre with the racks inside (reference 1056-1081; antenna blink 1481). */
 export function buildYard(kit: Kit): THREE.Group {
   const { rbox, box, cyl, mk, mat, textPlane, plaque, bush, own } = kit;
   const g = new THREE.Group();
@@ -12,7 +11,6 @@ export function buildYard(kit: Kit): THREE.Group {
     y0 = 0.15;
   rbox(4.5, 0.15, 3.3, "#d4d9df", 0, 0, 0, g, 0.06);
   rbox(W - 0.1, 0.04, D - 0.1, "#c9d1da", 0, y0, 0, g, 0.02, false);
-  // racks in two rows, LEDs on their fronts, a cable tray over each row
   const pos: [number, number, number][] = [];
   for (const z of [-0.65, 0.55]) {
     for (let i = 0; i < 5; i++) {
@@ -38,7 +36,6 @@ export function buildYard(kit: Kit): THREE.Group {
   kit.life.leds = im;
   textPlane(g, "VERCEL", "#1f2329", 0.9, 0.2, -0.9, y0 + 1.62, -0.32, "#ffffff");
   textPlane(g, "VPS · DOCKER", "#1f2329", 1.1, 0.2, -0.8, y0 + 1.62, 0.88, "#4ade80");
-  // glass walls and roof on a dark steel frame
   const glassM = own(
     new THREE.MeshStandardMaterial({
       color: "#bfe3f2",
@@ -58,7 +55,6 @@ export function buildYard(kit: Kit): THREE.Group {
   for (const z of [-D / 2, D / 2]) box(W + 0.07, 0.07, 0.07, steel, 0, y0 + Hh, z, g);
   for (const x of [-W / 2, 0, W / 2]) box(0.07, 0.07, D, steel, x, y0 + Hh, 0, g);
   box(0.05, 1.1, 0.6, steel, W / 2 - 0.02, y0, 0.8, g, false);
-  // outside: two AC units, a dish, an antenna on the frame
   for (const x of [-1.6, -0.9]) {
     rbox(0.5, 0.4, 0.4, "#c9cfd6", x, 0, 1.95, g, 0.05);
     cyl(0.13, 0.13, 0.03, "#6b7480", x, 0.4, 1.95, g, 14);

@@ -2,11 +2,6 @@ import type { Page } from "@playwright/test";
 
 export type PageMetrics = { lcpTag: string; lcpUrl: string; cls: number; shifts: string[] };
 
-/**
- * Reads the largest contentful paint and the layout shift total the page has
- * recorded so far. A text node has no element of its own, so the LCP tag falls
- * back to its parent; an image LCP carries a non-empty url.
- */
 export const pageMetrics = (page: Page): Promise<PageMetrics> =>
   page.evaluate(
     () =>

@@ -25,7 +25,6 @@ const fake = (env: Env = {}) => {
         contains: (c: string) => classes.has(c),
       },
     },
-    // The head script must never create a canvas: that is a WebGL probe before first paint.
     createElement: () => {
       state.probed = true;
       throw new Error("the head script must not probe WebGL");
@@ -53,7 +52,6 @@ const OPTS = {
   nightBefore: NIGHT_BEFORE,
   nightAfter: NIGHT_AFTER,
 };
-/** A Date whose Barcelona hour is `h` (10 Oct is CEST, UTC+2). */
 const dateAt = (h: number) => new Date(Date.UTC(2026, 9, 10, h - 2, 0));
 const saved = (mode: string) => ({
   bc: JSON.stringify({ state: { chosenMode: mode }, version: 1 }),
@@ -140,7 +138,6 @@ describe("mode before first paint", () => {
   it("reads the chosen mode", () => {
     const record = (state: object) => ({ bc: JSON.stringify({ state, version: 1 }) });
     expect(modes(boot({ stored: record({ chosenMode: "text" }) }).classes)).toEqual(["mode-text"]);
-    // A record written by the new store with nothing chosen: the signals decide.
     expect(modes(boot({ stored: record({ chosenMode: null }) }).classes)).toEqual(["mode-story"]);
     expect(
       modes(boot({ stored: record({ chosenMode: null }), reducedMotion: true }).classes),

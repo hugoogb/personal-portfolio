@@ -22,23 +22,19 @@ export const fetchStatus = async (signal?: AbortSignal): Promise<StatusMap | "un
   }
 };
 
-/** Status on boot, then every five minutes while the tab is visible (spec 9.6). */
 export const startStatus = () => {
-  // Aborts the request in flight on cleanup.
   const unmount = new AbortController();
   let seq = 0;
   let applied = 0;
   const tick = async () => {
     if (document.hidden) return;
     const mine = ++seq;
-    // Each request gives up after 10 s, or at once on cleanup.
     const request = new AbortController();
     const abort = () => request.abort();
     const timer = window.setTimeout(abort, TIMEOUT_MS);
     unmount.signal.addEventListener("abort", abort, { once: true });
     try {
       const status = await fetchStatus(request.signal);
-      // An older response never overwrites a newer one.
       if (unmount.signal.aborted || mine < applied) return;
       applied = mine;
       baseCamp.getState().setStatus(status);

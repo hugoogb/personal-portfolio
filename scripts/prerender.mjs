@@ -1,14 +1,3 @@
-/**
- * Bakes the rendered page into dist/index.html. The client never hydrates it (main.ts).
- *
- * The site is one page that is identical for every visitor, so it is rendered
- * once, at build time. Without this the HTML is an empty <div id="root"> and
- * every crawler that does not run JavaScript - link previews, most AI crawlers,
- * and search engines on their first pass - sees no content at all.
- *
- * Runs after both builds: `vite build` for the client and `vite build --ssr`
- * for src/entry-server.tsx, which lands in dist-ssr/ and is deleted here.
- */
 import { readFile, rm, writeFile } from "node:fs/promises";
 
 const dist = new URL("../dist/", import.meta.url);
@@ -22,11 +11,8 @@ if (!template.includes(ROOT)) {
   throw new Error(`prerender: ${ROOT} not found in dist/index.html`);
 }
 
-// `<` escaped so no string in the data can close the script element early.
 const jsonLd = JSON.stringify(structuredData()).replace(/</g, "\\u003c");
 
-// The page's one stylesheet (about 8 KB compressed) goes into the HTML: as a file it is
-// a round trip that first paint waits on, which on slow 4G is most of a second's budget.
 const STYLESHEET = /<link rel="stylesheet" crossorigin href="\/(assets\/[^"]+\.css)">/;
 const sheet = template.match(STYLESHEET);
 if (!sheet) throw new Error("prerender: no stylesheet link in dist/index.html");

@@ -6,16 +6,6 @@ const SITE = "https://hugoogb.dev/";
 const PERSON_ID = `${SITE}#person`;
 const WEBSITE_ID = `${SITE}#website`;
 
-/**
- * JSON-LD for the page, built from the same constants the page renders, so it
- * cannot drift from what a visitor sees - a hand-written block in index.html
- * would have kept listing projects long after they left the Work section.
- *
- * Projects are SoftwareSourceCode when the code is public and CreativeWork when
- * it is not. Neither is a Google rich-result type, which is the point: they
- * describe the work without inviting "missing field" warnings in Search Console
- * that SoftwareApplication would raise for not having prices or ratings.
- */
 export const structuredData = () => ({
   "@context": "https://schema.org",
   "@graph": [
@@ -42,7 +32,6 @@ export const structuredData = () => ({
       name: "Hugo García Benjumea",
       givenName: "Hugo",
       familyName: "García Benjumea",
-      // How people actually type it: without the accent, or by handle.
       alternateName: ["Hugo Garcia Benjumea", "hugoogb"],
       url: SITE,
       image: `${SITE}favicon/android-chrome-512x512.png`,

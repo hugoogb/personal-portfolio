@@ -5,7 +5,6 @@ import { OVERVIEW } from "@/world/lib/map";
 
 export type StopId = "top" | "about" | "f1" | "rl" | "wt" | "es" | "av" | "contact" | "overview";
 
-/** Where the camera looks: ground target, view height in world units, and azimuth in degrees. */
 export interface Pose {
   x: number;
   z: number;
@@ -15,29 +14,18 @@ export interface Pose {
 
 export interface Stop {
   id: StopId;
-  /** The section's id in the story document, and the URL hash. */
   anchor: string;
   place: PlaceId | null;
   label: string;
-  /** Listed in the section rail. */
   rail: boolean;
-  /** Where the card sits; the building is framed in the other half. */
   side: "left" | "right" | "center";
   pose: Pose;
-  /** A phone's pose, where it differs: by default the desktop view times NARROW_ZOOM_OUT. */
   narrow?: Partial<Pose>;
 }
 
-/** Story only: the camera may swing this far around its target (spec 4.2). */
 export const MAX_AZ = 20;
-/** A phone is narrow: a card's building is framed this much wider than on desktop. */
 const NARROW_ZOOM_OUT = 1.6;
-/**
- * On a phone the building rides this far (of the view) above the centre: the card sheet
- * starts at 56% of the screen (story.css), so the building centres in the top 56%.
- */
 const NARROW_LIFT = 0.22;
-/** On desktop the building sits this far (of the view's width) toward the free half. */
 const SIDE_SHIFT = 0.22;
 
 type V3 = [number, number, number];
@@ -51,7 +39,6 @@ const cross = (a: V3, b: V3): V3 => [
   a[0] * b[1] - a[1] * b[0],
 ];
 
-/** The camera's offset from its target, turned `az` degrees about the vertical axis. */
 export const cameraOffset = (az: number): V3 => {
   const a = (az * Math.PI) / 180;
   const c = Math.cos(a);
@@ -60,11 +47,6 @@ export const cameraOffset = (az: number): V3 => {
   return [x * c + z * s, y, -x * s + z * c];
 };
 
-/**
- * How far to move the camera's ground target so the view slides by (right, up)
- * world units on screen, at azimuth `az`. A thing on the ground then appears
- * shifted by (-right, -up).
- */
 export const groundShift = (right: number, up: number, az: number) => {
   const o = cameraOffset(az);
   const f = norm([-o[0], -o[1], -o[2]]);
@@ -75,7 +57,6 @@ export const groundShift = (right: number, up: number, az: number) => {
   return { x: s[0] - f[0] * t, z: s[2] - f[2] * t };
 };
 
-/** A ground point moved so it shows `up` world units higher on screen (at azimuth 0). */
 const lift = (p: { x: number; z: number }, up: number) => {
   const d = groundShift(0, -up, 0);
   return { x: p.x + d.x, z: p.z + d.z };
@@ -102,7 +83,6 @@ const project = (
   pose: at(id, PLACE_BY_ID[id].map.zoom, az),
 });
 
-/** The tour, in document order (spec 3.1). Poses are tuned by eye. */
 export const STOPS: Stop[] = [
   {
     id: "top",
@@ -144,9 +124,7 @@ export const STOPS: Stop[] = [
     label: "Explore the town",
     rail: false,
     side: "center",
-    // Lifted a little, so the island clears the closing line and button below it.
     pose: { ...lift(OVERVIEW, 4.5), view: OVERVIEW.view * 2.4, az: 0 },
-    // Phones: wide enough that the whole island fits the narrow screen.
     narrow: { view: OVERVIEW.view * 4 },
   },
 ];
@@ -157,10 +135,8 @@ export const EXPLORE_ONLY_SLUGS = PLACES.filter((p) => !TOUR_PLACES.includes(p.i
   .map((p) => p.slug)
   .sort();
 
-/** A stop's pose for this screen: the building sits in the half the card leaves free. */
 export const poseFor = (stop: Stop, narrow: boolean, aspect: number): Pose => {
   if (narrow) {
-    // Phones: the card is a sheet below, so the building rides in the top 56%.
     const { x, z, az, view } = {
       ...stop.pose,
       view: stop.pose.view * NARROW_ZOOM_OUT,
@@ -182,7 +158,6 @@ const smooth = (a: number, b: number, t: number) => {
   return k * k * (3 - 2 * k);
 };
 
-/** The pose between stop `index` and the next, `fraction` of the way; it holds still near each stop. */
 export const poseAt = (index: number, fraction: number, narrow: boolean, aspect: number): Pose => {
   const last = STOPS.length - 1;
   if (index < 0) return poseFor(STOPS[0], narrow, aspect);
@@ -200,7 +175,6 @@ export const poseAt = (index: number, fraction: number, narrow: boolean, aspect:
   };
 };
 
-/** The story section for a place: its own stop, or the nearest tour stop for explore-only places. */
 export const stopIndexForPlace = (id: PlaceId): number => {
   const own = STOPS.findIndex((s) => s.place === id && s.id !== "top");
   if (own >= 0) return own;

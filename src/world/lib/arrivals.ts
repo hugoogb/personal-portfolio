@@ -1,6 +1,5 @@
 export const ARRIVAL_S = 1.6;
 
-/** A quick swell and a slow fade: 0 at the start, 1 at about 0.35 s, 0 again at ARRIVAL_S. */
 export const arrivalPulse = (t: number) => {
   if (t <= 0 || t >= ARRIVAL_S) return 0;
   const rise = Math.min(1, t / 0.35);

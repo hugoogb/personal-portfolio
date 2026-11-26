@@ -11,10 +11,8 @@ export type PlaceId =
   | "board"
   | "post";
 
-/** Where a project actually runs; drives the traffic routes and the yard's racks. */
 export type Host = "vps" | "vercel";
 
-/** What a place's primary button does when it is not a plain link. */
 export type PlaceAction = "story" | "overview" | "wave" | "drive" | "copyEmail";
 
 export interface PlaceLink {
@@ -24,10 +22,8 @@ export interface PlaceLink {
 
 export interface Place {
   id: PlaceId;
-  /** Deep links (`/#readledger`) and the story document's anchors use this. */
   slug: string;
   name: string;
-  /** Short floating label, when the name is too long for one. */
   label?: string;
   kind: string;
   pill: string;
@@ -35,17 +31,11 @@ export interface Place {
   desc: string;
   stats: string[];
   stack: string[];
-  /** Roof and card-thumb colour. */
   color: string;
-  /** Exactly one of `href` or `action` is set. */
   primary: { label: string; href?: string; action?: PlaceAction };
   secondary?: PlaceLink;
-  /** The E button becomes this link when a place has no stack to show. */
   tertiary?: PlaceLink;
-  /** Card banner and story picture, projects only. */
   image?: { src: string; srcSetWebp: string; alt: string };
-  /** Shown instead of a source link when the code is private. */
   closedNote?: string;
-  /** World placement: centre, selection-ring radius, label height, camera zoom. */
   map: { x: number; z: number; r: number; top: number; zoom: number };
 }

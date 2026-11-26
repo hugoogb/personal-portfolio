@@ -7,7 +7,6 @@ import { prefersReducedMotion } from "@/utils/motion";
 
 const ARRIVES = new Set<string>([...PROJECT_IDS, "post"]);
 
-/** Follows the scroll while Story is on screen; returns the cleanup. */
 const drive = () => {
   const sections = storySections();
   if (!sections.length) return;
@@ -22,7 +21,6 @@ const drive = () => {
     s.setStop(i);
     const url = stop.id === "top" ? location.pathname + location.search : `#${stop.anchor}`;
     history.replaceState(history.state, "", url);
-    // A stop outside the rail (the finale) shows the nearest rail stop before it.
     let at = i;
     while (at > 0 && !STOPS[at].rail) at--;
     const shown = STOPS[at];
@@ -70,7 +68,6 @@ const drive = () => {
   };
 };
 
-/** Scroll position to tour stop (spec 5.3). Active in Story only; returns the cleanup. */
 export const startStoryDriver = () => {
   let stop: (() => void) | undefined;
   let seq = 0;
@@ -78,8 +75,6 @@ export const startStoryDriver = () => {
     stop?.();
     stop = undefined;
     if (mode !== "story") return;
-    // A microtask later, like an effect after a render: enterStory scrolls to its stop right
-    // after setting the mode, so the first announce sees the target and nothing on the way.
     const mine = ++seq;
     queueMicrotask(() => {
       if (mine === seq && baseCamp.getState().mode === "story") stop = drive();

@@ -5,14 +5,13 @@ import reactPlugin from "eslint-plugin-react";
 import reactHooksPlugin from "eslint-plugin-react-hooks";
 import reactRefreshPlugin from "eslint-plugin-react-refresh";
 import tseslint from "typescript-eslint";
+import noComments from "./eslint-rules/no-comments.js";
 
 export default [
-  // Build artifacts / deps
   {
     ignores: ["dist/**", "dist-ssr/**", "node_modules/**", "coverage/**"],
   },
 
-  // Node/CommonJS config files (e.g. prettier.config.cjs)
   {
     files: ["**/*.cjs"],
     languageOptions: {
@@ -25,7 +24,6 @@ export default [
     },
   },
 
-  // Node ESM build scripts (scripts/prerender.mjs)
   {
     files: ["scripts/**/*.mjs"],
     languageOptions: {
@@ -38,13 +36,10 @@ export default [
     },
   },
 
-  // Base JS rules
   js.configs.recommended,
 
-  // Base TS rules (non-type-aware, fast)
   ...tseslint.configs.recommended,
 
-  // App rules
   {
     files: ["**/*.{js,jsx,ts,tsx}"],
     languageOptions: {
@@ -64,17 +59,19 @@ export default [
       "react-refresh": reactRefreshPlugin,
     },
     rules: {
-      // React (JSX transform doesn't require React in scope)
       "react/react-in-jsx-scope": "off",
 
-      // Hooks
       ...reactHooksPlugin.configs.recommended.rules,
 
-      // Vite Fast Refresh safety
       "react-refresh/only-export-components": ["warn", { allowConstantExport: true }],
     },
   },
 
-  // Disable stylistic rules that conflict with Prettier
+  {
+    files: ["**/*.{js,jsx,ts,tsx,mjs,cjs}"],
+    plugins: { local: { rules: { "no-comments": noComments } } },
+    rules: { "local/no-comments": "error" },
+  },
+
   prettierConfig,
 ];

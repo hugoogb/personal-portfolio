@@ -153,7 +153,6 @@ describe("store, modes", () => {
     expect(saved(storage)).not.toHaveProperty("mode");
     store.getState().chooseMode("text");
     expect(saved(storage).chosenMode).toBe("text");
-    // A later fallback (Town off, a #text hash) changes the mode on screen, not the choice.
     store.getState().setMode("story");
     store.getState().setStop(3);
     expect(saved(storage).chosenMode).toBe("text");
@@ -240,7 +239,6 @@ describe("store, phase 2", () => {
     expect(store.getState().dpr).toBe(1.5);
     store.getState().setDpr(1.25);
     expect(store.getState().dpr).toBe(1.25);
-    // Never above the tier's own cap.
     store.getState().setDpr(3);
     expect(store.getState().dpr).toBe(1.5);
     store.getState().setDpr(1);

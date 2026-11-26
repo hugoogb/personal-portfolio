@@ -5,7 +5,6 @@ const normal = new THREE.Vector3();
 const faceDir = new THREE.Vector3();
 type Axis = "x" | "y" | "z";
 
-/** three's RoundedBoxGeometry UV along one axis of a face, unchanged. */
 const getUv = (uvAxis: Axis, projectionAxis: Axis, radius: number, sideLength: number) => {
   const totArcLength = (2 * Math.PI * radius) / 4;
   const centerLength = Math.max(sideLength - 2 * radius, 0);
@@ -19,9 +18,7 @@ const getUv = (uvAxis: Axis, projectionAxis: Axis, radius: number, sideLength: n
   return lenUv + arcUvRatio + arcUvRatio * (1 - arcAngleRatio);
 };
 
-/** A UV coordinate: the axis it runs along, the axis projected away, and whether it is flipped. */
 type UvRule = [Axis, Axis, boolean];
-/** Per face of BoxGeometry (+x, -x, +y, -y, +z, -z): its direction and its U and V rules. */
 const FACES: { dir: [number, number, number]; u: UvRule; v: UvRule }[] = [
   { dir: [1, 0, 0], u: ["z", "y", false], v: ["y", "z", true] },
   { dir: [-1, 0, 0], u: ["z", "y", true], v: ["y", "z", true] },
@@ -44,12 +41,6 @@ export interface RoundedBoxParameters {
   radius: number;
 }
 
-/**
- * three's RoundedBoxGeometry (same positions, normals and UVs), kept indexed.
- * three's version unrolls the box into separate triangles: a 3-segment box
- * then carries 1,764 vertices instead of 384, all of them shaded on every
- * frame, and it cannot merge with the town's indexed boxes and spheres.
- */
 export class RoundedBoxGeometry extends THREE.BufferGeometry {
   override readonly type = "RoundedBoxGeometry";
   parameters: RoundedBoxParameters;
@@ -72,7 +63,6 @@ export class RoundedBoxGeometry extends THREE.BufferGeometry {
     const positions = this.attributes.position.array as Float32Array;
     const normals = this.attributes.normal.array as Float32Array;
     const uvs = this.attributes.uv.array as Float32Array;
-    // Every face of the unit box has the same (total + 1)^2 grid of vertices.
     const perFace = (total + 1) * (total + 1);
     const half = 0.5 / total;
     for (let v = 0; v < positions.length / 3; v++) {

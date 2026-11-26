@@ -6,7 +6,6 @@ import { useBaseCamp } from "@/store/store";
 import { eggUnderPointer } from "@/world/lib/eggs";
 import { wasDrag } from "@/world/lib/drag";
 
-/** The place's anchor never moves: its matrix is composed once, not every frame. */
 const pin = (g: THREE.Group | null) => {
   if (!g) return;
   g.updateMatrix();
@@ -34,9 +33,6 @@ function PlaceNode({ place, object }: { place: Place; object: THREE.Group }) {
   return (
     <group position={[place.map.x, 0, place.map.z]} ref={pin}>
       <primitive object={object} />
-      {/* One generous hit volume per place; three.js raycasts invisible meshes. The
-          handlers live on it alone, so the place's own parts (the straw hat, the
-          caravel, the buoys) are not picked as the place. */}
       <mesh
         visible={false}
         position-y={Math.max(place.map.top, 1) / 2}

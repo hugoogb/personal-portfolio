@@ -189,7 +189,6 @@ describe("bakeStatic", () => {
       expect(mat.colorWrite).toBe(false);
       expect(mat.depthWrite).toBe(false);
       expect(casters[0].receiveShadow).toBe(false);
-      // all three boxes (24 vertices each) are in it, in root space
       expect(casters[0].geometry.getAttribute("position").count).toBe(72);
       expect(new THREE.Box3().setFromObject(casters[0]).max.x).toBeCloseTo(4.5, 5);
     });

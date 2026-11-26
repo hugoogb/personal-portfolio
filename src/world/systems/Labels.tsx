@@ -3,7 +3,6 @@ import { PLACE_BY_ID } from "@/content/places";
 import type { PlaceId } from "@/content/types";
 import { useBaseCamp } from "@/store/store";
 
-/** Floating labels over the hovered and the selected place (spec 4.3). */
 export function Labels() {
   const hover = useBaseCamp((s) => s.hover);
   const selected = useBaseCamp((s) => s.selected);

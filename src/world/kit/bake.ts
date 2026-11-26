@@ -5,24 +5,14 @@ const signature = (g: THREE.BufferGeometry) =>
   Object.keys(g.attributes).sort().join(",") + (g.index ? "|i" : "|n");
 
 export interface BakeOptions {
-  /** Materials that something repaints or animates: never colour-merged. */
   keep?: Set<THREE.Material>;
-  /** Registers merged geometry and shared materials so their owner disposes them. */
   own?: (x: THREE.Material | THREE.BufferGeometry) => void;
-  /**
-   * Draws every shadow caster's geometry as ONE invisible mesh that casts the
-   * shadow, and stops the coloured merged meshes from casting. The shadow pass
-   * then costs one draw per root instead of one per bucket.
-   */
   shadowProxy?: boolean;
 }
 
 const noOwn = () => {};
-/** Bounding radius under which a mesh is left out of the shadow proxy. */
 const TINY = 0.1;
-/** One shared vertex-colour material per parameter set, per owner. */
 const shared = new WeakMap<object, Map<string, THREE.MeshStandardMaterial>>();
-/** One invisible shadow-caster material per owner. */
 const proxies = new WeakMap<object, THREE.MeshBasicMaterial>();
 
 const isPlain = (m: THREE.Material): m is THREE.MeshStandardMaterial => {
@@ -31,16 +21,6 @@ const isPlain = (m: THREE.Material): m is THREE.MeshStandardMaterial => {
   return !s.map && !s.emissiveMap && !s.transparent && !s.vertexColors && s.emissive.getHex() === 0;
 };
 
-/**
- * Merges every static mesh under `root` that shares a material (and shadow
- * flag, render order and attribute layout) into one mesh. Plain opaque
- * materials (no map, no emissive, not in `opts.keep`) are merged by roughness
- * and metalness instead: their colour moves into a vertex colour on one
- * shared material, and the geometry is expressed in `root`'s space. Subtrees
- * marked `userData.dynamic` and instanced meshes are left alone. Returns how
- * many meshes were merged away. This is how the town fits spec 10's
- * draw-call budget.
- */
 export function bakeStatic(root: THREE.Object3D, opts: BakeOptions = {}): number {
   const own = opts.own ?? noOwn;
   const cache = shared.get(own) ?? shared.set(own, new Map()).get(own)!;
@@ -69,10 +49,7 @@ export function bakeStatic(root: THREE.Object3D, opts: BakeOptions = {}): number
       return;
     }
     const toRootM = new THREE.Matrix4().multiplyMatrices(toRoot, mesh.matrixWorld);
-    // Not clone(): it runs the geometry's constructor first, which builds a default sphere or
-    // rounded box only for copy() to overwrite it, and that was a third of the town's build.
     const geo = new THREE.BufferGeometry().copy(mesh.geometry).applyMatrix4(toRootM);
-    // Only the shadow proxy draws these; without it (or for a mesh that casts none) skip the work.
     const shadowGeo =
       opts.shadowProxy && mesh.castShadow
         ? (coarse(mesh.geometry)?.applyMatrix4(toRootM) ?? geo)
@@ -110,7 +87,6 @@ export function bakeStatic(root: THREE.Object3D, opts: BakeOptions = {}): number
     b.geos.push(geo);
     if (shadowGeo) {
       shadowGeo.computeBoundingSphere();
-      // Specks cast no shadow worth drawing at this zoom.
       if (shadowGeo.boundingSphere!.radius >= TINY) b.shadows.push(shadowGeo);
     }
     b.meshes.push(mesh);
@@ -120,7 +96,6 @@ export function bakeStatic(root: THREE.Object3D, opts: BakeOptions = {}): number
   const casters: { mesh: THREE.Mesh; shadows: THREE.BufferGeometry[] }[] = [];
   for (const b of buckets.values()) {
     const merged = mergeGeometries(b.geos, false);
-    // The per-mesh clones are dropped; the original meshes stay as they were.
     for (const g of b.geos) g.dispose();
     if (!merged) continue;
     own(merged);
@@ -151,10 +126,6 @@ export function bakeStatic(root: THREE.Object3D, opts: BakeOptions = {}): number
   return removed;
 }
 
-/**
- * A shadow needs no rounded corners and few facets: round-cornered boxes cast
- * as plain boxes, curved solids as 6-sided ones. Null when the shape is kept.
- */
 function coarse(g: THREE.BufferGeometry): THREE.BufferGeometry | null {
   const p = (g as THREE.BufferGeometry & { parameters?: Record<string, number | boolean> })
     .parameters;
@@ -200,7 +171,6 @@ function coarse(g: THREE.BufferGeometry): THREE.BufferGeometry | null {
   }
 }
 
-/** Positions and indices only: all a shadow map needs. */
 function shadowGeometry(geos: THREE.BufferGeometry[]): THREE.BufferGeometry {
   let verts = 0;
   let idx = 0;

@@ -12,7 +12,6 @@ function Routes() {
   return null;
 }
 
-/** A hash change while the page is open, as the browser reports it. */
 const go = (hash: string) =>
   act(() => {
     history.replaceState(null, "", hash);
@@ -43,7 +42,6 @@ beforeEach(() => {
 });
 afterEach(cleanup);
 
-// Spec 5.6, one block per row.
 describe("a tour section's hash (#<project>, #about, #contact)", () => {
   it.each(["#readledger", "#about", "#contact"])(
     "%s in Story leaves the scrolling to the browser",
