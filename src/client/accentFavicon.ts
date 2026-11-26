@@ -3,9 +3,7 @@ import { baseCamp } from "@/store/core";
 
 const SIZE = 64;
 
-/** Same rule as --primary-fg in globals.css: a label that stays readable. */
 const contrastOn = (hex: string) => {
-  // Accents are always #rrggbb (isHexColor).
   const [r, g, b] = [1, 3, 5].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
   const channel = (c: number) => (c <= 0.03928 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4);
   const luminance = 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b);
@@ -34,14 +32,6 @@ const draw = (color: string): string | null => {
   return canvas.toDataURL("image/png");
 };
 
-/**
- * Repaints the tab icon in whatever accent the visitor chose - so the thing
- * they changed follows them into the browser chrome.
- *
- * The default accent deliberately leaves the real favicon alone: the designed
- * icon is better than a generated one, and this should read as a reward for
- * having touched the picker rather than a replacement for the brand.
- */
 const paint = (color: string) => {
   document.querySelector('meta[name="theme-color"]')?.setAttribute("content", color);
 
@@ -59,8 +49,6 @@ const paint = (color: string) => {
   const href = draw(color);
   if (!href) return;
 
-  // Hide the shipped icons rather than delete them: switching back to the
-  // default accent has to be able to restore them.
   document
     .querySelectorAll<HTMLLinkElement>('link[rel="icon"]:not(#accent-favicon)')
     .forEach((link) => link.setAttribute("disabled", ""));
@@ -73,7 +61,6 @@ const paint = (color: string) => {
   if (!generated) document.head.appendChild(link);
 };
 
-/** Paints the accent now and on every change; returns the cleanup. */
 export const startAccentFavicon = () => {
   paint(baseCamp.getState().accent);
   return baseCamp.subscribe((s, prev) => {

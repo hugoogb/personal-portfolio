@@ -1,7 +1,6 @@
 import * as THREE from "three";
 import { mkRand, type Kit } from "@/world/kit/kit";
 
-/** HQ, Hugo's studio: glass ground floor with the desk setup, an accent volume over the back, a rooftop terrace (reference 755-802). */
 export function buildHq(kit: Kit): THREE.Group {
   const { rbox, box, cyl, ball, mk, canvasTex, plaque, bush, materials, own } = kit;
   const { leafA, leafB } = materials;
@@ -9,7 +8,6 @@ export function buildHq(kit: Kit): THREE.Group {
   rbox(3.1, 0.16, 2.9, "#ddd6c8", 0, 0, 0, g, 0.06);
   rbox(2.7, 0.04, 2.2, "#e3d6c0", 0, 0.16, 0, g, 0.02, false);
   rbox(1.6, 0.012, 1.0, "#3b434d", -0.1, 0.2, 0.45, g, 0.01, false);
-  // glass shell on a dark steel frame
   const glassM = own(
     new THREE.MeshStandardMaterial({
       color: "#cfe8f5",
@@ -28,7 +26,6 @@ export function buildHq(kit: Kit): THREE.Group {
   box(2.86, 0.06, 0.06, "#23272e", 0, 1.44, 1.15, g);
   box(0.06, 0.06, 2.3, "#23272e", 1.4, 1.44, 0, g);
   box(0.06, 0.06, 2.3, "#23272e", -1.4, 1.44, 0, g);
-  // the setup: a desk, an ultrawide and a vertical monitor, keyboard, mic arm, headphones, speakers, lamp
   const codeTex = (seed: number) =>
     canvasTex(160, 64, (c, w, h) => {
       c.fillStyle = "#14171c";
@@ -90,7 +87,6 @@ export function buildHq(kit: Kit): THREE.Group {
   for (const x of [-0.78, 0.3]) rbox(0.1, 0.16, 0.1, "#2a2f37", x, 0.67, 0.36, g, 0.02);
   cyl(0.012, 0.012, 0.3, "#4b4f56", 0.58, 0.67, 0.42, g, 6);
   mk(new THREE.ConeGeometry(0.07, 0.08, 12), materials.lamp, g, 0.58, 1.0, 0.45);
-  // accent LED strip under the desk, and an accent stripe on the chair
   {
     const led = own(
       new THREE.MeshStandardMaterial({
@@ -119,7 +115,6 @@ export function buildHq(kit: Kit): THREE.Group {
     kit.accent.push({ material: st, mode: "color" });
     mk(new THREE.BoxGeometry(0.06, 0.48, 0.075), st, ch, 0, 0.55, -0.16);
   }
-  // plants and a bookshelf under the upper floor
   cyl(0.11, 0.09, 0.24, "#e9e4da", 1.05, 0.16, 0.8, g, 12);
   ball(0.22, leafB, 1.05, 0.58, 0.8, g, 10);
   ball(0.15, leafA, 1.12, 0.8, 0.75, g, 8);
@@ -137,7 +132,6 @@ export function buildHq(kit: Kit): THREE.Group {
         g,
         false,
       );
-  // upper floor: a volume in your accent colour over the back half, cantilevered to the east
   rbox(3.0, 1.0, 1.45, materials.accentRoof, 0.35, 1.47, -0.48, g, 0.1);
   rbox(1.94, 0.8, 0.06, "#23272e", -0.05, 1.57, 0.255, g, 0.02, false);
   rbox(1.84, 0.7, 0.05, materials.win, -0.05, 1.62, 0.275, g, 0.02, false);
@@ -146,7 +140,6 @@ export function buildHq(kit: Kit): THREE.Group {
   for (let i = 0; i < 7; i++)
     box(0.035, 0.9, 0.08, "#b98552", 1.885, 1.52, -1.05 + i * 0.19, g, false);
   rbox(3.4, 0.07, 1.85, "#f4f2ee", 0.4, 2.47, -0.38, g, 0.02);
-  // rooftop terrace: deck, glass rail, two loungers, a plant
   rbox(1.6, 0.03, 1.15, "#c49a6c", -0.4, 2.54, -0.45, g, 0.01, false);
   {
     const rail = own(
@@ -172,7 +165,6 @@ export function buildHq(kit: Kit): THREE.Group {
   }
   cyl(0.1, 0.08, 0.18, "#e9e4da", 0.15, 2.57, -0.85, g, 10);
   ball(0.16, leafB, 0.15, 2.86, -0.85, g, 10);
-  // outside: a bike in your accent colour, the plaque, planters
   {
     const bk = new THREE.Group();
     bk.position.set(1.62, 0, 1.75);
@@ -191,7 +183,6 @@ export function buildHq(kit: Kit): THREE.Group {
   }
   bush(g, -1.65, -1.45);
   bush(g, 1.75, -1.2);
-  // the flag flies from the roof corner
   cyl(0.035, 0.035, 1.1, "#3b434d", 1.9, 2.54, -1.1, g);
   const flag = new THREE.Mesh(own(new THREE.PlaneGeometry(0.7, 0.4, 8, 1)), materials.accentFlag);
   flag.position.set(2.28, 3.42, -1.1);

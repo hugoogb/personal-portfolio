@@ -16,7 +16,6 @@ export function StoryFinale() {
         <button type="button" className="story-btn story-btn--primary" data-explore-cta disabled>
           Explore the town &rarr;
         </button>
-        {/* Filled in by src/client/client.ts when Explore is off, with the switch's reason. */}
         <p id="explore-why" className="story-note story-finale__why" hidden />
       </div>
     </section>

@@ -63,7 +63,6 @@ describe("lighting", () => {
   });
 
   it("swings the sun across the sky from morning to evening", () => {
-    // The reference's azimuth runs from pi at sunrise to 0 at sunset.
     expect(lighting(9).sun.offset[0]).toBeLessThan(0);
     expect(lighting(18).sun.offset[0]).toBeGreaterThan(0);
   });

@@ -14,12 +14,6 @@ interface Active {
   glows: number[];
 }
 
-/**
- * The tour's arrival moment (spec 4.4): the place's windows and glows swell
- * once. DayNight rewrites the resting intensities only four times a second, so
- * multiplying the live value would compound; the resting values are noted at
- * the start and each frame sets rest * k. Mounted after DayNight so this wins.
- */
 export function Arrivals({ world }: { world: BuiltWorld }) {
   const active = useRef<Active | null>(null);
   useEffect(

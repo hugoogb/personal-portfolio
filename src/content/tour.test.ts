@@ -64,14 +64,13 @@ describe("tour", () => {
     const a = groundShift(1, 0, 0);
     expect(Math.hypot(a.x, a.z)).toBeCloseTo(1);
     const b = groundShift(0, 1, 0);
-    expect(Math.hypot(b.x, b.z)).toBeGreaterThan(1); // up the screen is foreshortened on the ground
+    expect(Math.hypot(b.x, b.z)).toBeGreaterThan(1);
   });
 
   it("puts a left-side card's building right of centre on desktop", () => {
     const stop = STOPS.find((s) => s.side === "left")!;
     const pose = poseFor(stop, false, 16 / 9);
     const place = PLACE_BY_ID[stop.place!].map;
-    // Moving the target opposite the building's screen side: target - place lies along -right.
     const right = groundShift(1, 0, pose.az);
     const d = (pose.x - place.x) * right.x + (pose.z - place.z) * right.z;
     expect(d).toBeLessThan(0);
@@ -83,8 +82,6 @@ describe("tour", () => {
   });
 
   it("never zooms out so far that the near plane cuts the ground off the bottom", () => {
-    // The screen's bottom edge starts view/2 below the camera along the screen's up;
-    // past the camera's height the sea there falls behind the near plane (a pale band).
     const upY = Math.hypot(CAMERA_OFFSET[0], CAMERA_OFFSET[2]) / Math.hypot(...CAMERA_OFFSET);
     const views = [
       VIEW_MAX,

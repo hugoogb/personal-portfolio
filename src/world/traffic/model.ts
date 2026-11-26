@@ -4,7 +4,6 @@ import type { StatusMap } from "@/store/store";
 type Cell = [number, number];
 const key = (c: Cell) => `${c[0]},${c[1]}`;
 
-/** Road grid (reference 667-669): the main road, the avenue and the promenade. */
 export const ROAD_CELLS = (() => {
   const cells = new Set<string>();
   for (let x = -17; x <= 17; x++) cells.add(key([x, 0]));
@@ -37,7 +36,6 @@ export const bfs = (a: Cell, b: Cell): Cell[] => {
   return path;
 };
 
-/** Where each app's traffic joins the road (reference DOORS, line 673). */
 export const DOORS = {
   hq: [-3, 0],
   f1: [-11, 0],
@@ -48,9 +46,7 @@ export const DOORS = {
 } satisfies Record<string, Cell>;
 export type TrafficApp = keyof typeof DOORS;
 
-/** The avenue cell beside the yard where packets turn in. */
 export const YARD_GATE: Cell = [0, -10];
-/** Between the two rack rows inside the yard (yard at -3.2, -9.4). */
 export const YARD_TARGET: Cell = [-1.9, -9.4];
 
 export interface Route {
@@ -64,7 +60,6 @@ export const buildRoutes = (): Route[] =>
     path: [...bfs(DOORS[id], YARD_GATE), YARD_TARGET],
   }));
 
-/** One lane per road edge any route uses, towards the yard (excludes the final hop into the yard). */
 export const laneEdges = (routes: Route[]) => {
   const edges = new Map<string, [Cell, Cell]>();
   for (const r of routes) {
@@ -77,10 +72,8 @@ export const laneEdges = (routes: Route[]) => {
   return [...edges.values()];
 };
 
-/** Distance from the road's centre line to the packets' lane. */
 export const LANE = 0.22;
 
-/** A point `s` cells along a path, on the right-hand lane, with its heading (reference `at`). */
 export const pointAt = (
   path: Cell[],
   sIn: number,
@@ -103,18 +96,10 @@ export const pointAt = (
 export interface StreakPoint {
   x: number;
   z: number;
-  /** Heading, filled by pointAt for the tail and head; unused by the corners. */
   ry: number;
-  /** 0 at the streak's tail, 1 at its head: where this point sits along the fade. */
   u: number;
 }
 
-/**
- * The lane-side points a streak from `s0` to `s1` passes through: its tail, a
- * mitred point at every corner in between, and its head. Drawing a piece
- * between each pair bends the streak round a corner instead of cutting the
- * diagonal. Writes into `out` (reused, no allocation) and returns the count.
- */
 export const streakPoints = (path: Cell[], s0: number, s1: number, out: StreakPoint[]) => {
   const span = s1 - s0 || 1;
   let n = 0;
@@ -126,14 +111,12 @@ export const streakPoints = (path: Cell[], s0: number, s1: number, out: StreakPo
     const [nx, nz] = path[i + 1];
     const l1 = Math.hypot(cx - px, cz - pz) || 1;
     const l2 = Math.hypot(nx - cx, nz - cz) || 1;
-    // Lane normals either side of the corner (the same side pointAt offsets to).
     const ax = -(cz - pz) / l1;
     const az = (cx - px) / l1;
     const bx = -(nz - cz) / l2;
     const bz = (nx - cx) / l2;
     const dot = ax * bx + az * bz;
-    if (dot > 0.999) continue; // straight on: no corner to bend round
-    // The mitre: where the two offset lane lines meet.
+    if (dot > 0.999) continue;
     const k = LANE / (1 + dot);
     const p = out[n++];
     p.x = cx + (ax + bx) * k;
@@ -145,10 +128,6 @@ export const streakPoints = (path: Cell[], s0: number, s1: number, out: StreakPo
   return n;
 };
 
-/**
- * Simulated traffic (spec 6b, revised 6 Oct): a fixed, plausible profile per
- * app. These numbers only shape the animation; none is ever shown on screen.
- */
 export const PROFILES: Record<TrafficApp, { rpm: number; p50: number }> = {
   hq: { rpm: 40, p50: 60 },
   f1: { rpm: 30, p50: 140 },
@@ -158,11 +137,9 @@ export const PROFILES: Record<TrafficApp, { rpm: number; p50: number }> = {
   av: { rpm: 4, p50: 40 },
 };
 
-/** Flows per second, log-scaled from requests per minute and capped so the roads stay calm. */
 export const requestsPerSecond = (rpm: number) =>
   Math.min(1, Math.log10(1 + Math.max(0, rpm)) * 0.25);
 
-/** Cells per second: slower apps move visibly slower, clamped to stay readable. */
 export const packetSpeed = (p50: number) =>
   Math.min(3, Math.max(1.2, 3.2 - Math.log10(1 + Math.max(0, p50)) * 0.6));
 
@@ -173,7 +150,6 @@ export interface RoutePlan {
   down: boolean;
 }
 
-/** One plan per route, same order: the app's profile, and whether status reports it down. */
 export const planRoutes = (routes: Route[], status: StatusMap | "unknown"): RoutePlan[] =>
   routes.map((route) => ({
     route,

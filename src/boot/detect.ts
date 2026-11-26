@@ -10,10 +10,6 @@ import {
 type BaseSignals = Omit<TierSignals, "webgl" | "gpuTier">;
 type GpuResult = { tier: number; type: TierType };
 
-/**
- * detect-gpu's verdict as tier signals. A blocklisted GPU is tier 0; a GPU it
- * does not know (FALLBACK) tells us nothing, so the heuristics decide.
- */
 export const signalsFrom = (gpu: GpuResult | null, base: BaseSignals): TierSignals => ({
   ...base,
   webgl: gpu ? gpu.type !== "WEBGL_UNSUPPORTED" : true,
@@ -25,15 +21,11 @@ export const signalsFrom = (gpu: GpuResult | null, base: BaseSignals): TierSigna
         : null,
 });
 
-/** The tier to start on. No WebGL always means Lite; otherwise a manual choice wins. */
 export const bootTier = (signals: TierSignals, mode: QualityMode) => {
   const auto = chooseTier(signals);
   return { auto, tier: signals.webgl ? resolveTier(mode, auto) : (0 as Tier) };
 };
 
-/**
- * The town needs WebGL2 (three r163+ has no WebGL1 path). The probe's context is given back at once.
- */
 export const hasWebgl2 = (win: Window = window): boolean => {
   try {
     const gl = win.document.createElement("canvas").getContext("webgl2");
@@ -60,8 +52,6 @@ export const readSignals = async (win: Window = window): Promise<TierSignals> =>
   };
   let gpu: GpuResult | null = null;
   try {
-    // Loaded here, with the town, not in the first paint's bundle. Benchmark tables
-    // are served from this site (vite.config.ts), not unpkg.
     const { getGPUTier } = await import("detect-gpu");
     gpu = await getGPUTier({ benchmarksURL: "/benchmarks" });
   } catch {

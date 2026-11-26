@@ -7,12 +7,9 @@ export interface TallyLife {
   screen: THREE.MeshStandardMaterial;
 }
 
-/** The digit window's backlight at rest; DayNight scales it down when the service is down. */
 export const GLOW = 0.7;
-/** The Wrap card's glow at rest, dimmed the same way. */
 export const SCREEN = 0.8;
 
-/** One tap every PRESS seconds, and the count goes up by one. */
 const PRESS = 2.4;
 const START = 428;
 
@@ -21,7 +18,6 @@ const INK = "#1d1530";
 const PAPER = "#faf7f2";
 const CHROME = "#c9ccd6";
 
-/** A mechanical counter's window: four cells, the last one rolling. */
 const drawDigits = (count: () => number) => (c: CanvasRenderingContext2D, w: number, h: number) => {
   c.fillStyle = INK;
   c.fillRect(0, 0, w, h);
@@ -41,7 +37,6 @@ const drawDigits = (count: () => number) => (c: CanvasRenderingContext2D, w: num
   }
 };
 
-/** A Wrap card, as the app shows it: the year's biggest count, then the mix. */
 const drawWrap = (c: CanvasRenderingContext2D, w: number, h: number) => {
   const bg = c.createLinearGradient(0, 0, 0, h);
   bg.addColorStop(0, "#3b1d66");
@@ -90,18 +85,12 @@ const drawWrap = (c: CanvasRenderingContext2D, w: number, h: number) => {
   c.fillText("32 logs", 36, h - 39);
 };
 
-/**
- * Wrapped Things: a giant hand tally counter, because the app is one. It stands
- * on its finger ring, clicks every couple of seconds and counts up; a Wrap card
- * and a few of the things people count sit round it.
- */
 export function buildTally(kit: Kit): THREE.Group {
   const { rbox, cyl, mk, plaque, own, canvasTex } = kit;
   const g = new THREE.Group();
   rbox(2.9, 0.1, 2.9, "#ece6f7", 0, 0, 0, g, 0.05);
   rbox(1.9, 0.3, 1.2, "#d9cfff", 0, 0.1, -0.25, g, 0.08);
 
-  // the clicker, turned a little toward the street
   const clicker = new THREE.Group();
   clicker.position.set(0, 0.4, -0.25);
   clicker.rotation.y = 0.3;
@@ -152,7 +141,6 @@ export function buildTally(kit: Kit): THREE.Group {
     }),
   );
   mk(new THREE.PlaneGeometry(1.0, 0.375), glow, clicker, 0, CY + 0.12, D / 2 + 0.025, false);
-  // the button on top, and the reset knob beside it
   const top = CY + R;
   cyl(0.11, 0.11, 0.2, CHROME, 0, top - 0.05, 0, clicker, 14);
   const button = new THREE.Group();
@@ -162,7 +150,6 @@ export function buildTally(kit: Kit): THREE.Group {
   cyl(0.26, 0.26, 0.14, "#ffd23f", 0, 0, 0, button, 24);
   cyl(0.1, 0.1, 0.1, CHROME, 0.62, CY + 0.52, 0, clicker, 12).rotation.z = -0.8;
 
-  // the Wrap card, standing by
   {
     const card = new THREE.Group();
     card.position.set(0.95, 0.1, 0.8);
@@ -186,7 +173,6 @@ export function buildTally(kit: Kit): THREE.Group {
     sc.translateZ(0.035);
   }
 
-  // things people count: a pint, a coffee, a dumbbell
   cyl(0.17, 0.14, 0.42, "#f2b134", -1.0, 0.1, 0.75, g, 18);
   cyl(0.18, 0.18, 0.09, PAPER, -1.0, 0.52, 0.75, g, 18);
   cyl(0.14, 0.12, 0.2, PAPER, -0.75, 0.1, 1.1, g, 18);

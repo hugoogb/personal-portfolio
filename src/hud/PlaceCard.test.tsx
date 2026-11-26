@@ -8,7 +8,6 @@ import { useBaseCamp } from "@/store/store";
 beforeEach(() => useBaseCamp.setState(useBaseCamp.getInitialState()));
 afterEach(() => vi.unstubAllGlobals());
 
-/** A phone: no input points finely. */
 const touchOnly = () => vi.stubGlobal("matchMedia", () => ({ matches: false }));
 
 describe("PlaceCard", () => {

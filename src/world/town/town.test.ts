@@ -67,7 +67,6 @@ describe("buildTown", () => {
     const town = buildTown(kit);
     const clouds = town.clouds;
     expect(clouds.isInstancedMesh).toBe(true);
-    // three's shadow pass tests the main camera's layers, so layer 0
     expect(clouds.layers.mask).toBe(1);
     expect(clouds.castShadow).toBe(true);
     expect(clouds.receiveShadow).toBe(false);
@@ -98,7 +97,6 @@ describe("buildTown", () => {
       const root = new THREE.Group();
       addSmoke(kit, root, [new THREE.Vector3(0, 3, 0)], ready);
       const puffs = root.children[0] as THREE.InstancedMesh;
-      /** Puffs alive: instances that are not scaled to nothing. */
       const alive = () => {
         let n = 0;
         const m = new THREE.Matrix4();

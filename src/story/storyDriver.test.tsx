@@ -34,7 +34,7 @@ const setScroll = (y: number) => {
     window.dispatchEvent(new Event("scroll"));
   });
 };
-const focus = (stop: number) => stop * H + H / 2 - H / 2; // scrollY that centres a stop
+const focus = (stop: number) => stop * H + H / 2 - H / 2;
 
 let arrive: Mock<(id: PlaceId) => void>;
 
@@ -58,7 +58,7 @@ afterEach(cleanup);
 describe("startStoryDriver", () => {
   it("resuming Story at place Y after a scroll at X never announces X", async () => {
     render(<Driver />);
-    setScroll(focus(3)); // ReadLedger
+    setScroll(focus(3));
     act(() => useBaseCamp.setState({ mode: "explore", selected: "es" }));
     arrive.mockClear();
     const realScrollTo = window.scrollTo;
@@ -100,7 +100,7 @@ describe("startStoryDriver", () => {
   it("the finale, which is not in the rail, shows Contact in the rail and the chip", () => {
     render(<Driver />);
     setScroll(focus(3));
-    setScroll(focus(8)); // the overview section
+    setScroll(focus(8));
     expect(useBaseCamp.getState().stop).toBe(8);
     expect(document.querySelector("[data-rail-label]")!.textContent).toBe("Contact");
     expect(document.querySelector("[data-rail-count]")!.textContent).toBe("8 / 8");
@@ -166,10 +166,9 @@ describe("switching modes keeps the position", () => {
 
   it("Story -> Explore -> Story comes back to the same scroll position, announcing only that stop", async () => {
     render(<Driver />);
-    setScroll(focus(4) + 100); // Wrapped Things, a little past its centre
+    setScroll(focus(4) + 100);
     act(() => enterExplore());
     expect(useBaseCamp.getState().selected).toBe("wt");
-    // Explore's layout clamps the page to the top.
     Object.defineProperty(window, "scrollY", { value: 0, configurable: true });
     arrive.mockClear();
     const urls: string[] = [];
@@ -192,7 +191,7 @@ describe("switching modes keeps the position", () => {
   it("Text -> Story lands on the section read in Text, not the stale stop", async () => {
     useBaseCamp.setState({ mode: "text", stop: 4, selected: "wt" });
     render(<Driver />);
-    setScroll(focus(7)); // Contact, read in Text
+    setScroll(focus(7));
     await act(async () => enterStory());
     expect(useBaseCamp.getState().mode).toBe("story");
     expect(useBaseCamp.getState().stop).toBe(7);
@@ -201,14 +200,12 @@ describe("switching modes keeps the position", () => {
 
   it("Text, which hides the finale, measures past it: the end of the page is Contact", () => {
     const finale = document.getElementById("explore")!;
-    // A display:none box measures as an empty rect at the top of the viewport.
     finale.getClientRects = () => [] as unknown as DOMRectList;
     finale.getBoundingClientRect = () => ({ top: 0 }) as DOMRect;
     Object.defineProperty(finale, "offsetHeight", { value: 0, configurable: true });
     useBaseCamp.setState({ mode: "text", stop: 2, selected: "f1" });
     render(<Driver />);
     setScroll(focus(7) + 300);
-    // Explore, not Story: the driver would re-measure the (stubbed) hidden finale.
     act(() => enterExplore());
     expect(useBaseCamp.getState().stop).toBe(7);
     expect(useBaseCamp.getState().selected).toBe("post");
@@ -217,7 +214,7 @@ describe("switching modes keeps the position", () => {
   it("Text -> Explore selects the project read in Text", () => {
     useBaseCamp.setState({ mode: "text", stop: 4, selected: "wt", town: "loading" });
     render(<Driver />);
-    setScroll(focus(3)); // ReadLedger
+    setScroll(focus(3));
     act(() => enterExplore());
     expect(useBaseCamp.getState().mode).toBe("explore");
     expect(useBaseCamp.getState().selected).toBe("rl");

@@ -11,26 +11,14 @@ import { barcelonaHour, effectiveHour, nightAmount } from "@/world/lib/sun";
 
 const SHADOW_MAP: Record<Tier, number> = { 0: 0, 1: 0, 2: 1024, 3: 2048 };
 const RECOMPUTE_S = 0.25;
-/**
- * The shadow map is drawn every other frame, not on every render() call. Left
- * on autoUpdate, three redraws it for each scene render, which the effects
- * composer can make more than one a frame. At 60 fps a moving car's shadow
- * trails it by one frame at most, a pixel or two at the town's zoom.
- */
 export const SHADOW_EVERY = 2;
 
 const hourNow = () => effectiveHour(useBaseCamp.getState().timeOverride, new Date());
 
-/**
- * The stadium's point lights are in the town's shaders only while they shine.
- * Every lit pixel pays for each point light in the scene, dark or not, and by
- * day they were a fifth of the frame.
- */
 const floodlightsOn = (world: BuiltWorld, on: boolean) => {
   for (const light of world.kit.pointLights) light.visible = on;
 };
 
-/** The town's light (spec 6), recomputed four times a second from the hour. */
 export function DayNight({ world }: { world: BuiltWorld }) {
   const scene = useThree((s) => s.scene);
   const gl = useThree((s) => s.gl);
@@ -48,7 +36,6 @@ export function DayNight({ world }: { world: BuiltWorld }) {
     since.current = RECOMPUTE_S;
   }, [scene, bg, size]);
 
-  // Layout effect: a new light (the map size is its key) must get its map drawn on the very next frame.
   useLayoutEffect(() => {
     gl.shadowMap.autoUpdate = false;
     gl.shadowMap.needsUpdate = true;
@@ -57,7 +44,6 @@ export function DayNight({ world }: { world: BuiltWorld }) {
     };
   }, [gl, size]);
 
-  // Before the first frame, so its shaders already match the hour.
   useLayoutEffect(() => floodlightsOn(world, lighting(hourNow()).stadium > 0), [world]);
 
   useFrame((_, dt) => {
@@ -89,7 +75,6 @@ export function DayNight({ world }: { world: BuiltWorld }) {
     }
     bg.set(L.background);
     town.water.color.set(L.water);
-    // Duller at night, so the floodlights do not mirror on the sea as two blobs.
     town.water.roughness = 0.18 + (0.6 - 0.18) * L.night;
     kit.materials.win.emissiveIntensity = L.windows.bright;
     kit.materials.winDim.emissiveIntensity = L.windows.dim;
@@ -102,19 +87,16 @@ export function DayNight({ world }: { world: BuiltWorld }) {
       set.winDim.emissiveIntensity = L.windows.dim * f;
       for (const g of set.glows) g.material.emissiveIntensity = g.base * f;
     }
-    // The night owl counts the real Barcelona clock, not the preview override.
     if (s.introDone && nightAmount(barcelonaHour(new Date())) > 0.6) s.achieve("night");
     const flows = kit.life.flowMat as THREE.MeshBasicMaterial | undefined;
     if (flows) flows.opacity = Math.min(1, L.packets);
     kit.materials.lamp.emissiveIntensity = L.lamps;
     for (const m of kit.signMats) m.emissiveIntensity = L.signs;
     for (const light of kit.pointLights) light.intensity = L.stadium;
-    // Twice a day the lit shaders recompile for the new light count: one short hitch at dusk.
     if (kit.pointLights[0] && kit.pointLights[0].visible !== L.stadium > 0) {
       floodlightsOn(world, L.stadium > 0);
     }
     kit.materials.pool.opacity = L.pools;
-    // By day the pools are clear: skip their draws instead of blending nothing.
     kit.materials.pool.visible = L.pools > 0;
     const board = kit.life.boardFace as THREE.MeshStandardMaterial | undefined;
     if (board) board.emissiveIntensity = L.board;

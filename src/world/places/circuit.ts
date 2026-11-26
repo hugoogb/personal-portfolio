@@ -1,7 +1,6 @@
 import * as THREE from "three";
 import type { Kit } from "@/world/kit/kit";
 
-/** Barcelona-Catalunya outline in (u, v), the reference's TRACK (line 682). */
 const TRACK: [number, number][] = [
   [-0.85, 0],
   [0.55, 0],
@@ -39,7 +38,6 @@ interface F1Car {
   sp: number;
 }
 
-/** F1 Tracker, a pit lane and a Barcelona-shaped circuit with three cars lapping (reference 826-862; laps 1444). */
 export function buildCircuit(kit: Kit): THREE.Group {
   const { rbox, box, cyl, ball, mk, mat, canvasTex, textPlane, plaque, crowdRow, pool, ribbon } =
     kit;
@@ -56,7 +54,6 @@ export function buildCircuit(kit: Kit): THREE.Group {
   ribbon(curve, 260, 0.62, 0.03, mat("#cdd3c4", { side: THREE.DoubleSide }), g);
   ribbon(curve, 260, 0.36, 0.04, mat("#ffffff", { side: THREE.DoubleSide }), g);
   ribbon(curve, 260, 0.32, 0.05, mat("#4b5059", { side: THREE.DoubleSide, rough: 0.85 }), g);
-  // start / finish
   const ck = canvasTex(32, 128, (c, w, h) => {
     for (let yy = 0; yy < 8; yy++)
       for (let xx = 0; xx < 2; xx++) {
@@ -71,7 +68,6 @@ export function buildCircuit(kit: Kit): THREE.Group {
   cl.rotation.x = -Math.PI / 2;
   cl.position.set(1.0, 0.055, SZ);
   g.add(cl);
-  // pit lane, pit wall, garages, paddock roof, control tower
   box(4.9, 0.02, 0.24, "#8c939c", -0.4, 0.03, SZ - 0.4, g, false);
   rbox(4.7, 0.12, 0.05, "#f2f3f5", -0.4, 0.03, SZ - 0.2, g, 0.02);
   box(4.7, 0.03, 0.055, "#e5484d", -0.4, 0.15, SZ - 0.2, g, false);
@@ -87,7 +83,6 @@ export function buildCircuit(kit: Kit): THREE.Group {
   rbox(0.55, 1.1, 0.55, "#eef0f3", 2.55, 0, GZ, g, 0.06);
   rbox(0.66, 0.28, 0.66, win, 2.55, 1.1, GZ, g, 0.05);
   rbox(0.74, 0.08, 0.74, "#d8dde3", 2.55, 1.38, GZ, g, 0.03);
-  // main grandstand on the outside of the straight, facing the track
   const TZ = SZ + 0.55;
   for (let k = 0; k < 3; k++)
     rbox(3.6, 0.13, 0.3, "#cfd5dc", -0.3, k * 0.13, TZ + k * 0.28, g, 0.03);
@@ -124,7 +119,6 @@ export function buildCircuit(kit: Kit): THREE.Group {
     cm.castShadow = true;
     g.add(cm);
   }
-  // tyre walls at the big braking zones
   {
     const tg = new THREE.TorusGeometry(0.1, 0.045, 8, 16);
     tg.rotateX(Math.PI / 2);
@@ -136,7 +130,6 @@ export function buildCircuit(kit: Kit): THREE.Group {
     ])
       for (let k = 0; k < 3; k++) mk(tg, k % 2 ? "#2a2d33" : "#1c1e22", g, x, 0.05 + k * 0.09, z);
   }
-  // night race lighting: floodlight masts round the track, a light strip under the grandstand roof
   const MASTS: [number, number][] = [
     [-5.35, 0.2],
     [-5.0, -2.6],
@@ -153,7 +146,6 @@ export function buildCircuit(kit: Kit): THREE.Group {
   for (const [x, z] of MASTS) pool(g, x * 0.82, z * 0.82, 3.2, 3.2);
   box(3.5, 0.03, 0.05, lamp, -0.3, 0.72, TZ - 0.2, g, false);
   plaque(g, "F1 TRACKER", "#e5484d", -3.65, TZ + 0.45, 1.0);
-  // three cars lapping
   const cars: F1Car[] = (
     [
       ["#e5484d", 0.088],

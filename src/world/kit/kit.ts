@@ -2,7 +2,6 @@ import * as THREE from "three";
 import { RoundedBoxGeometry } from "@/world/kit/roundedBox";
 import type { Tier } from "@/boot/tiers";
 
-/** Soft clay, the locked art kit (spec 5.1); the reference sketch's STYLES.clay. */
 export const CLAY = {
   round: 1,
   rough: 0.72,
@@ -34,10 +33,8 @@ export interface FrameEnv {
   tier: Tier;
 }
 export type FrameFn = (dt: number, t: number, env: FrameEnv) => void;
-/** Lighting-dependent work that is not motion: it keeps running when the town is still. */
 export type LightFn = (env: FrameEnv, still: boolean) => void;
 export type AccentMode = "color" | "emissive" | "both";
-/** A material the accent colour paints: basic ones take the colour only. */
 export type AccentEntry =
   | { material: THREE.MeshBasicMaterial; mode: "color" }
   | { material: THREE.MeshStandardMaterial; mode: AccentMode };
@@ -48,7 +45,6 @@ export interface RoadPiece {
 }
 type Draw = (c: CanvasRenderingContext2D, w: number, h: number) => void;
 
-/** mulberry32, as in the reference (line 550), so layouts are repeatable. */
 export const mkRand = (seed: number) => {
   let a = seed;
   return () => {
@@ -62,11 +58,6 @@ export const mkRand = (seed: number) => {
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
-/**
- * Everything the town is built from: cached materials and geometry, the
- * shared window/lamp/accent materials, and the registries the systems use
- * (accent paint, signs, point lights, frame hooks, build-in parts).
- */
 export function createKit(seed = 1337) {
   const owned = {
     geometries: new Set<THREE.BufferGeometry>(),
@@ -121,7 +112,6 @@ export function createKit(seed = 1337) {
       return g;
     }
     const R2 = Math.max(0.005, Math.min(rr, w / 2 - 0.002, h / 2 - 0.002, d / 2 - 0.002));
-    // Trim, frames and sills have corners too small to see: one segment is enough.
     const seg = R2 <= 0.04 ? 1 : 3;
     const key = [w, h, d, R2, seg].map((v) => v.toFixed(3)).join("|");
     let g = geoCache.get(key);
@@ -129,7 +119,6 @@ export function createKit(seed = 1337) {
     return g;
   };
 
-  /** One geometry per shape and size: spheres and cylinders repeat across the town (trees, posts). */
   const cached = (key: string, make: () => THREE.BufferGeometry) => {
     let g = geoCache.get(key);
     if (!g) geoCache.set(key, (g = own(make())));
@@ -552,9 +541,7 @@ export function createKit(seed = 1337) {
     accent,
     paintAccent,
     pointLights: [] as THREE.PointLight[],
-    /** Named objects later phases drive (arena, stadium seats, ship, hat, LEDs, F1 cars, tally counter). */
     life: {} as Record<string, unknown>,
-    /** What the build-in animates. */
     buildIn: {
       ground: null as THREE.Object3D | null,
       roads: [] as RoadPiece[],
@@ -563,19 +550,16 @@ export function createKit(seed = 1337) {
     onFrame: (fn: FrameFn) => {
       frames.push(fn);
     },
-    /** One animated frame: the lighting work, then every motion hook. */
     frame: (dt: number, t: number, env: FrameEnv) => {
       for (const fn of lights) fn(env, false);
       for (const fn of frames) fn(dt, t, env);
     },
-    /** Reduced motion: pose everything at time `t` (default 0) without advancing it. */
     settle: (env: FrameEnv, t = 0) => {
       for (const fn of frames) fn(0, t, env);
     },
     onLight: (fn: LightFn) => {
       lights.push(fn);
     },
-    /** The lighting work alone, for a town that is not animating. */
     light: (env: FrameEnv, still: boolean) => {
       for (const fn of lights) fn(env, still);
     },

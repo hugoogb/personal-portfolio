@@ -18,11 +18,6 @@ import { Trophies } from "@/hud/Trophies";
 import { useHudKeys } from "@/hud/useHudKeys";
 import { useBaseCamp } from "@/store/store";
 
-/**
- * The HUD over the town (spec 4.3, story spec 5.5). It mounts only in Explore;
- * the canvas itself lives in #town-root, under this stage, which lets clicks
- * through everywhere but on the HUD's own pieces.
- */
 export function Hud() {
   const theme = useHudTheme();
   const selected = useBaseCamp((s) => s.selected);
@@ -32,8 +27,6 @@ export function Hud() {
   const introDone = useBaseCamp((s) => s.introDone);
   useHudKeys();
 
-  // Entering Explore from a link selects that link's place; otherwise keep the selection, or HQ.
-  // From the finale (a stop with no place) nothing is selected, so the camera stays at the overview.
   useEffect(() => {
     const s = useBaseCamp.getState();
     const place = placeBySlug(window.location.hash);
@@ -41,7 +34,6 @@ export function Hud() {
     else if (!s.selected && STOPS[s.stop]?.place) s.select("hq");
   }, []);
 
-  // In Explore the address follows the selection (replaceState: no hashchange, no loop).
   useEffect(() => {
     return useBaseCamp.subscribe((s, prev) => {
       if (s.selected === prev.selected) return;

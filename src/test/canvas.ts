@@ -1,9 +1,5 @@
 import { vi } from "vitest";
 
-/**
- * jsdom has no 2D canvas. The kit draws textures (signs, stripes, grass) with
- * one, so tests give it a context whose every method is a no-op.
- */
 export const stubCanvas = () => {
   const ctx = new Proxy(
     {},

@@ -10,7 +10,6 @@ interface Cube {
   z: number;
 }
 
-/** @avatar-generator, a factory that stamps faces onto cubes (reference 912-939; animation 1463-1464). */
 export function buildFactory(kit: Kit): THREE.Group {
   const { rbox, cyl, mk, mat, makeMat, geoBox, door, canvasTex, plaque, bush, winPick } = kit;
   const { win } = kit.materials;
@@ -52,7 +51,6 @@ export function buildFactory(kit: Kit): THREE.Group {
       c.arc(64, 70, 26, 0.15 * Math.PI, 0.85 * Math.PI);
       c.stroke();
     });
-  // the face logo on the east wall
   {
     const lg = new THREE.Mesh(
       kit.own(new THREE.CircleGeometry(0.36, 32)),
@@ -69,7 +67,6 @@ export function buildFactory(kit: Kit): THREE.Group {
     rim.position.set(1.54, 1.18, 0.78);
     g.add(rim);
   }
-  // the line comes out of the front wall: belt, a stamping press, a crate of finished faces
   rbox(0.5, 0.5, 0.05, "#2a2f37", 0.45, 0.12, 1.11, g, 0.02, false);
   rbox(0.42, 0.14, 1.8, "#3a414b", 0.45, 0.15, 2.0, g, 0.05);
   for (let i = 0; i < 5; i++) cyl(0.03, 0.03, 0.15, "#5b6470", 0.45, 0, 1.25 + i * 0.4, g, 6);
@@ -120,7 +117,6 @@ export function buildFactory(kit: Kit): THREE.Group {
       c.m.position.set(fac.x, 0.4, c.z);
     }
   });
-  // chimney top, place-local (reference world position minus the place's x, z), for the smoke
   const chimneys = (kit.life.chimneys ??= []) as { id: string; local: THREE.Vector3 }[];
   chimneys.push({ id: "av", local: new THREE.Vector3(-1.15, 3.25, -0.75) });
   return g;

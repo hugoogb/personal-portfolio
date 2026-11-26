@@ -1,15 +1,8 @@
-/** Where the story is, read by the camera every frame (never React state, so scrolling never re-renders). */
 export const progress = { index: 0, fraction: 0, cut: 0 };
 
 export const measureCenters = (sections: { top: number; height: number }[]) =>
   sections.map((s) => s.top + s.height / 2);
 
-/**
- * Where each stop is reached, as the page y that sits at the middle of the screen. A
- * section no taller than the screen is reached centred; a taller one (a phone card
- * sheet) when its top meets the top of the screen, so its building is in view first
- * and the card is then read while the camera holds. Anchor jumps land there too.
- */
 export const measureStops = (sections: { top: number; height: number }[], viewportH: number) =>
   sections.map((s) => s.top + Math.min(s.height, viewportH) / 2);
 
@@ -25,7 +18,6 @@ export const stopProgress = (centers: number[], focusY: number) => {
 export const currentStop = (p: { index: number; fraction: number }) =>
   p.index + (p.fraction >= 0.5 ? 1 : 0);
 
-/** Each tour section's stop line (measureStops) in page coordinates, on the layout on screen. */
 export const readStops = (sections: HTMLElement[]) =>
   measureStops(
     sections.map((el) => ({
@@ -39,10 +31,6 @@ export const storySections = () => [
   ...document.querySelectorAll<HTMLElement>("#story > section[data-stop]"),
 ];
 
-/**
- * The stop at the middle of the screen now, or null with no story on the page. Sections
- * the layout hides (Text has no finale) are skipped: a hidden box would measure at the top.
- */
 export const stopInView = (): number | null => {
   const shown = storySections()
     .map((el, i) => ({ el, i }))

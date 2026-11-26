@@ -4,10 +4,6 @@ export interface KeyValueStorage {
   removeItem(key: string): void;
 }
 
-/**
- * localStorage can be missing (server render) or throw on every call (private
- * windows, blocked site data). Then nothing is saved and the town still works.
- */
 export const createSafeStorage = (backend: () => Storage | undefined): KeyValueStorage => {
   const attempt = <T>(apply: (s: Storage) => T, fallback: T): T => {
     try {

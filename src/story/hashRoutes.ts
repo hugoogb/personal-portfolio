@@ -3,13 +3,8 @@ import { TOUR_PLACES } from "@/content/tour";
 import { baseCamp } from "@/store/core";
 import { enterExplore, enterText } from "@/story/transitions";
 
-/** A hash picks the mode for this visit only, never the saved choice (spec 3.4). */
 const BY_HASH = { chosen: false };
 
-/**
- * Hash changes while the page is open (story spec 5.6). The first load is the head script's.
- * A tour section's hash in Story or Text is the browser's own anchor scroll.
- */
 export const startHashRoutes = () => {
   const onHash = () => {
     const slug = location.hash.replace(/^#/, "").toLowerCase();

@@ -15,7 +15,6 @@ const LOW = JSON.stringify({
 const TEXT = JSON.stringify({ state: { chosenMode: "text" }, version: 1 });
 const STORY = JSON.stringify({ state: { chosenMode: "story", qualityMode: "Low" }, version: 1 });
 
-/** Seeds the saved record once per tab, so a choice made during the test survives a reload. */
 const seed = (page: Page, record: string) =>
   page.addInitScript((r) => {
     if (sessionStorage.getItem("seeded")) return;
@@ -26,13 +25,11 @@ const seed = (page: Page, record: string) =>
 const ready = async (page: Page) => {
   await expect(page.locator("html")).toHaveClass(/town-ready/, { timeout: 20_000 });
   await expect(page.locator(".stage")).not.toHaveAttribute("inert", { timeout: 10_000 });
-  // The town fades in over 0.6s (labels live inside it): axe reads a mid-fade label as faint text.
   await expect
     .poll(() => page.locator(".backdrop__town").evaluate((el) => getComputedStyle(el).opacity))
     .toBe("1");
 };
 
-/** Story keeps the HUD inert; the town is up once it has faded in. */
 const townShown = async (page: Page) => {
   await expect(page.locator("html")).toHaveClass(/town-ready/, { timeout: 20_000 });
   await expect
@@ -40,7 +37,6 @@ const townShown = async (page: Page) => {
     .toBe("1");
 };
 
-/** One project Live and one Down, so the status pills are on the page for the scans. */
 const statuses = (page: Page) =>
   page.route("**/api/status", (route) =>
     route.fulfill({
@@ -53,16 +49,11 @@ const statuses = (page: Page) =>
     }),
   );
 
-/** Barcelona noon and 23:00 on 10 Oct (CEST): the head script reads the clock for html.night. */
 const CLOCKS = [
   ["day", "2026-10-10T10:00:00Z"],
   ["night", "2026-10-10T21:00:00Z"],
 ] as const;
 
-/**
- * A pill's contrast against its card: the glass blended over the backdrop's own colour
- * (axe cannot read through the glass to the town, so it would only report "incomplete").
- */
 const pillContrast = (page: Page, id: string) =>
   page.evaluate((place) => {
     const rgba = (c: string) => {
@@ -86,7 +77,6 @@ const pillContrast = (page: Page, id: string) =>
     return (Math.max(a, b) + 0.05) / (Math.min(a, b) + 0.05);
   }, id);
 
-/** Serious and critical only: those block people; the rest are logged for the report. */
 const scan = async (page: Page, name: string, skip?: string) => {
   const axe = new AxeBuilder({ page }).exclude("canvas");
   if (skip) axe.exclude(skip);
@@ -127,7 +117,6 @@ test.describe("Story", () => {
     test(`has no serious violations by ${time}, and the rail and switch are keyboard-reachable`, async ({
       page,
     }) => {
-      // Pinned, so the scan is the same whatever hour the suite runs at.
       await page.clock.setFixedTime(new Date(at));
       await statuses(page);
       await page.goto("/");
@@ -136,7 +125,6 @@ test.describe("Story", () => {
       else await expect(page.locator("html")).not.toHaveClass(/(^|\s)night(\s|$)/);
       await townShown(page);
       await scan(page, `story-${time}`, "#explore-title");
-      // The status pills sit on the cards' glass: at least 4.5:1 against it, day and night.
       for (const [id, text] of [
         ["rl", "Live"],
         ["wt", "Down"],
@@ -144,7 +132,6 @@ test.describe("Story", () => {
         await expect(page.locator(`[data-status-for="${id}"]`)).toHaveText(text);
         expect(await pillContrast(page, id), `${id} pill by ${time}`).toBeGreaterThanOrEqual(4.5);
       }
-      // The finale text sits on the town, which axe cannot read from off screen: scan it in view too.
       await page.locator("#explore-title").scrollIntoViewIfNeeded();
       await scan(page, `story-finale-${time}`, "#top");
       await page.keyboard.press("Tab");
@@ -169,14 +156,12 @@ test.describe("Story", () => {
         const r = el.getBoundingClientRect();
         const cx = r.x + r.width / 2;
         const cy = r.y + r.height / 2;
-        // The pseudo-element is part of the link's hit area: probe 11px off-centre.
         return {
           up: document.elementFromPoint(cx, cy - 11) === el,
           down: document.elementFromPoint(cx, cy + 11) === el,
           left: document.elementFromPoint(cx - 11, cy) === el,
         };
       });
-      // A neighbour may own the shared edge; each side that is not a neighbour must be ours.
       expect(hit.left, `dot ${i} left`).toBe(true);
       expect(hit.up || i === 0, `dot ${i} up`).toBe(true);
       expect(hit.down || i === 7, `dot ${i} down`).toBe(true);
@@ -216,13 +201,11 @@ test.describe("Story with reduced motion", () => {
     await page.goto("/");
     await townShown(page);
     type Pose = Record<"x" | "z" | "view" | "az", number>;
-    // The azimuth is each stop's own (src/content/tour.ts); the rest is whatever the camera settles on.
     const finals: Pose[] = [];
     for (const [anchor, az] of [
       ["readledger", -12],
       ["esto-no-es-un-restaurante", -10],
     ] as const) {
-      // Scroll, then sample the camera on every frame for 1.5s.
       const samples = await page.evaluate(
         async ([id, ms]) => {
           const cam = () =>
@@ -262,11 +245,9 @@ test.describe("the town", () => {
   test("HUD, settings, trophies and console have no serious violations", async ({ page }) => {
     await page.goto("/");
     await ready(page);
-    // Force each HUD theme: the preview console's day/night commands.
     await page.keyboard.press("Control+k");
     await page.keyboard.type("day");
     await page.keyboard.press("Enter");
-    // A place stays selected: its label has its own contrast to hold.
     await expect(page.locator(".place-label.is-selected")).toBeVisible();
     await expect(page.locator(".stage")).toHaveAttribute("data-hud", "light");
     await scan(page, "hud-light");
@@ -284,7 +265,6 @@ test.describe("the town", () => {
     await scan(page, "console");
     await page.keyboard.type("night");
     await page.keyboard.press("Enter");
-    // A place stays selected: its label has its own contrast to hold.
     await expect(page.locator(".place-label.is-selected")).toBeVisible();
     await expect(page.locator(".stage")).toHaveAttribute("data-hud", "dark");
     await scan(page, "hud-dark");

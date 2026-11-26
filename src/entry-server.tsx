@@ -4,9 +4,7 @@ import { Story } from "@/story/Story";
 
 export { structuredData } from "@/utils/structuredData";
 
-/** Renders the whole page to HTML at build time (see scripts/prerender.mjs). */
 export const render = async () => {
-  // A render error inside a boundary would otherwise ship its fallback silently: fail the build.
   let failure: unknown;
   const { prelude } = await prerender(
     <StrictMode>

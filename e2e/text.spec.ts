@@ -1,13 +1,10 @@
 import { expect, test } from "@playwright/test";
 import { pageMetrics } from "./pageMetrics";
 
-// These cover the story document as the page, in Text mode. The town and the
-// tour are covered elsewhere.
 const TEXT = JSON.stringify({ state: { chosenMode: "text" }, version: 1 });
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript((record) => {
-    // Seed once per tab, so a choice made during the test survives a reload.
     if (sessionStorage.getItem("seeded")) return;
     localStorage.setItem("bc", record);
     sessionStorage.setItem("seeded", "1");
@@ -22,8 +19,6 @@ const PROJECTS = [
   "@avatar-generator",
 ];
 
-// Vercel's Speed Insights script only exists on Vercel; under `vite preview` it 404s.
-// A failed load's message omits the URL, so match on where it came from.
 const isNoise = (url: string) => url.includes("/_vercel/");
 
 test("the HTML itself carries the whole page and the JSON-LD", async ({ request }) => {
@@ -52,9 +47,6 @@ test("loads without console errors", async ({ page }) => {
 
 test("links into the site still land", async ({ page }) => {
   for (const hash of ["about", "contact", "readledger", "f1-tracker"]) {
-    // Each link arrives from outside, so start from a fresh load: a same-page hash
-    // change issued mid smooth-scroll is a different case, and headless Chromium
-    // drops it.
     await page.goto("about:blank");
     await page.goto(`/#${hash}`);
     await expect(page.locator(`#${hash}`), hash).toBeInViewport();
@@ -86,7 +78,6 @@ for (const width of [320, 390]) {
 }
 
 test.describe("reduced motion", () => {
-  // No seed here: the preference alone must choose Text.
   test("starts in Text and loads no town code", async ({ page }) => {
     await page.addInitScript(() => localStorage.removeItem("bc"));
     await page.emulateMedia({ reducedMotion: "reduce" });

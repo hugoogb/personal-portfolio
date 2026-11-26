@@ -1,14 +1,11 @@
 import { expect, test, type Page } from "@playwright/test";
 
-// Switching between Story, Explore and Text keeps the visitor's place, and only an explicit
-// choice is remembered. detect-gpu blocklists SwiftShader, so every seed pins a manual quality.
 const record = (state: object) =>
   JSON.stringify({ state: { qualityMode: "Low", ...state }, version: 1 });
 const STORY = record({ chosenMode: "story" });
 const TEXT = record({ chosenMode: "text" });
 const EXPLORE = record({ chosenMode: "explore", seen: true });
 
-/** Seeds the saved record once per tab, so a choice made during the test survives a reload. */
 const seed = (page: Page, value: string) =>
   page.addInitScript((r) => {
     if (sessionStorage.getItem("seeded")) return;
@@ -22,7 +19,6 @@ const saved = (page: Page) =>
 const townReady = (page: Page) =>
   expect(page.locator("html")).toHaveClass(/town-ready/, { timeout: 20_000 });
 
-/** Explore takes keys once the build-in is over. */
 const exploreReady = async (page: Page) => {
   await expect(page.locator("html")).toHaveClass(/mode-explore/);
   await townReady(page);
@@ -39,7 +35,6 @@ const centre = (page: Page, id: string) =>
     id,
   );
 
-/** Every URL the page writes with replaceState, from now on. */
 const recordUrls = (page: Page) =>
   page.evaluate(() => {
     const w = window as unknown as { __urls: string[] };
@@ -82,7 +77,6 @@ test.describe("a default the visitor never chose", () => {
     await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/");
     await expect(page.locator("html")).toHaveClass(/mode-text/);
-    // The status poll writes the record on boot: it must not carry Text as a choice.
     await expect.poll(() => page.evaluate(() => localStorage.getItem("bc"))).not.toBeNull();
     expect((await saved(page)).chosenMode ?? null).toBeNull();
     await page.emulateMedia({ reducedMotion: "no-preference" });
@@ -108,7 +102,6 @@ test.describe("switching keeps the place", () => {
       await recordUrls(page);
       await page.keyboard.press("Escape");
       await expect(page.locator("html")).toHaveClass(/mode-story/);
-      // Long enough for any smooth scroll to have flown past the earlier stops.
       await page.waitForTimeout(1500);
       const written = await urls(page);
       expect(written.filter((u) => /#(about|f1-tracker|readledger)$/.test(u))).toEqual([]);
@@ -135,7 +128,6 @@ test.describe("switching keeps the place", () => {
       await centre(page, "contact");
       await pick(page, "Story");
       await expect(page.locator("html")).toHaveClass(/mode-story/);
-      // Long enough for a scroll to an old stop to have moved the page.
       await page.waitForTimeout(1500);
       await expect(page.locator('[data-rail="contact"]')).toHaveAttribute("aria-current", "true");
       await expect(page).toHaveURL(/#contact$/);

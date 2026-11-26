@@ -5,7 +5,7 @@ const centers = measureCenters([
   { top: 0, height: 800 },
   { top: 800, height: 800 },
   { top: 1600, height: 1000 },
-]); // [400, 1200, 2100]
+]);
 
 describe("stopProgress", () => {
   it("finds the centres", () => expect(centers).toEqual([400, 1200, 2100]));
@@ -44,8 +44,6 @@ describe("measureStops", () => {
   });
 
   it("is where a tall section's top meets the top of the screen", () => {
-    // A phone card sheet runs past the screen: the stop is reached with the building in view,
-    // and the card is then read while the camera holds.
     expect(measureStops([{ top: 844, height: 1500 }], 844)).toEqual([844 + 422]);
   });
 });

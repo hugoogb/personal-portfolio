@@ -16,11 +16,8 @@ export interface BuiltWorld {
   kit: Kit;
   town: ReturnType<typeof buildTown>;
   places: Record<PlaceId, THREE.Group>;
-  /** Props grouped by distance ring; the build-in raises each ring as one. */
   rings: THREE.Group[];
-  /** Written by DayNight, read by Life. */
   env: FrameEnv;
-  /** Per-service window materials, so a down service can go dark alone. */
   traffic: ReturnType<typeof buildTraffic>;
   placeWindows: Partial<
     Record<
@@ -28,17 +25,12 @@ export interface BuiltWorld {
       {
         win: THREE.MeshStandardMaterial;
         winDim: THREE.MeshStandardMaterial;
-        /** Other lights of the place that go dark with it, at their resting intensity. */
         glows: { material: THREE.MeshStandardMaterial; base: number }[];
       }
     >
   >;
 }
 
-/**
- * The town's construction as steps: each `yield` is a point where the browser
- * may run between two pieces of work (see buildWorldInSlices).
- */
 export function* buildSteps(kit: Kit): Generator<void, BuiltWorld> {
   const town = buildTown(kit);
   yield;
@@ -65,10 +57,6 @@ export function* buildSteps(kit: Kit): Generator<void, BuiltWorld> {
     () => useBaseCamp.getState().introDone,
   );
 
-  // Merge static meshes to fit the draw-call budget: per material, and plain
-  // colours into one vertex-coloured material. Roads, animated parts and smoke
-  // are userData.dynamic, so they stay separate. What gets repainted or lit
-  // at runtime keeps its own material.
   const keep = new Set<THREE.Material>([
     ...kit.accent.map((a) => a.material),
     kit.materials.win,
@@ -112,8 +100,6 @@ export function* buildSteps(kit: Kit): Generator<void, BuiltWorld> {
   yield;
   if (kit.buildIn.ground) bakeStatic(kit.buildIn.ground, opts);
   yield;
-  // Rigid moving parts (cars, ship, buoys, hat, lid) merge inside themselves
-  // and keep their own shadow: the group moves, its pieces do not.
   const movers: THREE.Object3D[] = [];
   for (const g of [town.root, ...Object.values(places)]) {
     g.traverse((o) => {
@@ -125,7 +111,6 @@ export function* buildSteps(kit: Kit): Generator<void, BuiltWorld> {
   return { kit, town, places, rings, env: { night: 0, lit: 0, tier: 3 }, placeWindows, traffic };
 }
 
-/** Builds the whole town in one go, outside React. */
 export function buildWorld(): BuiltWorld {
   const steps = buildSteps(createKit());
   for (;;) {
@@ -134,14 +119,7 @@ export function buildWorld(): BuiltWorld {
   }
 }
 
-/** Main-thread time one slice may take before the build yields to the browser. */
 const SLICE_MS = 12;
-/**
- * Hands the main thread back to the browser between two slices: scheduler.yield()
- * where there is one (it resumes ahead of other queued work), a message-channel
- * task elsewhere. Not setTimeout(0): from the fifth nested call browsers wait at
- * least 4 ms each time, idle time that only delays the town.
- */
 export const nextTask = (): Promise<void> => {
   const scheduler = (globalThis as { scheduler?: { yield?: () => Promise<void> } }).scheduler;
   if (typeof scheduler?.yield === "function") return scheduler.yield();
@@ -155,12 +133,6 @@ export const nextTask = (): Promise<void> => {
   });
 };
 
-/**
- * Builds the town in slices of about 12 ms, so the page keeps scrolling
- * and stays clickable. Built at once it was one task of over 100 ms on a
- * laptop, and nearly half a second on a phone. The kit is disposed if the
- * build is abandoned (`signal` aborts) or throws.
- */
 export async function buildWorldInSlices(signal: AbortSignal): Promise<BuiltWorld | null> {
   const kit = createKit();
   const steps = buildSteps(kit);

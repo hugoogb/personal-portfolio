@@ -5,7 +5,6 @@ import { keyAction } from "@/hud/keys";
 import { enterStory } from "@/story/transitions";
 import { useBaseCamp, type BaseCampState } from "@/store/store";
 
-/** Esc closes the innermost thing first, then returns to the story (story spec 3.3). */
 const escape = (s: BaseCampState) => {
   if (s.consoleOpen) return s.setConsoleOpen(false);
   if (s.panel) return s.setPanel(null);
@@ -19,11 +18,8 @@ export const useHudKeys = () => {
       const action = keyAction(e);
       if (!action) return;
       const s = useBaseCamp.getState();
-      // The build-in is still playing: the town is not interactive yet.
       if (!s.introDone) return;
-      // While driving, the town's shortcuts stand down.
       if (s.driving && action !== "escape") return;
-      // A dialog owns the keyboard: arrows, letters and links must not leak out of it.
       if ((s.panel || s.consoleOpen) && action !== "escape" && action !== "console") return;
       e.preventDefault();
       const place = s.selected ? PLACE_BY_ID[s.selected] : null;

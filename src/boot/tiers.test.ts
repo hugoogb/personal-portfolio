@@ -73,10 +73,6 @@ describe("resolveTier", () => {
 
 const live: GovernorContext = { auto: true, tier: 3, dpr: MAX_DPR[3], introDone: true };
 
-/**
- * Feeds `seconds` of frames at a steady `fps` and applies each step the way the
- * Governor component does: a tier step resets the pixel ratio to the tier's.
- */
 const run = (start: GovernorState, fps: number, seconds: number, from = live) => {
   let state = start;
   let ctx = from;
@@ -156,7 +152,6 @@ describe("governor", () => {
   it("reads a long frame as a pause, not as a slow window", () => {
     let state = run(settled(), 30, 1.05).state;
     expect(state.lowRuns).toBe(1);
-    // Ten seconds held for a shader compile, then fast frames again.
     state = governorTick(state, 10, live).state;
     expect(state.windowTime).toBe(0);
     const after = run(state, 60, 2.2);

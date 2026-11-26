@@ -1,6 +1,5 @@
 import { useBaseCamp } from "@/store/store";
 
-/** The drive mode's bar: the real score and the way out. */
 export function DriveBar() {
   const setDriving = useBaseCamp((s) => s.setDriving);
   const score = useBaseCamp((s) => s.score);

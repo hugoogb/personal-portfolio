@@ -13,22 +13,18 @@ export type HudMode = "auto" | "light" | "dark";
 export type Panel = "trophies" | "settings" | null;
 export interface ServiceStatus {
   ok: boolean;
-  /** Round trip in milliseconds, or null when the request never completed. */
   ms: number | null;
 }
 export type StatusMap = Partial<Record<PlaceId, ServiceStatus>>;
 
-/** Where the HUD asks the camera to go; `seq` makes a repeat request a new one. */
 export interface CameraGoal {
   x: number;
   z: number;
   view: number;
-  /** Jump there at once instead of easing. */
   instant?: boolean;
   seq: number;
 }
 
-/** Where the camera is, published a few times a second for the minimap. */
 export interface CameraView {
   x: number;
   z: number;
@@ -49,55 +45,37 @@ export interface BaseCampState {
   accent: string;
   hudMode: HudMode;
   qualityMode: QualityMode;
-  /** What the device signals chose; a manual quality mode overrides it. */
   autoTier: Tier;
   tier: Tier;
-  /** The canvas's pixel-ratio cap: the tier's, until the governor lowers it. Any tier change resets it. */
   dpr: number;
   fps: number;
-  /** No input for a while, or the window is in the background: the town drops to 30 fps. */
   idle: boolean;
   consoleOpen: boolean;
   panel: Panel;
   driving: boolean;
   introDone: boolean;
-  /** The build-in has played once; returning visitors skip it. */
   seen: boolean;
-  /** This visit is the first one: the objective tracker shows. */
   firstVisit: boolean;
-  /** The selected card is showing its stack chips (E). */
   stackOpen: boolean;
   goal: CameraGoal | null;
-  /** The build-in is holding the camera at the overview. */
   introRunning: boolean;
-  /** Bumped to ask the camera to re-frame the selection. */
   reframeSeq: number;
-  /** A preview hour that replaces the real one; never persisted. */
   timeOverride: number | null;
   view: CameraView;
   toasts: Toast[];
-  /** When the last stadium wave started (ms since epoch), 0 for never. */
   waveAt: number;
   status: StatusMap | "unknown";
-  /** Goals scored in the arena this visit; never saved. */
   score: number;
-  /** The mode on screen: the head script's pick, then hashes, fallbacks and choices. Never saved. */
   mode: Mode;
-  /** The mode the visitor last picked (switch, finale, Esc, console); the only one saved (spec 3.4). */
   chosenMode: Mode | null;
-  /** The story stop at the middle of the screen (StoryDriver). */
   stop: number;
-  /** Whether the town can be shown: Explore is offered only when "ready". */
   town: "loading" | "ready" | "off";
-  /** The last tour arrival; `seq` makes a repeat a new one. */
   arrival: { id: PlaceId; seq: number } | null;
 
   select: (id: PlaceId) => void;
   deselect: () => void;
   setHover: (id: PlaceId | null) => void;
-  /** True when this call unlocked it, false when it already was. */
   unlock: (id: AchievementId) => boolean;
-  /** unlock() plus the toast that announces it. */
   achieve: (id: AchievementId) => boolean;
   setAccent: (hex: string) => void;
   setHudMode: (mode: HudMode) => void;
@@ -125,16 +103,13 @@ export interface BaseCampState {
   setStatus: (status: StatusMap | "unknown") => void;
   addGoal: (side: "Blue" | "Orange") => void;
   resetProgress: () => void;
-  /** Changes the mode on screen without recording it as the visitor's choice. */
   setMode: (mode: Mode) => void;
-  /** Records the visitor's own pick, which the next visit starts in. */
   chooseMode: (mode: Mode) => void;
   setStop: (stop: number) => void;
   setTown: (town: "loading" | "ready" | "off") => void;
   arrive: (id: PlaceId) => void;
 }
 
-/** One record for everything persisted except the accent, which keeps today's "color" key. */
 export const STORE_KEY = "bc";
 
 const HUD_MODES: readonly HudMode[] = ["auto", "light", "dark"];
@@ -151,11 +126,6 @@ type Persisted = Pick<
   "discovered" | "achievements" | "hudMode" | "qualityMode" | "seen" | "chosenMode"
 >;
 
-/**
- * The saved record is whatever a visitor's browser hands back: an older shape,
- * a hand-edited value, another version. Each field is kept only when it is
- * valid, so one bad field falls back to its default instead of breaking the HUD.
- */
 const restore = (saved: unknown): Partial<Persisted> => {
   if (!saved || typeof saved !== "object") return {};
   const s = saved as Record<string, unknown>;
@@ -173,7 +143,6 @@ let nextToastId = 1;
 let nextGoalSeq = 1;
 let nextArrivalSeq = 1;
 
-/** The store without React: the first paint's code reads and writes it; store.ts binds the hook. */
 export const createBaseCampCore = (storage: KeyValueStorage = safeStorage()) =>
   createStore<BaseCampState>()(
     persist(
@@ -294,10 +263,7 @@ export const createBaseCampCore = (storage: KeyValueStorage = safeStorage()) =>
         name: STORE_KEY,
         version: 1,
         storage: createJSONStorage(() => storage),
-        // Every version goes through restore(), so no record needs migrating.
         migrate: (saved) => saved as Persisted,
-        // The head script already picked the mode on screen (hash, choice, signals), so
-        // `current.mode` (from the class) stands; only the visitor's choice is restored.
         merge: (saved, current) => ({ ...current, ...restore(saved), mode: current.mode }),
         partialize: (s): Persisted => ({
           discovered: s.discovered,
@@ -311,5 +277,4 @@ export const createBaseCampCore = (storage: KeyValueStorage = safeStorage()) =>
     ),
   );
 
-/** The app's store. Tests build their own with createBaseCampStore. */
 export const baseCamp = createBaseCampCore();

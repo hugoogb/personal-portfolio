@@ -4,11 +4,6 @@ import type { Kit } from "@/world/kit/kit";
 const OX = 15.8,
   OZ = 10.8;
 
-/**
- * Departures board and the harbour (reference 1040-1055, straw hat 1082-1088).
- * The harbour and the hat are placed in world space in the reference, so they
- * live in a child group that undoes the board's rotation and offset.
- */
 export function buildDepartures(kit: Kit): THREE.Group {
   const { rbox, cyl, ball, mk, mat, canvasTex, own } = kit;
   const g = new THREE.Group();
@@ -67,7 +62,6 @@ export function buildDepartures(kit: Kit): THREE.Group {
   rbox(0.24, 0.32, 0.13, "#d64545", 0.65, 0, 0.8, g, 0.04);
   rbox(0.2, 0.26, 0.12, "#2c3e57", 0.92, 0, 0.72, g, 0.04);
 
-  // the harbour: world coordinates become local (minus the board, unrotated)
   const w = new THREE.Group();
   w.rotation.y = -Math.PI / 4;
   g.add(w);
@@ -116,9 +110,6 @@ export function buildDepartures(kit: Kit): THREE.Group {
   fl.position.set(0.2, 3.05, 0.36);
   fl.rotation.y = Math.PI / 2;
   sg.add(fl);
-  // Night: a stern and a bow lantern (the shared lamp material, so they follow
-  // the lamps' day/night intensity) and a glow on the water keep the dark hull
-  // readable against the dark sea.
   ball(0.08, kit.materials.lamp, -1.3, 1.0, 0, sg, 10);
   ball(0.07, kit.materials.lamp, 1.35, 0.78, 0, sg, 10);
   kit.pool(w, 24.6 - OX, 9.6 - OZ, 3.6, 3.6, -0.36);
@@ -142,18 +133,15 @@ export function buildDepartures(kit: Kit): THREE.Group {
     buoys.push(b);
   }
   const rb = new THREE.Group();
-  // Moored off the pier's far half, clear of the posts and the quay wall.
   rb.position.set(21.7 - OX, -0.42, 12.95 - OZ);
   rb.rotation.y = 0.2;
   rb.userData.dynamic = true;
   w.add(rb);
   rbox(0.95, 0.2, 0.42, "#c46a3b", 0, 0, 0, rb, 0.09);
-  // The deck sits ON the hull: sharing the hull's top plane made the two faces z-fight.
   rbox(0.8, 0.025, 0.32, "#e8d2b0", 0, 0.2, 0, rb, 0.01);
   rbox(0.08, 0.05, 0.36, "#9a6b45", 0.15, 0.225, 0, rb, 0.02);
   buoys.push(rb);
 
-  // the straw hat on the beach
   const hat = new THREE.Group();
   hat.position.set(-17.2 - OX, 0.02, 13.3 - OZ);
   hat.rotation.set(0.12, 0.6, 0);

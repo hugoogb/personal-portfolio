@@ -79,7 +79,6 @@ describe("streakPoints", () => {
   });
 
   it("bends round a corner through the mitred lane point", () => {
-    // East along z = 0, then south: the right-hand lane sits at z = +LANE, then x = -LANE.
     const path: [number, number][] = [
       [0, 0],
       [1, 0],
@@ -90,7 +89,6 @@ describe("streakPoints", () => {
     expect(pts[1].x).toBeCloseTo(1 - LANE, 6);
     expect(pts[1].z).toBeCloseTo(LANE, 6);
     expect(pts[1].u).toBeCloseTo(0.5, 6);
-    // Both neighbours lie on the lane lines that meet there.
     expect(pts[0].z).toBeCloseTo(LANE, 6);
     expect(pts[2].x).toBeCloseTo(1 - LANE, 6);
   });

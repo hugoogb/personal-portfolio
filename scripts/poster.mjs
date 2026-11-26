@@ -1,15 +1,4 @@
 /* global localStorage, document, window -- these run inside the page */
-/**
- * Captures the still images of the town that Story shows before the canvas is
- * ready (spec 6.1). Run after a visual change to the town:
- *   pnpm build && pnpm preview --port 4173 --strictPort &
- *   npm i --no-save --prefix /private/tmp/claude-501/poster sharp@0.34.4
- *   SHARP=/private/tmp/claude-501/poster/node_modules/sharp/lib/index.js node scripts/poster.mjs
- * sharp is not a project dependency; it comes from that scratch install.
- * Needs no GPU: SwiftShader draws it, slowly. The images are committed, each
- * at most 60000 bytes (spec 8): the webp quality steps down from 72 until it fits.
- * Each also gets an AVIF twin, which story.css prefers.
- */
 import { chromium } from "playwright-core";
 import { mkdir, writeFile } from "node:fs/promises";
 
@@ -49,7 +38,7 @@ for (const shot of SHOTS) {
     await page.addStyleTag({
       content: "#story,#rail,.mode-switch,.backdrop__still{visibility:hidden!important}",
     });
-    await page.waitForTimeout(2500); // the camera settles on the landing pose, day/night eases
+    await page.waitForTimeout(2500);
     const png = await page.screenshot({ type: "png" });
     const out = `public/posters/town-${when}-${shot.name}.webp`;
     let quality = 72;
@@ -59,8 +48,6 @@ for (const shot of SHOTS) {
       webp = await sharp(png).webp({ quality, effort: 6 }).toBuffer();
     }
     await writeFile(out, webp);
-    // AVIF first for the browsers that take it (story.css): the same look in fewer bytes.
-    // It must earn its place: at most AVIF_SHARE of the webp's bytes.
     let avifQuality = 60;
     let avif = await sharp(png).avif({ quality: avifQuality, effort: 9 }).toBuffer();
     while (avif.length > webp.length * AVIF_SHARE && avifQuality > 20) {

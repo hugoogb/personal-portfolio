@@ -11,7 +11,6 @@ beforeEach(() => {
   stubCanvas();
 });
 
-/** On a moving part: the object or one of its ancestors is userData.dynamic. */
 const moves = (o: THREE.Object3D | null): boolean =>
   !!o && (o.userData.dynamic === true || moves(o.parent));
 
@@ -39,7 +38,6 @@ describe("freezeStatic", () => {
     const all: THREE.Object3D[] = [];
     for (const r of roots) r.traverse((o) => all.push(o));
     const before = all.map((o) => [o.position.clone(), o.quaternion.clone(), o.scale.clone()]);
-    // A minute of every motion hook, by day and by night.
     for (let i = 0; i < 3600; i++)
       w.kit.frame(1 / 60, i / 60, { ...w.env, night: i % 1200 < 600 ? 0 : 1, lit: 1 });
     const moved = all.filter((o, i) => {
@@ -48,7 +46,6 @@ describe("freezeStatic", () => {
     });
     expect(moved.length).toBeGreaterThan(0);
     expect(moved.filter((o) => !moves(o)).map((o) => o.name || o.type)).toEqual([]);
-    // Moved by the systems rather than by kit frame hooks.
     const life = w.kit.life as Record<string, unknown>;
     const bySystems = [
       life.hat,

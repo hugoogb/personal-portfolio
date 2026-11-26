@@ -6,15 +6,12 @@ import { stubCanvas } from "@/test/canvas";
 import { buildWorld, buildWorldInSlices, nextTask } from "@/world/build";
 import { PROP_RINGS } from "@/world/lib/buildIn";
 
-// These tests bake the whole town in jsdom, which is slow under load.
 vi.setConfig({ testTimeout: 20_000 });
 
 beforeEach(() => {
   stubCanvas();
 });
 
-// f1 and yard sit at the spec's coordinates from the approved sketch; their axis-aligned boxes
-// overlap by ~0.9 at the circuit's edge while the geometry does not touch.
 const ALLOWED = new Set(["f1|yard"]);
 
 describe("buildWorld", () => {
@@ -22,7 +19,6 @@ describe("buildWorld", () => {
     const w = buildWorld();
     expect(Object.keys(w.places).sort()).toEqual([...ORDER].sort());
     expect(w.rings).toHaveLength(PROP_RINGS);
-    // Baking merges each ring's static props into a few meshes per material.
     let meshes = 0;
     for (const ring of w.rings) ring.traverse((o) => void ((o as THREE.Mesh).isMesh && meshes++));
     expect(meshes).toBeGreaterThan(0);
@@ -102,7 +98,6 @@ describe("buildWorldInSlices", () => {
         return Promise.resolve();
       },
     });
-    // Each slice ends at once, so every step is its own task.
     const now = vi.spyOn(performance, "now");
     let t = 0;
     now.mockImplementation(() => (t += 100));

@@ -1,7 +1,6 @@
 import { ORDER } from "@/content/places";
 import { useBaseCamp } from "@/store/store";
 
-/** First visit only (spec 4.3). */
 export function Objective() {
   const firstVisit = useBaseCamp((s) => s.firstVisit);
   const found = useBaseCamp((s) => s.discovered.length);

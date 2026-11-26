@@ -10,7 +10,6 @@ vi.mock("@react-three/fiber", () => ({
 
 let queue: FrameRequestCallback[] = [];
 
-/** Fires the display's frames for `ms` at `hz`, and counts the ones the pacer drew. */
 const display = (hz: number, ms: number, from = 0) => {
   const before = state.advance.mock.calls.length;
   const frames = Math.max(1, Math.round((ms * hz) / 1000));

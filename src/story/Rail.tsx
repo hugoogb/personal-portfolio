@@ -1,6 +1,5 @@
 import { RAIL_STOPS } from "@/content/tour";
 
-/** The section index (spec 4.5): a rail on desktop, a chip on phones. Plain links, so it works without JavaScript. */
 export function Rail() {
   return (
     <nav id="rail" aria-label="Sections">

@@ -4,29 +4,17 @@ import { LANE, laneEdges, type Route } from "@/world/traffic/model";
 
 export interface TrafficMeshes {
   group: THREE.Group;
-  /** Faint guide lines along both lanes of every road the traffic uses. */
   lanes: THREE.InstancedMesh;
-  /** The flow streaks: one accent line per message, whichever way it travels, in up to PIECES pieces. */
   flows: THREE.InstancedMesh;
   rings: THREE.InstancedMesh;
-  /** The roads the flows follow, shared with the system that moves them. */
   routes: Route[];
 }
 
 const NFLOW = 12;
-/** Pieces per streak: a straight run, plus one per corner it can span. */
 export const PIECES = 3;
 const NRINGS = 16;
-/** Streak length in cells; the system scales it down near a route's ends. */
 export const STREAK = 1.2;
 
-/**
- * Instanced road traffic: guide lines, flow streaks and the pulse rings. The
- * user asked (10 Oct) for flow lines rather than packets, with no difference
- * between requests and responses, so both directions draw the same accent
- * streak. Everything is dynamic and casts no shadow; Traffic.tsx writes the
- * matrices each frame.
- */
 export function buildTraffic(kit: Kit, routes: Route[]): TrafficMeshes {
   const group = new THREE.Group();
   group.userData.dynamic = true;
@@ -47,8 +35,6 @@ export function buildTraffic(kit: Kit, routes: Route[]): TrafficMeshes {
       depthWrite: false,
     }),
   );
-  // A streak bent round a corner is several pieces. Each carries its slice of
-  // the tail-to-head fade (flowRange), so the fade runs on unbroken.
   flowM.onBeforeCompile = (shader) => {
     shader.vertexShader = shader.vertexShader
       .replace(
@@ -57,7 +43,6 @@ export function buildTraffic(kit: Kit, routes: Route[]): TrafficMeshes {
       )
       .replace(
         "#include <begin_vertex>",
-        // The piece runs from x = -1 (its tail) to x = 0 (its head).
         "#include <begin_vertex>\nvFlow = mix(flowRange.x, flowRange.y, position.x + 1.0);",
       );
     shader.fragmentShader = shader.fragmentShader
@@ -83,14 +68,12 @@ export function buildTraffic(kit: Kit, routes: Route[]): TrafficMeshes {
 
   const laneG = new THREE.PlaneGeometry(1, 0.035);
   laneG.rotateX(-Math.PI / 2);
-  // Unit length along +x with its head at the origin; the system stretches it to the streak.
   const flowG = new THREE.PlaneGeometry(1, 0.1);
   flowG.translate(-0.5, 0, 0);
   flowG.rotateX(-Math.PI / 2);
   const ringG = new THREE.RingGeometry(0.16, 0.24, 28);
   for (const g of [laneG, flowG, ringG]) kit.own(g);
 
-  // Both lanes of each edge: flows run either way.
   const edges = laneEdges(routes).flatMap(([a, b]) => [
     [a, b],
     [b, a],

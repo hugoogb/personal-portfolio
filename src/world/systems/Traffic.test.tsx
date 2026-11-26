@@ -13,7 +13,6 @@ vi.mock("@react-three/fiber", () => ({ useFrame: () => undefined }));
 
 const world = { traffic: { routes: buildRoutes() } } as unknown as BuiltWorld;
 
-/** Its layout effect runs after Traffic renders and before Traffic's passive effects. */
 const InTheGap = () => {
   useLayoutEffect(() => useBaseCamp.getState().setTier(1), []);
   return null;

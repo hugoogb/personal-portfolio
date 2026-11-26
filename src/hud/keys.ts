@@ -8,17 +8,12 @@ export interface KeyLike {
   target?: EventTarget | null;
 }
 
-/** A form field the visitor is typing into: shortcuts leave it alone. */
 export const isField = (target: EventTarget | null | undefined) =>
   target instanceof HTMLElement &&
   (target.contentEditable === "true" ||
     target.isContentEditable ||
     ["INPUT", "TEXTAREA", "SELECT"].includes(target.tagName));
 
-/**
- * The town's keyboard map (spec 4.2). Shortcuts never fire from form fields;
- * Escape and the console shortcut are the exceptions, so a dialog can always be left.
- */
 export const keyAction = (e: KeyLike): HudKey | null => {
   if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") return "console";
   if (e.key === "Escape") return "escape";
