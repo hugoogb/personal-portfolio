@@ -40,17 +40,11 @@ const apply = (world: BuiltWorld, t: number) => {
   });
 };
 
-/** The settled town stops recomposing its static matrices every frame. */
 const freeze = (world: BuiltWorld) => {
   freezeStatic(world.town.root);
   for (const g of Object.values(world.places)) freezeStatic(g);
 };
 
-/**
- * The first-visit build-in (spec 5.4): the island rises, roads draw out,
- * places pop from HQ outward, props rise by ring, and the camera lands at
- * 0.9 s. Returning visitors and reduced motion get the settled town at once.
- */
 export function BuildIn({ world }: { world: BuiltWorld }) {
   const t = useRef(-1);
 
@@ -66,14 +60,12 @@ export function BuildIn({ world }: { world: BuiltWorld }) {
     s.focus(0, -1, OVERVIEW_VIEW, true);
     apply(world, 0);
     t.current = 0;
-    // A world dropped mid-build must not leave the camera held for the next one.
     return () => useBaseCamp.getState().setIntroRunning(false);
   }, [world]);
 
   useFrame((_, delta) => {
     if (t.current < 0) return;
     const prev = t.current;
-    // Wall-clock time, capped only against a tab-switch jump: a slow device skips frames, not seconds.
     t.current += Math.min(0.25, Math.max(0, delta));
     apply(world, Math.min(t.current, BUILD_IN_S));
     const s = useBaseCamp.getState();

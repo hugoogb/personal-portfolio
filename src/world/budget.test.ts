@@ -4,7 +4,6 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { stubCanvas } from "@/test/canvas";
 import { buildWorld } from "@/world/build";
 
-// These tests bake the whole town in jsdom, which is slow under load.
 vi.setConfig({ testTimeout: 20_000 });
 
 beforeEach(() => {
@@ -20,8 +19,6 @@ const triangles = (mesh: THREE.Mesh) => {
   return tris * inst;
 };
 
-/** Draw calls of one mesh in the main pass: one per material group, two for a
- * transparent double-sided material that three renders back then front. */
 const mainCalls = (mesh: THREE.Mesh) => {
   const mats = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
   let n = 0;
@@ -31,12 +28,10 @@ const mainCalls = (mesh: THREE.Mesh) => {
   return n;
 };
 
-/** What a High frame renders: the main pass, then the sun's shadow pass (spec 10). */
 const measure = (roots: THREE.Object3D[]) => {
   const main = { calls: 0, triangles: 0 };
   const shadow = { calls: 0, triangles: 0 };
   const visit = (o: THREE.Object3D) => {
-    // Smoke starts hidden but is on screen in steady state, so count it.
     if (!o.visible && o.userData.kind !== "smoke") return;
     const mesh = o as THREE.Mesh;
     if (mesh.isMesh) {

@@ -13,10 +13,8 @@ const RED = new THREE.Color("#ef4444");
 const FLAT = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(1, 0, 0), -Math.PI / 2);
 const HIDDEN = new THREE.Matrix4().makeScale(0, 0, 0);
 
-/** Moves the simulated flows (spec 6b). They appear once the build-in has finished. */
 export function Traffic({ world }: { world: BuiltWorld }) {
   const routes = world.traffic.routes;
-  /** Responses travel the same roads back, so they use each route reversed. */
   const reversed = useMemo(() => routes.map((r) => [...r.path].reverse()), [routes]);
   const sim = useMemo(() => {
     const s = useBaseCamp.getState();
@@ -41,7 +39,6 @@ export function Traffic({ world }: { world: BuiltWorld }) {
   );
 
   useEffect(() => {
-    // The sim was built before this subscription: catch up with any change in between.
     const now = useBaseCamp.getState();
     sim.setPlans(planRoutes(routes, now.status));
     sim.setCaps(trafficCaps(now.tier, prefersReducedMotion()));
@@ -53,7 +50,6 @@ export function Traffic({ world }: { world: BuiltWorld }) {
         if (i >= 0 && !prefersReducedMotion()) sim.burst(i, 3);
       }
     });
-    // The preference can flip mid-visit: empty the roads (or refill them) at once.
     const onPref = () =>
       sim.setCaps(trafficCaps(useBaseCamp.getState().tier, prefersReducedMotion()));
     const offPref = onMotionPreferenceChange(onPref);
@@ -71,13 +67,11 @@ export function Traffic({ world }: { world: BuiltWorld }) {
     const dt = Math.min(0.05, Math.max(0, delta));
     sim.step(dt);
     const { m, q, p, sc, up, c, pts } = tmp;
-    // Parse the accent hex only when it changes, not for every ring every frame.
     if (tmp.accentHex !== s.accent) {
       tmp.accentHex = s.accent;
       tmp.accent.set(s.accent);
     }
 
-    // Requests and responses draw the same streak: the town shows flow, not direction.
     const range = t.flows.geometry.getAttribute("flowRange") as THREE.InstancedBufferAttribute;
     let k = 0;
     const write = (list: Packet[], back: boolean) => {

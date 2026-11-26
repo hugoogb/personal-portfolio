@@ -16,7 +16,6 @@ const run = (sim: TrafficSim, seconds: number, dt = 0.05) => {
 
 describe("TrafficSim", () => {
   it("spawns about rate x time requests, within the cap", () => {
-    // Slow enough that none arrives within 5 s, so every spawn is still on the road.
     const sim = new TrafficSim([plan({ rate: 2, speed: 0.01 })], { req: 20, res: 10 }, () => 0);
     run(sim, 5);
     expect(sim.reqs.length).toBeGreaterThanOrEqual(9);
@@ -63,7 +62,6 @@ describe("TrafficSim", () => {
   });
 
   it("fades pulses out", () => {
-    // One spawn near t = 1 s; at 1.5 s its pulse is half faded but alive.
     const sim = new TrafficSim([plan({ rate: 1 })], { req: 20, res: 10 }, () => 0);
     run(sim, 1.5);
     expect(sim.pulses.length).toBeGreaterThan(0);

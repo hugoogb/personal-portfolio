@@ -1,24 +1,20 @@
 export const AX = 2.3;
 export const AZ = 1.6;
 export const GOAL_MOUTH = 0.55;
-/** Kick-off: the car waits on its own half, facing the ball at the centre spot. */
 export const CAR_START = { x: -1.3, y: 0 } as const;
 
 export interface ArenaState {
-  /** Car position in arena space (x, and y = arena z). */
   cp: { x: number; y: number };
   th: number;
   v: number;
   ball: { x: number; z: number };
   bv: { x: number; y: number };
-  /** Seconds left of the post-goal pause; the ball is hidden while > 0. */
   lock: number;
 }
 export interface DriveInput {
   throttle: number;
   steer: number;
   boost: boolean;
-  /** Touch: steer towards this arena-space point. */
   steerTo: { x: number; z: number } | null;
 }
 
@@ -33,7 +29,6 @@ export const createArena = (): ArenaState => ({
   lock: 0,
 });
 
-/** One physics step (reference updateArena, lines 1504-1529). */
 export function stepArena(
   a: ArenaState,
   input: DriveInput,

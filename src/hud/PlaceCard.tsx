@@ -5,11 +5,6 @@ import { canRunPrimary, runPrimary } from "@/hud/actions";
 import { pillFor } from "@/hud/pill";
 import { useBaseCamp } from "@/store/store";
 
-/**
- * The selection card (spec 4.3): screenshot banner for projects, then the
- * facts, then Q W E R. Links are real anchors (tracked by ClientRoot); the
- * primary button sizes to its label and wraps to its own row on narrow cards.
- */
 export function PlaceCard({ place }: { place: Place }) {
   const status = useBaseCamp((s) => s.status);
   const stackOpen = useBaseCamp((s) => s.stackOpen);

@@ -10,10 +10,6 @@ const project = (name: string): Project => {
   return found;
 };
 
-/**
- * Project copy, links and screenshots come from projects.constants.ts, the one
- * place they are already kept honest; the town only adds where and how it shows.
- */
 const fromProject = (p: Project) => ({
   name: p.name,
   desc: p.desc,
@@ -34,7 +30,6 @@ const fromProject = (p: Project) => ({
 const vpsApps = appsOn("vps").length;
 const vercelSites = appsOn("vercel").length;
 
-/** In cycle order: Next and the arrow keys walk this list. */
 export const PLACES: Place[] = [
   {
     id: "hq",
@@ -175,14 +170,12 @@ export const PLACE_BY_ID = Object.fromEntries(PLACES.map((p) => [p.id, p])) as R
 export const PROJECT_IDS = ["f1", "rl", "wt", "es", "av"] as const;
 export const PROJECT_PLACES: Place[] = PROJECT_IDS.map((id) => PLACE_BY_ID[id]);
 
-/** Accepts "readledger", "#readledger" or any casing; "" and unknown slugs give undefined. */
 export const placeBySlug = (slug: string): Place | undefined => {
   const wanted = slug.replace(/^#/, "").toLowerCase();
   if (!wanted) return undefined;
   return PLACES.find((p) => p.slug === wanted);
 };
 
-/** The arrow keys and R walk the cycle; with nothing selected, both start at HQ (spec 4.1). */
 export const stepPlace = (current: PlaceId | null, dir: 1 | -1): PlaceId => {
   if (!current) return "hq";
   const i = ORDER.indexOf(current);

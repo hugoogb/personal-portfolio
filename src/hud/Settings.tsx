@@ -129,7 +129,6 @@ export function Settings() {
           ))}
         </div>
       </fieldset>
-      {/* The top bar has no room for these on phones, so they live here there. */}
       <fieldset className="panel__group panel__more">
         <legend className="hud-label">More</legend>
         <div className="segmented">

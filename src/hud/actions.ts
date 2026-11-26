@@ -8,7 +8,6 @@ import { isTouchOnly } from "@/utils/input";
 import { NARROW_WIDTH, VIEW_MAX } from "@/world/lib/camera";
 import { OVERVIEW } from "@/world/lib/map";
 
-/** Keyboard shortcuts open links here; card clicks use real <a> tags. */
 export const openLink = (href: string) => {
   window.open(href, "_blank", "noopener");
 };
@@ -22,12 +21,10 @@ export const copyEmail = async () => {
   }
 };
 
-/** Whether a place's primary action can run on this device; links always can. */
 export const canRunPrimary = (place: Place) => place.primary.action !== "drive" || !isTouchOnly();
 
 const NO_KEYBOARD = "Driving needs a keyboard: try it on a computer";
 
-/** Every way into drive mode (card, Q, console) comes through here. */
 const drive = () => {
   const s = useBaseCamp.getState();
   if (isTouchOnly()) return s.toast(NO_KEYBOARD);
@@ -42,7 +39,6 @@ export const runPrimary = (place: Place) => {
     case "story":
       return enterStory();
     case "overview":
-      // A portrait phone sees a third of a desktop's width: pull back as far as Explore allows.
       return s.focus(
         OVERVIEW.x,
         OVERVIEW.z,
@@ -67,7 +63,6 @@ export const runTertiary = (place: Place) => {
   if (place.tertiary) openLink(place.tertiary.href);
 };
 
-/** The GPU's name from the canvas's existing WebGL context; never throws. */
 export const gpuRenderer = (): string => {
   try {
     const canvas = document.querySelector<HTMLCanvasElement>("#town-root canvas");
@@ -76,8 +71,6 @@ export const gpuRenderer = (): string => {
       | WebGLRenderingContext
       | null
       | undefined;
-    // The plain parameter first (no Firefox deprecation warning); browsers that mask it as a
-    // generic "WebKit WebGL" still name the GPU through the debug extension.
     const plain = gl?.getParameter(gl.RENDERER);
     if (typeof plain === "string" && plain && !/^(webkit webgl|mozilla)$/i.test(plain))
       return plain;

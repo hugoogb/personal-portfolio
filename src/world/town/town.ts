@@ -7,7 +7,6 @@ import { HOMES, ISLAND } from "@/world/lib/map";
 const HX = ISLAND.hx;
 const HZ = ISLAND.hz;
 
-/* The blocked-area rule (reference lines 1090-1094): where trees may not grow. */
 const blockedC: [number, number, number][] = [];
 for (const p of PLACES) blockedC.push([p.map.x, p.map.z, p.map.r + 0.5]);
 blockedC.push([-17.2, 13.3, 0.9]);
@@ -18,7 +17,6 @@ const blockedR: [number, number, number, number][] = [
   [-14.3, 7.9, -7.7, 14.2],
   [8.9, -12.1, 17.5, -5.2],
 ];
-/** The seafront lawn between the arena and the restaurant: a few trees, not a wood (user, 10 Oct). */
 const SEAFRONT: [number, number, number, number] = [-7.6, 8.3, 3.2, 14.2];
 const SEAFRONT_TREES = 3;
 const onRoad = (x: number, z: number) =>
@@ -28,14 +26,12 @@ export const isBlocked = (x: number, z: number) =>
   blockedC.some(([bx, bz, r]) => Math.hypot(x - bx, z - bz) < r) ||
   blockedR.some(([a, b, c, d]) => x > a && x < c && z > b && z < d);
 
-/** Ground, roads, trees, lamps, parked cars, homes, beach and cloud shadows (reference 733-754, 1089-1131). */
 export function buildTown(kit: Kit) {
   const { rbox, box, cyl, ball, mk, rand, materials, own } = kit;
   const root = new THREE.Group();
   const props: THREE.Object3D[] = [];
   kit.buildIn.props = props;
 
-  /* --- ground: island, beach, water, roads --- */
   const ground = new THREE.Group();
   root.add(ground);
   kit.buildIn.ground = ground;
@@ -91,7 +87,6 @@ export function buildTown(kit: Kit) {
     const w = new THREE.Mesh(own(new THREE.PlaneGeometry(260, 260)), water);
     w.rotation.x = -Math.PI / 2;
     w.position.y = -0.38;
-    // The sea stays clean: cloud shadows fall on the island only.
     w.receiveShadow = false;
     root.add(w);
   }
@@ -143,7 +138,6 @@ export function buildTown(kit: Kit) {
     zebra(1.7, 7, true);
   }
 
-  /* --- trees, lamps, parked cars --- */
   const car = (x: number, z: number, rot: number, col: string, van = false) => {
     const g = new THREE.Group();
     g.position.set(x, 0, z);
@@ -171,11 +165,9 @@ export function buildTown(kit: Kit) {
     props.push(g);
     return g;
   };
-  // Reduced from the sketch (14, 10) to fit spec 10's triangle budget.
   const sphG = new THREE.SphereGeometry(1, 12, 8),
     coneG = new THREE.ConeGeometry(1, 1, 14),
     trunkG = new THREE.CylinderGeometry(0.06, 0.09, 0.55, 8);
-  // 32 trees: the user found 60, then 45, too busy (2026-10-10).
   let seafront = 0;
   for (let i = 0; i < 500 && props.length < 32; i++) {
     const x = (rand() * 2 - 1) * (HX - 0.6),
@@ -248,7 +240,6 @@ export function buildTown(kit: Kit) {
   car(9.9, 6.62, Math.PI, "#e8c547");
   car(7.5, -0.38, Math.PI, "#6aa2d8");
   car(0.62, 4.9, Math.PI / 2, "#ffffff", true);
-  // ordinary homes, so it reads as a town
   {
     const WALLS = ["#fbf6ec", "#f3e3cf", "#e8eef3", "#f6e7e7", "#eef3e6"],
       ROOFS = ["#c8643c", "#b5533a", "#6b7f99", "#7a8f5a", "#a65d7a"];
@@ -268,7 +259,6 @@ export function buildTown(kit: Kit) {
     });
   }
 
-  /* --- beach (no gulls) --- */
   {
     const palm = (x: number, z: number, lean: number, h = 1.9) => {
       const g = new THREE.Group();
@@ -310,7 +300,6 @@ export function buildTown(kit: Kit) {
     palm(18.5, 4, 2.4, 1.7);
     palm(18.5, -3, 2.0);
     palm(18.5, -12.6, 2.6, 1.6);
-    // On the ground group, so they rise with the island during the build-in.
     const ug = ground;
     kit.umbrella(ug, -4.2, 14.5, "#e5484d", "#ffffff");
     kit.umbrella(ug, 1.8, 14.5, "#3b82c4", "#ffffff");
@@ -340,14 +329,11 @@ export function buildTown(kit: Kit) {
     kit.onFrame((_dt, t, env) => {
       fm.opacity = foamOpacity(env.night, Math.sin(t * 1.1));
     });
-    // Still water keeps following the time of day, without the swell.
     kit.onLight((env, still) => {
       if (still) fm.opacity = foamOpacity(env.night, 0);
     });
   }
 
-  /* --- cloud shadows: one invisible instanced mesh that only the sun's shadow map draws --- */
-  // It sits on layer 0: three's shadow pass tests objects against the MAIN camera's layers.
   const puffs: { cloud: number; x: number; y: number; z: number; r: number }[] = [];
   const clouds: THREE.Object3D[] = [];
   for (let i = 0; i < 6; i++) {
@@ -379,7 +365,6 @@ export function buildTown(kit: Kit) {
     cloudShadow.instanceMatrix.needsUpdate = true;
   };
   writeClouds();
-  // A daytime effect: an invisible mesh is not drawn into the shadow map either.
   kit.onLight((env) => {
     cloudShadow.visible = env.night < 0.5;
   });
@@ -394,11 +379,6 @@ export function buildTown(kit: Kit) {
   return { root, ground, water, props, clouds: cloudShadow };
 }
 
-/**
- * Chimney smoke (reference 1160-1161, 1459-1461): a pool of puffs drawn as one
- * instanced mesh; none on Low (spec 8), and none until `ready()` says the town
- * has been built (the build-in is still raising it before that).
- */
 export function addSmoke(
   kit: Kit,
   root: THREE.Object3D,
@@ -433,7 +413,6 @@ export function addSmoke(
   const write = () => {
     let alive = 0;
     puffs.forEach((p, i) => {
-      // Puffs swell as they rise, then shrink away instead of fading.
       const s = p.life > 0 ? p.scale * Math.min(1, p.life * 3) : 0;
       if (s > 0) alive++;
       m.makeScale(s, s, s).setPosition(p.pos);
@@ -444,7 +423,6 @@ export function addSmoke(
   };
   let smokeT = 0;
   let smokeI = 0;
-  // None on Low, and none while the town is still: clearing is not motion.
   kit.onLight((env, still) => {
     if ((env.tier < 2 || still) && smoke.visible) {
       for (const p of puffs) p.life = 0;

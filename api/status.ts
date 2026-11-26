@@ -12,7 +12,6 @@ interface Probe {
   host: string;
   ok: boolean;
   status: number;
-  /** Round trip in milliseconds, or null when the request never completed. */
   ms: number | null;
 }
 
@@ -30,22 +29,10 @@ const timed = async (url: string, method: "HEAD" | "GET") => {
   return { response, ms: Date.now() - started };
 };
 
-/**
- * HEAD rather than GET: the question is whether the host answers, and pulling a
- * whole document down to find out measures page weight instead of reachability.
- *
- * Not every server answers HEAD, so a refusal - stated as 405/501, or shown by
- * hanging up - falls back to GET. Each attempt is timed on its own, so a
- * fallback never reports the failed attempt's time as well.
- */
 const probe = async ({ id, host, url }: Target): Promise<Probe> => {
-  try {
-    const head = await timed(url, "HEAD");
-    if (head.response.status !== 405 && head.response.status !== 501) {
-      return { id, host, ok: head.response.ok, status: head.response.status, ms: head.ms };
-    }
-  } catch {
-    // Fall through - a host that hangs up on HEAD still deserves a GET.
+  const head = await timed(url, "HEAD").catch(() => null);
+  if (head && head.response.status !== 405 && head.response.status !== 501) {
+    return { id, host, ok: head.response.ok, status: head.response.status, ms: head.ms };
   }
 
   try {
@@ -56,16 +43,6 @@ const probe = async ({ id, host, url }: Target): Promise<Probe> => {
   }
 };
 
-/**
- * The service panel used to show hardcoded "live" labels, because reading the
- * real thing from the browser meant a cross-origin request the F1 API refuses -
- * its preflight returns 400 for every origin.
- *
- * Asking from the server instead sidesteps that entirely: there is no Origin
- * header to reject and no preflight to fail. The response is cached at the edge
- * so the upstream hosts see roughly one probe every five minutes however much traffic
- * this page gets.
- */
 export default async function handler(): Promise<Response> {
   const services = await Promise.all(STATUS_TARGETS.map(probe));
 

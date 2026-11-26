@@ -21,16 +21,8 @@ import { drag } from "@/world/lib/drag";
 
 const EASE = 6;
 const PUBLISH_EVERY_S = 0.1;
-/** How long the town dims on a reduced-motion cut between stops. */
 const CUT_FADE_MS = 180;
 
-/**
- * Fixed isometric orthographic camera (spec 4.1): eases to the selection or to
- * a HUD goal, pans by drag (the ground follows the pointer), zooms by wheel or
- * pinch, and publishes where it is for the minimap a few times a second.
- * In Story the scroll drives it instead (story spec 4.2): the goal is the tour's
- * pose, with an azimuth swing that eases back to 0 in Explore.
- */
 export function CameraRig() {
   const camera = useThree((s) => s.camera);
   const size = useThree((s) => s.size);
@@ -79,12 +71,10 @@ export function CameraRig() {
     const s0 = useBaseCamp.getState();
     if (s0.introRunning && s0.goal) jump(s0.goal.x, s0.goal.z, s0.goal.view);
     else if (s0.mode === "story" && !s0.firstVisit) {
-      // A return visit has no build-in: ease in from the wide shot (story spec 4.1).
       const p = poseFor(STOPS[STOPS.length - 1], narrow.current, aspect.current);
       jump(p.x, p.z, p.view, p.az);
     } else if (s0.selected && s0.mode !== "story") frame(s0.selected);
     return useBaseCamp.subscribe((s, prev) => {
-      // In Story the scroll drives the camera: a selection or a reframe does not move it.
       const story = s.mode === "story";
       if (!story && !s.introRunning && s.selected && s.selected !== prev.selected)
         frame(s.selected);
@@ -107,7 +97,6 @@ export function CameraRig() {
     };
     const onDown = (e: PointerEvent) => {
       const s = useBaseCamp.getState();
-      // Story: the page owns the pointer. Driving: the drag steers the car, it does not pan.
       if (s.mode !== "explore" || s.driving) return;
       pointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
       if (pointers.size === 1) drag.distance = 0;
@@ -124,7 +113,6 @@ export function CameraRig() {
       if (pointers.size === 1) {
         const d = panDelta(dx, dy, r.view, el.clientHeight);
         const t = clampTarget(r.gx - d.x, r.gz - d.z);
-        // Move the camera and its goal together, so the ground stays under the pointer.
         r.x += t.x - r.gx;
         r.z += t.z - r.gz;
         r.gx = t.x;
@@ -140,10 +128,8 @@ export function CameraRig() {
       pinch = 0;
     };
     const onWheel = (e: WheelEvent) => {
-      // Outside Explore the wheel scrolls the page.
       if (useBaseCamp.getState().mode !== "explore") return;
       e.preventDefault();
-      // wheelZoom expects pixels: Firefox reports lines (1) or pages (2) on some devices.
       const px = e.deltaMode === 1 ? 16 : e.deltaMode === 2 ? el.clientHeight : 1;
       rig.current.gview = wheelZoom(rig.current.gview, e.deltaY * px);
     };
@@ -170,15 +156,12 @@ export function CameraRig() {
       const p = reduced
         ? poseAt(currentStop(progress), 0, narrow.current, aspect.current)
         : poseAt(progress.index, progress.fraction, narrow.current, aspect.current);
-      // Unclamped: a pose framing a building by the shore sits past the pan limit on purpose.
       Object.assign(r, { gx: p.x, gz: p.z, gview: clampView(p.view, STORY_VIEW_MAX), gaz: p.az });
     } else if (s.mode === "explore") {
-      // Back inside the pan limit, at the fixed isometric angle.
       const t = clampTarget(r.gx, r.gz);
       Object.assign(r, { gx: t.x, gz: t.z, gaz: 0 });
     }
     if (r.cut !== progress.cut) {
-      // A reduced-motion cut between stops: a short dip of the town, not a camera move.
       r.cut = progress.cut;
       const root = document.getElementById("town-root");
       root?.classList.add("town-cut");
@@ -201,7 +184,6 @@ export function CameraRig() {
     r.since += dt;
     if (r.since >= PUBLISH_EVERY_S) {
       r.since = 0;
-      // Only a change is published: each one re-renders the minimap.
       const v = s.view;
       const a = aspect.current;
       if (

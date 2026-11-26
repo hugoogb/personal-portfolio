@@ -41,14 +41,6 @@ const usePageHidden = () => {
   return hidden;
 };
 
-/**
- * Compiles every shader in the scene before the first frame, so none of it lands on a drawn one.
- * Where KHR_parallel_shader_compile exists this runs off the main thread (spec 6.1, step 4).
- * three keys a program by where it draws: into a render target it outputs linear colour with no
- * tone mapping, onto the canvas sRGB and tone-mapped. So when the composer draws the scene into
- * its buffers, the compile runs with a render target bound too, or it builds programs the frame
- * never uses and the first frame compiles the real ones on the main thread.
- */
 function Compile({ offscreen, onDone }: { offscreen: boolean; onDone: () => void }) {
   const gl = useThree((s) => s.gl);
   const scene = useThree((s) => s.scene);
@@ -58,7 +50,6 @@ function Compile({ offscreen, onDone }: { offscreen: boolean; onDone: () => void
     const target = offscreen && canRenderHalfFloat(gl) ? new THREE.WebGLRenderTarget(1, 1) : null;
     const previous = gl.getRenderTarget();
     gl.setRenderTarget(target);
-    // compileAsync picks every program synchronously, then waits for them to link.
     const compiling = gl.compileAsync(scene, camera);
     gl.setRenderTarget(previous);
     compiling
@@ -74,7 +65,6 @@ function Compile({ offscreen, onDone }: { offscreen: boolean; onDone: () => void
   return null;
 }
 
-/** Calls onReady once, after the first frame has been drawn. */
 function FirstFrame({ onDrawn, onReady }: { onDrawn: () => void; onReady: () => void }) {
   const done = useRef(false);
   useFrame(() => {
@@ -90,18 +80,11 @@ export interface WorldProps {
   onReady: () => void;
 }
 
-/**
- * The town's canvas (spec 9.2). The pacer draws it at the tier's frame rate,
- * at 30 fps while nobody is using it (useIdle), and stops while the tab is
- * hidden. Text never mounts it (Town).
- */
 export default function World({ onReady }: WorldProps) {
   const tier = useBaseCamp((s) => s.tier);
   const dpr = useBaseCamp((s) => s.dpr);
   const idle = useBaseCamp((s) => s.idle);
   useIdle();
-  // Built in an effect so StrictMode's simulated unmount disposes a world that is then rebuilt,
-  // and in slices, so the page keeps moving meanwhile. A failed build reaches the boundary.
   const [world, setWorld] = useState<BuiltWorld | null>(null);
   const [failure, setFailure] = useState<unknown>(null);
   if (failure) throw failure;
@@ -110,7 +93,6 @@ export default function World({ onReady }: WorldProps) {
     let built: BuiltWorld | null = null;
     buildWorldInSlices(abort.signal).then(
       (w) => {
-        // Unmounted between the last slice and this callback: nobody else will dispose it.
         if (abort.signal.aborted) return w?.kit.dispose();
         built = w;
         if (w) setWorld(w);
@@ -125,15 +107,10 @@ export default function World({ onReady }: WorldProps) {
   }, []);
   const hidden = usePageHidden();
   const [drawn, setDrawn] = useState(false);
-  // Nothing is drawn (the frameloop is "never" and the Pacer unmounted) until the shaders compile.
   const [compiled, setCompiled] = useState(false);
   const onCompiled = useCallback(() => setCompiled(true), []);
-  // The first frame is drawn whatever the tab is doing, so boot can finish.
   const paused = drawn && hidden;
 
-  // The context is made once. A town that starts on High draws through the composer, which
-  // antialiases with FXAA, so its canvas has no MSAA. The composer then stays through Medium
-  // (without AO and bloom): taking it away would recompile every shader in the scene at once.
   const [composed] = useState(
     () => effectsEnabled(useBaseCamp.getState().tier) && probeHalfFloat(),
   );
@@ -142,19 +119,13 @@ export default function World({ onReady }: WorldProps) {
   return (
     <Canvas
       orthographic
-      // PCF by name: R3F's `shadows` alone asks for PCFSoft, which three r186 swaps for PCF on the
-      // first shadow pass, so every lit program compiled before it would be compiled again.
       shadows={tier >= 2 && "percentage"}
       dpr={[1, dpr]}
       frameloop="never"
       camera={{ position: [...CAMERA_OFFSET], zoom: 30, near: 0.1, far: 300 }}
       gl={{ antialias: tier >= 2 && !composed, powerPreference: "high-performance" }}
       onCreated={({ gl, scene }) => {
-        // The scene itself never moves. Left on, it recomposes its matrix every frame, which
-        // makes three recompute every world matrix in the town, static or not.
         scene.matrixAutoUpdate = false;
-        // three reads every program's compile log on first use, synchronously: a stall per
-        // shader on a phone. Previews (and e2e) keep the check, so a broken shader still shows.
         gl.debug.checkShaderErrors = isPreview();
       }}
       onPointerMissed={() => {

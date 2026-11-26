@@ -21,7 +21,6 @@ export enum TechId {
   Pnpm = "pnpm",
 }
 
-/** The stack, in the order the About panel and the structured data list it. */
 export const TECH: TechId[] = [
   TechId.Typescript,
   TechId.Python,

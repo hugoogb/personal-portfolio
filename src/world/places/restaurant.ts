@@ -3,7 +3,6 @@ import type { Kit } from "@/world/kit/kit";
 
 const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 
-/** Esto no es un restaurante, a shop-front restaurant with a terrace (reference 863-887). */
 export function buildRestaurant(kit: Kit): THREE.Group {
   const { rbox, cyl, ball, gable, winPick, textPlane, stripeTex, table, umbrella, bush, makeMat } =
     kit;
@@ -14,7 +13,6 @@ export function buildRestaurant(kit: Kit): THREE.Group {
   b.position.z = -0.35;
   g.add(b);
   rbox(2.8, 1.55, 1.8, "#fbf6ec", 0, 0.1, 0, b, 0.12);
-  // shop front: two big windows, the door, a striped awning, the name on the facade
   for (const x of [-0.85, 0.85]) {
     rbox(0.82, 0.68, 0.05, "#ffffff", x, 0.3, 0.905, b, 0.03, false);
     rbox(0.72, 0.6, 0.05, winPick(), x, 0.34, 0.92, b, 0.03, false);
@@ -39,7 +37,6 @@ export function buildRestaurant(kit: Kit): THREE.Group {
     rbox(2.72, 0.08, 0.04, "#e0a526", 0, 0.86, 1.36, b, 0.02, false);
   }
   textPlane(b, "ESTO NO ES UN RESTAURANTE", "#c98f12", 2.4, 0.22, 0, 1.43, 0.91);
-  // side windows with green shutters
   for (const z of [-0.45, 0.35]) {
     rbox(0.05, 0.5, 0.36, "#ffffff", 1.405, 0.6, z, b, 0.02, false);
     rbox(0.05, 0.44, 0.28, winPick(), 1.42, 0.63, z, b, 0.02, false);
@@ -48,7 +45,6 @@ export function buildRestaurant(kit: Kit): THREE.Group {
   }
   gable(2.8, 1.8, 0.95, "#c8643c", 0, 1.65, 0, b);
   rbox(0.32, 0.9, 0.32, "#a2877a", 0.8, 1.95, -0.45, b, 0.05);
-  // terrace: deck, tables, umbrellas, string lights, the "Cerrado" board
   rbox(2.8, 0.05, 1.1, "#d9c3a0", 0, 0.12, 1.15, g, 0.02);
   table(g, -0.85, 1.15, 0.17);
   table(g, 0.85, 1.15, 0.17);
@@ -69,12 +65,10 @@ export function buildRestaurant(kit: Kit): THREE.Group {
     rbox(0.34, 0.3, 0.04, "#1f2329", 0, 0.05, 0, sg, 0.02);
     textPlane(sg, "CERRADO", "#1f2329", 0.3, 0.14, 0, 0.2, 0.025, "#ffffff", false);
   }
-  // kitchen garden on the side
   for (let r = 0; r < 3; r++)
     for (let i = 0; i < 3; i++)
       ball(0.07, r === 1 ? "#e5484d" : leafA, 1.75 + i * 0.16, 0.06, -0.75 + r * 0.25, g, 8);
   bush(g, -1.65, -1.1);
-  // chimney top, place-local (reference world position minus the place's x, z), for the smoke
   const chimneys = (kit.life.chimneys ??= []) as { id: string; local: THREE.Vector3 }[];
   chimneys.push({ id: "es", local: new THREE.Vector3(0.8, 2.95, -0.35 - 0.45) });
   return g;

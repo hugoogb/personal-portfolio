@@ -12,11 +12,6 @@ export interface Pulse {
   down: boolean;
 }
 
-/**
- * The packets on the roads: requests leave a door at each route's rate,
- * arrive at the yard, and are answered (unless the service is down) by a
- * response on the opposite lane.
- */
 export class TrafficSim {
   reqs: Packet[] = [];
   ress: Packet[] = [];
@@ -31,7 +26,6 @@ export class TrafficSim {
     this.acc = plans.map(() => rand());
   }
 
-  /** New rates and up/down for the same routes (planRoutes keeps one plan per route). */
   setPlans(plans: RoutePlan[]) {
     this.plans = plans;
   }
@@ -46,7 +40,6 @@ export class TrafficSim {
     this.pulses.push({ x, z, life: 1, down });
   }
 
-  /** A tour arrival (spec 4.4): `n` requests leave this route's door at once; none to a service that is down. */
   burst(plan: number, n: number) {
     const route = this.plans[plan]?.route;
     if (!route || this.plans[plan].down || this.caps.req === 0) return;
@@ -71,7 +64,6 @@ export class TrafficSim {
       }
     }
 
-    // In-place compaction: keep survivors in order, no new arrays.
     let w = 0;
     for (let r = 0; r < this.reqs.length; r++) {
       const p = this.reqs[r];

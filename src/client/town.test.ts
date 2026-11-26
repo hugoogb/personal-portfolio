@@ -32,7 +32,6 @@ describe("startTown", () => {
     expect(mountTown).not.toHaveBeenCalled();
     baseCamp.getState().setMode("explore");
     await vi.waitFor(() => expect(mountTown).toHaveBeenCalledTimes(1));
-    // Later changes are Town's own business: the root is mounted once.
     baseCamp.getState().setMode("story");
     baseCamp.getState().setMode("explore");
     await flush();

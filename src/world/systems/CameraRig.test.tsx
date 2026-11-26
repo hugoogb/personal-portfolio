@@ -25,7 +25,6 @@ vi.mock("@react-three/fiber", () => ({
 
 const ASPECT = three.size.width / three.size.height;
 
-/** Advances the rig `n` frames of 1/30 s. */
 const step = async (n: number) => {
   for (let i = 0; i < n; i++) act(() => frame({}, 1 / 30));
 };
@@ -112,7 +111,7 @@ describe("CameraRig in Story", () => {
   it("eases the azimuth back to the fixed isometric angle in Explore", async () => {
     useBaseCamp.setState({ mode: "story" });
     progress.index = 6;
-    progress.fraction = 0; // av, az 14
+    progress.fraction = 0;
     const cam = await renderRigAndStep(60);
     expect(rigState.az).toBeGreaterThan(10);
     act(() => useBaseCamp.setState({ mode: "explore", selected: "av" }));
@@ -127,7 +126,7 @@ describe("CameraRig in Story", () => {
     progress.index = 2;
     progress.fraction = 0.6;
     const cam = await renderRigAndStep(1);
-    const pose = poseFor(STOPS[3], false, ASPECT); // currentStop rounds 2.6 to 3
+    const pose = poseFor(STOPS[3], false, ASPECT);
     expect(cam.target.x).toBeCloseTo(pose.x, 3);
   });
 

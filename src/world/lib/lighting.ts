@@ -4,9 +4,7 @@ import { SUNRISE, SUNSET, dayAmount, smoothstep } from "@/world/lib/sun";
 export interface LightingState {
   day: number;
   night: number;
-  /** Drives every night light (spec 6). */
   lit: number;
-  /** Sun position relative to the camera target, its colour and strength. */
   sun: { offset: [number, number, number]; color: string; intensity: number };
   hemi: { sky: string; ground: string; intensity: number };
   background: string;
@@ -18,7 +16,6 @@ export interface LightingState {
   stadium: number;
   pools: number;
   board: number;
-  /** Bloom strength for the High-only effects (Phase 5); off below 0.04. */
   bloom: number;
 }
 
@@ -27,7 +24,6 @@ const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 const C = (hex: string) => new THREE.Color(hex);
 const hex = (c: THREE.Color) => `#${c.getHexString()}`;
 
-/** Everything the town's light depends on, from the hour in Barcelona (spec 6). */
 export function lighting(h: number): LightingState {
   const day = dayAmount(h);
   const night = 1 - day;

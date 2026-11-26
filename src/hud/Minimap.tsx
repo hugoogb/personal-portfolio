@@ -8,7 +8,6 @@ import { ISLAND, ROADS } from "@/world/lib/map";
 const points = (pts: { x: number; y: number }[]) =>
   pts.map((p) => `${p.x.toFixed(2)},${p.y.toFixed(2)}`).join(" ");
 
-/** Turned 45 degrees so "up" matches the view; a click moves the camera there (spec 4.1). */
 export function Minimap() {
   const view = useBaseCamp((s) => s.view);
   const discovered = useBaseCamp((s) => s.discovered);

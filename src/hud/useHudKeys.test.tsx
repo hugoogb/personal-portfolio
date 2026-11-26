@@ -12,7 +12,6 @@ function Probe() {
 const press = (key: string, init: KeyboardEventInit = {}) =>
   fireEvent.keyDown(window, { key, ...init });
 
-// The town is live once the build-in has finished; most tests start there.
 beforeEach(() => useBaseCamp.setState({ ...useBaseCamp.getInitialState(), introDone: true }));
 
 describe("useHudKeys", () => {

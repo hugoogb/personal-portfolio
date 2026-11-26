@@ -27,7 +27,6 @@ vi.mock("@/world/World", () => {
       </button>
     );
   }
-  // The getter runs when Town reads the module's default, so each load is counted.
   return {
     get default() {
       worldImport();

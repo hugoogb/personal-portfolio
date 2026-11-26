@@ -4,7 +4,6 @@ import { prefersReducedMotion } from "@/utils/motion";
 import { useBaseCamp } from "@/store/store";
 import type { BuiltWorld } from "@/world/build";
 
-/** Ambient animation, accent painting, and sign redraw once the web fonts are in. */
 export function Life({ world }: { world: BuiltWorld }) {
   const accent = useBaseCamp((s) => s.accent);
   const t = useRef(0);
@@ -25,10 +24,7 @@ export function Life({ world }: { world: BuiltWorld }) {
   useFrame((_, delta) => {
     const still = prefersReducedMotion();
     if (still) {
-      // Not motion: the sea, cloud shadows and smoke still follow the time of day.
       world.kit.light(world.env, true);
-      // Pose the town once per stillness, at the time it reached (the cars and the press line
-      // start at the origin until a frame runs; a mid-visit switch must not snap to t = 0).
       if (!posed.current) {
         posed.current = true;
         world.kit.settle(world.env, t.current);

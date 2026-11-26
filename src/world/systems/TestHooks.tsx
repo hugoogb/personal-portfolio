@@ -9,33 +9,26 @@ declare global {
   interface Window {
     __baseCamp?: {
       screenOf(t: string): { x: number; y: number } | null;
-      /** The last frame's renderer counters, for perf checks. */
       info(): {
         frame: number;
         calls: number;
         triangles: number;
         geometries: number;
         textures: number;
-        /** Linked shader programs: each is a compile on the first frame. */
         programs: number;
-        /** Objects in the scene, and how many recompute their matrix every frame. */
         objects: number;
         autoMatrices: number;
       };
-      /** Where the camera rig is: ground target, view height and azimuth in degrees. */
       camera(): { x: number; z: number; view: number; az: number };
-      /** Pins the town's clock to an hour (null follows Barcelona again). */
       setHour(h: number | null): void;
     };
   }
 }
 
-/** Preview-only (World mounts it there): where an egg is on the page (so e2e can click it), renderer counters, the camera and the clock. */
 export function TestHooks({ world }: { world: BuiltWorld }) {
   const camera = useThree((s) => s.camera);
   const gl = useThree((s) => s.gl);
   const scene = useThree((s) => s.scene);
-  // Frames drawn: gl.info.render.frame counts every render() call, several a frame under the composer.
   const frames = useRef(0);
   useFrame(() => {
     frames.current++;
